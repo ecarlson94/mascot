@@ -1,0 +1,32 @@
+{
+  "name": "Flutter",
+  "dockerFile": "Dockerfile",
+  // Set *default* container specific settings.json values on container create
+  "settings": {},
+  // Add the IDs of extensions you want installed when the container is created
+  "extensions": [
+	"yzhang.markdown-all-in-one",
+	"dart-code.dart-code",
+	"dart-code.flutter",
+	"luanpotter.dart-import",
+	"felixangelov.bloc",
+	"hashicorp.terraform",
+	"4ops.terraform",
+	"eamodio.gitlens",
+	"jeroen-meijer.pubspec-assist"
+],
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": "./scripts/postContainerCreate.sh",
+  "forwardPorts": [
+    5000, // HTTP
+    9005
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/terraform:1": {}
+  },
+  "portsAttributes": {
+    "5000": {
+      "label": "HTTP"
+    }
+  }
+}
