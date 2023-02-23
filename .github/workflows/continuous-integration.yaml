@@ -24,7 +24,7 @@ jobs:
           flutter-version: '3.7.x'
           cache: true
           cache-key: 'flutter-:os:-:channel:-:version:-:arch:-:hash:' # optional, change this to force refresh cache
-          cache-path: ${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch: # optional, change this to specify the cache path
+          cache-path: '${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:' # optional, change this to specify the cache path
           architecture: x64 # optional, x64 or arm64
 
       - name: Install lcov
@@ -40,7 +40,7 @@ jobs:
         run: dart run dart_code_metrics:metrics analyze --reporter=github --fatal-style --fatal-performance --fatal-warnings lib
 
       - name: Run unit / integration tests
-        run: flutter test --coverage
+        run: flutter test --coverage --machine > test-report.json
 
       - name: Report code coverage
         uses: zgosalvez/github-actions-report-lcov@v3
@@ -63,6 +63,6 @@ jobs:
         uses: dorny/test-reporter@v1
         with:
           name: Unit/Integration Test Report
-          path: tests.json
+          path: test-report.json
           reporter: flutter-json
           fail-on-error: true
