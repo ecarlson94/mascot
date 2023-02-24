@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:isar/isar.dart';
 
-import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/error/failure.dart';
 import '../entities/image.dart';
 
