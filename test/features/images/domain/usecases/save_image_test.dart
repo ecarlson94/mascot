@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mascot/features/images/domain/entities/image.dart';
 import 'package:mascot/features/images/domain/usecases/save_image.dart';
 import 'package:mockito/mockito.dart';
 
@@ -15,19 +14,17 @@ void main() {
     usecase = SaveImage(context.mocks.mockImagesRepository);
   });
 
-  const Image expected = Image(id: 1);
-
   test('should save the provided image to the repository', () async {
     // arrange
     when(context.mocks.mockImagesRepository.saveImage(any))
-        .thenAnswer((_) async => const Right(expected));
+        .thenAnswer((_) async => Right(context.data.image));
 
     // act
-    final result = await usecase(expected);
+    final result = await usecase(context.data.image);
 
     // assert
-    expect(result, const Right(expected));
-    verify(context.mocks.mockImagesRepository.saveImage(expected));
+    expect(result, Right(context.data.image));
+    verify(context.mocks.mockImagesRepository.saveImage(context.data.image));
     verifyNoMoreInteractions(context.mocks.mockImagesRepository);
   });
 }

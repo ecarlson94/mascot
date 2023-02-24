@@ -7,8 +7,8 @@ abstract class Entity extends Equatable {
 
   const Entity({required this.id});
 
-  List<Object?> get properties;
+  List<Object?> get customProps;
 
   @override
-  List<Object?> get props => [id, ...properties];
+  List<Object?> get props => [id, ...customProps];
 }

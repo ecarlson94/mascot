@@ -1,8 +1,10 @@
 import '../../../../core/clean_architecture/entity.dart';
 
 class Image extends Entity {
-  const Image({required super.id});
+  final String name;
+
+  const Image({required super.id, required this.name});
 
   @override
-  List<Object?> get properties => [];
+  List<Object?> get customProps => [name];
 }

@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/error/failure.dart';
-import 'package:mascot/features/images/data/models/image_model.dart';
 import 'package:mascot/features/images/data/repositories/images_repository_impl.dart';
 import 'package:mockito/mockito.dart';
 
@@ -10,7 +9,6 @@ import '../../../../fixtures/test_context.dart';
 void main() {
   late TestContext context;
   late ImagesRepositoryImpl repository;
-  const tImage = ImageModel(isarId: 1);
 
   setUp(() {
     context = TestContext();
@@ -23,15 +21,16 @@ void main() {
       () async {
         // arrange
         when(context.mocks.mockImagesLocalDataSource.getImage(any))
-            .thenAnswer((_) async => tImage);
+            .thenAnswer((_) => Future.value(context.data.imageModel));
 
         // act
-        final result = await repository.getImage(tImage.id);
+        final result = await repository.getImage(context.data.image.id);
 
         // assert
-        expect(result, const Right(tImage));
+        expect(result, Right(context.data.image));
 
-        verify(context.mocks.mockImagesLocalDataSource.getImage(tImage.id));
+        verify(context.mocks.mockImagesLocalDataSource
+            .getImage(context.data.image.id));
         verifyNoMoreInteractions(context.mocks.mockImagesLocalDataSource);
       },
     );
@@ -43,12 +42,13 @@ void main() {
           .thenThrow(Exception());
 
       // act
-      final result = await repository.getImage(tImage.id);
+      final result = await repository.getImage(context.data.image.id);
 
       // assert
       expect(result, Left(LocalDataSourceFailure()));
 
-      verify(context.mocks.mockImagesLocalDataSource.getImage(tImage.id));
+      verify(context.mocks.mockImagesLocalDataSource
+          .getImage(context.data.image.id));
       verifyNoMoreInteractions(context.mocks.mockImagesLocalDataSource);
     });
   });
@@ -59,15 +59,16 @@ void main() {
       () async {
         // arrange
         when(context.mocks.mockImagesLocalDataSource.saveImage(any))
-            .thenAnswer((_) async => tImage);
+            .thenAnswer((_) async => context.data.imageModel);
 
         // act
-        final result = await repository.saveImage(tImage);
+        final result = await repository.saveImage(context.data.image);
 
         // assert
-        expect(result, const Right(tImage));
+        expect(result, Right(context.data.image));
 
-        verify(context.mocks.mockImagesLocalDataSource.saveImage(tImage));
+        verify(context.mocks.mockImagesLocalDataSource
+            .saveImage(context.data.imageModel));
         verifyNoMoreInteractions(context.mocks.mockImagesLocalDataSource);
       },
     );
@@ -79,12 +80,13 @@ void main() {
           .thenThrow(Exception());
 
       // act
-      final result = await repository.saveImage(tImage);
+      final result = await repository.saveImage(context.data.image);
 
       // assert
       expect(result, Left(LocalDataSourceFailure()));
 
-      verify(context.mocks.mockImagesLocalDataSource.saveImage(tImage));
+      verify(context.mocks.mockImagesLocalDataSource
+          .saveImage(context.data.imageModel));
       verifyNoMoreInteractions(context.mocks.mockImagesLocalDataSource);
     });
   });
