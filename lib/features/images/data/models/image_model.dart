@@ -12,4 +12,6 @@ class ImageModel extends Image {
   const ImageModel({required Id isarId})
       : isarId = isarId == 0 ? Isar.autoIncrement : isarId,
         super(id: isarId == 0 ? Isar.autoIncrement : isarId);
+
+  factory ImageModel.fromImage(Image image) => ImageModel(isarId: image.id);
 }

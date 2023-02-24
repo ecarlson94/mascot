@@ -1,13 +1,14 @@
 import 'package:equatable/equatable.dart';
 
+typedef Id = int;
+
 abstract class Entity extends Equatable {
-  final int id;
+  final Id id;
 
-  const Entity({required this.id, required List<Object?> props})
-      : _props = props;
+  const Entity({required this.id});
 
-  final List<Object?> _props;
+  List<Object?> get properties;
 
   @override
-  List<Object?> get props => [id, ..._props];
+  List<Object?> get props => [id, ...properties];
 }
