@@ -7,14 +7,19 @@ import 'dart:async' as _i6;
 import 'dart:typed_data' as _i10;
 
 import 'package:dartz/dartz.dart' as _i2;
+import 'package:image_picker/image_picker.dart' as _i12;
 import 'package:isar/isar.dart' as _i4;
 import 'package:mascot/core/error/failure.dart' as _i7;
+import 'package:mascot/core/utils/input_converters/convert_xfile_to_image.dart'
+    as _i11;
 import 'package:mascot/features/images/data/datasources/images_local_data_source.dart'
     as _i9;
 import 'package:mascot/features/images/data/models/image_model.dart' as _i3;
 import 'package:mascot/features/images/domain/entities/image.dart' as _i8;
 import 'package:mascot/features/images/domain/repositories/images_repository.dart'
     as _i5;
+import 'package:mascot/features/images/domain/usecases/get_image.dart' as _i13;
+import 'package:mascot/features/images/domain/usecases/save_image.dart' as _i14;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -738,4 +743,82 @@ class MockIsarCollection<OBJ> extends _i1.Mock
         returnValue: _i6.Future<void>.value(),
         returnValueForMissingStub: _i6.Future<void>.value(),
       ) as _i6.Future<void>);
+}
+
+/// A class which mocks [ConvertXfileToImage].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockConvertXfileToImage extends _i1.Mock
+    implements _i11.ConvertXfileToImage {
+  MockConvertXfileToImage() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.Either<_i7.Failure, _i8.Image> call(_i12.XFile? input) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [input],
+        ),
+        returnValue: _FakeEither_0<_i7.Failure, _i8.Image>(
+          this,
+          Invocation.method(
+            #call,
+            [input],
+          ),
+        ),
+      ) as _i2.Either<_i7.Failure, _i8.Image>);
+}
+
+/// A class which mocks [GetImage].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetImage extends _i1.Mock implements _i13.GetImage {
+  MockGetImage() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.Future<_i2.Either<_i7.Failure, _i8.Image>> call(int? params) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [params],
+        ),
+        returnValue: _i6.Future<_i2.Either<_i7.Failure, _i8.Image>>.value(
+            _FakeEither_0<_i7.Failure, _i8.Image>(
+          this,
+          Invocation.method(
+            #call,
+            [params],
+          ),
+        )),
+      ) as _i6.Future<_i2.Either<_i7.Failure, _i8.Image>>);
+}
+
+/// A class which mocks [SaveImage].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSaveImage extends _i1.Mock implements _i14.SaveImage {
+  MockSaveImage() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.Future<_i2.Either<_i7.Failure, _i8.Image>> call(_i8.Image? params) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [params],
+        ),
+        returnValue: _i6.Future<_i2.Either<_i7.Failure, _i8.Image>>.value(
+            _FakeEither_0<_i7.Failure, _i8.Image>(
+          this,
+          Invocation.method(
+            #call,
+            [params],
+          ),
+        )),
+      ) as _i6.Future<_i2.Either<_i7.Failure, _i8.Image>>);
 }

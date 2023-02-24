@@ -1,3 +1,4 @@
+import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 
 import '../models/image_model.dart';
@@ -10,6 +11,7 @@ abstract class ImagesLocalDataSource {
   Future<ImageModel> getImage(Id id);
 }
 
+@injectable
 class ImagesLocalDataSourceImpl implements ImagesLocalDataSource {
   final IsarCollection<ImageModel> images;
 

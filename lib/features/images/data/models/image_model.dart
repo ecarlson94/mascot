@@ -4,7 +4,7 @@ import '../../domain/entities/image.dart';
 
 part 'image_model.g.dart';
 
-@Collection(ignore: {'props', 'properties', 'id'})
+@Collection(ignore: {'props', 'customProps', 'id'})
 class ImageModel extends Image {
   @Name('id')
   final Id isarId;

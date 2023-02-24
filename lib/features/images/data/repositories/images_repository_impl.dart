@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 
 import '../../../../core/error/failure.dart';
@@ -9,6 +10,7 @@ import '../models/image_model.dart';
 
 typedef FailureOrImageFuture = Future<Either<Failure, Image>>;
 
+@injectable
 class ImagesRepositoryImpl implements ImagesRepository {
   final ImagesLocalDataSource _localDataSource;
 
