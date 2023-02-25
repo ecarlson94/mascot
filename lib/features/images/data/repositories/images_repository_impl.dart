@@ -17,8 +17,10 @@ class ImagesRepositoryImpl implements ImagesRepository {
   ImagesRepositoryImpl(this._localDataSource);
 
   @override
-  FailureOrImageFuture getImage(Id id) async {
+  FailureOrImageFuture getImage(Id? id) async {
     try {
+      if (id == null) throw Exception('Image not found');
+
       return Right(await _localDataSource.getImage(id));
     } on Exception {
       return Left(

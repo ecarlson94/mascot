@@ -6,11 +6,11 @@ import '../../../../fixtures/test_context.dart';
 
 void main() {
   late TestContext context;
-  late ImagesLocalDataSourceImpl dataSource;
+  late ImagesIsarDataSource dataSource;
 
   setUp(() {
     context = TestContext();
-    dataSource = ImagesLocalDataSourceImpl(
+    dataSource = ImagesIsarDataSource(
       context.mocks.mockImageModelCollection,
     );
   });

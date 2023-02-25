@@ -8,8 +8,7 @@
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 import 'package:isar/isar.dart' as _i4;
-import 'package:mascot/core/dependency_injection/isar_db_configuration.dart'
-    as _i5;
+import 'package:mascot/core/dependency_injection/db_configuration.dart' as _i5;
 import 'package:mascot/core/utils/input_converters/convert_xfile_to_image.dart'
     as _i3;
 import 'package:mascot/features/images/data/datasources/images_collection.dart'
@@ -41,10 +40,10 @@ _i1.GetIt $init(
   );
   gh.singleton<_i3.ConvertXfileToImage>(_i3.ConvertXfileToImage());
   gh.singletonAsync<_i4.Isar>(() => _i5.IsarSingleton.create());
-  gh.lazySingletonAsync<_i4.IsarCollection<_i6.ImageModel>>(
-      () async => _i7.ImagesCollection.create(await gh.getAsync<_i4.Isar>()));
+  gh.lazySingletonAsync<_i4.IsarCollection<_i6.ImageModel>>(() async =>
+      _i7.IsarImagesCollection.create(await gh.getAsync<_i4.Isar>()));
   gh.lazySingletonAsync<_i8.ImagesLocalDataSource>(() async =>
-      _i8.ImagesLocalDataSourceImpl(
+      _i8.ImagesIsarDataSource(
           await gh.getAsync<_i4.IsarCollection<_i6.ImageModel>>()));
   gh.lazySingletonAsync<_i9.ImagesRepository>(() async =>
       _i10.ImagesRepositoryImpl(

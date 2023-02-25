@@ -12,10 +12,10 @@ abstract class ImagesLocalDataSource {
 }
 
 @LazySingleton(as: ImagesLocalDataSource)
-class ImagesLocalDataSourceImpl implements ImagesLocalDataSource {
+class ImagesIsarDataSource implements ImagesLocalDataSource {
   final IsarCollection<ImageModel> images;
 
-  ImagesLocalDataSourceImpl(this.images);
+  ImagesIsarDataSource(this.images);
 
   @override
   Future<ImageModel> getImage(Id id) async {

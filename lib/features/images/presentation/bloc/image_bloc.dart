@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/error/error.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/utils/input_converters/convert_xfile_to_image.dart';

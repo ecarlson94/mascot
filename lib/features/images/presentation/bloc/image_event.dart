@@ -4,7 +4,7 @@ abstract class ImageEvent extends Equatable {
   const ImageEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class SaveImageEvent extends ImageEvent {
@@ -13,14 +13,14 @@ class SaveImageEvent extends ImageEvent {
   const SaveImageEvent({required this.image});
 
   @override
-  List<Object> get props => [image];
+  List<Object?> get props => [image];
 }
 
 class GetImageEvent extends ImageEvent {
-  final int id;
+  final Id? id;
 
   const GetImageEvent({required this.id});
 
   @override
-  List<Object> get props => [id];
+  List<Object?> get props => [id];
 }
