@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../../core/error/error.dart';
 import '../../../../core/error/failure.dart';
@@ -17,6 +18,7 @@ const int invalidXfileFailureCode = 100;
 const int saveImageFailureCode = 101;
 const int getImageFailureCode = 102;
 
+@injectable
 class ImageBloc extends Bloc<ImageEvent, ImageState> {
   ImageBloc(
     GetImage getImage,

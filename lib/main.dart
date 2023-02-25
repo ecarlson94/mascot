@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
 
+import 'core/dependency_injection/injection_container.dart';
+
 void main() {
-  runApp(const MyApp());
+  configureDependencies();
+  runApp(
+    FutureBuilder(
+      future: getIt.allReady(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          return const MyApp();
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

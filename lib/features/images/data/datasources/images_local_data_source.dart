@@ -11,7 +11,7 @@ abstract class ImagesLocalDataSource {
   Future<ImageModel> getImage(Id id);
 }
 
-@injectable
+@LazySingleton(as: ImagesLocalDataSource)
 class ImagesLocalDataSourceImpl implements ImagesLocalDataSource {
   final IsarCollection<ImageModel> images;
 

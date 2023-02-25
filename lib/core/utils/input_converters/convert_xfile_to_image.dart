@@ -6,7 +6,7 @@ import '../../../features/images/domain/entities/image.dart';
 import '../../error/failure.dart';
 import 'input_converter.dart';
 
-@injectable
+@singleton
 class ConvertXfileToImage extends InputConverter<XFile, Image> {
   @override
   Either<Failure, Image> call(XFile input) {

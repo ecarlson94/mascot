@@ -10,7 +10,7 @@ import '../models/image_model.dart';
 
 typedef FailureOrImageFuture = Future<Either<Failure, Image>>;
 
-@injectable
+@LazySingleton(as: ImagesRepository)
 class ImagesRepositoryImpl implements ImagesRepository {
   final ImagesLocalDataSource _localDataSource;
 
