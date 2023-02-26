@@ -6,19 +6,19 @@ import 'package:mascot/core/utils/input_converters/input_converter.dart';
 import 'package:mascot/features/images/domain/entities/image.dart';
 
 void main() {
-  late ConvertXfileToImage convertXfileToImage;
+  late ConvertXfileToImage mapXfileToImage;
 
   setUp(() {
-    convertXfileToImage = ConvertXfileToImage();
+    mapXfileToImage = ConvertXfileToImage();
   });
 
-  group('ConvertXfileToImage', () {
+  group('MapXfileToImage', () {
     test('should return an Image when the input is valid', () {
       // arrange
       var input = XFile('test');
 
       // act
-      final result = convertXfileToImage(input);
+      final result = mapXfileToImage(input);
 
       // assert
       expect(result, Right(Image(name: input.name)));
@@ -32,7 +32,7 @@ void main() {
         'should return an InvalidInputFailure when the input is $failureReason',
         () {
           // act
-          final result = convertXfileToImage(input);
+          final result = mapXfileToImage(input);
 
           // assert
           expect(result, Left(InvalidInputFailure()));

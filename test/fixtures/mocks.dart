@@ -1,41 +1,59 @@
-import 'package:isar/isar.dart';
+import 'package:hive/hive.dart';
+import 'package:isar/isar.dart' as isar;
 import 'package:mascot/core/utils/input_converters/convert_xfile_to_image.dart';
+import 'package:mascot/core/utils/mappers/map_image_to_image_model.dart';
+import 'package:mascot/features/images/data/datasources/images_collection.dart';
 import 'package:mascot/features/images/data/datasources/images_local_data_source.dart';
-import 'package:mascot/features/images/data/models/image_model.dart';
 import 'package:mascot/features/images/domain/repositories/images_repository.dart';
 import 'package:mascot/features/images/domain/usecases/get_image.dart';
 import 'package:mascot/features/images/domain/usecases/save_image.dart';
 import 'package:mockito/annotations.dart';
-import './mocks.mocks.dart';
+
+import 'mocks.mocks.dart';
+import 'test_model.dart';
 
 @GenerateMocks([
   ImagesRepository,
   ImagesLocalDataSource,
-  IsarCollection<ImageModel>,
+  isar.IsarCollection<TestModel>,
+  CollectionBox<TestModel>,
+  LocalImages,
   ConvertXfileToImage,
+  MapImageToImageModel,
   GetImage,
   SaveImage,
 ])
 class Mocks {
-  MockImagesRepository? _mockImagesRepository;
-  MockImagesRepository get mockImagesRepository =>
-      _mockImagesRepository ??= MockImagesRepository();
+  MockImagesRepository? _imagesRepository;
+  MockImagesRepository get imagesRepository =>
+      _imagesRepository ??= MockImagesRepository();
 
-  MockImagesLocalDataSource? _mockImagesLocalDataSource;
-  MockImagesLocalDataSource get mockImagesLocalDataSource =>
-      _mockImagesLocalDataSource ??= MockImagesLocalDataSource();
+  MockImagesLocalDataSource? _imagesLocalDataSource;
+  MockImagesLocalDataSource get imagesLocalDataSource =>
+      _imagesLocalDataSource ??= MockImagesLocalDataSource();
 
-  MockIsarCollection<ImageModel>? _mockImageModelCollection;
-  MockIsarCollection<ImageModel> get mockImageModelCollection =>
-      _mockImageModelCollection ??= MockIsarCollection<ImageModel>();
+  MockIsarCollection<TestModel>? _isarTestCollection;
+  MockIsarCollection<TestModel> get isarTestCollection =>
+      _isarTestCollection ??= MockIsarCollection();
 
-  MockConvertXfileToImage? _mockConvertXfileToImage;
-  MockConvertXfileToImage get mockConvertXfileToImage =>
-      _mockConvertXfileToImage ??= MockConvertXfileToImage();
+  MockCollectionBox<TestModel>? _hiveTestCollection;
+  MockCollectionBox<TestModel> get hiveTestCollection =>
+      _hiveTestCollection ??= MockCollectionBox();
 
-  MockGetImage? _mockGetImage;
-  MockGetImage get mockGetImage => _mockGetImage ??= MockGetImage();
+  MockLocalImages? _mockLocalImages;
+  MockLocalImages get mockLocalImages => _mockLocalImages ??= MockLocalImages();
 
-  MockSaveImage? _mockSaveImage;
-  MockSaveImage get mockSaveImage => _mockSaveImage ??= MockSaveImage();
+  MockConvertXfileToImage? _convertXfileToImage;
+  MockConvertXfileToImage get convertXfileToImage =>
+      _convertXfileToImage ??= MockConvertXfileToImage();
+
+  MockMapImageToImageModel? _mapImageToImageModel;
+  MockMapImageToImageModel get mapImageToImageModel =>
+      _mapImageToImageModel ??= MockMapImageToImageModel();
+
+  MockGetImage? _getImage;
+  MockGetImage get getImage => _getImage ??= MockGetImage();
+
+  MockSaveImage? _saveImage;
+  MockSaveImage get saveImage => _saveImage ??= MockSaveImage();
 }

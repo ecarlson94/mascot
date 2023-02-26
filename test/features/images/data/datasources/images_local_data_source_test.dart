@@ -6,19 +6,19 @@ import '../../../../fixtures/test_context.dart';
 
 void main() {
   late TestContext context;
-  late ImagesIsarDataSource dataSource;
+  late ImagesLocalDataSourceImpl dataSource;
 
   setUp(() {
     context = TestContext();
-    dataSource = ImagesIsarDataSource(
-      context.mocks.mockImageModelCollection,
+    dataSource = ImagesLocalDataSourceImpl(
+      context.mocks.mockLocalImages,
     );
   });
 
   group('getImage', () {
     test('should return ImageModel from local database', () async {
       // arrange
-      when(context.mocks.mockImageModelCollection.get(any))
+      when(context.mocks.mockLocalImages.get(any))
           .thenAnswer((_) async => context.data.imageModel);
 
       // act
@@ -26,20 +26,8 @@ void main() {
 
       // assert
       expect(result, context.data.imageModel);
-      verify(context.mocks.mockImageModelCollection.get(1));
-      verifyNoMoreInteractions(context.mocks.mockImageModelCollection);
-    });
-
-    test('should throw Exception when image is not found', () async {
-      // arrange
-      when(context.mocks.mockImageModelCollection.get(any))
-          .thenAnswer((_) async => null);
-
-      // act
-      final call = dataSource.getImage;
-
-      // assert
-      expect(() => call(1), throwsException);
+      verify(context.mocks.mockLocalImages.get(1));
+      verifyNoMoreInteractions(context.mocks.mockLocalImages);
     });
   });
 
@@ -48,9 +36,7 @@ void main() {
       'should return ImageModel from local database after saving image to database',
       () async {
         // arrange
-        when(context.mocks.mockImageModelCollection.put(any))
-            .thenAnswer((_) async => 1);
-        when(context.mocks.mockImageModelCollection.get(any))
+        when(context.mocks.mockLocalImages.save(any))
             .thenAnswer((_) async => context.data.imageModel);
 
         // act
@@ -58,11 +44,8 @@ void main() {
 
         // assert
         expect(result, context.data.imageModel);
-        verifyInOrder([
-          context.mocks.mockImageModelCollection.put(context.data.imageModel),
-          context.mocks.mockImageModelCollection.get(1),
-        ]);
-        verifyNoMoreInteractions(context.mocks.mockImageModelCollection);
+        verify(context.mocks.mockLocalImages.save(context.data.imageModel));
+        verifyNoMoreInteractions(context.mocks.mockLocalImages);
       },
     );
   });

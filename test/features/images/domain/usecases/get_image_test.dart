@@ -11,12 +11,12 @@ void main() {
 
   setUp(() {
     context = TestContext();
-    usecase = GetImage(context.mocks.mockImagesRepository);
+    usecase = GetImage(context.mocks.imagesRepository);
   });
 
   test('should get the requested image from the repository', () async {
     // arrange
-    when(context.mocks.mockImagesRepository.getImage(any))
+    when(context.mocks.imagesRepository.getImage(any))
         .thenAnswer((_) async => Right(context.data.image));
 
     // act
@@ -24,7 +24,7 @@ void main() {
 
     // assert
     expect(result, Right(context.data.image));
-    verify(context.mocks.mockImagesRepository.getImage(context.data.image.id));
-    verifyNoMoreInteractions(context.mocks.mockImagesRepository);
+    verify(context.mocks.imagesRepository.getImage(context.data.image.id));
+    verifyNoMoreInteractions(context.mocks.imagesRepository);
   });
 }

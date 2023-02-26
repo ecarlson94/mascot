@@ -12,7 +12,12 @@ void main() {
 
   setUp(() {
     context = TestContext();
-    repository = ImagesRepositoryImpl(context.mocks.mockImagesLocalDataSource);
+    repository = ImagesRepositoryImpl(
+      context.mocks.imagesLocalDataSource,
+      context.mocks.mapImageToImageModel,
+    );
+    when(context.mocks.mapImageToImageModel(any))
+        .thenAnswer((_) => context.data.imageModel);
   });
 
   group('getImage', () {
@@ -20,7 +25,7 @@ void main() {
       'should return the requested image when call to local data source is successful',
       () async {
         // arrange
-        when(context.mocks.mockImagesLocalDataSource.getImage(any))
+        when(context.mocks.imagesLocalDataSource.getImage(any))
             .thenAnswer((_) => Future.value(context.data.imageModel));
 
         // act
@@ -29,16 +34,16 @@ void main() {
         // assert
         expect(result, Right(context.data.image));
 
-        verify(context.mocks.mockImagesLocalDataSource
+        verify(context.mocks.imagesLocalDataSource
             .getImage(context.data.image.id));
-        verifyNoMoreInteractions(context.mocks.mockImagesLocalDataSource);
+        verifyNoMoreInteractions(context.mocks.imagesLocalDataSource);
       },
     );
 
     test('should return failure when call to local data source is unsuccessful',
         () async {
       // arrange
-      when(context.mocks.mockImagesLocalDataSource.getImage(any))
+      when(context.mocks.imagesLocalDataSource.getImage(any))
           .thenThrow(Exception());
 
       // act
@@ -47,18 +52,18 @@ void main() {
       // assert
       expect(result, Left(LocalDataSourceFailure()));
 
-      verify(context.mocks.mockImagesLocalDataSource
-          .getImage(context.data.image.id));
-      verifyNoMoreInteractions(context.mocks.mockImagesLocalDataSource);
+      verify(
+          context.mocks.imagesLocalDataSource.getImage(context.data.image.id));
+      verifyNoMoreInteractions(context.mocks.imagesLocalDataSource);
     });
   });
 
   group('saveImage', () {
     test(
-      'should should return saved image when call to local data source is successful',
+      'should return saved image when call to local data source is successful',
       () async {
         // arrange
-        when(context.mocks.mockImagesLocalDataSource.saveImage(any))
+        when(context.mocks.imagesLocalDataSource.saveImage(any))
             .thenAnswer((_) async => context.data.imageModel);
 
         // act
@@ -66,17 +71,36 @@ void main() {
 
         // assert
         expect(result, Right(context.data.image));
-
-        verify(context.mocks.mockImagesLocalDataSource
+        verify(context.mocks.imagesLocalDataSource
             .saveImage(context.data.imageModel));
-        verifyNoMoreInteractions(context.mocks.mockImagesLocalDataSource);
+        verifyNoMoreInteractions(context.mocks.imagesLocalDataSource);
+      },
+    );
+
+    test(
+      'should map the Image to an ImageModel before saving it to the local database',
+      () async {
+        // arrange
+        when(context.mocks.imagesLocalDataSource.saveImage(any))
+            .thenAnswer((_) async => context.data.imageModel);
+
+        // act
+        await repository.saveImage(context.data.image);
+
+        // assert
+        verifyInOrder([
+          context.mocks.mapImageToImageModel(context.data.image),
+          context.mocks.imagesLocalDataSource
+              .saveImage(context.data.imageModel),
+        ]);
+        verifyNoMoreInteractions(context.mocks.mapImageToImageModel);
       },
     );
 
     test('should return failure when call to local data source is unsuccessful',
         () async {
       // arrange
-      when(context.mocks.mockImagesLocalDataSource.saveImage(any))
+      when(context.mocks.imagesLocalDataSource.saveImage(any))
           .thenThrow(Exception());
 
       // act
@@ -85,9 +109,9 @@ void main() {
       // assert
       expect(result, Left(LocalDataSourceFailure()));
 
-      verify(context.mocks.mockImagesLocalDataSource
+      verify(context.mocks.imagesLocalDataSource
           .saveImage(context.data.imageModel));
-      verifyNoMoreInteractions(context.mocks.mockImagesLocalDataSource);
+      verifyNoMoreInteractions(context.mocks.imagesLocalDataSource);
     });
   });
 }

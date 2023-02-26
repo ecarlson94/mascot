@@ -11,12 +11,12 @@ void main() {
 
   setUp(() {
     context = TestContext();
-    usecase = SaveImage(context.mocks.mockImagesRepository);
+    usecase = SaveImage(context.mocks.imagesRepository);
   });
 
   test('should save the provided image to the repository', () async {
     // arrange
-    when(context.mocks.mockImagesRepository.saveImage(any))
+    when(context.mocks.imagesRepository.saveImage(any))
         .thenAnswer((_) async => Right(context.data.image));
 
     // act
@@ -24,7 +24,7 @@ void main() {
 
     // assert
     expect(result, Right(context.data.image));
-    verify(context.mocks.mockImagesRepository.saveImage(context.data.image));
-    verifyNoMoreInteractions(context.mocks.mockImagesRepository);
+    verify(context.mocks.imagesRepository.saveImage(context.data.image));
+    verifyNoMoreInteractions(context.mocks.imagesRepository);
   });
 }

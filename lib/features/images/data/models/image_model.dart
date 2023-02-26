@@ -1,31 +1,29 @@
-import 'package:isar/isar.dart';
+// ignore: todo
+// TODO: remove when enabling Isar
+// ignore_for_file: overridden_fields
 
+import 'package:hive/hive.dart';
+
+import '../../../../core/clean_architecture/entity.dart';
 import '../../domain/entities/image.dart';
 
-part 'image_model.g.dart'; // uncomment for isar
+part 'image_model.g.dart';
 
-// uncomment for isar
-@Collection(
-  ignore: {'props', 'stringify'},
-  inheritance: false,
-)
-class ImageModel implements Image {
-  const ImageModel({this.id, required this.name});
+// ignore: todo
+// TODO: uncomment when enabling Isar
+// @Collection(
+//   ignore: {'props', 'stringify'},
+//   inheritance: false,
+// )
+@HiveType(typeId: 0)
+class ImageModel extends Image {
+  const ImageModel({this.id, required this.name}) : super(id: id, name: name);
 
-  factory ImageModel.fromImage(Image image) => ImageModel(
-        id: image.id,
-        name: image.name,
-      );
-
+  @HiveField(0)
   @override
   final Id? id;
 
+  @HiveField(1)
   @override
   final String name;
-
-  @override
-  List<Object?> get props => [id, name];
-
-  @override
-  bool? get stringify => null;
 }
