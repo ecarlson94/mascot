@@ -2,19 +2,24 @@
   "name": "Flutter",
   "dockerFile": "Dockerfile",
   // Set *default* container specific settings.json values on container create
-  "settings": {},
   // Add the IDs of extensions you want installed when the container is created
-  "extensions": [
-	"yzhang.markdown-all-in-one",
-	"dart-code.dart-code",
-	"dart-code.flutter",
-	"luanpotter.dart-import",
-	"felixangelov.bloc",
-	"hashicorp.terraform",
-	"4ops.terraform",
-	"eamodio.gitlens",
-	"jeroen-meijer.pubspec-assist"
-],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "yzhang.markdown-all-in-one",
+        "dart-code.dart-code",
+        "dart-code.flutter",
+        "luanpotter.dart-import",
+        "hashicorp.terraform",
+        "4ops.terraform",
+        "eamodio.gitlens",
+        "jeroen-meijer.pubspec-assist",
+        "KiritchoukC.flutter-clean-architecture",
+        "FelixAngelov.bloc"
+      ],
+      "settings": {}
+    }
+  },
   // Use 'postCreateCommand' to run commands after the container is created.
   // "postCreateCommand": "./scripts/postContainerCreate.sh",
   "forwardPorts": [
