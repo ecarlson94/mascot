@@ -32,7 +32,7 @@ void main() {
         final result = await repository.getImage(context.data.image.id);
 
         // assert
-        expect(result, Right(context.data.image));
+        expect(result, Right(context.data.imageModel));
 
         verify(context.mocks.imagesLocalDataSource
             .getImage(context.data.image.id));
@@ -70,7 +70,7 @@ void main() {
         final result = await repository.saveImage(context.data.image);
 
         // assert
-        expect(result, Right(context.data.image));
+        expect(result, Right(context.data.imageModel));
         verify(context.mocks.imagesLocalDataSource
             .saveImage(context.data.imageModel));
         verifyNoMoreInteractions(context.mocks.imagesLocalDataSource);

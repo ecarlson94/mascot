@@ -30,7 +30,7 @@ void main() {
 
   void setupMockInputConverterSuccess() =>
       when(context.mocks.convertXfileToImage(any))
-          .thenReturn(Right(context.data.image));
+          .thenAnswer((_) async => Right(context.data.image));
   void setupMockSaveImageSuccess() => when(context.mocks.saveImage(any))
       .thenAnswer((_) async => Right(context.data.image));
   void setupMockGetImageSuccess() => when(context.mocks.getImage(any))
@@ -58,7 +58,7 @@ void main() {
       'should emit [ImageSaveError($invalidXfileFailureCode)] when the input is invalid',
       build: () {
         when(context.mocks.convertXfileToImage(any))
-            .thenReturn(Left(InvalidInputFailure()));
+            .thenAnswer((_) async => Left(InvalidInputFailure()));
         return bloc;
       },
       act: (bloc) => bloc.add(SaveImageEvent(image: XFile(''))),
@@ -114,7 +114,7 @@ void main() {
       'should emit [ImageSaveError(0)] during validation when an unkown failure occurs',
       build: () {
         when(context.mocks.convertXfileToImage(any))
-            .thenReturn(Left(EmptyFailure()));
+            .thenAnswer((_) async => Left(EmptyFailure()));
         return bloc;
       },
       act: (bloc) => bloc.add(SaveImageEvent(image: context.data.xfile)),

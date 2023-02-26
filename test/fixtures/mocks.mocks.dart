@@ -936,20 +936,21 @@ class MockConvertXfileToImage extends _i1.Mock
   }
 
   @override
-  _i2.Either<_i8.Failure, _i9.Image> call(_i14.XFile? input) =>
+  _i7.Future<_i2.Either<_i8.Failure, _i9.Image>> call(_i14.XFile? input) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [input],
         ),
-        returnValue: _FakeEither_0<_i8.Failure, _i9.Image>(
+        returnValue: _i7.Future<_i2.Either<_i8.Failure, _i9.Image>>.value(
+            _FakeEither_0<_i8.Failure, _i9.Image>(
           this,
           Invocation.method(
             #call,
             [input],
           ),
-        ),
-      ) as _i2.Either<_i8.Failure, _i9.Image>);
+        )),
+      ) as _i7.Future<_i2.Either<_i8.Failure, _i9.Image>>);
 }
 
 /// A class which mocks [MapImageToImageModel].

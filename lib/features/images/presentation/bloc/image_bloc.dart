@@ -43,7 +43,8 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
     Emitter<ImageState> emit,
     SaveImage saveImage,
   ) async {
-    await convertXfileToImage(event.image).fold(
+    var failureOrImage = await convertXfileToImage(event.image);
+    await failureOrImage.fold(
       (l) async => emit(_mapSaveImageFailureToSaveImageError(l)),
       (r) async {
         emit(SavingImage());

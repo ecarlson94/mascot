@@ -1,3 +1,5 @@
+import 'dart:async';
+
 abstract class Mapper<TIn, TOut> {
-  TOut call(TIn input);
+  FutureOr<TOut> call(TIn input);
 }

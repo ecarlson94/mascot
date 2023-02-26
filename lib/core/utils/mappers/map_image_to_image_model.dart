@@ -11,6 +11,7 @@ class MapImageToImageModel extends Mapper<Image, ImageModel> {
     return ImageModel(
       id: input.id,
       name: input.name,
+      data: input.data,
     );
   }
 }

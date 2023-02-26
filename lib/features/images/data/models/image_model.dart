@@ -2,6 +2,7 @@
 // TODO: remove when enabling Isar
 // ignore_for_file: overridden_fields
 
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 
 import '../../../../core/clean_architecture/entity.dart';
@@ -17,7 +18,12 @@ part 'image_model.g.dart';
 // )
 @HiveType(typeId: 0)
 class ImageModel extends Image {
-  const ImageModel({this.id, required this.name}) : super(id: id, name: name);
+  const ImageModel({this.id, required this.name, required this.data})
+      : super(
+          id: id,
+          name: name,
+          data: data,
+        );
 
   @HiveField(0)
   @override
@@ -26,4 +32,8 @@ class ImageModel extends Image {
   @HiveField(1)
   @override
   final String name;
+
+  @HiveField(2)
+  @override
+  final Uint8List data;
 }

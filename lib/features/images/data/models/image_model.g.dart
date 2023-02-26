@@ -19,17 +19,20 @@ class ImageModelAdapter extends TypeAdapter<ImageModel> {
     return ImageModel(
       id: fields[0] as int?,
       name: fields[1] as String,
+      data: fields[2] as Uint8List,
     );
   }
 
   @override
   void write(BinaryWriter writer, ImageModel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.name);
+      ..write(obj.name)
+      ..writeByte(2)
+      ..write(obj.data);
   }
 
   @override
