@@ -2,11 +2,10 @@ import 'package:hive_flutter/hive_flutter.dart' as hive;
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart' as isar;
 
-// @module
+// @module // Uncomment when enabling Isar
 abstract class IsarSingleton implements isar.Isar {
-  // @preResolve
-  // ignore: todo
-  // TODO: Add the schemas to the Isar.open() call when enabling Isar
+  @preResolve
+  // static Future<isar.Isar> create() => isar.Isar.open([ImageModelSchema]); // Uncomment when enabling Isar
   static Future<isar.Isar> create() => isar.Isar.open([]);
 }
 

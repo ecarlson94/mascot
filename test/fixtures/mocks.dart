@@ -1,9 +1,11 @@
 import 'package:hive/hive.dart';
 import 'package:isar/isar.dart' as isar;
+import 'package:isar/isar.dart';
 import 'package:mascot/core/utils/input_converters/convert_xfile_to_image.dart';
 import 'package:mascot/core/utils/mappers/map_image_to_image_model.dart';
 import 'package:mascot/features/images/data/datasources/images_collection.dart';
 import 'package:mascot/features/images/data/datasources/images_local_data_source.dart';
+import 'package:mascot/features/images/data/models/image_model.dart';
 import 'package:mascot/features/images/domain/repositories/images_repository.dart';
 import 'package:mascot/features/images/domain/usecases/get_image.dart';
 import 'package:mascot/features/images/domain/usecases/save_image.dart';
@@ -12,11 +14,15 @@ import 'package:mockito/annotations.dart';
 import 'mocks.mocks.dart';
 import 'test_model.dart';
 
+@GenerateNiceMocks([
+  MockSpec<Isar>(unsupportedMembers: {#txnSync, #writeTxnSync}),
+])
 @GenerateMocks([
   ImagesRepository,
   ImagesLocalDataSource,
   isar.IsarCollection<TestModel>,
   Box<TestModel>,
+  HiveInterface,
   LocalImages,
   ConvertXfileToImage,
   MapImageToImageModel,
@@ -24,6 +30,9 @@ import 'test_model.dart';
   SaveImage,
 ])
 class Mocks {
+  MockIsar? _isar;
+  MockIsar get isar => _isar ??= MockIsar();
+
   MockImagesRepository? _imagesRepository;
   MockImagesRepository get imagesRepository =>
       _imagesRepository ??= MockImagesRepository();
@@ -39,6 +48,12 @@ class Mocks {
   MockBox<TestModel>? _hiveTestCollection;
   MockBox<TestModel> get hiveTestCollection =>
       _hiveTestCollection ??= MockBox();
+
+  MockBox<ImageModel>? _hiveImageBox;
+  MockBox<ImageModel> get hiveImageBox => _hiveImageBox ??= MockBox();
+
+  MockHiveInterface? _hiveInterface;
+  MockHiveInterface get hiveInterface => _hiveInterface ??= MockHiveInterface();
 
   MockLocalImages? _mockLocalImages;
   MockLocalImages get mockLocalImages => _mockLocalImages ??= MockLocalImages();

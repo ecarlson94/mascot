@@ -5,8 +5,8 @@ import 'package:isar/isar.dart';
 import '../../../../core/data/hive_collection.dart' as custom;
 import '../models/image_model.dart';
 
-// @module
-abstract class IsarImagesCollection implements IsarCollection<ImageModel> {
+// @module // Uncomment when enabling Isar
+abstract class IsarImagesCollection {
   @factoryMethod
   IsarCollection<ImageModel> create(Isar isar) {
     return isar.collection<ImageModel>();
