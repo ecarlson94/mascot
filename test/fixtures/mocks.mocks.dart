@@ -100,19 +100,8 @@ class _FakeQuery_5<T> extends _i1.SmartFake implements _i4.Query<T> {
         );
 }
 
-class _FakeBoxCollection_6 extends _i1.SmartFake implements _i5.BoxCollection {
-  _FakeBoxCollection_6(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeCollectionBox_7<V> extends _i1.SmartFake
-    implements _i5.CollectionBox<V> {
-  _FakeCollectionBox_7(
+class _FakeBox_6<E> extends _i1.SmartFake implements _i5.Box<E> {
+  _FakeBox_6(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -771,79 +760,164 @@ class MockIsarCollection<OBJ> extends _i1.Mock
       ) as _i7.Future<void>);
 }
 
-/// A class which mocks [CollectionBox].
+/// A class which mocks [Box].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockCollectionBox<V> extends _i1.Mock implements _i5.CollectionBox<V> {
-  MockCollectionBox() {
+class MockBox<E> extends _i1.Mock implements _i5.Box<E> {
+  MockBox() {
     _i1.throwOnMissingStub(this);
   }
 
+  @override
+  Iterable<E> get values => (super.noSuchMethod(
+        Invocation.getter(#values),
+        returnValue: <E>[],
+      ) as Iterable<E>);
   @override
   String get name => (super.noSuchMethod(
         Invocation.getter(#name),
         returnValue: '',
       ) as String);
   @override
-  _i5.BoxCollection get boxCollection => (super.noSuchMethod(
-        Invocation.getter(#boxCollection),
-        returnValue: _FakeBoxCollection_6(
-          this,
-          Invocation.getter(#boxCollection),
-        ),
-      ) as _i5.BoxCollection);
+  bool get isOpen => (super.noSuchMethod(
+        Invocation.getter(#isOpen),
+        returnValue: false,
+      ) as bool);
   @override
-  _i7.Future<List<String>> getAllKeys() => (super.noSuchMethod(
+  bool get lazy => (super.noSuchMethod(
+        Invocation.getter(#lazy),
+        returnValue: false,
+      ) as bool);
+  @override
+  Iterable<dynamic> get keys => (super.noSuchMethod(
+        Invocation.getter(#keys),
+        returnValue: <dynamic>[],
+      ) as Iterable<dynamic>);
+  @override
+  int get length => (super.noSuchMethod(
+        Invocation.getter(#length),
+        returnValue: 0,
+      ) as int);
+  @override
+  bool get isEmpty => (super.noSuchMethod(
+        Invocation.getter(#isEmpty),
+        returnValue: false,
+      ) as bool);
+  @override
+  bool get isNotEmpty => (super.noSuchMethod(
+        Invocation.getter(#isNotEmpty),
+        returnValue: false,
+      ) as bool);
+  @override
+  Iterable<E> valuesBetween({
+    dynamic startKey,
+    dynamic endKey,
+  }) =>
+      (super.noSuchMethod(
         Invocation.method(
-          #getAllKeys,
+          #valuesBetween,
+          [],
+          {
+            #startKey: startKey,
+            #endKey: endKey,
+          },
+        ),
+        returnValue: <E>[],
+      ) as Iterable<E>);
+  @override
+  E? getAt(int? index) => (super.noSuchMethod(Invocation.method(
+        #getAt,
+        [index],
+      )) as E?);
+  @override
+  Map<dynamic, E> toMap() => (super.noSuchMethod(
+        Invocation.method(
+          #toMap,
           [],
         ),
-        returnValue: _i7.Future<List<String>>.value(<String>[]),
-      ) as _i7.Future<List<String>>);
+        returnValue: <dynamic, E>{},
+      ) as Map<dynamic, E>);
   @override
-  _i7.Future<Map<String, V>> getAllValues() => (super.noSuchMethod(
+  dynamic keyAt(int? index) => super.noSuchMethod(Invocation.method(
+        #keyAt,
+        [index],
+      ));
+  @override
+  _i7.Stream<_i5.BoxEvent> watch({dynamic key}) => (super.noSuchMethod(
         Invocation.method(
-          #getAllValues,
+          #watch,
           [],
+          {#key: key},
         ),
-        returnValue: _i7.Future<Map<String, V>>.value(<String, V>{}),
-      ) as _i7.Future<Map<String, V>>);
+        returnValue: _i7.Stream<_i5.BoxEvent>.empty(),
+      ) as _i7.Stream<_i5.BoxEvent>);
   @override
-  _i7.Future<V?> get(String? key) => (super.noSuchMethod(
+  bool containsKey(dynamic key) => (super.noSuchMethod(
         Invocation.method(
-          #get,
+          #containsKey,
           [key],
         ),
-        returnValue: _i7.Future<V?>.value(),
-      ) as _i7.Future<V?>);
-  @override
-  _i7.Future<List<V?>> getAll(List<String>? keys) => (super.noSuchMethod(
-        Invocation.method(
-          #getAll,
-          [keys],
-        ),
-        returnValue: _i7.Future<List<V?>>.value(<V?>[]),
-      ) as _i7.Future<List<V?>>);
+        returnValue: false,
+      ) as bool);
   @override
   _i7.Future<void> put(
-    String? key,
-    V? val, [
-    Object? transaction,
-  ]) =>
+    dynamic key,
+    E? value,
+  ) =>
       (super.noSuchMethod(
         Invocation.method(
           #put,
           [
             key,
-            val,
-            transaction,
+            value,
           ],
         ),
         returnValue: _i7.Future<void>.value(),
         returnValueForMissingStub: _i7.Future<void>.value(),
       ) as _i7.Future<void>);
   @override
-  _i7.Future<void> delete(String? key) => (super.noSuchMethod(
+  _i7.Future<void> putAt(
+    int? index,
+    E? value,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #putAt,
+          [
+            index,
+            value,
+          ],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+  @override
+  _i7.Future<void> putAll(Map<dynamic, E>? entries) => (super.noSuchMethod(
+        Invocation.method(
+          #putAll,
+          [entries],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+  @override
+  _i7.Future<int> add(E? value) => (super.noSuchMethod(
+        Invocation.method(
+          #add,
+          [value],
+        ),
+        returnValue: _i7.Future<int>.value(0),
+      ) as _i7.Future<int>);
+  @override
+  _i7.Future<Iterable<int>> addAll(Iterable<E>? values) => (super.noSuchMethod(
+        Invocation.method(
+          #addAll,
+          [values],
+        ),
+        returnValue: _i7.Future<Iterable<int>>.value(<int>[]),
+      ) as _i7.Future<Iterable<int>>);
+  @override
+  _i7.Future<void> delete(dynamic key) => (super.noSuchMethod(
         Invocation.method(
           #delete,
           [key],
@@ -852,7 +926,16 @@ class MockCollectionBox<V> extends _i1.Mock implements _i5.CollectionBox<V> {
         returnValueForMissingStub: _i7.Future<void>.value(),
       ) as _i7.Future<void>);
   @override
-  _i7.Future<void> deleteAll(List<String>? keys) => (super.noSuchMethod(
+  _i7.Future<void> deleteAt(int? index) => (super.noSuchMethod(
+        Invocation.method(
+          #deleteAt,
+          [index],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+  @override
+  _i7.Future<void> deleteAll(Iterable<dynamic>? keys) => (super.noSuchMethod(
         Invocation.method(
           #deleteAll,
           [keys],
@@ -861,9 +944,35 @@ class MockCollectionBox<V> extends _i1.Mock implements _i5.CollectionBox<V> {
         returnValueForMissingStub: _i7.Future<void>.value(),
       ) as _i7.Future<void>);
   @override
-  _i7.Future<void> clear() => (super.noSuchMethod(
+  _i7.Future<void> compact() => (super.noSuchMethod(
+        Invocation.method(
+          #compact,
+          [],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+  @override
+  _i7.Future<int> clear() => (super.noSuchMethod(
         Invocation.method(
           #clear,
+          [],
+        ),
+        returnValue: _i7.Future<int>.value(0),
+      ) as _i7.Future<int>);
+  @override
+  _i7.Future<void> close() => (super.noSuchMethod(
+        Invocation.method(
+          #close,
+          [],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+  @override
+  _i7.Future<void> deleteFromDisk() => (super.noSuchMethod(
+        Invocation.method(
+          #deleteFromDisk,
           [],
         ),
         returnValue: _i7.Future<void>.value(),
@@ -889,13 +998,13 @@ class MockLocalImages extends _i1.Mock implements _i12.LocalImages {
   }
 
   @override
-  _i5.CollectionBox<_i3.ImageModel> get collection => (super.noSuchMethod(
+  _i5.Box<_i3.ImageModel> get collection => (super.noSuchMethod(
         Invocation.getter(#collection),
-        returnValue: _FakeCollectionBox_7<_i3.ImageModel>(
+        returnValue: _FakeBox_6<_i3.ImageModel>(
           this,
           Invocation.getter(#collection),
         ),
-      ) as _i5.CollectionBox<_i3.ImageModel>);
+      ) as _i5.Box<_i3.ImageModel>);
   @override
   _i7.Future<_i3.ImageModel> get(int? id) => (super.noSuchMethod(
         Invocation.method(

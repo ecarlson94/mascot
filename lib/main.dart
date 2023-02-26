@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/injection/injection_container.dart';
 import 'features/images/presentation/bloc/image_bloc.dart';
+import 'features/images/presentation/widgets/display_image_button.dart';
+import 'features/images/presentation/widgets/pick_image_button.dart';
 
-void main() {
-  configureDependencies();
+Future main() async {
+  await configureDependencies();
   runApp(const MyApp());
 }
 
@@ -19,7 +21,10 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         body: BlocProvider(
           create: (_) => getIt<ImageBloc>(),
-          child: const Text('Hello World'),
+          child: Column(children: const [
+            PickImageButton(),
+            DisplayImage(),
+          ]),
         ),
       ),
     );

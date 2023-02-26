@@ -4,9 +4,7 @@ import '../clean_architecture/entity.dart';
 import 'collection.dart';
 
 abstract class HiveCollection<T extends Entity> implements Collection<T> {
-  final CollectionBox<T> collection;
-  int _length = 0;
-  bool _lengthAquired = false;
+  final Box<T> collection;
 
   HiveCollection(this.collection);
 
@@ -15,21 +13,15 @@ abstract class HiveCollection<T extends Entity> implements Collection<T> {
     var notFound = Exception('${T.toString()} not found');
     if (id == null) throw notFound;
 
-    var item = await collection.get(id.toString());
+    var item = collection.get(id);
     if (item == null) throw notFound;
     return item;
   }
 
   @override
   Future<T> save(T item) async {
-    if (!_lengthAquired) {
-      _length = (await collection.getAllKeys()).length;
-      _lengthAquired = true;
-    }
-
-    var id = item.id ?? _length + 1;
-    await collection.put(id.toString(), item);
-    _length++;
+    var id = item.id ?? collection.length + 1;
+    await collection.put(id, item);
 
     return await get(id);
   }

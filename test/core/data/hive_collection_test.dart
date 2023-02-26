@@ -19,8 +19,8 @@ void main() {
     collection = TestHiveCollection(context.mocks.hiveTestCollection);
     model = const TestModel(id: 1, name: 'test');
 
-    when(context.mocks.hiveTestCollection.get(any))
-        .thenAnswer((_) async => model);
+    when(context.mocks.hiveTestCollection.get(any)).thenReturn(model);
+    when(context.mocks.hiveTestCollection.length).thenReturn(0);
   });
 
   group('get', () {
@@ -30,14 +30,13 @@ void main() {
 
       // assert
       expect(result, model);
-      verify(context.mocks.hiveTestCollection.get(1.toString()));
+      verify(context.mocks.hiveTestCollection.get(1));
       verifyNoMoreInteractions(context.mocks.hiveTestCollection);
     });
 
     test('should throw Exception when image is not found', () async {
       // arrange
-      when(context.mocks.hiveTestCollection.get(any))
-          .thenAnswer((_) async => null);
+      when(context.mocks.hiveTestCollection.get(any)).thenReturn(null);
 
       // act
       final call = collection.get;
@@ -48,8 +47,7 @@ void main() {
 
     test('should throw Exception when id is null', () async {
       // arrange
-      when(context.mocks.hiveTestCollection.get(any))
-          .thenAnswer((_) async => null);
+      when(context.mocks.hiveTestCollection.get(any)).thenReturn(null);
 
       // act
       final call = collection.get;
@@ -66,8 +64,6 @@ void main() {
         // arrange
         when(context.mocks.hiveTestCollection.put(any, any))
             .thenAnswer((_) async {});
-        when(context.mocks.hiveTestCollection.getAllKeys())
-            .thenAnswer((_) async => []);
 
         // act
         final result = await collection.save(model);
@@ -75,9 +71,8 @@ void main() {
         // assert
         expect(result, model);
         verifyInOrder([
-          context.mocks.hiveTestCollection.getAllKeys(),
-          context.mocks.hiveTestCollection.put(model.id.toString(), model),
-          context.mocks.hiveTestCollection.get(model.id.toString()),
+          context.mocks.hiveTestCollection.put(model.id, model),
+          context.mocks.hiveTestCollection.get(model.id),
         ]);
         verifyNoMoreInteractions(context.mocks.hiveTestCollection);
       },
@@ -87,29 +82,27 @@ void main() {
       // arrange
       when(context.mocks.hiveTestCollection.put(any, any))
           .thenAnswer((_) async {});
-      when(context.mocks.hiveTestCollection.getAllKeys())
-          .thenAnswer((_) async => ['1', '2', '3']);
+      when(context.mocks.hiveTestCollection.length).thenReturn(3);
 
       // act
       await collection.save(model);
 
       // assert
-      verify(context.mocks.hiveTestCollection.put(model.id.toString(), model));
+      verify(context.mocks.hiveTestCollection.put(model.id, model));
     });
 
     test('should auto increment id when id is null', () async {
       // arrange
       when(context.mocks.hiveTestCollection.put(any, any))
           .thenAnswer((_) async {});
-      when(context.mocks.hiveTestCollection.getAllKeys())
-          .thenAnswer((_) async => ['1', '2', '3']);
+      when(context.mocks.hiveTestCollection.length).thenReturn(3);
       var newModel = const TestModel(id: null, name: 'test');
 
       // act
       await collection.save(newModel);
 
       // assert
-      verify(context.mocks.hiveTestCollection.put(4.toString(), newModel));
+      verify(context.mocks.hiveTestCollection.put(4, newModel));
     });
   });
 }

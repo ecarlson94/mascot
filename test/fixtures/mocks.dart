@@ -16,7 +16,7 @@ import 'test_model.dart';
   ImagesRepository,
   ImagesLocalDataSource,
   isar.IsarCollection<TestModel>,
-  CollectionBox<TestModel>,
+  Box<TestModel>,
   LocalImages,
   ConvertXfileToImage,
   MapImageToImageModel,
@@ -36,9 +36,9 @@ class Mocks {
   MockIsarCollection<TestModel> get isarTestCollection =>
       _isarTestCollection ??= MockIsarCollection();
 
-  MockCollectionBox<TestModel>? _hiveTestCollection;
-  MockCollectionBox<TestModel> get hiveTestCollection =>
-      _hiveTestCollection ??= MockCollectionBox();
+  MockBox<TestModel>? _hiveTestCollection;
+  MockBox<TestModel> get hiveTestCollection =>
+      _hiveTestCollection ??= MockBox();
 
   MockLocalImages? _mockLocalImages;
   MockLocalImages get mockLocalImages => _mockLocalImages ??= MockLocalImages();
