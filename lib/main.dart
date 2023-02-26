@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'MASCOT',
+      title: 'mascot',
       home: Scaffold(
         body: BlocProvider(
           create: (_) => getIt<ImageBloc>(),
