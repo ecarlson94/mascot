@@ -13,7 +13,7 @@ class PickImageButton extends StatelessWidget {
       builder: (context, state) {
         var imageBloc = BlocProvider.of<ImageBloc>(context);
         var isSaving = state is SavingImage;
-        return ElevatedButton(
+        return FilledButton(
           onPressed: isSaving
               ? null
               : () async {
@@ -24,7 +24,7 @@ class PickImageButton extends StatelessWidget {
                     imageBloc.add(SaveImageEvent(image: image));
                   }
                 },
-          child: const Text('Pick Image'),
+          child: const Text('PICK'),
         );
       },
     );

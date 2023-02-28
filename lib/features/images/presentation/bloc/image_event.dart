@@ -16,6 +16,15 @@ class SaveImageEvent extends ImageEvent {
   List<Object?> get props => [image];
 }
 
+class SetImageEvent extends ImageEvent {
+  final Image image;
+
+  const SetImageEvent({required this.image});
+
+  @override
+  List<Object?> get props => [image];
+}
+
 class GetImageEvent extends ImageEvent {
   final Id? id;
 

@@ -36,7 +36,7 @@ void main() {
   void setupMockGetImageSuccess() => when(context.mocks.getImage(any))
       .thenAnswer((_) async => Right(context.data.image));
 
-  group('SaveImage', () {
+  group('SaveImageEvent', () {
     blocTest(
       'should call the InputConverter to validate and convert the xfile to an Image',
       build: () {
@@ -122,7 +122,7 @@ void main() {
     );
   });
 
-  group('GetImage', () {
+  group('GetImageImage', () {
     blocTest(
       'should emit [GetImageError($getImageFailureCode)] when data retrieval from the local data source fails',
       build: () {
@@ -163,6 +163,19 @@ void main() {
       },
       act: (bloc) => bloc.add(GetImageEvent(id: context.data.image.id)),
       expect: () => [GettingImage(), const GetImageError(0)],
+    );
+  });
+
+  group('SetImageEvent', () {
+    blocTest(
+      'should emit [ImageLoaded] with the provided image',
+      build: () => bloc,
+      act: (bloc) => bloc.add(SetImageEvent(image: context.data.image)),
+      expect: () {
+        return [
+          ImageLoaded(context.data.image),
+        ];
+      },
     );
   });
 }

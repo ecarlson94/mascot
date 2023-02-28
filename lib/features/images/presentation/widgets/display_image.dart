@@ -12,7 +12,7 @@ class DisplayImage extends StatelessWidget {
       builder: (context, state) {
         return state is ImageLoaded
             ? Image.memory(state.image.data)
-            : const Placeholder();
+            : const SizedBox.shrink();
       },
     );
   }

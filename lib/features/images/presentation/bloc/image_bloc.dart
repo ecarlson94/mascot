@@ -32,6 +32,8 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
           await _saveImage(convertXfileToImage, event, emit, saveImage);
         } else if (event is GetImageEvent) {
           await _getImage(emit, getImage, event);
+        } else if (event is SetImageEvent) {
+          emit(ImageLoaded(event.image));
         }
       },
     );
