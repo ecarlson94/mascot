@@ -19,9 +19,7 @@ class ImagesLocalDataSourceImpl implements ImagesLocalDataSource {
   ImagesLocalDataSourceImpl(this.collection);
 
   @override
-  Future<ImageModel> getImage(Id? id) {
-    return collection.get(id);
-  }
+  Future<ImageModel> getImage(Id? id) => collection.get(id);
 
   @override
   Future<Id> addImage(ImageModel image) => collection.add(image);

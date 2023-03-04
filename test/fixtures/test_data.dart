@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 import 'package:mascot/features/images/data/models/image_model.dart';
 import 'package:mascot/features/images/domain/entities/image.dart';
+import 'package:mascot/features/mascot/data/models/mascot_model.dart';
 import 'package:mascot/features/mascot/domain/entities/expression.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
 
@@ -23,7 +24,7 @@ class TestData {
         name: image.name,
       );
 
-  final Mascot mascot = Mascot(
+  final MascotModel mascotModel = MascotModel(
     id: 1,
     name: 'test',
     expressions: [
@@ -47,4 +48,5 @@ class TestData {
       ),
     ],
   );
+  Mascot get mascot => mascotModel;
 }

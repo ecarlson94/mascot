@@ -19,6 +19,7 @@ import 'test_model.dart';
 @GenerateNiceMocks([
   MockSpec<Isar>(unsupportedMembers: {#txnSync, #writeTxnSync}),
   MockSpec<CollectionAdapter<ImageModel>>(as: #MockImagesCollectionAdapter),
+  MockSpec<CollectionAdapter<MascotModel>>(as: #MockMascotsCollectionAdapter),
 ])
 @GenerateMocks([
   ImagesRepository,
@@ -58,9 +59,13 @@ class Mocks {
   MockBox<MascotModel>? _hiveMascotBox;
   MockBox<MascotModel> get hiveMascotBox => _hiveMascotBox ??= MockBox();
 
-  MockImagesCollectionAdapter? _imageCollectionAdapter;
-  MockImagesCollectionAdapter get imageCollectionAdapter =>
-      _imageCollectionAdapter ??= MockImagesCollectionAdapter();
+  MockImagesCollectionAdapter? _imagesCollectionAdapter;
+  MockImagesCollectionAdapter get imagesCollectionAdapter =>
+      _imagesCollectionAdapter ??= MockImagesCollectionAdapter();
+
+  MockMascotsCollectionAdapter? _mascotsCollectionAdapter;
+  MockMascotsCollectionAdapter get mascotsCollectionAdapter =>
+      _mascotsCollectionAdapter ??= MockMascotsCollectionAdapter();
 
   MockHiveInterface? _hiveInterface;
   MockHiveInterface get hiveInterface => _hiveInterface ??= MockHiveInterface();

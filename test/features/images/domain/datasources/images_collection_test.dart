@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
+import 'package:mascot/core/data/hive_collection_adapter.dart';
 import 'package:mascot/features/images/data/datasources/images_collection.dart';
 import 'package:mascot/features/images/data/models/image_model.dart';
 import 'package:mockito/mockito.dart';
@@ -9,6 +10,8 @@ import '../../../../fixtures/test_context.dart';
 class IsarImagesCollectionImpl extends IsarImagesCollection {}
 
 class HiveImagesCollectionImpl extends HiveImagesCollection {}
+
+class ImagesCollectionAdapterImpl extends ImagesCollectionAdapter {}
 
 class MockIsarCollection<T> extends Mock implements IsarCollection<T> {}
 
@@ -63,6 +66,23 @@ void main() {
 
       // assert
       verify(context.mocks.hiveInterface.registerAdapter(ImageModelAdapter()));
+    });
+  });
+
+  group('ImagesCollectionAdapter', () {
+    late ImagesCollectionAdapter imagesCollectionAdapter;
+    setUp(() {
+      imagesCollectionAdapter = ImagesCollectionAdapterImpl();
+    });
+
+    test('should return HiveCollectionAdapter', () {
+      // act
+      final adapter = imagesCollectionAdapter.create(
+        context.mocks.hiveImageBox,
+      );
+
+      // assert
+      expect(adapter, isA<HiveCollectionAdapter<ImageModel>>());
     });
   });
 }

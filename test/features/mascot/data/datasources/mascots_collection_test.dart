@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
+import 'package:mascot/core/data/hive_collection_adapter.dart';
 import 'package:mascot/features/mascot/data/datasources/mascots_collection.dart';
 import 'package:mascot/features/mascot/data/models/expression_model.dart';
 import 'package:mascot/features/mascot/data/models/mascot_model.dart';
@@ -12,6 +13,8 @@ class IsarMascotsCollectionImpl extends IsarMascotsCollection {}
 class HiveMascotsCollectionImpl extends HiveMascotsCollection {}
 
 class MockIsarCollection<T> extends Mock implements IsarCollection<T> {}
+
+class MascotsCollectionAdapterImpl extends MascotsCollectionAdapter {}
 
 void main() {
   late TestContext context;
@@ -74,6 +77,21 @@ void main() {
       verify(
         context.mocks.hiveInterface.registerAdapter(ExpressionModelAdapter()),
       );
+    });
+  });
+
+  group('MascotsCollectionAdapter', () {
+    late MascotsCollectionAdapter adapter;
+    setUp(() {
+      adapter = MascotsCollectionAdapterImpl();
+    });
+
+    test('should return HiveCollectionAdapter', () {
+      // act
+      final result = adapter.create(context.mocks.hiveMascotBox);
+
+      // assert
+      expect(result, isA<HiveCollectionAdapter<MascotModel>>());
     });
   });
 }

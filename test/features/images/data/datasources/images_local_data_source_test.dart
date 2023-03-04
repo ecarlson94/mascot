@@ -11,14 +11,14 @@ void main() {
   setUp(() {
     context = TestContext();
     dataSource = ImagesLocalDataSourceImpl(
-      context.mocks.imageCollectionAdapter,
+      context.mocks.imagesCollectionAdapter,
     );
   });
 
   group('getImage', () {
     test('should return ImageModel from local database', () async {
       // arrange
-      when(context.mocks.imageCollectionAdapter.get(any))
+      when(context.mocks.imagesCollectionAdapter.get(any))
           .thenAnswer((_) async => context.data.imageModel);
 
       // act
@@ -26,8 +26,8 @@ void main() {
 
       // assert
       expect(result, context.data.imageModel);
-      verify(context.mocks.imageCollectionAdapter.get(1));
-      verifyNoMoreInteractions(context.mocks.imageCollectionAdapter);
+      verify(context.mocks.imagesCollectionAdapter.get(1));
+      verifyNoMoreInteractions(context.mocks.imagesCollectionAdapter);
     });
   });
 
@@ -37,7 +37,7 @@ void main() {
       () async {
         // arrange
         var id = 1;
-        when(context.mocks.imageCollectionAdapter.add(any))
+        when(context.mocks.imagesCollectionAdapter.add(any))
             .thenAnswer((_) async => id);
 
         // act
@@ -46,8 +46,8 @@ void main() {
         // assert
         expect(result, equals(id));
         verify(
-            context.mocks.imageCollectionAdapter.add(context.data.imageModel));
-        verifyNoMoreInteractions(context.mocks.imageCollectionAdapter);
+            context.mocks.imagesCollectionAdapter.add(context.data.imageModel));
+        verifyNoMoreInteractions(context.mocks.imagesCollectionAdapter);
       },
     );
   });

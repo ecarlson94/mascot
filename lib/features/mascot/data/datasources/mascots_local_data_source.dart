@@ -13,10 +13,10 @@ abstract class MascotLocalDataSource {
 }
 
 @LazySingleton(as: MascotLocalDataSource)
-class MascotLocalDataSourceImpl implements MascotLocalDataSource {
+class MascotsLocalDataSourceImpl implements MascotLocalDataSource {
   final CollectionAdapter<MascotModel> collection;
 
-  MascotLocalDataSourceImpl(this.collection);
+  MascotsLocalDataSourceImpl(this.collection);
 
   @override
   Future<MascotModel> getMascot(Id? id) => collection.get(id);

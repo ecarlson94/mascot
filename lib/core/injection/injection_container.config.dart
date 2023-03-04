@@ -87,7 +87,7 @@ Future<_i1.GetIt> $init(
         gh<_i5.MapImageToImageModel>(),
       ));
   gh.lazySingleton<_i17.MascotLocalDataSource>(() =>
-      _i17.MascotLocalDataSourceImpl(
+      _i17.MascotsLocalDataSourceImpl(
           gh<_i12.CollectionAdapter<_i11.MascotModel>>()));
   gh.lazySingleton<_i18.AddImage>(
       () => _i18.AddImage(gh<_i15.ImagesRepository>()));
