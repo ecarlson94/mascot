@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import 'core/injection/injection_container.dart';
-import 'features/images/presentation/bloc/image_bloc.dart';
-import 'features/images/presentation/widgets/display_image.dart';
-import 'features/images/presentation/widgets/pick_image_button.dart';
+import 'features/expressions/presentation/bloc/expression_bloc.dart';
+import 'features/expressions/presentation/widgets/display_image.dart';
+import 'features/expressions/presentation/widgets/pick_image_button.dart';
 
 Future main() async {
   await configureDependencies();
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         body: BlocProvider(
-          create: (_) => getIt<ImageBloc>(),
+          create: (_) => getIt<ExpressionBloc>(),
           child: Center(
             child: Column(children: const [
               PickImageButton(),

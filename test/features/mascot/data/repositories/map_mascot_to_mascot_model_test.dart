@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mascot/features/mascot/data/repositories/map_expression_to_expression_model.dart';
+import 'package:mascot/features/expressions/data/repositories/map_expression_to_expression_model.dart';
+import 'package:mascot/features/expressions/data/repositories/map_image_to_image_model.dart';
 import 'package:mascot/features/mascot/data/repositories/map_mascot_to_mascot_model.dart';
 
 import '../../../../fixtures/test_context.dart';
@@ -11,7 +12,7 @@ void main() {
   setUp(() {
     context = TestContext();
     mapMascotToMascotModel = MapMascotToMascotModel(
-      MapExpressionToExpressionModel(),
+      MapExpressionToExpressionModel(MapImageToImageModel()),
     );
   });
 

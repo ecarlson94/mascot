@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../features/images/domain/entities/image.dart';
+import '../../../features/expressions/domain/entities/image.dart';
 import '../../error/failure.dart';
 import 'input_converter.dart';
 
@@ -16,7 +16,6 @@ class ConvertXfileToImage extends InputConverter<XFile, Image> {
 
     return Right(
       Image(
-        id: 0,
         name: input.name,
         data: data,
       ),

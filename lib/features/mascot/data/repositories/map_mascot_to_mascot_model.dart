@@ -2,9 +2,9 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../core/data/mapper.dart';
 import '../../domain/entities/mascot.dart';
-import '../models/expression_model.dart';
+import '../../../expressions/data/models/expression_model.dart';
 import '../models/mascot_model.dart';
-import 'map_expression_to_expression_model.dart';
+import '../../../expressions/data/repositories/map_expression_to_expression_model.dart';
 
 @injectable
 class MapMascotToMascotModel extends Mapper<Mascot, MascotModel> {

@@ -1,31 +1,28 @@
 import 'dart:typed_data';
 
 import 'package:image_picker/image_picker.dart';
-import 'package:mascot/features/images/data/models/image_model.dart';
-import 'package:mascot/features/images/domain/entities/image.dart';
-import 'package:mascot/features/mascot/data/models/expression_model.dart';
+import 'package:mascot/features/expressions/data/models/expression_model.dart';
+import 'package:mascot/features/expressions/data/models/image_model.dart';
+import 'package:mascot/features/expressions/domain/entities/expression.dart';
+import 'package:mascot/features/expressions/domain/entities/image.dart';
 import 'package:mascot/features/mascot/data/models/mascot_model.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
 
 import 'test_x_file.dart';
 
 class TestData {
-  final ImageModel imageModel =
-      ImageModel(id: 1, name: 'test', data: Uint8List(200));
+  final ImageModel imageModel = ImageModel(name: 'test', data: Uint8List(200));
   Image get image => Image(
-        id: imageModel.id,
         name: imageModel.name,
         data: imageModel.data,
       );
 
   final List<ImageModel> imageModels = [
     ImageModel(
-      id: 3,
       name: 'test1',
       data: Uint8List(200),
     ),
     ImageModel(
-      id: 4,
       name: 'test2',
       data: Uint8List(200),
     ),
@@ -38,24 +35,57 @@ class TestData {
         name: image.name,
       );
 
+  final ExpressionModel expressionModel = ExpressionModel(
+    id: 1,
+    name: 'neutral',
+    description: 'this expression is neutral',
+    image: ImageModel(
+      name: 'neutralFace',
+      data: Uint8List(200),
+    ),
+  );
+  Expression get expression => expressionModel;
+
+  final List<ExpressionModel> expressionModels = [
+    ExpressionModel(
+      id: 1,
+      name: 'neutral',
+      description: 'this expression is neutral',
+      image: ImageModel(
+        name: 'neutralFace',
+        data: Uint8List(200),
+      ),
+    ),
+    ExpressionModel(
+      id: 2,
+      name: 'talking',
+      description: 'this expression is talking',
+      image: ImageModel(
+        name: 'talkingFace',
+        data: Uint8List(200),
+      ),
+    ),
+  ];
+  List<Expression> get expressions => expressionModels;
+
   final MascotModel mascotModel = MascotModel(
     id: 1,
     name: 'test',
     expressions: [
       ExpressionModel(
+        id: 1,
         name: 'neutral',
         description: 'this expression is neutral',
-        image: Image(
-          id: 1,
+        image: ImageModel(
           name: 'neutralFace',
           data: Uint8List(200),
         ),
       ),
       ExpressionModel(
+        id: 2,
         name: 'talking',
         description: 'this expression is talking',
-        image: Image(
-          id: 2,
+        image: ImageModel(
           name: 'talkingFace',
           data: Uint8List(200),
         ),

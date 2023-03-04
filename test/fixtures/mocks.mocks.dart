@@ -10,26 +10,27 @@ import 'package:dartz/dartz.dart' as _i5;
 import 'package:hive/hive.dart' as _i6;
 import 'package:hive/src/box/default_compaction_strategy.dart' as _i16;
 import 'package:hive/src/box/default_key_comparator.dart' as _i15;
-import 'package:image_picker/image_picker.dart' as _i18;
 import 'package:isar/isar.dart' as _i2;
 import 'package:mascot/core/data/collection_adapter.dart' as _i8;
 import 'package:mascot/core/error/failure.dart' as _i10;
-import 'package:mascot/core/utils/input_converters/convert_xfile_to_image.dart'
-    as _i17;
-import 'package:mascot/features/images/data/datasources/images_local_data_source.dart'
+import 'package:mascot/features/expressions/data/datasources/expressions_local_data_source.dart'
     as _i12;
-import 'package:mascot/features/images/data/models/image_model.dart' as _i3;
-import 'package:mascot/features/images/domain/entities/image.dart' as _i11;
-import 'package:mascot/features/images/domain/repositories/images_repository.dart'
+import 'package:mascot/features/expressions/data/models/expression_model.dart'
+    as _i3;
+import 'package:mascot/features/expressions/domain/entities/expression.dart'
+    as _i11;
+import 'package:mascot/features/expressions/domain/repositories/expressions_repository.dart'
     as _i9;
-import 'package:mascot/features/images/domain/usecases/add_image.dart' as _i20;
-import 'package:mascot/features/images/domain/usecases/get_image.dart' as _i19;
+import 'package:mascot/features/expressions/domain/usecases/add_expression.dart'
+    as _i18;
+import 'package:mascot/features/expressions/domain/usecases/get_expression.dart'
+    as _i17;
 import 'package:mascot/features/mascot/data/datasources/mascots_local_data_source.dart'
     as _i13;
 import 'package:mascot/features/mascot/data/models/mascot_model.dart' as _i4;
-import 'package:mascot/features/mascot/domain/entities/mascot.dart' as _i22;
+import 'package:mascot/features/mascot/domain/entities/mascot.dart' as _i20;
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart'
-    as _i21;
+    as _i19;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -54,8 +55,9 @@ class _FakeIsarCollection_0<OBJ> extends _i1.SmartFake
         );
 }
 
-class _FakeImageModel_1 extends _i1.SmartFake implements _i3.ImageModel {
-  _FakeImageModel_1(
+class _FakeExpressionModel_1 extends _i1.SmartFake
+    implements _i3.ExpressionModel {
+  _FakeExpressionModel_1(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -348,15 +350,16 @@ class MockIsar extends _i1.Mock implements _i2.Isar {
 /// A class which mocks [CollectionAdapter].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockImagesCollectionAdapter extends _i1.Mock
-    implements _i8.CollectionAdapter<_i3.ImageModel> {
+class MockExpressionsCollectionAdapter extends _i1.Mock
+    implements _i8.CollectionAdapter<_i3.ExpressionModel> {
   @override
-  _i7.Future<_i3.ImageModel> get(int? id) => (super.noSuchMethod(
+  _i7.Future<_i3.ExpressionModel> get(int? id) => (super.noSuchMethod(
         Invocation.method(
           #get,
           [id],
         ),
-        returnValue: _i7.Future<_i3.ImageModel>.value(_FakeImageModel_1(
+        returnValue:
+            _i7.Future<_i3.ExpressionModel>.value(_FakeExpressionModel_1(
           this,
           Invocation.method(
             #get,
@@ -364,16 +367,16 @@ class MockImagesCollectionAdapter extends _i1.Mock
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.ImageModel>.value(_FakeImageModel_1(
+            _i7.Future<_i3.ExpressionModel>.value(_FakeExpressionModel_1(
           this,
           Invocation.method(
             #get,
             [id],
           ),
         )),
-      ) as _i7.Future<_i3.ImageModel>);
+      ) as _i7.Future<_i3.ExpressionModel>);
   @override
-  _i7.Future<int> add(_i3.ImageModel? item) => (super.noSuchMethod(
+  _i7.Future<int> add(_i3.ExpressionModel? item) => (super.noSuchMethod(
         Invocation.method(
           #add,
           [item],
@@ -391,16 +394,17 @@ class MockImagesCollectionAdapter extends _i1.Mock
         returnValueForMissingStub: _i7.Future<void>.value(),
       ) as _i7.Future<void>);
   @override
-  _i7.Future<List<_i3.ImageModel>> getMany(Iterable<int>? ids) =>
+  _i7.Future<List<_i3.ExpressionModel>> getMany(Iterable<int>? ids) =>
       (super.noSuchMethod(
         Invocation.method(
           #getMany,
           [ids],
         ),
-        returnValue: _i7.Future<List<_i3.ImageModel>>.value(<_i3.ImageModel>[]),
-        returnValueForMissingStub:
-            _i7.Future<List<_i3.ImageModel>>.value(<_i3.ImageModel>[]),
-      ) as _i7.Future<List<_i3.ImageModel>>);
+        returnValue: _i7.Future<List<_i3.ExpressionModel>>.value(
+            <_i3.ExpressionModel>[]),
+        returnValueForMissingStub: _i7.Future<List<_i3.ExpressionModel>>.value(
+            <_i3.ExpressionModel>[]),
+      ) as _i7.Future<List<_i3.ExpressionModel>>);
 }
 
 /// A class which mocks [CollectionAdapter].
@@ -462,132 +466,139 @@ class MockMascotsCollectionAdapter extends _i1.Mock
       ) as _i7.Future<List<_i4.MascotModel>>);
 }
 
-/// A class which mocks [ImagesRepository].
+/// A class which mocks [ExpressionsRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockImagesRepository extends _i1.Mock implements _i9.ImagesRepository {
-  MockImagesRepository() {
+class MockExpressionsRepository extends _i1.Mock
+    implements _i9.ExpressionsRepository {
+  MockExpressionsRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<_i5.Either<_i10.Failure, int>> addImage(_i11.Image? image) =>
+  _i7.Future<_i5.Either<_i10.Failure, int>> addExpression(
+          _i11.Expression? image) =>
       (super.noSuchMethod(
         Invocation.method(
-          #addImage,
+          #addExpression,
           [image],
         ),
         returnValue: _i7.Future<_i5.Either<_i10.Failure, int>>.value(
             _FakeEither_3<_i10.Failure, int>(
           this,
           Invocation.method(
-            #addImage,
+            #addExpression,
             [image],
           ),
         )),
       ) as _i7.Future<_i5.Either<_i10.Failure, int>>);
   @override
-  _i7.Future<_i5.Either<_i10.Failure, List<int>>> addImages(
-          List<_i11.Image>? images) =>
+  _i7.Future<_i5.Either<_i10.Failure, List<int>>> addExpressions(
+          List<_i11.Expression>? images) =>
       (super.noSuchMethod(
         Invocation.method(
-          #addImages,
+          #addExpressions,
           [images],
         ),
         returnValue: _i7.Future<_i5.Either<_i10.Failure, List<int>>>.value(
             _FakeEither_3<_i10.Failure, List<int>>(
           this,
           Invocation.method(
-            #addImages,
+            #addExpressions,
             [images],
           ),
         )),
       ) as _i7.Future<_i5.Either<_i10.Failure, List<int>>>);
   @override
-  _i7.Future<_i5.Either<_i10.Failure, _i11.Image>> getImage(int? id) =>
+  _i7.Future<_i5.Either<_i10.Failure, _i11.Expression>> getExpression(
+          int? id) =>
       (super.noSuchMethod(
         Invocation.method(
-          #getImage,
+          #getExpression,
           [id],
         ),
-        returnValue: _i7.Future<_i5.Either<_i10.Failure, _i11.Image>>.value(
-            _FakeEither_3<_i10.Failure, _i11.Image>(
+        returnValue:
+            _i7.Future<_i5.Either<_i10.Failure, _i11.Expression>>.value(
+                _FakeEither_3<_i10.Failure, _i11.Expression>(
           this,
           Invocation.method(
-            #getImage,
+            #getExpression,
             [id],
           ),
         )),
-      ) as _i7.Future<_i5.Either<_i10.Failure, _i11.Image>>);
+      ) as _i7.Future<_i5.Either<_i10.Failure, _i11.Expression>>);
   @override
-  _i7.Future<_i5.Either<_i10.Failure, List<_i11.Image>>> getImages(
+  _i7.Future<_i5.Either<_i10.Failure, List<_i11.Expression>>> getExpressions(
           List<int>? ids) =>
       (super.noSuchMethod(
         Invocation.method(
-          #getImages,
+          #getExpressions,
           [ids],
         ),
         returnValue:
-            _i7.Future<_i5.Either<_i10.Failure, List<_i11.Image>>>.value(
-                _FakeEither_3<_i10.Failure, List<_i11.Image>>(
+            _i7.Future<_i5.Either<_i10.Failure, List<_i11.Expression>>>.value(
+                _FakeEither_3<_i10.Failure, List<_i11.Expression>>(
           this,
           Invocation.method(
-            #getImages,
+            #getExpressions,
             [ids],
           ),
         )),
-      ) as _i7.Future<_i5.Either<_i10.Failure, List<_i11.Image>>>);
+      ) as _i7.Future<_i5.Either<_i10.Failure, List<_i11.Expression>>>);
 }
 
-/// A class which mocks [ImagesLocalDataSource].
+/// A class which mocks [ExpressionsLocalDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockImagesLocalDataSource extends _i1.Mock
-    implements _i12.ImagesLocalDataSource {
-  MockImagesLocalDataSource() {
+class MockExpressionsLocalDataSource extends _i1.Mock
+    implements _i12.ExpressionsLocalDataSource {
+  MockExpressionsLocalDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<int> addImage(_i3.ImageModel? image) => (super.noSuchMethod(
+  _i7.Future<int> addExpression(_i3.ExpressionModel? image) =>
+      (super.noSuchMethod(
         Invocation.method(
-          #addImage,
+          #addExpression,
           [image],
         ),
         returnValue: _i7.Future<int>.value(0),
       ) as _i7.Future<int>);
   @override
-  _i7.Future<_i3.ImageModel> getImage(int? id) => (super.noSuchMethod(
+  _i7.Future<_i3.ExpressionModel> getExpression(int? id) => (super.noSuchMethod(
         Invocation.method(
-          #getImage,
+          #getExpression,
           [id],
         ),
-        returnValue: _i7.Future<_i3.ImageModel>.value(_FakeImageModel_1(
+        returnValue:
+            _i7.Future<_i3.ExpressionModel>.value(_FakeExpressionModel_1(
           this,
           Invocation.method(
-            #getImage,
+            #getExpression,
             [id],
           ),
         )),
-      ) as _i7.Future<_i3.ImageModel>);
+      ) as _i7.Future<_i3.ExpressionModel>);
   @override
-  _i7.Future<void> removeImage(int? id) => (super.noSuchMethod(
+  _i7.Future<void> removeExpression(int? id) => (super.noSuchMethod(
         Invocation.method(
-          #removeImage,
+          #removeExpression,
           [id],
         ),
         returnValue: _i7.Future<void>.value(),
         returnValueForMissingStub: _i7.Future<void>.value(),
       ) as _i7.Future<void>);
   @override
-  _i7.Future<List<_i3.ImageModel>> getImages(List<int>? ids) =>
+  _i7.Future<List<_i3.ExpressionModel>> getExpressions(List<int>? ids) =>
       (super.noSuchMethod(
         Invocation.method(
-          #getImages,
+          #getExpressions,
           [ids],
         ),
-        returnValue: _i7.Future<List<_i3.ImageModel>>.value(<_i3.ImageModel>[]),
-      ) as _i7.Future<List<_i3.ImageModel>>);
+        returnValue: _i7.Future<List<_i3.ExpressionModel>>.value(
+            <_i3.ExpressionModel>[]),
+      ) as _i7.Future<List<_i3.ExpressionModel>>);
 }
 
 /// A class which mocks [MascotsLocalDataSource].
@@ -1661,69 +1672,43 @@ class MockHiveInterface extends _i1.Mock implements _i6.HiveInterface {
       );
 }
 
-/// A class which mocks [ConvertXfileToImage].
+/// A class which mocks [GetExpression].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockConvertXfileToImage extends _i1.Mock
-    implements _i17.ConvertXfileToImage {
-  MockConvertXfileToImage() {
+class MockGetExpression extends _i1.Mock implements _i17.GetExpression {
+  MockGetExpression() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<_i5.Either<_i10.Failure, _i11.Image>> call(_i18.XFile? input) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #call,
-          [input],
-        ),
-        returnValue: _i7.Future<_i5.Either<_i10.Failure, _i11.Image>>.value(
-            _FakeEither_3<_i10.Failure, _i11.Image>(
-          this,
-          Invocation.method(
-            #call,
-            [input],
-          ),
-        )),
-      ) as _i7.Future<_i5.Either<_i10.Failure, _i11.Image>>);
-}
-
-/// A class which mocks [GetImage].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockGetImage extends _i1.Mock implements _i19.GetImage {
-  MockGetImage() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  _i7.Future<_i5.Either<_i10.Failure, _i11.Image>> call(int? params) =>
+  _i7.Future<_i5.Either<_i10.Failure, _i11.Expression>> call(int? params) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [params],
         ),
-        returnValue: _i7.Future<_i5.Either<_i10.Failure, _i11.Image>>.value(
-            _FakeEither_3<_i10.Failure, _i11.Image>(
+        returnValue:
+            _i7.Future<_i5.Either<_i10.Failure, _i11.Expression>>.value(
+                _FakeEither_3<_i10.Failure, _i11.Expression>(
           this,
           Invocation.method(
             #call,
             [params],
           ),
         )),
-      ) as _i7.Future<_i5.Either<_i10.Failure, _i11.Image>>);
+      ) as _i7.Future<_i5.Either<_i10.Failure, _i11.Expression>>);
 }
 
-/// A class which mocks [AddImage].
+/// A class which mocks [AddExpression].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAddImage extends _i1.Mock implements _i20.AddImage {
-  MockAddImage() {
+class MockAddExpression extends _i1.Mock implements _i18.AddExpression {
+  MockAddExpression() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<_i5.Either<_i10.Failure, int>> call(_i11.Image? params) =>
+  _i7.Future<_i5.Either<_i10.Failure, int>> call(_i11.Expression? params) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
@@ -1743,13 +1728,13 @@ class MockAddImage extends _i1.Mock implements _i20.AddImage {
 /// A class which mocks [MascotsRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMascotsRepository extends _i1.Mock implements _i21.MascotsRepository {
+class MockMascotsRepository extends _i1.Mock implements _i19.MascotsRepository {
   MockMascotsRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<_i5.Either<_i10.Failure, int>> addMascot(_i22.Mascot? mascot) =>
+  _i7.Future<_i5.Either<_i10.Failure, int>> addMascot(_i20.Mascot? mascot) =>
       (super.noSuchMethod(
         Invocation.method(
           #addMascot,
@@ -1765,19 +1750,19 @@ class MockMascotsRepository extends _i1.Mock implements _i21.MascotsRepository {
         )),
       ) as _i7.Future<_i5.Either<_i10.Failure, int>>);
   @override
-  _i7.Future<_i5.Either<_i10.Failure, _i22.Mascot>> getMascot(int? id) =>
+  _i7.Future<_i5.Either<_i10.Failure, _i20.Mascot>> getMascot(int? id) =>
       (super.noSuchMethod(
         Invocation.method(
           #getMascot,
           [id],
         ),
-        returnValue: _i7.Future<_i5.Either<_i10.Failure, _i22.Mascot>>.value(
-            _FakeEither_3<_i10.Failure, _i22.Mascot>(
+        returnValue: _i7.Future<_i5.Either<_i10.Failure, _i20.Mascot>>.value(
+            _FakeEither_3<_i10.Failure, _i20.Mascot>(
           this,
           Invocation.method(
             #getMascot,
             [id],
           ),
         )),
-      ) as _i7.Future<_i5.Either<_i10.Failure, _i22.Mascot>>);
+      ) as _i7.Future<_i5.Either<_i10.Failure, _i20.Mascot>>);
 }

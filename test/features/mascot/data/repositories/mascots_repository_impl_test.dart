@@ -1,7 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/error/failure.dart';
-import 'package:mascot/features/mascot/data/repositories/map_expression_to_expression_model.dart';
+import 'package:mascot/features/expressions/data/repositories/map_expression_to_expression_model.dart';
+import 'package:mascot/features/expressions/data/repositories/map_image_to_image_model.dart';
 import 'package:mascot/features/mascot/data/repositories/map_mascot_to_mascot_model.dart';
 import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl.dart';
 import 'package:mockito/mockito.dart';
@@ -15,8 +16,10 @@ void main() {
     context = TestContext();
     repository = MascotsRepositoryImpl(
       context.mocks.mascotsLocalDataSource,
-      context.mocks.imagesRepository,
-      MapMascotToMascotModel(MapExpressionToExpressionModel()),
+      context.mocks.expressionsRepository,
+      MapMascotToMascotModel(
+        MapExpressionToExpressionModel(MapImageToImageModel()),
+      ),
     );
   });
 

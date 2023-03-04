@@ -3,27 +3,29 @@
 import 'package:hive/hive.dart';
 
 import '../../../../core/clean_architecture/entity.dart';
-import '../../domain/entities/mascot.dart';
-import '../../../expressions/data/models/expression_model.dart';
+import '../../domain/entities/expression.dart';
+import 'image_model.dart';
 
-part 'mascot_model.g.dart';
+part 'expression_model.g.dart';
 
 // ignore: todo
 // TODO: uncomment when enabling Isar
 // @Collection(
 //   ignore: {'props', 'stringify'},
-//   inheritance: false,
+//   inheritance: false
 // )
-@HiveType(typeId: 2)
-class MascotModel extends Mascot {
-  const MascotModel({
+@HiveType(typeId: 3)
+class ExpressionModel extends Expression {
+  const ExpressionModel({
     required this.id,
     required this.name,
-    this.expressions = const [],
+    required this.description,
+    required this.image,
   }) : super(
           id: id,
           name: name,
-          expressions: expressions,
+          description: description,
+          image: image,
         );
 
   @HiveField(0)
@@ -36,5 +38,9 @@ class MascotModel extends Mascot {
 
   @HiveField(2)
   @override
-  final List<ExpressionModel> expressions;
+  final String description;
+
+  @HiveField(3)
+  @override
+  final ImageModel image;
 }
