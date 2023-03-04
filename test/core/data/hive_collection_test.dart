@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mascot/core/data/hive_collection.dart';
+import 'package:mascot/core/data/hive_collection_adapter.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../fixtures/test_context.dart';
 import '../../fixtures/test_model.dart';
 
-class TestHiveCollection extends HiveCollection<TestModel> {
+class TestHiveCollection extends HiveCollectionAdapter<TestModel> {
   TestHiveCollection(super.collection);
 }
 

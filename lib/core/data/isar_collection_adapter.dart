@@ -1,12 +1,12 @@
 import 'package:isar/isar.dart' as isar;
 
 import '../clean_architecture/entity.dart';
-import 'collection.dart';
+import 'collection_adapter.dart';
 
-abstract class IsarCollection<T extends Entity> implements Collection<T> {
+class IsarCollectionAdapter<T extends Entity> implements CollectionAdapter<T> {
   final isar.IsarCollection<T> collection;
 
-  IsarCollection(this.collection);
+  IsarCollectionAdapter(this.collection);
 
   @override
   Future<T> get(isar.Id? id) async {

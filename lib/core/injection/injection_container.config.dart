@@ -9,11 +9,10 @@ import 'package:get_it/get_it.dart' as _i1;
 import 'package:hive/hive.dart' as _i6;
 import 'package:hive_flutter/hive_flutter.dart' as _i4;
 import 'package:injectable/injectable.dart' as _i2;
+import 'package:mascot/core/data/collection_adapter.dart' as _i8;
 import 'package:mascot/core/utils/input_converters/convert_xfile_to_image.dart'
     as _i3;
 import 'package:mascot/core/utils/mappers/map_image_to_image_model.dart' as _i5;
-import 'package:mascot/features/images/data/datasources/images_collection.dart'
-    as _i8;
 import 'package:mascot/features/images/data/datasources/images_local_data_source.dart'
     as _i9;
 import 'package:mascot/features/images/data/models/image_model.dart' as _i7;
@@ -44,6 +43,7 @@ Future<_i1.GetIt> $init(
   );
   final hiveSingleton = _$HiveSingleton();
   final hiveImagesCollection = _$HiveImagesCollection();
+  final imagesCollectionAdapter = _$ImagesCollectionAdapter();
   gh.singleton<_i3.ConvertXfileToImage>(_i3.ConvertXfileToImage());
   await gh.factoryAsync<_i4.HiveInterface>(
     () => hiveSingleton.create(),
@@ -54,10 +54,11 @@ Future<_i1.GetIt> $init(
     () => hiveImagesCollection.create(gh<_i6.HiveInterface>()),
     preResolve: true,
   );
-  gh.lazySingleton<_i8.LocalImages>(
-      () => _i8.LocalImages(gh<_i6.Box<_i7.ImageModel>>()));
-  gh.lazySingleton<_i9.ImagesLocalDataSource>(
-      () => _i9.ImagesLocalDataSourceImpl(gh<_i8.LocalImages>()));
+  gh.lazySingleton<_i8.CollectionAdapter<_i7.ImageModel>>(
+      () => imagesCollectionAdapter.create(gh<_i6.Box<_i7.ImageModel>>()));
+  gh.lazySingleton<_i9.ImagesLocalDataSource>(() =>
+      _i9.ImagesLocalDataSourceImpl(
+          gh<_i8.CollectionAdapter<_i7.ImageModel>>()));
   gh.lazySingleton<_i10.ImagesRepository>(() => _i11.ImagesRepositoryImpl(
         gh<_i9.ImagesLocalDataSource>(),
         gh<_i5.MapImageToImageModel>(),
@@ -77,3 +78,5 @@ Future<_i1.GetIt> $init(
 class _$HiveSingleton extends _i15.HiveSingleton {}
 
 class _$HiveImagesCollection extends _i16.HiveImagesCollection {}
+
+class _$ImagesCollectionAdapter extends _i16.ImagesCollectionAdapter {}

@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mascot/core/data/isar_collection.dart';
+import 'package:mascot/core/data/isar_collection_adapter.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../fixtures/test_context.dart';
 import '../../fixtures/test_model.dart';
 
-class TestIsarCollection extends IsarCollection<TestModel> {
+class TestIsarCollection extends IsarCollectionAdapter<TestModel> {
   TestIsarCollection(super.collection);
 }
 

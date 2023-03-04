@@ -65,19 +65,4 @@ void main() {
       verify(context.mocks.hiveInterface.registerAdapter(ImageModelAdapter()));
     });
   });
-
-  group('LocalImages', () {
-    late LocalImages localImages;
-    setUp(() {
-      localImages = LocalImages(context.mocks.hiveImageBox);
-    });
-
-    test('should return hive collection', () {
-      // act
-      final collection = localImages.collection;
-
-      // assert
-      expect(collection, context.mocks.hiveImageBox);
-    });
-  });
 }

@@ -1,12 +1,12 @@
 import 'package:hive/hive.dart';
 
 import '../clean_architecture/entity.dart';
-import 'collection.dart';
+import 'collection_adapter.dart';
 
-abstract class HiveCollection<T extends Entity> implements Collection<T> {
+class HiveCollectionAdapter<T extends Entity> implements CollectionAdapter<T> {
   final Box<T> collection;
 
-  HiveCollection(this.collection);
+  HiveCollectionAdapter(this.collection);
 
   @override
   Future<T> get(Id? id) async {

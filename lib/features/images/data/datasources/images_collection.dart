@@ -2,7 +2,8 @@ import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 
-import '../../../../core/data/hive_collection.dart' as custom;
+import '../../../../core/data/collection_adapter.dart';
+import '../../../../core/data/hive_collection_adapter.dart';
 import '../models/image_model.dart';
 
 // @module // Uncomment when enabling Isar
@@ -24,7 +25,12 @@ abstract class HiveImagesCollection {
   }
 }
 
-@lazySingleton
-class LocalImages extends custom.HiveCollection<ImageModel> {
-  LocalImages(super.collection);
+@module
+abstract class ImagesCollectionAdapter {
+  @lazySingleton
+  CollectionAdapter<ImageModel> create(
+    Box<ImageModel> collection,
+  ) {
+    return HiveCollectionAdapter<ImageModel>(collection);
+  }
 }

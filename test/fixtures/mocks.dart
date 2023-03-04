@@ -1,9 +1,9 @@
 import 'package:hive/hive.dart';
 import 'package:isar/isar.dart' as isar;
 import 'package:isar/isar.dart';
+import 'package:mascot/core/data/collection_adapter.dart';
 import 'package:mascot/core/utils/input_converters/convert_xfile_to_image.dart';
 import 'package:mascot/core/utils/mappers/map_image_to_image_model.dart';
-import 'package:mascot/features/images/data/datasources/images_collection.dart';
 import 'package:mascot/features/images/data/datasources/images_local_data_source.dart';
 import 'package:mascot/features/images/data/models/image_model.dart';
 import 'package:mascot/features/images/domain/repositories/images_repository.dart';
@@ -16,6 +16,7 @@ import 'test_model.dart';
 
 @GenerateNiceMocks([
   MockSpec<Isar>(unsupportedMembers: {#txnSync, #writeTxnSync}),
+  MockSpec<CollectionAdapter<ImageModel>>(as: #MockImagesCollectionAdapter),
 ])
 @GenerateMocks([
   ImagesRepository,
@@ -23,7 +24,6 @@ import 'test_model.dart';
   isar.IsarCollection<TestModel>,
   Box<TestModel>,
   HiveInterface,
-  LocalImages,
   ConvertXfileToImage,
   MapImageToImageModel,
   GetImage,
@@ -52,11 +52,12 @@ class Mocks {
   MockBox<ImageModel>? _hiveImageBox;
   MockBox<ImageModel> get hiveImageBox => _hiveImageBox ??= MockBox();
 
+  MockImagesCollectionAdapter? _imageCollectionAdapter;
+  MockImagesCollectionAdapter get imageCollectionAdapter =>
+      _imageCollectionAdapter ??= MockImagesCollectionAdapter();
+
   MockHiveInterface? _hiveInterface;
   MockHiveInterface get hiveInterface => _hiveInterface ??= MockHiveInterface();
-
-  MockLocalImages? _mockLocalImages;
-  MockLocalImages get mockLocalImages => _mockLocalImages ??= MockLocalImages();
 
   MockConvertXfileToImage? _convertXfileToImage;
   MockConvertXfileToImage get convertXfileToImage =>
