@@ -29,4 +29,11 @@ class Expression extends EquatableEntity {
       image: image ?? this.image,
     );
   }
+
+  static Expression empty = Expression(
+    id: 0,
+    name: '',
+    description: '',
+    image: Image.empty,
+  );
 }

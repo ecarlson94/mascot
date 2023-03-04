@@ -9,4 +9,6 @@ class Image extends Equatable {
 
   @override
   List<Object?> get props => [name, data];
+
+  static Image empty = Image(name: '', data: Uint8List(0));
 }

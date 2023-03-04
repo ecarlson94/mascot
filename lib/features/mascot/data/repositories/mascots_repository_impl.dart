@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/data/failure_or_id_future.dart';
 import '../../../../core/error/failure.dart';
+import '../../../expressions/domain/entities/expression.dart';
 import '../../../expressions/domain/repositories/expressions_repository.dart';
 import '../../domain/entities/mascot.dart';
 import '../../domain/repositories/mascots_repository.dart';
@@ -24,31 +25,47 @@ class MascotsRepositoryImpl implements MascotsRepository {
 
   @override
   FailureOrMascotFuture getMascot(Id id) async {
+    Mascot mascot;
     try {
-      return Right(
-        // TODO: get images separately
-        await _localDataSource.getMascot(id),
-      );
+      mascot = await _localDataSource.getMascot(id);
     } on Exception {
       return Left(
         LocalDataSourceFailure(),
       );
     }
+
+    var expressionIds = mascot.expressions.map((e) => e.id).toList();
+    return (await _expressionsRepository.getExpressions(expressionIds)).fold(
+      (l) => Left(l),
+      (expressions) => Right(mascot.copyWith(expressions: expressions)),
+    );
   }
 
   @override
   FailureOrIdFuture addMascot(Mascot mascot) async {
-    try {
-      return Right(
-        // TODO: save images separately
-        await _localDataSource.addMascot(
-          _mapMascotToMascotModel(mascot),
-        ),
-      );
-    } on Exception {
-      return Left(
-        LocalDataSourceFailure(),
-      );
-    }
+    return (await _expressionsRepository.addExpressions(mascot.expressions))
+        .fold(
+      (l) => Left(l),
+      (ids) async => (await _expressionsRepository.getExpressions(ids)).fold(
+        (l) => Left(l),
+        (expressions) async {
+          final mascotWithExpressions = mascot.copyWith(
+            expressions: expressions
+                .map((e) => Expression.empty.copyWith(id: e.id))
+                .toList(),
+          );
+
+          try {
+            return Right(await _localDataSource.addMascot(
+              _mapMascotToMascotModel(mascotWithExpressions),
+            ));
+          } on Exception {
+            return Left(
+              LocalDataSourceFailure(),
+            );
+          }
+        },
+      ),
+    );
   }
 }
