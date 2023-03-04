@@ -9,5 +9,5 @@ abstract class MascotsRepository {
   Future<Either<Failure, Mascot>> saveMascot(Mascot mascot);
 
   /// Gets a mascot by Id
-  Future<Either<Failure, Stream<Mascot>>> getMascot(Id? id);
+  Future<Either<Failure, Mascot>> getMascot(Id? id);
 }

@@ -8,11 +8,12 @@ class Mascot extends EquatableEntity {
   final Image? blinkingFace;
   final Image? talkingBlinkingFace;
 
-  const Mascot(
-    this.name,
-    this.neutralFace,
+  const Mascot({
+    super.id,
+    required this.name,
+    required this.neutralFace,
     this.blinkingFace,
     this.talkingFace,
     this.talkingBlinkingFace,
-  );
+  });
 }

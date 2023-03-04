@@ -9,6 +9,7 @@ import 'package:mascot/features/images/data/models/image_model.dart';
 import 'package:mascot/features/images/domain/repositories/images_repository.dart';
 import 'package:mascot/features/images/domain/usecases/get_image.dart';
 import 'package:mascot/features/images/domain/usecases/save_image.dart';
+import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart';
 import 'package:mockito/annotations.dart';
 
 import 'mocks.mocks.dart';
@@ -28,6 +29,7 @@ import 'test_model.dart';
   MapImageToImageModel,
   GetImage,
   SaveImage,
+  MascotsRepository,
 ])
 class Mocks {
   MockIsar? _isar;
@@ -72,4 +74,8 @@ class Mocks {
 
   MockSaveImage? _saveImage;
   MockSaveImage get saveImage => _saveImage ??= MockSaveImage();
+
+  MockMascotsRepository? _mascotsRepository;
+  MockMascotsRepository get mascotsRepository =>
+      _mascotsRepository ??= MockMascotsRepository();
 }

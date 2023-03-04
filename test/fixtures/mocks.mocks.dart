@@ -26,6 +26,9 @@ import 'package:mascot/features/images/domain/repositories/images_repository.dar
     as _i8;
 import 'package:mascot/features/images/domain/usecases/get_image.dart' as _i18;
 import 'package:mascot/features/images/domain/usecases/save_image.dart' as _i19;
+import 'package:mascot/features/mascot/domain/entities/mascot.dart' as _i21;
+import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart'
+    as _i20;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -1605,4 +1608,47 @@ class MockSaveImage extends _i1.Mock implements _i19.SaveImage {
           ),
         )),
       ) as _i6.Future<_i4.Either<_i9.Failure, _i10.Image>>);
+}
+
+/// A class which mocks [MascotsRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockMascotsRepository extends _i1.Mock implements _i20.MascotsRepository {
+  MockMascotsRepository() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.Future<_i4.Either<_i9.Failure, _i21.Mascot>> saveMascot(
+          _i21.Mascot? mascot) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #saveMascot,
+          [mascot],
+        ),
+        returnValue: _i6.Future<_i4.Either<_i9.Failure, _i21.Mascot>>.value(
+            _FakeEither_2<_i9.Failure, _i21.Mascot>(
+          this,
+          Invocation.method(
+            #saveMascot,
+            [mascot],
+          ),
+        )),
+      ) as _i6.Future<_i4.Either<_i9.Failure, _i21.Mascot>>);
+  @override
+  _i6.Future<_i4.Either<_i9.Failure, _i21.Mascot>> getMascot(int? id) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getMascot,
+          [id],
+        ),
+        returnValue: _i6.Future<_i4.Either<_i9.Failure, _i21.Mascot>>.value(
+            _FakeEither_2<_i9.Failure, _i21.Mascot>(
+          this,
+          Invocation.method(
+            #getMascot,
+            [id],
+          ),
+        )),
+      ) as _i6.Future<_i4.Either<_i9.Failure, _i21.Mascot>>);
 }
