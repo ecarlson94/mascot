@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import 'core/injection/injection_container.dart';
-import 'features/expressions/presentation/bloc/expression_bloc.dart';
-import 'features/expressions/presentation/widgets/display_image.dart';
-import 'features/expressions/presentation/widgets/pick_image_button.dart';
+import 'features/mascot/presentation/widgets/create_mascot_fab.dart';
 
 Future main() async {
   await configureDependencies();
@@ -36,16 +33,11 @@ class MyApp extends StatelessWidget {
           const ResponsiveBreakpoint.autoScale(1700, name: 'XL'),
         ],
       ),
-      home: Scaffold(
-        body: BlocProvider(
-          create: (_) => getIt<ExpressionBloc>(),
-          child: Center(
-            child: Column(children: const [
-              PickImageButton(),
-              DisplayImage(),
-            ]),
-          ),
+      home: const Scaffold(
+        body: Center(
+          child: SizedBox.shrink(),
         ),
+        floatingActionButton: CreateMascotFab(),
       ),
     );
   }
