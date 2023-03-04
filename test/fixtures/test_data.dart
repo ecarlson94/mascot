@@ -18,6 +18,20 @@ class TestData {
         data: imageModel.data,
       );
 
+  final List<ImageModel> imageModels = [
+    ImageModel(
+      id: 3,
+      name: 'test1',
+      data: Uint8List(200),
+    ),
+    ImageModel(
+      id: 4,
+      name: 'test2',
+      data: Uint8List(200),
+    ),
+  ];
+  List<Image> get images => imageModels;
+
   XFile? _xfile;
   XFile get xfile => _xfile ??= TestXFile.fromData(
         image.data,

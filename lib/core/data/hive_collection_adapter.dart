@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 
 import '../clean_architecture/entity.dart';
+import '../error/exception.dart';
 import 'collection_adapter.dart';
 
 class HiveCollectionAdapter<T extends Entity> implements CollectionAdapter<T> {
@@ -10,11 +11,10 @@ class HiveCollectionAdapter<T extends Entity> implements CollectionAdapter<T> {
 
   @override
   Future<T> get(Id id) async {
-    var notFound = Exception('${T.toString()} not found');
-    if (id == 0) throw notFound;
-
     var item = collection.get(id);
-    if (item == null) throw notFound;
+    if (item == null) {
+      throw ArgumentException('${T.toString()} with id of $id not found');
+    }
     return item;
   }
 
@@ -24,4 +24,11 @@ class HiveCollectionAdapter<T extends Entity> implements CollectionAdapter<T> {
     await collection.put(id, item);
     return id;
   }
+
+  @override
+  Future<void> remove(Id id) => collection.delete(id);
+
+  @override
+  Future<List<T>> getMany(Iterable<Id> ids) =>
+      Future.wait(ids.map((id) => get(id)).toList());
 }

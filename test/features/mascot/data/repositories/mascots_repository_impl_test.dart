@@ -15,6 +15,7 @@ void main() {
     context = TestContext();
     repository = MascotsRepositoryImpl(
       context.mocks.mascotsLocalDataSource,
+      context.mocks.imagesRepository,
       MapMascotToMascotModel(MapExpressionToExpressionModel()),
     );
   });

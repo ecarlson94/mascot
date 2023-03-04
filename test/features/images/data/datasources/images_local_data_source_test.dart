@@ -52,5 +52,40 @@ void main() {
         },
       );
     });
+
+    group('removeImage', () {
+      test(
+        'should remove image from local database',
+        () async {
+          // arrange
+          when(context.mocks.imagesCollectionAdapter.remove(any))
+              .thenAnswer((_) async => true);
+
+          // act
+          await dataSource.removeImage(1);
+
+          // assert
+          verify(context.mocks.imagesCollectionAdapter.remove(1));
+          verifyNoMoreInteractions(context.mocks.imagesCollectionAdapter);
+        },
+      );
+    });
+
+    group('getImages', () {
+      test('should return list of ImageModels from local database', () async {
+        // arrange
+        var ids = context.data.imageModels.map((e) => e.id).toList();
+        when(context.mocks.imagesCollectionAdapter.getMany(any))
+            .thenAnswer((_) async => context.data.imageModels);
+
+        // act
+        final result = await dataSource.getImages(ids);
+
+        // assert
+        expect(result, context.data.imageModels);
+        verify(context.mocks.imagesCollectionAdapter.getMany(ids));
+        verifyNoMoreInteractions(context.mocks.imagesCollectionAdapter);
+      });
+    });
   });
 }

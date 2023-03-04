@@ -30,7 +30,6 @@ import 'test_model.dart';
   Box<TestModel>,
   HiveInterface,
   ConvertXfileToImage,
-  MapImageToImageModel,
   GetImage,
   AddImage,
   MascotsRepository,
@@ -79,10 +78,6 @@ class Mocks {
   MockConvertXfileToImage? _convertXfileToImage;
   MockConvertXfileToImage get convertXfileToImage =>
       _convertXfileToImage ??= MockConvertXfileToImage();
-
-  MockMapImageToImageModel? _mapImageToImageModel;
-  MockMapImageToImageModel get mapImageToImageModel =>
-      _mapImageToImageModel ??= MockMapImageToImageModel();
 
   MockGetImage? _getImage;
   MockGetImage get getImage => _getImage ??= MockGetImage();

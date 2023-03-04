@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
-import 'package:isar/isar.dart';
 
+import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/data/failure_or_id_future.dart';
 import '../../../../core/error/failure.dart';
 import '../../domain/entities/image.dart';
@@ -33,6 +33,38 @@ class ImagesRepositoryImpl implements ImagesRepository {
       return Right(
         await _localDataSource.addImage(_mapImageToImageModel(image)),
       );
+    } on Exception {
+      return Left(
+        LocalDataSourceFailure(),
+      );
+    }
+  }
+
+  @override
+  FailureOrImageIdsFuture addImages(List<Image> images) async {
+    var imageIds = <Id>[];
+    try {
+      for (var image in images) {
+        imageIds.add(
+          await _localDataSource.addImage(_mapImageToImageModel(image)),
+        );
+      }
+    } on Exception {
+      for (var imageId in imageIds) {
+        await _localDataSource.removeImage(imageId);
+      }
+      return Left(
+        LocalDataSourceFailure(),
+      );
+    }
+
+    return Right(imageIds);
+  }
+
+  @override
+  FailureOrImagesFuture getImages(List<Id> ids) async {
+    try {
+      return Right(await _localDataSource.getImages(ids));
     } on Exception {
       return Left(
         LocalDataSourceFailure(),

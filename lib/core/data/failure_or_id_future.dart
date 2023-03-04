@@ -4,3 +4,4 @@ import '../clean_architecture/entity.dart';
 import '../error/failure.dart';
 
 typedef FailureOrIdFuture = Future<Either<Failure, Id>>;
+typedef FailureOrImageIdsFuture = Future<Either<Failure, List<Id>>>;

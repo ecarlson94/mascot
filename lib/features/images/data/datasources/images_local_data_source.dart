@@ -10,6 +10,12 @@ abstract class ImagesLocalDataSource {
 
   /// Gets an image from the local database.
   Future<ImageModel> getImage(Id id);
+
+  /// Removes an image from the local database.
+  Future<void> removeImage(Id id);
+
+  /// Gets several images from the local database.
+  Future<List<ImageModel>> getImages(List<Id> ids);
 }
 
 @Injectable(as: ImagesLocalDataSource)
@@ -23,4 +29,10 @@ class ImagesLocalDataSourceImpl implements ImagesLocalDataSource {
 
   @override
   Future<Id> addImage(ImageModel image) => collection.add(image);
+
+  @override
+  Future<void> removeImage(Id id) => collection.remove(id);
+
+  @override
+  Future<List<ImageModel>> getImages(List<Id> ids) => collection.getMany(ids);
 }

@@ -93,6 +93,7 @@ Future<_i1.GetIt> $init(
       gh<_i11.CollectionAdapter<_i10.MascotModel>>()));
   gh.factory<_i16.MascotsRepository>(() => _i17.MascotsRepositoryImpl(
         gh<_i15.MascotsLocalDataSource>(),
+        gh<_i13.ImagesRepository>(),
         gh<_i7.MapMascotToMascotModel>(),
       ));
   gh.factory<_i18.AddImage>(() => _i18.AddImage(gh<_i13.ImagesRepository>()));

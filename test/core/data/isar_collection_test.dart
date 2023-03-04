@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/data/isar_collection_adapter.dart';
+import 'package:mascot/core/error/exception.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../fixtures/test_context.dart';
@@ -45,7 +46,7 @@ void main() {
         final call = collection.get;
 
         // assert
-        expect(() => call(1), throwsException);
+        expect(() => call(1), throwsA(isA<ArgumentException>()));
       });
 
       test('should throw Exception when id is 0', () async {
@@ -57,7 +58,7 @@ void main() {
         final call = collection.get;
 
         // assert
-        expect(() => call(0), throwsException);
+        expect(() => call(0), throwsA(isA<ArgumentException>()));
       });
     });
 
@@ -80,6 +81,58 @@ void main() {
           verifyNoMoreInteractions(context.mocks.isarTestCollection);
         },
       );
+    });
+
+    group('remove', () {
+      test('should remove item from isar database', () {
+        // arrange
+        when(context.mocks.isarTestCollection.delete(any))
+            .thenAnswer((_) async => Future.value(true));
+
+        // act
+        collection.remove(1);
+
+        // assert
+        verify(context.mocks.isarTestCollection.delete(1));
+        verifyNoMoreInteractions(context.mocks.isarTestCollection);
+      });
+    });
+
+    group('getMany', () {
+      late List<TestModel> testModels;
+      setUp(() {
+        testModels = [
+          const TestModel(id: 1, name: 'test1'),
+          const TestModel(id: 2, name: 'test2'),
+          const TestModel(id: 3, name: 'test3'),
+        ];
+      });
+
+      test('should return ImageModel list from isar database', () async {
+        // arrange
+        var ids = testModels.map((e) => e.id).toList();
+        when(context.mocks.isarTestCollection.getAll(any))
+            .thenAnswer((_) async => testModels);
+
+        // act
+        final result = await collection.getMany(ids);
+
+        // assert
+        expect(result, testModels);
+      });
+
+      test('should throw Exception when image is not found', () async {
+        // arrange
+        var ids = testModels.map((e) => e.id).toList();
+        when(context.mocks.isarTestCollection.getAll(any))
+            .thenAnswer((_) async => testModels.sublist(0, 2));
+
+        // act
+        final call = collection.getMany;
+
+        // assert
+        expect(() => call(ids), throwsA(isA<ArgumentException>()));
+      });
     });
   });
 }
