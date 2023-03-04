@@ -8,7 +8,7 @@ import '../models/image_model.dart';
 
 // @module // Uncomment when enabling Isar
 abstract class IsarImagesCollection {
-  @factoryMethod
+  @lazySingleton
   IsarCollection<ImageModel> create(Isar isar) {
     return isar.collection<ImageModel>();
   }
@@ -16,10 +16,11 @@ abstract class IsarImagesCollection {
 
 @module
 abstract class HiveImagesCollection {
+  @singleton
   @preResolve
   Future<Box<ImageModel>> create(
     HiveInterface hive,
-  ) {
+  ) async {
     hive.registerAdapter(ImageModelAdapter());
     return hive.openBox<ImageModel>('images');
   }
@@ -27,7 +28,7 @@ abstract class HiveImagesCollection {
 
 @module
 abstract class ImagesCollectionAdapter {
-  @lazySingleton
+  @factoryMethod
   CollectionAdapter<ImageModel> create(
     Box<ImageModel> collection,
   ) {

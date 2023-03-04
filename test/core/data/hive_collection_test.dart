@@ -23,97 +23,99 @@ void main() {
     when(context.mocks.hiveTestCollection.length).thenReturn(0);
   });
 
-  group('get', () {
-    test('should return ImageModel from local database', () async {
-      // act
-      final result = await collection.get(1);
+  group('HiveCollection', () {
+    group('get', () {
+      test('should return ImageModel from local database', () async {
+        // act
+        final result = await collection.get(1);
 
-      // assert
-      expect(result, model);
-      verify(context.mocks.hiveTestCollection.get(1));
-      verifyNoMoreInteractions(context.mocks.hiveTestCollection);
+        // assert
+        expect(result, model);
+        verify(context.mocks.hiveTestCollection.get(1));
+        verifyNoMoreInteractions(context.mocks.hiveTestCollection);
+      });
+
+      test('should throw Exception when image is not found', () async {
+        // arrange
+        when(context.mocks.hiveTestCollection.get(any)).thenReturn(null);
+
+        // act
+        final call = collection.get;
+
+        // assert
+        expect(() => call(1), throwsException);
+      });
+
+      test('should throw Exception when id is zero', () async {
+        // arrange
+        when(context.mocks.hiveTestCollection.get(any)).thenReturn(null);
+
+        // act
+        final call = collection.get;
+
+        // assert
+        expect(() => call(0), throwsException);
+      });
     });
 
-    test('should throw Exception when image is not found', () async {
-      // arrange
-      when(context.mocks.hiveTestCollection.get(any)).thenReturn(null);
+    group('add', () {
+      test(
+        'should return new object id from local database after saving item',
+        () async {
+          // arrange
+          when(context.mocks.hiveTestCollection.put(any, any))
+              .thenAnswer((_) async {});
 
-      // act
-      final call = collection.get;
+          // act
+          final result = await collection.add(model);
 
-      // assert
-      expect(() => call(1), throwsException);
-    });
+          // assert
+          expect(result, model.id);
+          verify(context.mocks.hiveTestCollection.put(model.id, model));
+          verifyNoMoreInteractions(context.mocks.hiveTestCollection);
+        },
+      );
 
-    test('should throw Exception when id is null', () async {
-      // arrange
-      when(context.mocks.hiveTestCollection.get(any)).thenReturn(null);
-
-      // act
-      final call = collection.get;
-
-      // assert
-      expect(() => call(null), throwsException);
-    });
-  });
-
-  group('add', () {
-    test(
-      'should return new object id from local database after saving item',
-      () async {
+      test('should not auto increment id when id is not null', () async {
         // arrange
         when(context.mocks.hiveTestCollection.put(any, any))
             .thenAnswer((_) async {});
+        when(context.mocks.hiveTestCollection.length).thenReturn(3);
 
         // act
-        final result = await collection.add(model);
+        await collection.add(model);
 
         // assert
-        expect(result, model.id);
         verify(context.mocks.hiveTestCollection.put(model.id, model));
-        verifyNoMoreInteractions(context.mocks.hiveTestCollection);
-      },
-    );
+      });
 
-    test('should not auto increment id when id is not null', () async {
-      // arrange
-      when(context.mocks.hiveTestCollection.put(any, any))
-          .thenAnswer((_) async {});
-      when(context.mocks.hiveTestCollection.length).thenReturn(3);
+      test('should auto increment id when id is 0', () async {
+        // arrange
+        when(context.mocks.hiveTestCollection.put(any, any))
+            .thenAnswer((_) async {});
+        when(context.mocks.hiveTestCollection.length).thenReturn(3);
+        var newModel = const TestModel(id: 0, name: 'test');
 
-      // act
-      await collection.add(model);
+        // act
+        await collection.add(newModel);
 
-      // assert
-      verify(context.mocks.hiveTestCollection.put(model.id, model));
-    });
+        // assert
+        verify(context.mocks.hiveTestCollection.put(4, newModel));
+      });
 
-    test('should auto increment id when id is 0', () async {
-      // arrange
-      when(context.mocks.hiveTestCollection.put(any, any))
-          .thenAnswer((_) async {});
-      when(context.mocks.hiveTestCollection.length).thenReturn(3);
-      var newModel = const TestModel(id: 0, name: 'test');
+      test('should not auto increment id when id is not 0', () async {
+        // arrange
+        when(context.mocks.hiveTestCollection.put(any, any))
+            .thenAnswer((_) async {});
+        when(context.mocks.hiveTestCollection.length).thenReturn(3);
+        var newModel = const TestModel(id: 1, name: 'test');
 
-      // act
-      await collection.add(newModel);
+        // act
+        await collection.add(newModel);
 
-      // assert
-      verify(context.mocks.hiveTestCollection.put(4, newModel));
-    });
-
-    test('should not auto increment id when id is not 0', () async {
-      // arrange
-      when(context.mocks.hiveTestCollection.put(any, any))
-          .thenAnswer((_) async {});
-      when(context.mocks.hiveTestCollection.length).thenReturn(3);
-      var newModel = const TestModel(id: 1, name: 'test');
-
-      // act
-      await collection.add(newModel);
-
-      // assert
-      verifyNever(context.mocks.hiveTestCollection.put(4, newModel));
+        // assert
+        verifyNever(context.mocks.hiveTestCollection.put(4, newModel));
+      });
     });
   });
 }

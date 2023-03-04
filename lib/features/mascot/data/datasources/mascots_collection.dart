@@ -9,7 +9,7 @@ import '../models/mascot_model.dart';
 
 // @module // Uncomment when enabling Isar
 abstract class IsarMascotsCollection {
-  @factoryMethod
+  @lazySingleton
   IsarCollection<MascotModel> create(Isar isar) {
     return isar.collection<MascotModel>();
   }
@@ -17,6 +17,7 @@ abstract class IsarMascotsCollection {
 
 @module
 abstract class HiveMascotsCollection {
+  @singleton
   @preResolve
   Future<Box<MascotModel>> create(
     HiveInterface hive,
@@ -29,7 +30,7 @@ abstract class HiveMascotsCollection {
 
 @module
 abstract class MascotsCollectionAdapter {
-  @lazySingleton
+  @factoryMethod
   CollectionAdapter<MascotModel> create(
     Box<MascotModel> collection,
   ) {

@@ -4,32 +4,34 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i7;
-import 'dart:typed_data' as _i13;
+import 'dart:typed_data' as _i14;
 
 import 'package:dartz/dartz.dart' as _i5;
 import 'package:hive/hive.dart' as _i6;
-import 'package:hive/src/box/default_compaction_strategy.dart' as _i15;
-import 'package:hive/src/box/default_key_comparator.dart' as _i14;
-import 'package:image_picker/image_picker.dart' as _i17;
+import 'package:hive/src/box/default_compaction_strategy.dart' as _i16;
+import 'package:hive/src/box/default_key_comparator.dart' as _i15;
+import 'package:image_picker/image_picker.dart' as _i18;
 import 'package:isar/isar.dart' as _i2;
 import 'package:mascot/core/data/collection_adapter.dart' as _i8;
 import 'package:mascot/core/error/failure.dart' as _i10;
 import 'package:mascot/core/utils/input_converters/convert_xfile_to_image.dart'
-    as _i16;
-import 'package:mascot/core/utils/mappers/map_image_to_image_model.dart'
-    as _i18;
+    as _i17;
 import 'package:mascot/features/images/data/datasources/images_local_data_source.dart'
     as _i12;
 import 'package:mascot/features/images/data/models/image_model.dart' as _i3;
+import 'package:mascot/features/images/data/repositories/map_image_to_image_model.dart'
+    as _i19;
 import 'package:mascot/features/images/domain/entities/image.dart' as _i11;
 import 'package:mascot/features/images/domain/repositories/images_repository.dart'
     as _i9;
-import 'package:mascot/features/images/domain/usecases/add_image.dart' as _i20;
-import 'package:mascot/features/images/domain/usecases/get_image.dart' as _i19;
+import 'package:mascot/features/images/domain/usecases/add_image.dart' as _i21;
+import 'package:mascot/features/images/domain/usecases/get_image.dart' as _i20;
+import 'package:mascot/features/mascot/data/datasources/mascots_local_data_source.dart'
+    as _i13;
 import 'package:mascot/features/mascot/data/models/mascot_model.dart' as _i4;
-import 'package:mascot/features/mascot/domain/entities/mascot.dart' as _i22;
+import 'package:mascot/features/mascot/domain/entities/mascot.dart' as _i23;
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart'
-    as _i21;
+    as _i22;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -496,6 +498,39 @@ class MockImagesLocalDataSource extends _i1.Mock
       ) as _i7.Future<_i3.ImageModel>);
 }
 
+/// A class which mocks [MascotsLocalDataSource].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockMascotsLocalDataSource extends _i1.Mock
+    implements _i13.MascotsLocalDataSource {
+  MockMascotsLocalDataSource() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i7.Future<int> addMascot(_i4.MascotModel? mascot) => (super.noSuchMethod(
+        Invocation.method(
+          #addMascot,
+          [mascot],
+        ),
+        returnValue: _i7.Future<int>.value(0),
+      ) as _i7.Future<int>);
+  @override
+  _i7.Future<_i4.MascotModel> getMascot(int? id) => (super.noSuchMethod(
+        Invocation.method(
+          #getMascot,
+          [id],
+        ),
+        returnValue: _i7.Future<_i4.MascotModel>.value(_FakeMascotModel_2(
+          this,
+          Invocation.method(
+            #getMascot,
+            [id],
+          ),
+        )),
+      ) as _i7.Future<_i4.MascotModel>);
+}
+
 /// A class which mocks [IsarCollection].
 ///
 /// See the documentation for Mockito's code generation for more information.
@@ -828,7 +863,7 @@ class MockIsarCollection<OBJ> extends _i1.Mock
         returnValueForMissingStub: null,
       );
   @override
-  _i7.Future<void> importJsonRaw(_i13.Uint8List? jsonBytes) =>
+  _i7.Future<void> importJsonRaw(_i14.Uint8List? jsonBytes) =>
       (super.noSuchMethod(
         Invocation.method(
           #importJsonRaw,
@@ -838,7 +873,7 @@ class MockIsarCollection<OBJ> extends _i1.Mock
         returnValueForMissingStub: _i7.Future<void>.value(),
       ) as _i7.Future<void>);
   @override
-  void importJsonRawSync(_i13.Uint8List? jsonBytes) => super.noSuchMethod(
+  void importJsonRawSync(_i14.Uint8List? jsonBytes) => super.noSuchMethod(
         Invocation.method(
           #importJsonRawSync,
           [jsonBytes],
@@ -1319,11 +1354,11 @@ class MockHiveInterface extends _i1.Mock implements _i6.HiveInterface {
   _i7.Future<_i6.Box<E>> openBox<E>(
     String? name, {
     _i6.HiveCipher? encryptionCipher,
-    _i6.KeyComparator? keyComparator = _i14.defaultKeyComparator,
-    _i6.CompactionStrategy? compactionStrategy = _i15.defaultCompactionStrategy,
+    _i6.KeyComparator? keyComparator = _i15.defaultKeyComparator,
+    _i6.CompactionStrategy? compactionStrategy = _i16.defaultCompactionStrategy,
     bool? crashRecovery = true,
     String? path,
-    _i13.Uint8List? bytes,
+    _i14.Uint8List? bytes,
     String? collection,
     List<int>? encryptionKey,
   }) =>
@@ -1364,8 +1399,8 @@ class MockHiveInterface extends _i1.Mock implements _i6.HiveInterface {
   _i7.Future<_i6.LazyBox<E>> openLazyBox<E>(
     String? name, {
     _i6.HiveCipher? encryptionCipher,
-    _i6.KeyComparator? keyComparator = _i14.defaultKeyComparator,
-    _i6.CompactionStrategy? compactionStrategy = _i15.defaultCompactionStrategy,
+    _i6.KeyComparator? keyComparator = _i15.defaultKeyComparator,
+    _i6.CompactionStrategy? compactionStrategy = _i16.defaultCompactionStrategy,
     bool? crashRecovery = true,
     String? path,
     String? collection,
@@ -1538,13 +1573,13 @@ class MockHiveInterface extends _i1.Mock implements _i6.HiveInterface {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockConvertXfileToImage extends _i1.Mock
-    implements _i16.ConvertXfileToImage {
+    implements _i17.ConvertXfileToImage {
   MockConvertXfileToImage() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<_i5.Either<_i10.Failure, _i11.Image>> call(_i17.XFile? input) =>
+  _i7.Future<_i5.Either<_i10.Failure, _i11.Image>> call(_i18.XFile? input) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
@@ -1565,7 +1600,7 @@ class MockConvertXfileToImage extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockMapImageToImageModel extends _i1.Mock
-    implements _i18.MapImageToImageModel {
+    implements _i19.MapImageToImageModel {
   MockMapImageToImageModel() {
     _i1.throwOnMissingStub(this);
   }
@@ -1589,7 +1624,7 @@ class MockMapImageToImageModel extends _i1.Mock
 /// A class which mocks [GetImage].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGetImage extends _i1.Mock implements _i19.GetImage {
+class MockGetImage extends _i1.Mock implements _i20.GetImage {
   MockGetImage() {
     _i1.throwOnMissingStub(this);
   }
@@ -1615,7 +1650,7 @@ class MockGetImage extends _i1.Mock implements _i19.GetImage {
 /// A class which mocks [AddImage].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAddImage extends _i1.Mock implements _i20.AddImage {
+class MockAddImage extends _i1.Mock implements _i21.AddImage {
   MockAddImage() {
     _i1.throwOnMissingStub(this);
   }
@@ -1641,13 +1676,13 @@ class MockAddImage extends _i1.Mock implements _i20.AddImage {
 /// A class which mocks [MascotsRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMascotsRepository extends _i1.Mock implements _i21.MascotsRepository {
+class MockMascotsRepository extends _i1.Mock implements _i22.MascotsRepository {
   MockMascotsRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<_i5.Either<_i10.Failure, int>> addMascot(_i22.Mascot? mascot) =>
+  _i7.Future<_i5.Either<_i10.Failure, int>> addMascot(_i23.Mascot? mascot) =>
       (super.noSuchMethod(
         Invocation.method(
           #addMascot,
@@ -1663,19 +1698,19 @@ class MockMascotsRepository extends _i1.Mock implements _i21.MascotsRepository {
         )),
       ) as _i7.Future<_i5.Either<_i10.Failure, int>>);
   @override
-  _i7.Future<_i5.Either<_i10.Failure, _i22.Mascot>> getMascot(int? id) =>
+  _i7.Future<_i5.Either<_i10.Failure, _i23.Mascot>> getMascot(int? id) =>
       (super.noSuchMethod(
         Invocation.method(
           #getMascot,
           [id],
         ),
-        returnValue: _i7.Future<_i5.Either<_i10.Failure, _i22.Mascot>>.value(
-            _FakeEither_3<_i10.Failure, _i22.Mascot>(
+        returnValue: _i7.Future<_i5.Either<_i10.Failure, _i23.Mascot>>.value(
+            _FakeEither_3<_i10.Failure, _i23.Mascot>(
           this,
           Invocation.method(
             #getMascot,
             [id],
           ),
         )),
-      ) as _i7.Future<_i5.Either<_i10.Failure, _i22.Mascot>>);
+      ) as _i7.Future<_i5.Either<_i10.Failure, _i23.Mascot>>);
 }

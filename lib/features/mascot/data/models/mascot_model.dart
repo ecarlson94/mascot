@@ -3,8 +3,8 @@
 import 'package:hive/hive.dart';
 
 import '../../../../core/clean_architecture/entity.dart';
-import '../../domain/entities/expression.dart';
 import '../../domain/entities/mascot.dart';
+import 'expression_model.dart';
 
 part 'mascot_model.g.dart';
 
@@ -36,5 +36,5 @@ class MascotModel extends Mascot {
 
   @HiveField(2)
   @override
-  final List<Expression> expressions;
+  final List<ExpressionModel> expressions;
 }

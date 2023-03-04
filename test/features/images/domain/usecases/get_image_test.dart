@@ -14,17 +14,20 @@ void main() {
     usecase = GetImage(context.mocks.imagesRepository);
   });
 
-  test('should get the requested image from the repository', () async {
-    // arrange
-    when(context.mocks.imagesRepository.getImage(any))
-        .thenAnswer((_) async => Right(context.data.image));
+  test(
+    'GetImage usecase should get the requested image from the repository',
+    () async {
+      // arrange
+      when(context.mocks.imagesRepository.getImage(any))
+          .thenAnswer((_) async => Right(context.data.image));
 
-    // act
-    final result = await usecase(context.data.image.id);
+      // act
+      final result = await usecase(context.data.image.id);
 
-    // assert
-    expect(result, Right(context.data.image));
-    verify(context.mocks.imagesRepository.getImage(context.data.image.id));
-    verifyNoMoreInteractions(context.mocks.imagesRepository);
-  });
+      // assert
+      expect(result, Right(context.data.image));
+      verify(context.mocks.imagesRepository.getImage(context.data.image.id));
+      verifyNoMoreInteractions(context.mocks.imagesRepository);
+    },
+  );
 }

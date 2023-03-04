@@ -7,7 +7,7 @@ import '../../../../core/error/failure.dart';
 import '../entities/mascot.dart';
 import '../repositories/mascots_repository.dart';
 
-@lazySingleton
+@injectable
 class GetMascot extends UseCase<Mascot, Id> {
   final MascotsRepository _mascotsRepository;
 

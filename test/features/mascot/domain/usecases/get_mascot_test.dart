@@ -14,7 +14,7 @@ void main() {
     usecase = GetMascot(context.mocks.mascotsRepository);
   });
 
-  test('should get the mascot from the repository', () async {
+  test('GetMascot usecase should get the mascot from the repository', () async {
     // arrange
     when(context.mocks.mascotsRepository.getMascot(any))
         .thenAnswer((_) async => Right(context.data.mascot));

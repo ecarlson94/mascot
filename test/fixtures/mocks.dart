@@ -3,12 +3,13 @@ import 'package:isar/isar.dart' as isar;
 import 'package:isar/isar.dart';
 import 'package:mascot/core/data/collection_adapter.dart';
 import 'package:mascot/core/utils/input_converters/convert_xfile_to_image.dart';
-import 'package:mascot/core/utils/mappers/map_image_to_image_model.dart';
+import 'package:mascot/features/images/data/repositories/map_image_to_image_model.dart';
 import 'package:mascot/features/images/data/datasources/images_local_data_source.dart';
 import 'package:mascot/features/images/data/models/image_model.dart';
 import 'package:mascot/features/images/domain/repositories/images_repository.dart';
 import 'package:mascot/features/images/domain/usecases/get_image.dart';
 import 'package:mascot/features/images/domain/usecases/add_image.dart';
+import 'package:mascot/features/mascot/data/datasources/mascots_local_data_source.dart';
 import 'package:mascot/features/mascot/data/models/mascot_model.dart';
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart';
 import 'package:mockito/annotations.dart';
@@ -24,6 +25,7 @@ import 'test_model.dart';
 @GenerateMocks([
   ImagesRepository,
   ImagesLocalDataSource,
+  MascotsLocalDataSource,
   isar.IsarCollection<TestModel>,
   Box<TestModel>,
   HiveInterface,
@@ -44,6 +46,10 @@ class Mocks {
   MockImagesLocalDataSource? _imagesLocalDataSource;
   MockImagesLocalDataSource get imagesLocalDataSource =>
       _imagesLocalDataSource ??= MockImagesLocalDataSource();
+
+  MockMascotsLocalDataSource? _mascotsLocalDataSource;
+  MockMascotsLocalDataSource get mascotsLocalDataSource =>
+      _mascotsLocalDataSource ??= MockMascotsLocalDataSource();
 
   MockIsarCollection<TestModel>? _isarTestCollection;
   MockIsarCollection<TestModel> get isarTestCollection =>

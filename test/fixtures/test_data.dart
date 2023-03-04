@@ -3,8 +3,8 @@ import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 import 'package:mascot/features/images/data/models/image_model.dart';
 import 'package:mascot/features/images/domain/entities/image.dart';
+import 'package:mascot/features/mascot/data/models/expression_model.dart';
 import 'package:mascot/features/mascot/data/models/mascot_model.dart';
-import 'package:mascot/features/mascot/domain/entities/expression.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
 
 import 'test_x_file.dart';
@@ -28,7 +28,7 @@ class TestData {
     id: 1,
     name: 'test',
     expressions: [
-      Expression(
+      ExpressionModel(
         name: 'neutral',
         description: 'this expression is neutral',
         image: Image(
@@ -37,7 +37,7 @@ class TestData {
           data: Uint8List(200),
         ),
       ),
-      Expression(
+      ExpressionModel(
         name: 'talking',
         description: 'this expression is talking',
         image: Image(

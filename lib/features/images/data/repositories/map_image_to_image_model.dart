@@ -1,10 +1,10 @@
 import 'package:injectable/injectable.dart';
 
-import '../../../features/images/data/models/image_model.dart';
-import '../../../features/images/domain/entities/image.dart';
-import 'mapper.dart';
+import '../../../../core/data/mapper.dart';
+import '../../domain/entities/image.dart';
+import '../models/image_model.dart';
 
-@singleton
+@injectable
 class MapImageToImageModel extends Mapper<Image, ImageModel> {
   @override
   ImageModel call(Image input) {

@@ -26,7 +26,7 @@ class SetImageEvent extends ImageEvent {
 }
 
 class GetImageEvent extends ImageEvent {
-  final Id? id;
+  final Id id;
 
   const GetImageEvent({required this.id});
 

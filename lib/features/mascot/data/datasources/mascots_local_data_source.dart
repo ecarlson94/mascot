@@ -4,22 +4,22 @@ import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/data/collection_adapter.dart';
 import '../models/mascot_model.dart';
 
-abstract class MascotLocalDataSource {
+abstract class MascotsLocalDataSource {
   /// Saves a mascot to the local database.
   Future<Id> addMascot(MascotModel mascot);
 
   /// Gets a mascot from the local database.
-  Future<MascotModel> getMascot(Id? id);
+  Future<MascotModel> getMascot(Id id);
 }
 
-@LazySingleton(as: MascotLocalDataSource)
-class MascotsLocalDataSourceImpl implements MascotLocalDataSource {
+@Injectable(as: MascotsLocalDataSource)
+class MascotsLocalDataSourceImpl implements MascotsLocalDataSource {
   final CollectionAdapter<MascotModel> collection;
 
   MascotsLocalDataSourceImpl(this.collection);
 
   @override
-  Future<MascotModel> getMascot(Id? id) => collection.get(id);
+  Future<MascotModel> getMascot(Id id) => collection.get(id);
 
   @override
   Future<Id> addMascot(MascotModel mascot) => collection.add(mascot);

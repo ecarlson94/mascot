@@ -72,7 +72,7 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
   }
 
   Future<void> _loadImage(
-    Id? id,
+    Id id,
     Emitter<ImageState> emit,
   ) async {
     emit(GettingImage());

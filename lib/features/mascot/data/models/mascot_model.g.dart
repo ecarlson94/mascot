@@ -19,7 +19,7 @@ class MascotModelAdapter extends TypeAdapter<MascotModel> {
     return MascotModel(
       id: fields[0] as int,
       name: fields[1] as String,
-      expressions: (fields[2] as List).cast<Expression>(),
+      expressions: (fields[2] as List).cast<ExpressionModel>(),
     );
   }
 

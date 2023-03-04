@@ -9,9 +9,9 @@ class IsarCollectionAdapter<T extends Entity> implements CollectionAdapter<T> {
   IsarCollectionAdapter(this.collection);
 
   @override
-  Future<T> get(isar.Id? id) async {
+  Future<T> get(isar.Id id) async {
     var notFound = Exception('${T.toString()} not found');
-    if (id == null) throw notFound;
+    if (id == 0) throw notFound;
 
     var item = await collection.get(id);
     if (item == null) throw notFound;
