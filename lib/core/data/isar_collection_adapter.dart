@@ -19,8 +19,7 @@ class IsarCollectionAdapter<T extends Entity> implements CollectionAdapter<T> {
   }
 
   @override
-  Future<T> save(T item) async {
-    var newId = await collection.put(item);
-    return get(newId);
+  Future<Id> add(T item) async {
+    return await collection.put(item);
   }
 }

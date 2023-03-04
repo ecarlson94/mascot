@@ -16,6 +16,7 @@ class ConvertXfileToImage extends InputConverter<XFile, Image> {
 
     return Right(
       Image(
+        id: 0,
         name: input.name,
         data: data,
       ),

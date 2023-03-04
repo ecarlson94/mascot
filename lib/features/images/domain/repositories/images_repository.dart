@@ -4,11 +4,13 @@ import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/error/failure.dart';
 import '../entities/image.dart';
 
+typedef FailureOrImageFuture = Future<Either<Failure, Image>>;
+typedef FailureOrIdFuture = Future<Either<Failure, Id>>;
+
 abstract class ImagesRepository {
   /// Saves an image
-  Future<Either<Failure, Image>> saveImage(Image image);
+  FailureOrIdFuture addImage(Image image);
 
   /// Gets an image by id
-  // TODO: change to stream
-  Future<Either<Failure, Image>> getImage(Id? id);
+  FailureOrImageFuture getImage(Id? id);
 }

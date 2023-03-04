@@ -1,30 +1,30 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mascot/features/mascot/domain/usecases/save_mascot.dart';
+import 'package:mascot/features/mascot/domain/usecases/add_mascot.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../../fixtures/test_context.dart';
 
 void main() {
   late TestContext context;
-  late SaveMascot usecase;
+  late AddMascot usecase;
 
   setUp(() {
     context = TestContext();
-    usecase = SaveMascot(context.mocks.mascotsRepository);
+    usecase = AddMascot(context.mocks.mascotsRepository);
   });
 
-  test('should save the provided mascot to the repository', () async {
+  test('should add the provided mascot to the repository', () async {
     // arrange
-    when(context.mocks.mascotsRepository.saveMascot(any))
-        .thenAnswer((_) async => Right(context.data.mascot));
+    when(context.mocks.mascotsRepository.addMascot(any))
+        .thenAnswer((_) async => Right(context.data.mascot.id));
 
     // act
     final result = await usecase(context.data.mascot);
 
     // assert
-    expect(result, Right(context.data.mascot));
-    verify(context.mocks.mascotsRepository.saveMascot(context.data.mascot));
+    expect(result, Right(context.data.mascot.id));
+    verify(context.mocks.mascotsRepository.addMascot(context.data.mascot));
     verifyNoMoreInteractions(context.mocks.mascotsRepository);
   });
 }

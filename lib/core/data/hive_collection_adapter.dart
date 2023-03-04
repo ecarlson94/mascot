@@ -19,10 +19,9 @@ class HiveCollectionAdapter<T extends Entity> implements CollectionAdapter<T> {
   }
 
   @override
-  Future<T> save(T item) async {
-    var id = item.id ?? collection.length + 1;
+  Future<Id> add(T item) async {
+    var id = item.id == 0 ? collection.length + 1 : item.id;
     await collection.put(id, item);
-
-    return await get(id);
+    return id;
   }
 }

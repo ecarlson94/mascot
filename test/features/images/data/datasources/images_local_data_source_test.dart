@@ -31,21 +31,22 @@ void main() {
     });
   });
 
-  group('saveImage', () {
+  group('addImage', () {
     test(
-      'should return ImageModel from local database after saving image to database',
+      'should return new image id from local database after adding image to database',
       () async {
         // arrange
-        when(context.mocks.imageCollectionAdapter.save(any))
-            .thenAnswer((_) async => context.data.imageModel);
+        var id = 1;
+        when(context.mocks.imageCollectionAdapter.add(any))
+            .thenAnswer((_) async => id);
 
         // act
-        final result = await dataSource.saveImage(context.data.imageModel);
+        final result = await dataSource.addImage(context.data.imageModel);
 
         // assert
-        expect(result, context.data.imageModel);
+        expect(result, equals(id));
         verify(
-            context.mocks.imageCollectionAdapter.save(context.data.imageModel));
+            context.mocks.imageCollectionAdapter.add(context.data.imageModel));
         verifyNoMoreInteractions(context.mocks.imageCollectionAdapter);
       },
     );

@@ -8,7 +8,8 @@ import 'package:mascot/features/images/data/datasources/images_local_data_source
 import 'package:mascot/features/images/data/models/image_model.dart';
 import 'package:mascot/features/images/domain/repositories/images_repository.dart';
 import 'package:mascot/features/images/domain/usecases/get_image.dart';
-import 'package:mascot/features/images/domain/usecases/save_image.dart';
+import 'package:mascot/features/images/domain/usecases/add_image.dart';
+import 'package:mascot/features/mascot/data/models/mascot_model.dart';
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart';
 import 'package:mockito/annotations.dart';
 
@@ -28,7 +29,7 @@ import 'test_model.dart';
   ConvertXfileToImage,
   MapImageToImageModel,
   GetImage,
-  SaveImage,
+  AddImage,
   MascotsRepository,
 ])
 class Mocks {
@@ -54,6 +55,9 @@ class Mocks {
   MockBox<ImageModel>? _hiveImageBox;
   MockBox<ImageModel> get hiveImageBox => _hiveImageBox ??= MockBox();
 
+  MockBox<MascotModel>? _hiveMascotBox;
+  MockBox<MascotModel> get hiveMascotBox => _hiveMascotBox ??= MockBox();
+
   MockImagesCollectionAdapter? _imageCollectionAdapter;
   MockImagesCollectionAdapter get imageCollectionAdapter =>
       _imageCollectionAdapter ??= MockImagesCollectionAdapter();
@@ -72,8 +76,8 @@ class Mocks {
   MockGetImage? _getImage;
   MockGetImage get getImage => _getImage ??= MockGetImage();
 
-  MockSaveImage? _saveImage;
-  MockSaveImage get saveImage => _saveImage ??= MockSaveImage();
+  MockAddImage? _addImage;
+  MockAddImage get addImage => _addImage ??= MockAddImage();
 
   MockMascotsRepository? _mascotsRepository;
   MockMascotsRepository get mascotsRepository =>

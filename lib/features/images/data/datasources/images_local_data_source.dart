@@ -6,7 +6,7 @@ import '../models/image_model.dart';
 
 abstract class ImagesLocalDataSource {
   /// Saves an image to the local database.
-  Future<ImageModel> saveImage(ImageModel image);
+  Future<Id> addImage(ImageModel image);
 
   /// Gets an image from the local database.
   Future<ImageModel> getImage(Id? id);
@@ -24,5 +24,5 @@ class ImagesLocalDataSourceImpl implements ImagesLocalDataSource {
   }
 
   @override
-  Future<ImageModel> saveImage(ImageModel image) => collection.save(image);
+  Future<Id> addImage(ImageModel image) => collection.add(image);
 }

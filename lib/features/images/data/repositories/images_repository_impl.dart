@@ -8,8 +8,6 @@ import '../../domain/entities/image.dart';
 import '../../domain/repositories/images_repository.dart';
 import '../datasources/images_local_data_source.dart';
 
-typedef FailureOrImageFuture = Future<Either<Failure, Image>>;
-
 @LazySingleton(as: ImagesRepository)
 class ImagesRepositoryImpl implements ImagesRepository {
   final ImagesLocalDataSource _localDataSource;
@@ -29,10 +27,10 @@ class ImagesRepositoryImpl implements ImagesRepository {
   }
 
   @override
-  FailureOrImageFuture saveImage(Image image) async {
+  FailureOrIdFuture addImage(Image image) async {
     try {
       return Right(
-        await _localDataSource.saveImage(_mapImageToImageModel(image)),
+        await _localDataSource.addImage(_mapImageToImageModel(image)),
       );
     } on Exception {
       return Left(

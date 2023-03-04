@@ -8,12 +8,12 @@ import '../entities/mascot.dart';
 import '../repositories/mascots_repository.dart';
 
 @lazySingleton
-class GetMascot extends UseCase<Mascot, Id> {
+class AddMascot implements UseCase<Id, Mascot> {
   final MascotsRepository _mascotsRepository;
 
-  GetMascot(this._mascotsRepository);
+  AddMascot(this._mascotsRepository);
 
   @override
-  Future<Either<Failure, Mascot>> call(Id params) =>
-      _mascotsRepository.getMascot(params);
+  Future<Either<Failure, Id>> call(Mascot mascot) =>
+      _mascotsRepository.addMascot(mascot);
 }

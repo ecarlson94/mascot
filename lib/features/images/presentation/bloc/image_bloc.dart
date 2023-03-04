@@ -9,29 +9,33 @@ import '../../../../core/error/failure.dart';
 import '../../../../core/utils/input_converters/convert_xfile_to_image.dart';
 import '../../../../core/utils/input_converters/input_converter.dart';
 import '../../domain/entities/image.dart';
+import '../../domain/usecases/add_image.dart';
 import '../../domain/usecases/get_image.dart';
-import '../../domain/usecases/save_image.dart';
 
 part 'image_event.dart';
 part 'image_state.dart';
 
 const int invalidXfileFailureCode = 100;
-const int saveImageFailureCode = 101;
+const int addImageFailureCode = 101;
 const int getImageFailureCode = 102;
 
 @injectable
 class ImageBloc extends Bloc<ImageEvent, ImageState> {
+  final GetImage getImage;
+  final AddImage addImage;
+  final ConvertXfileToImage convertXfileToImage;
+
   ImageBloc(
-    GetImage getImage,
-    SaveImage saveImage,
-    ConvertXfileToImage convertXfileToImage,
+    this.getImage,
+    this.addImage,
+    this.convertXfileToImage,
   ) : super(ImageInitial()) {
     on<ImageEvent>(
       (event, emit) async {
         if (event is SaveImageEvent) {
-          await _saveImage(convertXfileToImage, event, emit, saveImage);
+          await _addImage(event.image, emit);
         } else if (event is GetImageEvent) {
-          await _getImage(emit, getImage, event);
+          await _loadImage(event.id, emit);
         } else if (event is SetImageEvent) {
           emit(ImageLoaded(event.image));
         }
@@ -39,20 +43,18 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
     );
   }
 
-  Future<void> _saveImage(
-    ConvertXfileToImage convertXfileToImage,
-    SaveImageEvent event,
+  Future<void> _addImage(
+    XFile image,
     Emitter<ImageState> emit,
-    SaveImage saveImage,
   ) async {
-    var failureOrImage = await convertXfileToImage(event.image);
+    var failureOrImage = await convertXfileToImage(image);
     await failureOrImage.fold(
       (l) async => emit(_mapSaveImageFailureToSaveImageError(l)),
-      (r) async {
+      (image) async {
         emit(SavingImage());
-        return (await saveImage(r)).fold(
+        return (await addImage(image)).fold(
           (l) => emit(_mapSaveImageFailureToSaveImageError(l)),
-          (r) => emit(ImageLoaded(r)),
+          (id) async => _loadImage(id, emit),
         );
       },
     );
@@ -63,21 +65,20 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
       case InvalidInputFailure:
         return const SaveImageError(invalidXfileFailureCode);
       case LocalDataSourceFailure:
-        return const SaveImageError(saveImageFailureCode);
+        return const SaveImageError(addImageFailureCode);
       default:
         return const SaveImageError(0);
     }
   }
 
-  Future<void> _getImage(
+  Future<void> _loadImage(
+    Id? id,
     Emitter<ImageState> emit,
-    GetImage getImage,
-    GetImageEvent event,
   ) async {
     emit(GettingImage());
-    (await getImage(event.id)).fold(
+    (await getImage(id)).fold(
       (l) => emit(_mapGetImageFailureToGetImageError(l)),
-      (r) => emit(ImageLoaded(r)),
+      (image) => emit(ImageLoaded(image)),
     );
   }
 }

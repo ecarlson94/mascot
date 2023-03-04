@@ -1,6 +1,6 @@
-import 'package:isar/isar.dart';
+import '../clean_architecture/entity.dart';
 
 abstract class CollectionAdapter<T> {
   Future<T> get(Id? id);
-  Future<T> save(T item);
+  Future<Id> add(T item);
 }

@@ -1,30 +1,30 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'image_model.dart';
+part of 'mascot_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class ImageModelAdapter extends TypeAdapter<ImageModel> {
+class MascotModelAdapter extends TypeAdapter<MascotModel> {
   @override
-  final int typeId = 0;
+  final int typeId = 2;
 
   @override
-  ImageModel read(BinaryReader reader) {
+  MascotModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return ImageModel(
+    return MascotModel(
       id: fields[0] as int,
       name: fields[1] as String,
-      data: fields[2] as Uint8List,
+      expressions: (fields[2] as List).cast<Expression>(),
     );
   }
 
   @override
-  void write(BinaryWriter writer, ImageModel obj) {
+  void write(BinaryWriter writer, MascotModel obj) {
     writer
       ..writeByte(3)
       ..writeByte(0)
@@ -32,7 +32,7 @@ class ImageModelAdapter extends TypeAdapter<ImageModel> {
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.data);
+      ..write(obj.expressions);
   }
 
   @override
@@ -41,7 +41,7 @@ class ImageModelAdapter extends TypeAdapter<ImageModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ImageModelAdapter &&
+      other is MascotModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

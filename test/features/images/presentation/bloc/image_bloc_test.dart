@@ -18,7 +18,7 @@ void main() {
     context = TestContext();
     bloc = ImageBloc(
       context.mocks.getImage,
-      context.mocks.saveImage,
+      context.mocks.addImage,
       context.mocks.convertXfileToImage,
     );
   });
@@ -31,8 +31,8 @@ void main() {
   void setupMockInputConverterSuccess() =>
       when(context.mocks.convertXfileToImage(any))
           .thenAnswer((_) async => Right(context.data.image));
-  void setupMockSaveImageSuccess() => when(context.mocks.saveImage(any))
-      .thenAnswer((_) async => Right(context.data.image));
+  void setupMockSaveImageSuccess() => when(context.mocks.addImage(any))
+      .thenAnswer((_) async => Right(context.data.image.id));
   void setupMockGetImageSuccess() => when(context.mocks.getImage(any))
       .thenAnswer((_) async => Right(context.data.image));
 
@@ -42,6 +42,7 @@ void main() {
       build: () {
         setupMockInputConverterSuccess();
         setupMockSaveImageSuccess();
+        setupMockGetImageSuccess();
         return bloc;
       },
       act: (bloc) => bloc.add(SaveImageEvent(image: context.data.xfile)),
@@ -49,6 +50,7 @@ void main() {
         verify(context.mocks.convertXfileToImage(context.data.xfile));
         return [
           SavingImage(),
+          GettingImage(),
           ImageLoaded(context.data.image),
         ];
       },
@@ -66,11 +68,12 @@ void main() {
     );
 
     blocTest(
-      'should emit [SavingImage, ImageLoaded] when data is retrieved succfully',
+      'should emit [SavingImage, GettingImage, ImageLoaded] when data is retrieved successfully',
       build: () {
         setupMockInputConverterSuccess();
-        when(context.mocks.saveImage(any))
-            .thenAnswer((_) async => Right(context.data.image));
+        when(context.mocks.addImage(any))
+            .thenAnswer((_) async => Right(context.data.image.id));
+        setupMockGetImageSuccess();
         return bloc;
       },
       act: (bloc) {
@@ -78,31 +81,32 @@ void main() {
       },
       expect: () {
         verify(context.mocks.convertXfileToImage(context.data.xfile));
-        verify(context.mocks.saveImage(context.data.image));
+        verify(context.mocks.addImage(context.data.image));
         return [
           SavingImage(),
+          GettingImage(),
           ImageLoaded(context.data.image),
         ];
       },
     );
 
     blocTest(
-      'should emit [SavingImage, ImageSaveError($saveImageFailureCode)] when data retrieval from the local data source fails',
+      'should emit [SavingImage, ImageSaveError($addImageFailureCode)] when data retrieval from the local data source fails',
       build: () {
         setupMockInputConverterSuccess();
-        when(context.mocks.saveImage(any))
+        when(context.mocks.addImage(any))
             .thenAnswer((_) async => Left(LocalDataSourceFailure()));
         return bloc;
       },
       act: (bloc) => bloc.add(SaveImageEvent(image: context.data.xfile)),
-      expect: () => [SavingImage(), const SaveImageError(saveImageFailureCode)],
+      expect: () => [SavingImage(), const SaveImageError(addImageFailureCode)],
     );
 
     blocTest(
       'should emit [SavingImage, ImageSaveError(0)] after validation when an unkown failure occurs',
       build: () {
         setupMockInputConverterSuccess();
-        when(context.mocks.saveImage(any))
+        when(context.mocks.addImage(any))
             .thenAnswer((_) async => Left(EmptyFailure()));
         return bloc;
       },

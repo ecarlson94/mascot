@@ -12,14 +12,5 @@ void main() {
       // assert
       expect(entity.props.first, id);
     });
-
-    test('set id should throw exception', () {
-      //arrange
-      const id = 1;
-      const entity = TestEntity(name: 'name', id: id);
-
-      // assert
-      expect(() => entity.id = 2, throwsException);
-    });
   });
 }

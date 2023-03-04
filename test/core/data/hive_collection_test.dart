@@ -57,23 +57,20 @@ void main() {
     });
   });
 
-  group('save', () {
+  group('add', () {
     test(
-      'should return ImageModel from local database after saving image',
+      'should return new object id from local database after saving item',
       () async {
         // arrange
         when(context.mocks.hiveTestCollection.put(any, any))
             .thenAnswer((_) async {});
 
         // act
-        final result = await collection.save(model);
+        final result = await collection.add(model);
 
         // assert
-        expect(result, model);
-        verifyInOrder([
-          context.mocks.hiveTestCollection.put(model.id, model),
-          context.mocks.hiveTestCollection.get(model.id),
-        ]);
+        expect(result, model.id);
+        verify(context.mocks.hiveTestCollection.put(model.id, model));
         verifyNoMoreInteractions(context.mocks.hiveTestCollection);
       },
     );
@@ -85,24 +82,38 @@ void main() {
       when(context.mocks.hiveTestCollection.length).thenReturn(3);
 
       // act
-      await collection.save(model);
+      await collection.add(model);
 
       // assert
       verify(context.mocks.hiveTestCollection.put(model.id, model));
     });
 
-    test('should auto increment id when id is null', () async {
+    test('should auto increment id when id is 0', () async {
       // arrange
       when(context.mocks.hiveTestCollection.put(any, any))
           .thenAnswer((_) async {});
       when(context.mocks.hiveTestCollection.length).thenReturn(3);
-      var newModel = const TestModel(id: null, name: 'test');
+      var newModel = const TestModel(id: 0, name: 'test');
 
       // act
-      await collection.save(newModel);
+      await collection.add(newModel);
 
       // assert
       verify(context.mocks.hiveTestCollection.put(4, newModel));
+    });
+
+    test('should not auto increment id when id is not 0', () async {
+      // arrange
+      when(context.mocks.hiveTestCollection.put(any, any))
+          .thenAnswer((_) async {});
+      when(context.mocks.hiveTestCollection.length).thenReturn(3);
+      var newModel = const TestModel(id: 1, name: 'test');
+
+      // act
+      await collection.add(newModel);
+
+      // assert
+      verifyNever(context.mocks.hiveTestCollection.put(4, newModel));
     });
   });
 }

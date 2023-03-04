@@ -34,8 +34,9 @@ void main() {
         result,
         Right(
           Image(
-            name: context.data.image.name,
-            data: context.data.image.data,
+            id: 0,
+            name: context.data.xfile.name,
+            data: await context.data.xfile.readAsBytes(),
           ),
         ),
       );

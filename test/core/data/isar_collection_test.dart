@@ -60,7 +60,7 @@ void main() {
     });
   });
 
-  group('save', () {
+  group('add', () {
     test(
       'should return ImageModel from local database after saving image to database',
       () async {
@@ -71,14 +71,11 @@ void main() {
             .thenAnswer((_) async => model);
 
         // act
-        final result = await collection.save(model);
+        final result = await collection.add(model);
 
         // assert
-        expect(result, model);
-        verifyInOrder([
-          context.mocks.isarTestCollection.put(model),
-          context.mocks.isarTestCollection.get(1),
-        ]);
+        expect(result, model.id);
+        verify(context.mocks.isarTestCollection.put(model));
         verifyNoMoreInteractions(context.mocks.isarTestCollection);
       },
     );

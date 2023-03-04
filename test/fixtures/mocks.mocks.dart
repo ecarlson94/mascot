@@ -24,8 +24,8 @@ import 'package:mascot/features/images/data/models/image_model.dart' as _i3;
 import 'package:mascot/features/images/domain/entities/image.dart' as _i10;
 import 'package:mascot/features/images/domain/repositories/images_repository.dart'
     as _i8;
+import 'package:mascot/features/images/domain/usecases/add_image.dart' as _i19;
 import 'package:mascot/features/images/domain/usecases/get_image.dart' as _i18;
-import 'package:mascot/features/images/domain/usecases/save_image.dart' as _i19;
 import 'package:mascot/features/mascot/domain/entities/mascot.dart' as _i21;
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart'
     as _i20;
@@ -362,27 +362,14 @@ class MockImagesCollectionAdapter extends _i1.Mock
         )),
       ) as _i6.Future<_i3.ImageModel>);
   @override
-  _i6.Future<_i3.ImageModel> save(_i3.ImageModel? item) => (super.noSuchMethod(
+  _i6.Future<int> add(_i3.ImageModel? item) => (super.noSuchMethod(
         Invocation.method(
-          #save,
+          #add,
           [item],
         ),
-        returnValue: _i6.Future<_i3.ImageModel>.value(_FakeImageModel_1(
-          this,
-          Invocation.method(
-            #save,
-            [item],
-          ),
-        )),
-        returnValueForMissingStub:
-            _i6.Future<_i3.ImageModel>.value(_FakeImageModel_1(
-          this,
-          Invocation.method(
-            #save,
-            [item],
-          ),
-        )),
-      ) as _i6.Future<_i3.ImageModel>);
+        returnValue: _i6.Future<int>.value(0),
+        returnValueForMissingStub: _i6.Future<int>.value(0),
+      ) as _i6.Future<int>);
 }
 
 /// A class which mocks [ImagesRepository].
@@ -394,22 +381,21 @@ class MockImagesRepository extends _i1.Mock implements _i8.ImagesRepository {
   }
 
   @override
-  _i6.Future<_i4.Either<_i9.Failure, _i10.Image>> saveImage(
-          _i10.Image? image) =>
+  _i6.Future<_i4.Either<_i9.Failure, int>> addImage(_i10.Image? image) =>
       (super.noSuchMethod(
         Invocation.method(
-          #saveImage,
+          #addImage,
           [image],
         ),
-        returnValue: _i6.Future<_i4.Either<_i9.Failure, _i10.Image>>.value(
-            _FakeEither_2<_i9.Failure, _i10.Image>(
+        returnValue: _i6.Future<_i4.Either<_i9.Failure, int>>.value(
+            _FakeEither_2<_i9.Failure, int>(
           this,
           Invocation.method(
-            #saveImage,
+            #addImage,
             [image],
           ),
         )),
-      ) as _i6.Future<_i4.Either<_i9.Failure, _i10.Image>>);
+      ) as _i6.Future<_i4.Either<_i9.Failure, int>>);
   @override
   _i6.Future<_i4.Either<_i9.Failure, _i10.Image>> getImage(int? id) =>
       (super.noSuchMethod(
@@ -438,20 +424,13 @@ class MockImagesLocalDataSource extends _i1.Mock
   }
 
   @override
-  _i6.Future<_i3.ImageModel> saveImage(_i3.ImageModel? image) =>
-      (super.noSuchMethod(
+  _i6.Future<int> addImage(_i3.ImageModel? image) => (super.noSuchMethod(
         Invocation.method(
-          #saveImage,
+          #addImage,
           [image],
         ),
-        returnValue: _i6.Future<_i3.ImageModel>.value(_FakeImageModel_1(
-          this,
-          Invocation.method(
-            #saveImage,
-            [image],
-          ),
-        )),
-      ) as _i6.Future<_i3.ImageModel>);
+        returnValue: _i6.Future<int>.value(0),
+      ) as _i6.Future<int>);
   @override
   _i6.Future<_i3.ImageModel> getImage(int? id) => (super.noSuchMethod(
         Invocation.method(
@@ -1584,30 +1563,30 @@ class MockGetImage extends _i1.Mock implements _i18.GetImage {
       ) as _i6.Future<_i4.Either<_i9.Failure, _i10.Image>>);
 }
 
-/// A class which mocks [SaveImage].
+/// A class which mocks [AddImage].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSaveImage extends _i1.Mock implements _i19.SaveImage {
-  MockSaveImage() {
+class MockAddImage extends _i1.Mock implements _i19.AddImage {
+  MockAddImage() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.Future<_i4.Either<_i9.Failure, _i10.Image>> call(_i10.Image? params) =>
+  _i6.Future<_i4.Either<_i9.Failure, int>> call(_i10.Image? params) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [params],
         ),
-        returnValue: _i6.Future<_i4.Either<_i9.Failure, _i10.Image>>.value(
-            _FakeEither_2<_i9.Failure, _i10.Image>(
+        returnValue: _i6.Future<_i4.Either<_i9.Failure, int>>.value(
+            _FakeEither_2<_i9.Failure, int>(
           this,
           Invocation.method(
             #call,
             [params],
           ),
         )),
-      ) as _i6.Future<_i4.Either<_i9.Failure, _i10.Image>>);
+      ) as _i6.Future<_i4.Either<_i9.Failure, int>>);
 }
 
 /// A class which mocks [MascotsRepository].
@@ -1619,22 +1598,21 @@ class MockMascotsRepository extends _i1.Mock implements _i20.MascotsRepository {
   }
 
   @override
-  _i6.Future<_i4.Either<_i9.Failure, _i21.Mascot>> saveMascot(
-          _i21.Mascot? mascot) =>
+  _i6.Future<_i4.Either<_i9.Failure, int>> addMascot(_i21.Mascot? mascot) =>
       (super.noSuchMethod(
         Invocation.method(
-          #saveMascot,
+          #addMascot,
           [mascot],
         ),
-        returnValue: _i6.Future<_i4.Either<_i9.Failure, _i21.Mascot>>.value(
-            _FakeEither_2<_i9.Failure, _i21.Mascot>(
+        returnValue: _i6.Future<_i4.Either<_i9.Failure, int>>.value(
+            _FakeEither_2<_i9.Failure, int>(
           this,
           Invocation.method(
-            #saveMascot,
+            #addMascot,
             [mascot],
           ),
         )),
-      ) as _i6.Future<_i4.Either<_i9.Failure, _i21.Mascot>>);
+      ) as _i6.Future<_i4.Either<_i9.Failure, int>>);
   @override
   _i6.Future<_i4.Either<_i9.Failure, _i21.Mascot>> getMascot(int? id) =>
       (super.noSuchMethod(

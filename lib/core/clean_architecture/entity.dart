@@ -3,18 +3,12 @@ import 'package:equatable/equatable.dart';
 typedef Id = int;
 
 abstract class Entity {
-  Id? id;
+  Id get id;
 }
 
 abstract class EquatableEntity extends Equatable implements Entity {
   @override
-  final Id? id;
+  final Id id;
 
-  @override
-  set id(Id? id) => throw Exception('Cannot set id');
-
-  const EquatableEntity({this.id});
-
-  @override
-  List<Object?> get props => [id];
+  const EquatableEntity({required this.id});
 }
