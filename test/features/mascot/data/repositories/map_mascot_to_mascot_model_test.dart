@@ -28,5 +28,17 @@ void main() {
       // assert
       expect(result, expectedMascotModel);
     });
+
+    test('reverse should return a Mascot when the input is valid', () {
+      // arrange
+      var expectedMascot = context.data.mascot;
+      var inputMascotModel = context.data.mascotModel;
+
+      // act
+      final result = mapMascotToMascotModel.reverse(inputMascotModel);
+
+      // assert
+      expect(result, expectedMascot);
+    });
   });
 }

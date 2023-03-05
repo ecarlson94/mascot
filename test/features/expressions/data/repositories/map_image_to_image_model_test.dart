@@ -20,5 +20,13 @@ void main() {
       // assert
       expect(result, context.data.imageModel);
     });
+
+    test('reverse should return an Image when the input is valid', () {
+      // act
+      final result = mapImageToImageModel.reverse(context.data.imageModel);
+
+      // assert
+      expect(result, context.data.image);
+    });
   });
 }

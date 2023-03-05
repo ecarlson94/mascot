@@ -25,5 +25,18 @@ void main() {
       // assert
       expect(result, expectedExpressionModel);
     });
+
+    test('reverse should return an Expression when the input is valid', () {
+      // arrange
+      var expectedExpression = context.data.mascot.expressions.first;
+      var inputExpressionModel = context.data.mascotModel.expressions.first;
+
+      // act
+      final result =
+          mapExpressionToExpressionModel.reverse(inputExpressionModel);
+
+      // assert
+      expect(result, expectedExpression);
+    });
   });
 }

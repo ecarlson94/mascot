@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:image_picker/image_picker.dart';
 import 'package:mascot/features/expressions/data/models/expression_model.dart';
 import 'package:mascot/features/expressions/data/models/image_model.dart';
 import 'package:mascot/features/expressions/domain/entities/expression.dart';
@@ -45,7 +44,15 @@ class TestData {
       data: Uint8List(200),
     ),
   );
-  Expression get expression => expressionModel;
+  final Expression expression = Expression(
+    id: 1,
+    name: CreateMascotBloc.neutralExpressionName,
+    description: CreateMascotBloc.neutralExpressionDescription,
+    image: Image(
+      name: 'test',
+      data: Uint8List(200),
+    ),
+  );
 
   final List<ExpressionModel> expressionModels = [
     ExpressionModel(
