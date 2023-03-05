@@ -15,10 +15,6 @@ import '../../domain/usecases/get_expression.dart';
 part 'expression_event.dart';
 part 'expression_state.dart';
 
-const int invalidXfileFailureCode = 100;
-const int addImageFailureCode = 101;
-const int getImageFailureCode = 102;
-
 @injectable
 class ExpressionBloc extends Bloc<ExpressionEvent, ExpressionState> {
   final GetExpression getExpression;
@@ -76,11 +72,20 @@ class ExpressionBloc extends Bloc<ExpressionEvent, ExpressionState> {
   SaveExpressionError _mapSaveImageFailureToSaveImageError(Failure failure) {
     switch (failure.runtimeType) {
       case InvalidInputFailure:
-        return const SaveExpressionError(invalidXfileFailureCode);
+        return const SaveExpressionError(ErrorCodes.invalidXfileFailureCode);
       case LocalDataSourceFailure:
-        return const SaveExpressionError(addImageFailureCode);
+        return const SaveExpressionError(ErrorCodes.addImageFailureCode);
       default:
-        return const SaveExpressionError(0);
+        return const SaveExpressionError(ErrorCodes.unknownFailureCode);
+    }
+  }
+
+  GetExpressionError _mapGetImageFailureToGetImageError(Failure failure) {
+    switch (failure.runtimeType) {
+      case LocalDataSourceFailure:
+        return const GetExpressionError(ErrorCodes.getImageFailureCode);
+      default:
+        return const GetExpressionError(ErrorCodes.unknownFailureCode);
     }
   }
 
@@ -93,14 +98,5 @@ class ExpressionBloc extends Bloc<ExpressionEvent, ExpressionState> {
       (l) => emit(_mapGetImageFailureToGetImageError(l)),
       (image) => emit(ExpressionLoaded(image)),
     );
-  }
-}
-
-GetExpressionError _mapGetImageFailureToGetImageError(Failure failure) {
-  switch (failure.runtimeType) {
-    case LocalDataSourceFailure:
-      return const GetExpressionError(getImageFailureCode);
-    default:
-      return const GetExpressionError(0);
   }
 }

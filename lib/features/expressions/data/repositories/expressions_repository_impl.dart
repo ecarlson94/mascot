@@ -22,7 +22,8 @@ class ExpressionsRepositoryImpl implements ExpressionsRepository {
   @override
   FailureOrExpressionFuture getExpression(Id id) async {
     try {
-      return Right(await _localDataSource.getExpression(id));
+      var expressionModel = await _localDataSource.getExpression(id);
+      return Right(_mapExpressionToExpressionModel.reverse(expressionModel));
     } on Exception {
       return Left(
         LocalDataSourceFailure(),
@@ -33,10 +34,9 @@ class ExpressionsRepositoryImpl implements ExpressionsRepository {
   @override
   FailureOrIdFuture addExpression(Expression expression) async {
     try {
-      return Right(
-        await _localDataSource
-            .addExpression(_mapExpressionToExpressionModel(expression)),
-      );
+      var id = await _localDataSource
+          .addExpression(_mapExpressionToExpressionModel(expression));
+      return Right(id);
     } on Exception {
       return Left(
         LocalDataSourceFailure(),
@@ -69,7 +69,10 @@ class ExpressionsRepositoryImpl implements ExpressionsRepository {
   @override
   FailureOrExpressionsFuture getExpressions(List<Id> ids) async {
     try {
-      return Right(await _localDataSource.getExpressions(ids));
+      var expressionModels = await _localDataSource.getExpressions(ids);
+      return Right(
+        expressionModels.map(_mapExpressionToExpressionModel.reverse).toList(),
+      );
     } on Exception {
       return Left(
         LocalDataSourceFailure(),

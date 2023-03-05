@@ -15,13 +15,14 @@ class HiveCollectionAdapter<T extends Entity> implements CollectionAdapter<T> {
     if (item == null) {
       throw ArgumentException('${T.toString()} with id of $id not found');
     }
-    return item;
+    return item.copyWithId(id);
   }
 
   @override
   Future<Id> add(T item) async {
     var id = item.id == 0 ? collection.length + 1 : item.id;
-    await collection.put(id, item);
+    var itemWithId = item.copyWithId(id);
+    await collection.put(id, itemWithId);
     return id;
   }
 

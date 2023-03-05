@@ -9,6 +9,7 @@ import '../../../expressions/domain/repositories/expressions_repository.dart';
 import '../../domain/entities/mascot.dart';
 import '../../domain/repositories/mascots_repository.dart';
 import '../datasources/mascots_local_data_source.dart';
+import '../models/mascot_model.dart';
 import 'map_mascot_to_mascot_model.dart';
 
 @Injectable(as: MascotsRepository)
@@ -25,19 +26,20 @@ class MascotsRepositoryImpl implements MascotsRepository {
 
   @override
   FailureOrMascotFuture getMascot(Id id) async {
-    Mascot mascot;
+    MascotModel mascotModel;
+    List<Id> expressionIds;
     try {
-      mascot = await _localDataSource.getMascot(id);
+      mascotModel = await _localDataSource.getMascot(id);
+      expressionIds = mascotModel.expressions.map((e) => e.id).toList();
     } on Exception {
       return Left(
         LocalDataSourceFailure(),
       );
     }
 
-    var expressionIds = mascot.expressions.map((e) => e.id).toList();
     return (await _expressionsRepository.getExpressions(expressionIds)).fold(
       (l) => Left(l),
-      (expressions) => Right(mascot.copyWith(expressions: expressions)),
+      (expressions) => Right(mascotModel.copyWith(expressions: expressions)),
     );
   }
 
@@ -56,9 +58,10 @@ class MascotsRepositoryImpl implements MascotsRepository {
           );
 
           try {
-            return Right(await _localDataSource.addMascot(
+            var id = await _localDataSource.addMascot(
               _mapMascotToMascotModel(mascotWithExpressions),
-            ));
+            );
+            return Right(id);
           } on Exception {
             return Left(
               LocalDataSourceFailure(),

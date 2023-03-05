@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mascot/core/error/error.dart';
 import 'package:mascot/core/error/failure.dart';
 import 'package:mascot/core/utils/input_converters/convert_xfile_to_image.dart';
 import 'package:mascot/features/expressions/data/models/image_model.dart';
@@ -48,14 +49,15 @@ void main() {
       );
 
       blocTest(
-        'should emit [ExpressionSaveError($invalidXfileFailureCode)] when the input is invalid',
+        'should emit [ExpressionSaveError($ErrorCodes.invalidXfileFailureCode)] when the input is invalid',
         build: () => bloc,
         act: (bloc) => bloc.add(SaveExpressionEvent(
           name: context.data.expression.name,
           description: context.data.expression.description,
           image: XFile(''),
         )),
-        expect: () => [const SaveExpressionError(invalidXfileFailureCode)],
+        expect: () =>
+            [const SaveExpressionError(ErrorCodes.invalidXfileFailureCode)],
       );
 
       blocTest(
@@ -87,7 +89,7 @@ void main() {
       );
 
       blocTest(
-        'should emit [SavingExpression, ExpressionSaveError($addImageFailureCode)] when data retrieval from the local data source fails',
+        'should emit [SavingExpression, ExpressionSaveError($ErrorCodes.addImageFailureCode)] when data retrieval from the local data source fails',
         build: () {
           when(context.mocks.addExpression(any))
               .thenAnswer((_) async => Left(LocalDataSourceFailure()));
@@ -100,7 +102,7 @@ void main() {
         )),
         expect: () => [
           SavingExpression(),
-          const SaveExpressionError(addImageFailureCode),
+          const SaveExpressionError(ErrorCodes.addImageFailureCode),
         ],
       );
 
@@ -122,7 +124,7 @@ void main() {
 
     group('GetExpression', () {
       blocTest(
-        'should emit [GetExpressionError($getImageFailureCode)] when data retrieval from the local data source fails',
+        'should emit [GetExpressionError($ErrorCodes.getImageFailureCode)] when data retrieval from the local data source fails',
         build: () {
           when(context.mocks.getExpression(any))
               .thenAnswer((_) async => Left(LocalDataSourceFailure()));
@@ -131,7 +133,7 @@ void main() {
         act: (bloc) => bloc.add(const GetExpressionEvent(id: 0)),
         expect: () => [
           GettingExpression(),
-          const GetExpressionError(getImageFailureCode),
+          const GetExpressionError(ErrorCodes.getImageFailureCode),
         ],
       );
 

@@ -13,12 +13,18 @@ class MapExpressionToExpressionModel
   MapExpressionToExpressionModel(this._mapImageToImageModel);
 
   @override
-  ExpressionModel call(Expression input) {
-    return ExpressionModel(
-      id: input.id,
-      name: input.name,
-      description: input.description,
-      image: _mapImageToImageModel(input.image),
-    );
-  }
+  ExpressionModel call(Expression input) => ExpressionModel(
+        id: input.id,
+        name: input.name,
+        description: input.description,
+        image: _mapImageToImageModel(input.image),
+      );
+
+  @override
+  Expression reverse(ExpressionModel input) => Expression(
+        id: input.id,
+        name: input.name,
+        description: input.description,
+        image: _mapImageToImageModel.reverse(input.image),
+      );
 }

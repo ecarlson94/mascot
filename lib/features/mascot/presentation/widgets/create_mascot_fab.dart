@@ -18,13 +18,12 @@ class CreateMascotFab extends StatelessWidget {
     final elevation = floatingActionButtonTheme.elevation ?? 6.0;
 
     return OpenContainer(
-      transitionType: ContainerTransitionType.fade,
-      transitionDuration: const Duration(milliseconds: 750),
+      transitionType: ContainerTransitionType.fadeThrough,
+      transitionDuration: const Duration(milliseconds: 400),
       tappable: true,
       closedElevation: elevation,
-      openElevation: elevation,
       closedShape: shape,
-      openBuilder: (contexk, _) => const NewMascotPage(),
+      openBuilder: (context, _) => const NewMascotPage(),
       // TODO: make button without label on mobile
       closedBuilder: (context, openContainer) => FloatingActionButton.extended(
         label: const Text('Add mascot'),

@@ -24,7 +24,7 @@ abstract class HiveExpressionsCollection {
   ) async {
     hive.registerAdapter(ImageModelAdapter());
     hive.registerAdapter(ExpressionModelAdapter());
-    return hive.openBox<ExpressionModel>('images');
+    return hive.openBox<ExpressionModel>('expressions');
   }
 }
 

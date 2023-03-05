@@ -8,10 +8,10 @@ import '../entities/mascot.dart';
 import '../repositories/mascots_repository.dart';
 
 @injectable
-class AddMascot implements UseCase<Id, Mascot> {
+class SaveMascot implements UseCase<Id, Mascot> {
   final MascotsRepository _mascotsRepository;
 
-  AddMascot(this._mascotsRepository);
+  SaveMascot(this._mascotsRepository);
 
   @override
   Future<Either<Failure, Id>> call(Mascot mascot) =>

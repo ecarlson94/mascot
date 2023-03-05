@@ -3,8 +3,8 @@
 import 'package:hive/hive.dart';
 
 import '../../../../core/clean_architecture/entity.dart';
-import '../../domain/entities/mascot.dart';
 import '../../../expressions/data/models/expression_model.dart';
+import '../../domain/entities/mascot.dart';
 
 part 'mascot_model.g.dart';
 
@@ -37,4 +37,13 @@ class MascotModel extends Mascot {
   @HiveField(2)
   @override
   final List<ExpressionModel> expressions;
+
+  @override
+  MascotModel copyWithId(Id id) {
+    return MascotModel(
+      id: id,
+      name: name,
+      expressions: expressions,
+    );
+  }
 }

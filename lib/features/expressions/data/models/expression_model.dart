@@ -43,4 +43,14 @@ class ExpressionModel extends Expression {
   @HiveField(3)
   @override
   final ImageModel image;
+
+  @override
+  ExpressionModel copyWithId(Id id) {
+    return ExpressionModel(
+      id: id,
+      name: name,
+      description: description,
+      image: image,
+    );
+  }
 }

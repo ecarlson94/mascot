@@ -25,7 +25,7 @@ import 'package:mascot/features/expressions/data/repositories/map_image_to_image
 import 'package:mascot/features/expressions/domain/repositories/expressions_repository.dart'
     as _i14;
 import 'package:mascot/features/expressions/domain/usecases/add_expression.dart'
-    as _i19;
+    as _i20;
 import 'package:mascot/features/expressions/domain/usecases/get_expression.dart'
     as _i16;
 import 'package:mascot/features/expressions/presentation/bloc/expression_bloc.dart'
@@ -39,13 +39,16 @@ import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl
     as _i18;
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart'
     as _i17;
-import 'package:mascot/features/mascot/domain/usecases/add_mascot.dart' as _i20;
 import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart' as _i22;
+import 'package:mascot/features/mascot/domain/usecases/save_mascot.dart'
+    as _i19;
+import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart'
+    as _i23;
 
 import '../../features/expressions/data/datasources/expressions_collection.dart'
-    as _i24;
-import '../../features/mascot/data/datasources/mascots_collection.dart' as _i25;
-import 'db_configuration.dart' as _i23;
+    as _i25;
+import '../../features/mascot/data/datasources/mascots_collection.dart' as _i26;
+import 'db_configuration.dart' as _i24;
 
 // ignore_for_file: unnecessary_lambdas
 // ignore_for_file: lines_longer_than_80_chars
@@ -103,27 +106,32 @@ Future<_i1.GetIt> $init(
         gh<_i14.ExpressionsRepository>(),
         gh<_i12.MapMascotToMascotModel>(),
       ));
-  gh.factory<_i19.AddExpression>(
-      () => _i19.AddExpression(gh<_i14.ExpressionsRepository>()));
-  gh.factory<_i20.AddMascot>(
-      () => _i20.AddMascot(gh<_i17.MascotsRepository>()));
+  gh.factory<_i19.SaveMascot>(
+      () => _i19.SaveMascot(gh<_i17.MascotsRepository>()));
+  gh.factory<_i20.AddExpression>(
+      () => _i20.AddExpression(gh<_i14.ExpressionsRepository>()));
   gh.factory<_i21.ExpressionBloc>(() => _i21.ExpressionBloc(
         gh<_i16.GetExpression>(),
-        gh<_i19.AddExpression>(),
+        gh<_i20.AddExpression>(),
         gh<_i3.ConvertXfileToImage>(),
       ));
   gh.factory<_i22.GetMascot>(
       () => _i22.GetMascot(gh<_i17.MascotsRepository>()));
+  gh.factory<_i23.CreateMascotBloc>(() => _i23.CreateMascotBloc(
+        gh<_i3.ConvertXfileToImage>(),
+        gh<_i19.SaveMascot>(),
+        gh<_i22.GetMascot>(),
+      ));
   return getIt;
 }
 
-class _$HiveSingleton extends _i23.HiveSingleton {}
+class _$HiveSingleton extends _i24.HiveSingleton {}
 
-class _$HiveExpressionsCollection extends _i24.HiveExpressionsCollection {}
+class _$HiveExpressionsCollection extends _i25.HiveExpressionsCollection {}
 
 class _$ExpressionsCollectionAdapter
-    extends _i24.ExpressionsCollectionAdapter {}
+    extends _i25.ExpressionsCollectionAdapter {}
 
-class _$HiveMascotsCollection extends _i25.HiveMascotsCollection {}
+class _$HiveMascotsCollection extends _i26.HiveMascotsCollection {}
 
-class _$MascotsCollectionAdapter extends _i25.MascotsCollectionAdapter {}
+class _$MascotsCollectionAdapter extends _i26.MascotsCollectionAdapter {}

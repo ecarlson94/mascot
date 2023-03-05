@@ -8,7 +8,7 @@ import '../entities/mascot.dart';
 typedef FailureOrMascotFuture = Future<Either<Failure, Mascot>>;
 
 abstract class MascotsRepository {
-  /// Saves a mascot
+  /// Adds a mascot
   FailureOrIdFuture addMascot(Mascot mascot);
 
   /// Gets a mascot by Id

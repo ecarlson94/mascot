@@ -1,7 +1,7 @@
 import '../../../../core/clean_architecture/entity.dart';
 import 'image.dart';
 
-class Expression extends EquatableEntity {
+class Expression extends EquatableEntity<Expression> {
   final String name;
   final String description;
   final Image image;
@@ -36,4 +36,7 @@ class Expression extends EquatableEntity {
     description: '',
     image: Image.empty,
   );
+
+  @override
+  Expression copyWithId(Id id) => copyWith(id: id);
 }

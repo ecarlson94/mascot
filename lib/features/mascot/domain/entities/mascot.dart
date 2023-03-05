@@ -1,7 +1,7 @@
 import '../../../../core/clean_architecture/entity.dart';
 import '../../../expressions/domain/entities/expression.dart';
 
-class Mascot extends EquatableEntity {
+class Mascot extends EquatableEntity<Mascot> {
   final String name;
   final List<Expression> expressions;
 
@@ -25,4 +25,13 @@ class Mascot extends EquatableEntity {
       expressions: expressions ?? this.expressions,
     );
   }
+
+  static const Mascot empty = Mascot(
+    id: 0,
+    name: '',
+    expressions: [],
+  );
+
+  @override
+  Mascot copyWithId(Id id) => copyWith(id: id);
 }

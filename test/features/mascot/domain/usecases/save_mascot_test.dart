@@ -1,21 +1,21 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mascot/features/mascot/domain/usecases/add_mascot.dart';
+import 'package:mascot/features/mascot/domain/usecases/save_mascot.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../../fixtures/test_context.dart';
 
 void main() {
   late TestContext context;
-  late AddMascot usecase;
+  late SaveMascot usecase;
 
   setUp(() {
     context = TestContext();
-    usecase = AddMascot(context.mocks.mascotsRepository);
+    usecase = SaveMascot(context.mocks.mascotsRepository);
   });
 
   test(
-    'AddMascot usecase should add the provided mascot to the repository',
+    'SaveMascot usecase should add the provided mascot to the repository',
     () async {
       // arrange
       when(context.mocks.mascotsRepository.addMascot(any))

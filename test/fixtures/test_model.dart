@@ -13,12 +13,18 @@ class TestEntity extends entity.EquatableEntity {
 
   @override
   List<Object?> get props => [id, name];
+
+  @override
+  TestEntity copyWithId(entity.Id id) => TestEntity(id: id, name: name);
 }
 
 @Collection(ignore: {'props', 'stringify'})
 class TestModel extends TestEntity {
   const TestModel({required Id id, required String name})
       : super(id: id, name: name);
+
+  @override
+  TestModel copyWithId(entity.Id id) => TestModel(id: id, name: name);
 }
 
 @HiveType(typeId: 230)
@@ -33,4 +39,7 @@ class HiveTestModel extends TestEntity {
   @override
   @HiveField(1)
   final String name;
+
+  @override
+  HiveTestModel copyWithId(entity.Id id) => HiveTestModel(id: id, name: name);
 }
