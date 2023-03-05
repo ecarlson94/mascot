@@ -11,6 +11,8 @@ class TestXFile extends XFile {
   @override
   Future<Uint8List> readAsBytes() async => _bytes;
 
+  Uint8List get data => _bytes;
+
   @override
   String name = 'valid';
 

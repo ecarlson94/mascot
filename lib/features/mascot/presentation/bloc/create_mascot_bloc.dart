@@ -4,9 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/error/error.dart';
-import '../../../../core/error/failure.dart';
 import '../../../../core/utils/input_converters/convert_xfile_to_image.dart';
-import '../../../../core/utils/input_converters/input_converter.dart';
 import '../../../expressions/domain/entities/expression.dart';
 import '../../domain/entities/mascot.dart';
 import '../../domain/usecases/get_mascot.dart';
@@ -50,6 +48,7 @@ class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
         );
       } else if (event is SetMascotName) {
         var mascot = state.mascot.copyWith(name: event.name);
+        emit(MascotUpdated(mascot));
         await _updateMascot(mascot, emit);
       }
     });
@@ -63,7 +62,12 @@ class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
   ) async {
     var imageOrFailure = await _convertXfileToImage(image);
     await imageOrFailure.fold(
-      (l) async => emit(_mapXFileInputFailure(l)),
+      (l) async => emit(
+        UploadExpressionError(
+          ErrorCodes.invalidXfileFailureCode,
+          state.mascot,
+        ),
+      ),
       (image) async {
         var expression = state.mascot.expressions
             .firstWhere(
@@ -80,6 +84,7 @@ class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
         var mascot = state.mascot.copyWith(
           expressions: [...unchangedExpressions, expression],
         );
+        emit(SavingExpression(mascot));
 
         await _updateMascot(mascot, emit);
       },
@@ -92,44 +97,24 @@ class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
   ) async {
     var mascotIdOrFailure = await _saveMascot(mascot);
     await mascotIdOrFailure.fold(
-      (l) async => emit(_saveMascotFailure(l)),
+      (l) async => emit(
+        SaveMascotError(
+          ErrorCodes.saveMascotFailureCode,
+          mascot,
+        ),
+      ),
       (mascotId) async {
         var mascotOrFailure = await _getMascot(mascotId);
         await mascotOrFailure.fold(
-          (l) async => emit(_saveMascotFailure(l)),
-          (mascot) async => emit(CreateMascotInitial(mascot)),
+          (l) async => emit(
+            SaveMascotError(
+              ErrorCodes.getMascotFailureCode,
+              mascot,
+            ),
+          ),
+          (updatedMascot) async => emit(MascotUpdated(updatedMascot)),
         );
       },
     );
-  }
-
-  UploadExpressionError _mapXFileInputFailure(Failure failure) {
-    switch (failure.runtimeType) {
-      case InvalidInputFailure:
-        return UploadExpressionError(
-          ErrorCodes.invalidXfileFailureCode,
-          state.mascot,
-        );
-      default:
-        return UploadExpressionError(
-          ErrorCodes.unknownFailureCode,
-          state.mascot,
-        );
-    }
-  }
-
-  SaveMascotError _saveMascotFailure(Failure failure) {
-    switch (failure.runtimeType) {
-      case LocalDataSourceFailure:
-        return SaveMascotError(
-          ErrorCodes.saveMascotFailureCode,
-          state.mascot,
-        );
-      default:
-        return SaveMascotError(
-          ErrorCodes.unknownFailureCode,
-          state.mascot,
-        );
-    }
   }
 }

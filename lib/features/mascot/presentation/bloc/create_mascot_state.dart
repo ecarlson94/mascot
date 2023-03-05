@@ -13,6 +13,14 @@ class CreateMascotInitial extends CreateMascotState {
   const CreateMascotInitial(super.mascot);
 }
 
+class SavingExpression extends CreateMascotState {
+  const SavingExpression(super.mascot);
+}
+
+class MascotUpdated extends CreateMascotState {
+  const MascotUpdated(super.mascot);
+}
+
 abstract class CreateMascotError extends CreateMascotState
     implements ErrorState {
   @override

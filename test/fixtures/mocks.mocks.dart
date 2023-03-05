@@ -31,6 +31,9 @@ import 'package:mascot/features/mascot/data/models/mascot_model.dart' as _i4;
 import 'package:mascot/features/mascot/domain/entities/mascot.dart' as _i20;
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart'
     as _i19;
+import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart' as _i22;
+import 'package:mascot/features/mascot/domain/usecases/save_mascot.dart'
+    as _i21;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -1762,6 +1765,58 @@ class MockMascotsRepository extends _i1.Mock implements _i19.MascotsRepository {
           Invocation.method(
             #getMascot,
             [id],
+          ),
+        )),
+      ) as _i7.Future<_i5.Either<_i10.Failure, _i20.Mascot>>);
+}
+
+/// A class which mocks [SaveMascot].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSaveMascot extends _i1.Mock implements _i21.SaveMascot {
+  MockSaveMascot() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i7.Future<_i5.Either<_i10.Failure, int>> call(_i20.Mascot? mascot) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [mascot],
+        ),
+        returnValue: _i7.Future<_i5.Either<_i10.Failure, int>>.value(
+            _FakeEither_3<_i10.Failure, int>(
+          this,
+          Invocation.method(
+            #call,
+            [mascot],
+          ),
+        )),
+      ) as _i7.Future<_i5.Either<_i10.Failure, int>>);
+}
+
+/// A class which mocks [GetMascot].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetMascot extends _i1.Mock implements _i22.GetMascot {
+  MockGetMascot() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i7.Future<_i5.Either<_i10.Failure, _i20.Mascot>> call(int? params) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [params],
+        ),
+        returnValue: _i7.Future<_i5.Either<_i10.Failure, _i20.Mascot>>.value(
+            _FakeEither_3<_i10.Failure, _i20.Mascot>(
+          this,
+          Invocation.method(
+            #call,
+            [params],
           ),
         )),
       ) as _i7.Future<_i5.Either<_i10.Failure, _i20.Mascot>>);

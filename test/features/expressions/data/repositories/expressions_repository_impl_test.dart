@@ -6,6 +6,7 @@ import 'package:mascot/features/expressions/data/models/expression_model.dart';
 import 'package:mascot/features/expressions/data/repositories/expressions_repository_impl.dart';
 import 'package:mascot/features/expressions/data/repositories/map_expression_to_expression_model.dart';
 import 'package:mascot/features/expressions/data/repositories/map_image_to_image_model.dart';
+import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../../fixtures/test_context.dart';
@@ -41,6 +42,22 @@ void main() {
           verify(context.mocks.expressionsLocalDataSource
               .getExpression(context.data.expression.id));
           verifyNoMoreInteractions(context.mocks.expressionsLocalDataSource);
+        },
+      );
+
+      test(
+        'should convert ExpressionModel to Expression',
+        () async {
+          // arrange
+          when(context.mocks.expressionsLocalDataSource.getExpression(any))
+              .thenAnswer((_) => Future.value(context.data.expressionModel));
+
+          // act
+          final result =
+              await repository.getExpression(context.data.expression.id);
+
+          // assert
+          expect(result.getOrElse(() => Expression.empty), isA<Expression>());
         },
       );
 
@@ -187,6 +204,19 @@ void main() {
           verifyNoMoreInteractions(context.mocks.expressionsLocalDataSource);
         },
       );
+
+      test('should convert ExpressionModels to Expressions', () async {
+        // arrange
+        var ids = context.data.expressions.map((e) => e.id).toList();
+        when(context.mocks.expressionsLocalDataSource.getExpressions(any))
+            .thenAnswer((_) => Future.value(context.data.expressionModels));
+
+        // act
+        final result = await repository.getExpressions(ids);
+
+        // assert
+        expect(result.getOrElse(() => <Expression>[]), isA<List<Expression>>());
+      });
 
       test(
           'should return failure when call to local data source is unsuccessful',

@@ -7,6 +7,7 @@ import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mascot/features/expressions/domain/entities/image.dart';
 import 'package:mascot/features/mascot/data/models/mascot_model.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
+import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart';
 
 import 'test_x_file.dart';
 
@@ -29,18 +30,18 @@ class TestData {
   ];
   List<Image> get images => imageModels;
 
-  XFile? _xfile;
-  XFile get xfile => _xfile ??= TestXFile.fromData(
+  TestXFile? _xfile;
+  TestXFile get xfile => _xfile ??= TestXFile.fromData(
         image.data,
         name: image.name,
       );
 
   final ExpressionModel expressionModel = ExpressionModel(
     id: 1,
-    name: 'neutral',
-    description: 'this expression is neutral',
+    name: CreateMascotBloc.neutralExpressionName,
+    description: CreateMascotBloc.neutralExpressionDescription,
     image: ImageModel(
-      name: 'neutralFace',
+      name: 'test',
       data: Uint8List(200),
     ),
   );
@@ -49,8 +50,8 @@ class TestData {
   final List<ExpressionModel> expressionModels = [
     ExpressionModel(
       id: 1,
-      name: 'neutral',
-      description: 'this expression is neutral',
+      name: CreateMascotBloc.neutralExpressionName,
+      description: CreateMascotBloc.neutralExpressionDescription,
       image: ImageModel(
         name: 'neutralFace',
         data: Uint8List(200),
@@ -58,8 +59,8 @@ class TestData {
     ),
     ExpressionModel(
       id: 2,
-      name: 'talking',
-      description: 'this expression is talking',
+      name: CreateMascotBloc.talkingExpressionName,
+      description: CreateMascotBloc.talkingExpressionDescription,
       image: ImageModel(
         name: 'talkingFace',
         data: Uint8List(200),
@@ -74,8 +75,8 @@ class TestData {
     expressions: [
       ExpressionModel(
         id: 1,
-        name: 'neutral',
-        description: 'this expression is neutral',
+        name: CreateMascotBloc.neutralExpressionName,
+        description: CreateMascotBloc.neutralExpressionDescription,
         image: ImageModel(
           name: 'neutralFace',
           data: Uint8List(200),
@@ -83,8 +84,8 @@ class TestData {
       ),
       ExpressionModel(
         id: 2,
-        name: 'talking',
-        description: 'this expression is talking',
+        name: CreateMascotBloc.talkingExpressionName,
+        description: CreateMascotBloc.talkingExpressionDescription,
         image: ImageModel(
           name: 'talkingFace',
           data: Uint8List(200),
@@ -92,5 +93,28 @@ class TestData {
       ),
     ],
   );
-  Mascot get mascot => mascotModel;
+  final Mascot mascot = Mascot(
+    id: 1,
+    name: 'test',
+    expressions: [
+      Expression(
+        id: 1,
+        name: CreateMascotBloc.neutralExpressionName,
+        description: CreateMascotBloc.neutralExpressionDescription,
+        image: Image(
+          name: 'neutralFace',
+          data: Uint8List(200),
+        ),
+      ),
+      Expression(
+        id: 2,
+        name: CreateMascotBloc.talkingExpressionName,
+        description: CreateMascotBloc.talkingExpressionDescription,
+        image: Image(
+          name: 'talkingFace',
+          data: Uint8List(200),
+        ),
+      ),
+    ],
+  );
 }

@@ -64,6 +64,21 @@ void main() {
         },
       );
 
+      test(
+        'should convert MascotModel to Mascot',
+        () async {
+          // arrange
+          when(context.mocks.mascotsLocalDataSource.getMascot(any))
+              .thenAnswer((_) => Future.value(context.data.mascotModel));
+
+          // act
+          var result = await repository.getMascot(context.data.mascot.id);
+
+          // assert
+          expect(result.getOrElse(() => Mascot.empty), isA<Mascot>());
+        },
+      );
+
       test('should retrieve expressions for mascot from expressions repository',
           () async {
         // arrange

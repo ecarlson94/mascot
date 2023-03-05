@@ -26,7 +26,7 @@ void main() {
     );
   });
 
-  group('ImageBloc', () {
+  group('ExpressionBloc', () {
     test('initialState should be ExpressionInitial', () {
       // assert
       expect(bloc.state, ExpressionInitial());
@@ -72,7 +72,12 @@ void main() {
           description: context.data.expression.description,
           image: context.data.xfile,
         )),
-        expect: () {
+        expect: () => [
+          SavingExpression(),
+          GettingExpression(),
+          ExpressionLoaded(context.data.expressionModel),
+        ],
+        verify: (bloc) {
           var expression = context.data.expression.copyWith(
             id: 0,
             image: Image(name: xfileImage.name, data: xfileImage.data),
@@ -80,11 +85,6 @@ void main() {
           verify(
             context.mocks.addExpression(expression),
           );
-          return [
-            SavingExpression(),
-            GettingExpression(),
-            ExpressionLoaded(context.data.expressionModel),
-          ];
         },
       );
 
@@ -146,13 +146,13 @@ void main() {
         act: (bloc) {
           bloc.add(GetExpressionEvent(id: context.data.expression.id));
         },
-        expect: () {
-          verify(context.mocks.getExpression(context.data.expression.id));
-          return [
-            GettingExpression(),
-            ExpressionLoaded(context.data.expression),
-          ];
-        },
+        verify: (bloc) => verify(
+          context.mocks.getExpression(context.data.expression.id),
+        ),
+        expect: () => [
+          GettingExpression(),
+          ExpressionLoaded(context.data.expression),
+        ],
       );
 
       blocTest(
@@ -176,11 +176,9 @@ void main() {
         act: (bloc) => bloc.add(
           SetExpressionEvent(expression: context.data.expression),
         ),
-        expect: () {
-          return [
-            ExpressionLoaded(context.data.expression),
-          ];
-        },
+        expect: () => [
+          ExpressionLoaded(context.data.expression),
+        ],
       );
     });
   });

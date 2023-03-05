@@ -10,4 +10,5 @@ abstract class ErrorCodes {
   static const int addImageFailureCode = 101;
   static const int getImageFailureCode = 102;
   static const int saveMascotFailureCode = 103;
+  static const int getMascotFailureCode = 104;
 }

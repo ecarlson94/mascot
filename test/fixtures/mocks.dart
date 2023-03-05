@@ -10,6 +10,8 @@ import 'package:mascot/features/expressions/domain/usecases/get_expression.dart'
 import 'package:mascot/features/mascot/data/datasources/mascots_local_data_source.dart';
 import 'package:mascot/features/mascot/data/models/mascot_model.dart';
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart';
+import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart';
+import 'package:mascot/features/mascot/domain/usecases/save_mascot.dart';
 import 'package:mockito/annotations.dart';
 
 import 'mocks.mocks.dart';
@@ -32,6 +34,8 @@ import 'test_model.dart';
   GetExpression,
   AddExpression,
   MascotsRepository,
+  SaveMascot,
+  GetMascot,
 ])
 class Mocks {
   MockIsar? _isar;
@@ -83,4 +87,10 @@ class Mocks {
   MockMascotsRepository? _mascotsRepository;
   MockMascotsRepository get mascotsRepository =>
       _mascotsRepository ??= MockMascotsRepository();
+
+  MockSaveMascot? _saveMascot;
+  MockSaveMascot get saveMascot => _saveMascot ??= MockSaveMascot();
+
+  MockGetMascot? _getMascot;
+  MockGetMascot get getMascot => _getMascot ??= MockGetMascot();
 }
