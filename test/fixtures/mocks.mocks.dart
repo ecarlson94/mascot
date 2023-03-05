@@ -21,19 +21,15 @@ import 'package:mascot/features/expressions/domain/entities/expression.dart'
     as _i11;
 import 'package:mascot/features/expressions/domain/repositories/expressions_repository.dart'
     as _i9;
-import 'package:mascot/features/expressions/domain/usecases/add_expression.dart'
-    as _i18;
-import 'package:mascot/features/expressions/domain/usecases/get_expression.dart'
-    as _i17;
 import 'package:mascot/features/mascot/data/datasources/mascots_local_data_source.dart'
     as _i13;
 import 'package:mascot/features/mascot/data/models/mascot_model.dart' as _i4;
-import 'package:mascot/features/mascot/domain/entities/mascot.dart' as _i20;
+import 'package:mascot/features/mascot/domain/entities/mascot.dart' as _i18;
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart'
-    as _i19;
-import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart' as _i22;
+    as _i17;
+import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart' as _i20;
 import 'package:mascot/features/mascot/domain/usecases/save_mascot.dart'
-    as _i21;
+    as _i19;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -1675,69 +1671,16 @@ class MockHiveInterface extends _i1.Mock implements _i6.HiveInterface {
       );
 }
 
-/// A class which mocks [GetExpression].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockGetExpression extends _i1.Mock implements _i17.GetExpression {
-  MockGetExpression() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  _i7.Future<_i5.Either<_i10.Failure, _i11.Expression>> call(int? params) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #call,
-          [params],
-        ),
-        returnValue:
-            _i7.Future<_i5.Either<_i10.Failure, _i11.Expression>>.value(
-                _FakeEither_3<_i10.Failure, _i11.Expression>(
-          this,
-          Invocation.method(
-            #call,
-            [params],
-          ),
-        )),
-      ) as _i7.Future<_i5.Either<_i10.Failure, _i11.Expression>>);
-}
-
-/// A class which mocks [AddExpression].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockAddExpression extends _i1.Mock implements _i18.AddExpression {
-  MockAddExpression() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  _i7.Future<_i5.Either<_i10.Failure, int>> call(_i11.Expression? params) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #call,
-          [params],
-        ),
-        returnValue: _i7.Future<_i5.Either<_i10.Failure, int>>.value(
-            _FakeEither_3<_i10.Failure, int>(
-          this,
-          Invocation.method(
-            #call,
-            [params],
-          ),
-        )),
-      ) as _i7.Future<_i5.Either<_i10.Failure, int>>);
-}
-
 /// A class which mocks [MascotsRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMascotsRepository extends _i1.Mock implements _i19.MascotsRepository {
+class MockMascotsRepository extends _i1.Mock implements _i17.MascotsRepository {
   MockMascotsRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<_i5.Either<_i10.Failure, int>> addMascot(_i20.Mascot? mascot) =>
+  _i7.Future<_i5.Either<_i10.Failure, int>> addMascot(_i18.Mascot? mascot) =>
       (super.noSuchMethod(
         Invocation.method(
           #addMascot,
@@ -1753,33 +1696,33 @@ class MockMascotsRepository extends _i1.Mock implements _i19.MascotsRepository {
         )),
       ) as _i7.Future<_i5.Either<_i10.Failure, int>>);
   @override
-  _i7.Future<_i5.Either<_i10.Failure, _i20.Mascot>> getMascot(int? id) =>
+  _i7.Future<_i5.Either<_i10.Failure, _i18.Mascot>> getMascot(int? id) =>
       (super.noSuchMethod(
         Invocation.method(
           #getMascot,
           [id],
         ),
-        returnValue: _i7.Future<_i5.Either<_i10.Failure, _i20.Mascot>>.value(
-            _FakeEither_3<_i10.Failure, _i20.Mascot>(
+        returnValue: _i7.Future<_i5.Either<_i10.Failure, _i18.Mascot>>.value(
+            _FakeEither_3<_i10.Failure, _i18.Mascot>(
           this,
           Invocation.method(
             #getMascot,
             [id],
           ),
         )),
-      ) as _i7.Future<_i5.Either<_i10.Failure, _i20.Mascot>>);
+      ) as _i7.Future<_i5.Either<_i10.Failure, _i18.Mascot>>);
 }
 
 /// A class which mocks [SaveMascot].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSaveMascot extends _i1.Mock implements _i21.SaveMascot {
+class MockSaveMascot extends _i1.Mock implements _i19.SaveMascot {
   MockSaveMascot() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<_i5.Either<_i10.Failure, int>> call(_i20.Mascot? mascot) =>
+  _i7.Future<_i5.Either<_i10.Failure, int>> call(_i18.Mascot? mascot) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
@@ -1799,25 +1742,25 @@ class MockSaveMascot extends _i1.Mock implements _i21.SaveMascot {
 /// A class which mocks [GetMascot].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGetMascot extends _i1.Mock implements _i22.GetMascot {
+class MockGetMascot extends _i1.Mock implements _i20.GetMascot {
   MockGetMascot() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<_i5.Either<_i10.Failure, _i20.Mascot>> call(int? params) =>
+  _i7.Future<_i5.Either<_i10.Failure, _i18.Mascot>> call(int? params) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [params],
         ),
-        returnValue: _i7.Future<_i5.Either<_i10.Failure, _i20.Mascot>>.value(
-            _FakeEither_3<_i10.Failure, _i20.Mascot>(
+        returnValue: _i7.Future<_i5.Either<_i10.Failure, _i18.Mascot>>.value(
+            _FakeEither_3<_i10.Failure, _i18.Mascot>(
           this,
           Invocation.method(
             #call,
             [params],
           ),
         )),
-      ) as _i7.Future<_i5.Either<_i10.Failure, _i20.Mascot>>);
+      ) as _i7.Future<_i5.Either<_i10.Failure, _i18.Mascot>>);
 }

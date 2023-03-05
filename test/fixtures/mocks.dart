@@ -5,8 +5,6 @@ import 'package:mascot/core/data/collection_adapter.dart';
 import 'package:mascot/features/expressions/data/datasources/expressions_local_data_source.dart';
 import 'package:mascot/features/expressions/data/models/expression_model.dart';
 import 'package:mascot/features/expressions/domain/repositories/expressions_repository.dart';
-import 'package:mascot/features/expressions/domain/usecases/add_expression.dart';
-import 'package:mascot/features/expressions/domain/usecases/get_expression.dart';
 import 'package:mascot/features/mascot/data/datasources/mascots_local_data_source.dart';
 import 'package:mascot/features/mascot/data/models/mascot_model.dart';
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart';
@@ -31,8 +29,6 @@ import 'test_model.dart';
   isar.IsarCollection<TestModel>,
   Box<TestModel>,
   HiveInterface,
-  GetExpression,
-  AddExpression,
   MascotsRepository,
   SaveMascot,
   GetMascot,
@@ -77,12 +73,6 @@ class Mocks {
 
   MockHiveInterface? _hiveInterface;
   MockHiveInterface get hiveInterface => _hiveInterface ??= MockHiveInterface();
-
-  MockGetExpression? _getExpression;
-  MockGetExpression get getExpression => _getExpression ??= MockGetExpression();
-
-  MockAddExpression? _addExpression;
-  MockAddExpression get addExpression => _addExpression ??= MockAddExpression();
 
   MockMascotsRepository? _mascotsRepository;
   MockMascotsRepository get mascotsRepository =>

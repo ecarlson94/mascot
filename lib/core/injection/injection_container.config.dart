@@ -24,31 +24,25 @@ import 'package:mascot/features/expressions/data/repositories/map_image_to_image
     as _i5;
 import 'package:mascot/features/expressions/domain/repositories/expressions_repository.dart'
     as _i14;
-import 'package:mascot/features/expressions/domain/usecases/add_expression.dart'
-    as _i20;
-import 'package:mascot/features/expressions/domain/usecases/get_expression.dart'
-    as _i16;
-import 'package:mascot/features/expressions/presentation/bloc/expression_bloc.dart'
-    as _i21;
 import 'package:mascot/features/mascot/data/datasources/mascots_local_data_source.dart'
     as _i13;
 import 'package:mascot/features/mascot/data/models/mascot_model.dart' as _i8;
 import 'package:mascot/features/mascot/data/repositories/map_mascot_to_mascot_model.dart'
     as _i12;
 import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl.dart'
-    as _i18;
-import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart'
     as _i17;
-import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart' as _i22;
+import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart'
+    as _i16;
+import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart' as _i19;
 import 'package:mascot/features/mascot/domain/usecases/save_mascot.dart'
-    as _i19;
+    as _i18;
 import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart'
-    as _i23;
+    as _i20;
 
 import '../../features/expressions/data/datasources/expressions_collection.dart'
-    as _i25;
-import '../../features/mascot/data/datasources/mascots_collection.dart' as _i26;
-import 'db_configuration.dart' as _i24;
+    as _i22;
+import '../../features/mascot/data/datasources/mascots_collection.dart' as _i23;
+import 'db_configuration.dart' as _i21;
 
 // ignore_for_file: unnecessary_lambdas
 // ignore_for_file: lines_longer_than_80_chars
@@ -99,39 +93,30 @@ Future<_i1.GetIt> $init(
         gh<_i10.ExpressionsLocalDataSource>(),
         gh<_i11.MapExpressionToExpressionModel>(),
       ));
-  gh.factory<_i16.GetExpression>(
-      () => _i16.GetExpression(gh<_i14.ExpressionsRepository>()));
-  gh.factory<_i17.MascotsRepository>(() => _i18.MascotsRepositoryImpl(
+  gh.factory<_i16.MascotsRepository>(() => _i17.MascotsRepositoryImpl(
         gh<_i13.MascotsLocalDataSource>(),
         gh<_i14.ExpressionsRepository>(),
         gh<_i12.MapMascotToMascotModel>(),
       ));
-  gh.factory<_i19.SaveMascot>(
-      () => _i19.SaveMascot(gh<_i17.MascotsRepository>()));
-  gh.factory<_i20.AddExpression>(
-      () => _i20.AddExpression(gh<_i14.ExpressionsRepository>()));
-  gh.factory<_i21.ExpressionBloc>(() => _i21.ExpressionBloc(
-        gh<_i16.GetExpression>(),
-        gh<_i20.AddExpression>(),
+  gh.factory<_i18.SaveMascot>(
+      () => _i18.SaveMascot(gh<_i16.MascotsRepository>()));
+  gh.factory<_i19.GetMascot>(
+      () => _i19.GetMascot(gh<_i16.MascotsRepository>()));
+  gh.factory<_i20.CreateMascotBloc>(() => _i20.CreateMascotBloc(
         gh<_i3.ConvertXfileToImage>(),
-      ));
-  gh.factory<_i22.GetMascot>(
-      () => _i22.GetMascot(gh<_i17.MascotsRepository>()));
-  gh.factory<_i23.CreateMascotBloc>(() => _i23.CreateMascotBloc(
-        gh<_i3.ConvertXfileToImage>(),
-        gh<_i19.SaveMascot>(),
-        gh<_i22.GetMascot>(),
+        gh<_i18.SaveMascot>(),
+        gh<_i19.GetMascot>(),
       ));
   return getIt;
 }
 
-class _$HiveSingleton extends _i24.HiveSingleton {}
+class _$HiveSingleton extends _i21.HiveSingleton {}
 
-class _$HiveExpressionsCollection extends _i25.HiveExpressionsCollection {}
+class _$HiveExpressionsCollection extends _i22.HiveExpressionsCollection {}
 
 class _$ExpressionsCollectionAdapter
-    extends _i25.ExpressionsCollectionAdapter {}
+    extends _i22.ExpressionsCollectionAdapter {}
 
-class _$HiveMascotsCollection extends _i26.HiveMascotsCollection {}
+class _$HiveMascotsCollection extends _i23.HiveMascotsCollection {}
 
-class _$MascotsCollectionAdapter extends _i26.MascotsCollectionAdapter {}
+class _$MascotsCollectionAdapter extends _i23.MascotsCollectionAdapter {}
