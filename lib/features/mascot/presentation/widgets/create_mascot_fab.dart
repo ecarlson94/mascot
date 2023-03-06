@@ -24,7 +24,6 @@ class CreateMascotFab extends StatelessWidget {
       closedElevation: elevation,
       closedShape: shape,
       openBuilder: (context, _) => const NewMascotPage(),
-      // TODO: make button without label on mobile
       closedBuilder: (context, openContainer) => FloatingActionButton.extended(
         label: const Text('Add mascot'),
         icon: const Icon(Icons.add),

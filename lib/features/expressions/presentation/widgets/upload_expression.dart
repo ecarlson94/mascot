@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../../core/utils/constants.dart';
 import '../../domain/entities/image.dart' as model;
 
 class UploadExpression extends StatelessWidget {
@@ -33,6 +34,9 @@ class UploadExpression extends StatelessWidget {
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
         child: Card(
+          shape: const RoundedRectangleBorder(
+            borderRadius: mediumBorderRadius,
+          ),
           clipBehavior: Clip.hardEdge,
           child: SizedBox(
             height: height,
