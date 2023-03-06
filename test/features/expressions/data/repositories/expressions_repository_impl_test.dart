@@ -57,7 +57,10 @@ void main() {
               await repository.getExpression(context.data.expression.id);
 
           // assert
-          expect(result.getOrElse(() => Expression.empty), isA<Expression>());
+          expect(
+            result.getOrElse(() => Expression.empty),
+            isNot(isA<ExpressionModel>()),
+          );
         },
       );
 
@@ -219,7 +222,10 @@ void main() {
         final result = await repository.getExpressions(ids);
 
         // assert
-        expect(result.getOrElse(() => <Expression>[]), isA<List<Expression>>());
+        expect(
+          result.getOrElse(() => <Expression>[]),
+          isNot(isA<List<ExpressionModel>>()),
+        );
       });
 
       test(

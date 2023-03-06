@@ -75,7 +75,10 @@ void main() {
           var result = await repository.getMascot(context.data.mascot.id);
 
           // assert
-          expect(result.getOrElse(() => Mascot.empty), isA<Mascot>());
+          expect(
+            result.getOrElse(() => Mascot.empty),
+            isNot(isA<MascotModel>()),
+          );
         },
       );
 
