@@ -57,7 +57,9 @@ void main() {
           await hiveExpressionsCollection.create(context.mocks.hiveInterface);
 
       // assert
-      verify(context.mocks.hiveInterface.openBox<ExpressionModel>('images'));
+      verify(
+        context.mocks.hiveInterface.openBox<ExpressionModel>('expressions'),
+      );
       expect(box, context.mocks.hiveImageBox);
     });
 

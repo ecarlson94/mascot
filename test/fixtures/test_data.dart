@@ -74,7 +74,26 @@ class TestData {
       ),
     ),
   ];
-  List<Expression> get expressions => expressionModels;
+  final List<Expression> expressions = [
+    Expression(
+      id: 1,
+      name: CreateMascotBloc.neutralExpressionName,
+      description: CreateMascotBloc.neutralExpressionDescription,
+      image: Image(
+        name: 'neutralFace',
+        data: Uint8List(200),
+      ),
+    ),
+    Expression(
+      id: 2,
+      name: CreateMascotBloc.talkingExpressionName,
+      description: CreateMascotBloc.talkingExpressionDescription,
+      image: Image(
+        name: 'talkingFace',
+        data: Uint8List(200),
+      ),
+    ),
+  ];
 
   final MascotModel mascotModel = MascotModel(
     id: 1,

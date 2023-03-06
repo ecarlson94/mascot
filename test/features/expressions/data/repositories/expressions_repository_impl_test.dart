@@ -37,7 +37,7 @@ void main() {
               await repository.getExpression(context.data.expression.id);
 
           // assert
-          expect(result, Right(context.data.expressionModel));
+          expect(result, Right(context.data.expression));
 
           verify(context.mocks.expressionsLocalDataSource
               .getExpression(context.data.expression.id));
@@ -199,7 +199,11 @@ void main() {
           final result = await repository.getExpressions(ids);
 
           // assert
-          expect(result, Right(context.data.expressionModels));
+          expect(result, isA<Right<Failure, List<Expression>>>());
+          expect(
+            result.getOrElse(() => []),
+            context.data.expressions,
+          );
           verify(context.mocks.expressionsLocalDataSource.getExpressions(ids));
           verifyNoMoreInteractions(context.mocks.expressionsLocalDataSource);
         },

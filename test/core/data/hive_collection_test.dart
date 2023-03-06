@@ -91,7 +91,7 @@ void main() {
         await collection.add(newModel);
 
         // assert
-        verify(context.mocks.hiveTestCollection.put(4, newModel));
+        verify(context.mocks.hiveTestCollection.put(4, newModel.copyWithId(4)));
       });
 
       test('should not auto increment id when id is not 0', () async {
