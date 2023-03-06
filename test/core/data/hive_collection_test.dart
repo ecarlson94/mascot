@@ -1,11 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mascot/core/data/hive_collection.dart';
+import 'package:mascot/core/clean_architecture/entity.dart';
+import 'package:mascot/core/data/hive_collection_adapter.dart';
+import 'package:mascot/core/error/exception.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../fixtures/test_context.dart';
 import '../../fixtures/test_model.dart';
 
-class TestHiveCollection extends HiveCollection<TestModel> {
+class TestHiveCollection extends HiveCollectionAdapter<TestModel> {
   TestHiveCollection(super.collection);
 }
 
@@ -23,86 +25,155 @@ void main() {
     when(context.mocks.hiveTestCollection.length).thenReturn(0);
   });
 
-  group('get', () {
-    test('should return ImageModel from local database', () async {
-      // act
-      final result = await collection.get(1);
-
-      // assert
-      expect(result, model);
-      verify(context.mocks.hiveTestCollection.get(1));
-      verifyNoMoreInteractions(context.mocks.hiveTestCollection);
-    });
-
-    test('should throw Exception when image is not found', () async {
-      // arrange
-      when(context.mocks.hiveTestCollection.get(any)).thenReturn(null);
-
-      // act
-      final call = collection.get;
-
-      // assert
-      expect(() => call(1), throwsException);
-    });
-
-    test('should throw Exception when id is null', () async {
-      // arrange
-      when(context.mocks.hiveTestCollection.get(any)).thenReturn(null);
-
-      // act
-      final call = collection.get;
-
-      // assert
-      expect(() => call(null), throwsException);
-    });
-  });
-
-  group('save', () {
-    test(
-      'should return ImageModel from local database after saving image',
-      () async {
-        // arrange
-        when(context.mocks.hiveTestCollection.put(any, any))
-            .thenAnswer((_) async {});
-
+  group('HiveCollection', () {
+    group('get', () {
+      test('should return TestModel from local database', () async {
         // act
-        final result = await collection.save(model);
+        final result = await collection.get(1);
 
         // assert
         expect(result, model);
-        verifyInOrder([
-          context.mocks.hiveTestCollection.put(model.id, model),
-          context.mocks.hiveTestCollection.get(model.id),
-        ]);
+        verify(context.mocks.hiveTestCollection.get(1));
         verifyNoMoreInteractions(context.mocks.hiveTestCollection);
-      },
-    );
+      });
 
-    test('should not auto increment id when id is not null', () async {
-      // arrange
-      when(context.mocks.hiveTestCollection.put(any, any))
-          .thenAnswer((_) async {});
-      when(context.mocks.hiveTestCollection.length).thenReturn(3);
+      test('should throw Exception when image is not found', () async {
+        // arrange
+        when(context.mocks.hiveTestCollection.get(any)).thenReturn(null);
 
-      // act
-      await collection.save(model);
+        // act
+        final call = collection.get;
 
-      // assert
-      verify(context.mocks.hiveTestCollection.put(model.id, model));
+        // assert
+        expect(() => call(1), throwsA(isA<ArgumentException>()));
+      });
     });
 
-    test('should auto increment id when id is null', () async {
-      // arrange
-      when(context.mocks.hiveTestCollection.put(any, any))
-          .thenAnswer((_) async {});
-      when(context.mocks.hiveTestCollection.length).thenReturn(3);
-      var newModel = const TestModel(id: null, name: 'test');
+    group('add', () {
+      test(
+        'should return new object id from local database after saving item',
+        () async {
+          // arrange
+          when(context.mocks.hiveTestCollection.put(any, any))
+              .thenAnswer((_) async {});
 
-      // act
-      await collection.save(newModel);
+          // act
+          final result = await collection.add(model);
 
-      // assert
-      verify(context.mocks.hiveTestCollection.put(4, newModel));
+          // assert
+          expect(result, model.id);
+          verify(context.mocks.hiveTestCollection.put(model.id, model));
+          verifyNoMoreInteractions(context.mocks.hiveTestCollection);
+        },
+      );
+
+      test('should not auto increment id when id is not null', () async {
+        // arrange
+        when(context.mocks.hiveTestCollection.put(any, any))
+            .thenAnswer((_) async {});
+        when(context.mocks.hiveTestCollection.length).thenReturn(3);
+
+        // act
+        await collection.add(model);
+
+        // assert
+        verify(context.mocks.hiveTestCollection.put(model.id, model));
+      });
+
+      test('should auto increment id when id is 0', () async {
+        // arrange
+        when(context.mocks.hiveTestCollection.put(any, any))
+            .thenAnswer((_) async {});
+        when(context.mocks.hiveTestCollection.length).thenReturn(3);
+        var newModel = const TestModel(id: 0, name: 'test');
+
+        // act
+        await collection.add(newModel);
+
+        // assert
+        verify(context.mocks.hiveTestCollection.put(4, newModel.copyWithId(4)));
+      });
+
+      test('should not auto increment id when id is not 0', () async {
+        // arrange
+        when(context.mocks.hiveTestCollection.put(any, any))
+            .thenAnswer((_) async {});
+        when(context.mocks.hiveTestCollection.length).thenReturn(3);
+        var newModel = const TestModel(id: 1, name: 'test');
+
+        // act
+        await collection.add(newModel);
+
+        // assert
+        verifyNever(context.mocks.hiveTestCollection.put(4, newModel));
+      });
+    });
+
+    group('remove', () {
+      test('should remove item from hive database', () async {
+        // arrange
+        when(context.mocks.hiveTestCollection.delete(any))
+            .thenAnswer((_) async {});
+
+        // act
+        await collection.remove(1);
+
+        // assert
+        verify(context.mocks.hiveTestCollection.delete(1));
+        verifyNoMoreInteractions(context.mocks.hiveTestCollection);
+      });
+    });
+
+    group('getMany', () {
+      late List<TestModel> testModels;
+      setUp(() {
+        testModels = [
+          const TestModel(id: 1, name: 'test1'),
+          const TestModel(id: 2, name: 'test2'),
+          const TestModel(id: 3, name: 'test3'),
+        ];
+      });
+
+      test('should return ImageModel list from hive database', () async {
+        // arrange
+        var ids = testModels.map((e) => e.id).toList();
+        when(context.mocks.hiveTestCollection.get(any)).thenAnswer(
+          (_) => testModels.firstWhere(
+            (element) => element.id == (_.positionalArguments.first as Id),
+          ),
+        );
+
+        // act
+        final result = await collection.getMany(ids);
+
+        // assert
+        for (var model in result) {
+          verify(context.mocks.hiveTestCollection.get(model.id));
+          expect(
+            model,
+            testModels.firstWhere((element) => element.id == model.id),
+          );
+        }
+        verifyNoMoreInteractions(context.mocks.hiveTestCollection);
+      });
+
+      test('should throw Exception when image is not found', () async {
+        // arrange
+        var ids = testModels.map((e) => e.id).toList();
+        when(context.mocks.hiveTestCollection.get(any)).thenAnswer(
+          (_) => testModels.firstWhere(
+            (element) => element.id == (_.positionalArguments.first as Id),
+          ),
+        );
+        when(context.mocks.hiveTestCollection.get(3))
+            .thenAnswer((realInvocation) => null);
+
+        // act
+        final call = collection.getMany;
+
+        // assert
+        expect(() => call(ids), throwsA(isA<ArgumentException>()));
+      });
     });
   });
 }

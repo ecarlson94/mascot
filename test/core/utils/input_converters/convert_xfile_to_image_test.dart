@@ -4,7 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/utils/input_converters/convert_xfile_to_image.dart';
 import 'package:mascot/core/utils/input_converters/input_converter.dart';
-import 'package:mascot/features/images/domain/entities/image.dart';
+import 'package:mascot/features/expressions/domain/entities/image.dart';
 
 import '../../../fixtures/test_context.dart';
 import '../../../fixtures/test_x_file.dart';
@@ -34,8 +34,8 @@ void main() {
         result,
         Right(
           Image(
-            name: context.data.image.name,
-            data: context.data.image.data,
+            name: context.data.xfile.name,
+            data: await context.data.xfile.readAsBytes(),
           ),
         ),
       );

@@ -17,7 +17,7 @@ class HiveTestModelAdapter extends TypeAdapter<HiveTestModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return HiveTestModel(
-      id: fields[0] as int?,
+      id: fields[0] as int,
       name: fields[1] as String,
     );
   }
@@ -133,16 +133,14 @@ P _testModelDeserializeProp<P>(
 }
 
 Id _testModelGetId(TestModel object) {
-  return object.id ?? Isar.autoIncrement;
+  return object.id;
 }
 
 List<IsarLinkBase<dynamic>> _testModelGetLinks(TestModel object) {
   return [];
 }
 
-void _testModelAttach(IsarCollection<dynamic> col, Id id, TestModel object) {
-  object.id = id;
-}
+void _testModelAttach(IsarCollection<dynamic> col, Id id, TestModel object) {}
 
 extension TestModelQueryWhereSort
     on QueryBuilder<TestModel, TestModel, QWhere> {
@@ -276,24 +274,8 @@ extension TestModelQueryFilter
     });
   }
 
-  QueryBuilder<TestModel, TestModel, QAfterFilterCondition> idIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'id',
-      ));
-    });
-  }
-
-  QueryBuilder<TestModel, TestModel, QAfterFilterCondition> idIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'id',
-      ));
-    });
-  }
-
   QueryBuilder<TestModel, TestModel, QAfterFilterCondition> idEqualTo(
-      Id? value) {
+      Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -303,7 +285,7 @@ extension TestModelQueryFilter
   }
 
   QueryBuilder<TestModel, TestModel, QAfterFilterCondition> idGreaterThan(
-    Id? value, {
+    Id value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -316,7 +298,7 @@ extension TestModelQueryFilter
   }
 
   QueryBuilder<TestModel, TestModel, QAfterFilterCondition> idLessThan(
-    Id? value, {
+    Id value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -329,8 +311,8 @@ extension TestModelQueryFilter
   }
 
   QueryBuilder<TestModel, TestModel, QAfterFilterCondition> idBetween(
-    Id? lower,
-    Id? upper, {
+    Id lower,
+    Id upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {

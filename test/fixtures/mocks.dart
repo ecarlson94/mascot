@@ -1,14 +1,15 @@
 import 'package:hive/hive.dart';
 import 'package:isar/isar.dart' as isar;
 import 'package:isar/isar.dart';
-import 'package:mascot/core/utils/input_converters/convert_xfile_to_image.dart';
-import 'package:mascot/core/utils/mappers/map_image_to_image_model.dart';
-import 'package:mascot/features/images/data/datasources/images_collection.dart';
-import 'package:mascot/features/images/data/datasources/images_local_data_source.dart';
-import 'package:mascot/features/images/data/models/image_model.dart';
-import 'package:mascot/features/images/domain/repositories/images_repository.dart';
-import 'package:mascot/features/images/domain/usecases/get_image.dart';
-import 'package:mascot/features/images/domain/usecases/save_image.dart';
+import 'package:mascot/core/data/collection_adapter.dart';
+import 'package:mascot/features/expressions/data/datasources/expressions_local_data_source.dart';
+import 'package:mascot/features/expressions/data/models/expression_model.dart';
+import 'package:mascot/features/expressions/domain/repositories/expressions_repository.dart';
+import 'package:mascot/features/mascot/data/datasources/mascots_local_data_source.dart';
+import 'package:mascot/features/mascot/data/models/mascot_model.dart';
+import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart';
+import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart';
+import 'package:mascot/features/mascot/domain/usecases/save_mascot.dart';
 import 'package:mockito/annotations.dart';
 
 import 'mocks.mocks.dart';
@@ -16,30 +17,37 @@ import 'test_model.dart';
 
 @GenerateNiceMocks([
   MockSpec<Isar>(unsupportedMembers: {#txnSync, #writeTxnSync}),
+  MockSpec<CollectionAdapter<ExpressionModel>>(
+    as: #MockExpressionsCollectionAdapter,
+  ),
+  MockSpec<CollectionAdapter<MascotModel>>(as: #MockMascotsCollectionAdapter),
 ])
 @GenerateMocks([
-  ImagesRepository,
-  ImagesLocalDataSource,
+  ExpressionsRepository,
+  ExpressionsLocalDataSource,
+  MascotsLocalDataSource,
   isar.IsarCollection<TestModel>,
   Box<TestModel>,
   HiveInterface,
-  LocalImages,
-  ConvertXfileToImage,
-  MapImageToImageModel,
-  GetImage,
-  SaveImage,
+  MascotsRepository,
+  SaveMascot,
+  GetMascot,
 ])
 class Mocks {
   MockIsar? _isar;
   MockIsar get isar => _isar ??= MockIsar();
 
-  MockImagesRepository? _imagesRepository;
-  MockImagesRepository get imagesRepository =>
-      _imagesRepository ??= MockImagesRepository();
+  MockExpressionsRepository? _expressionsRepository;
+  MockExpressionsRepository get expressionsRepository =>
+      _expressionsRepository ??= MockExpressionsRepository();
 
-  MockImagesLocalDataSource? _imagesLocalDataSource;
-  MockImagesLocalDataSource get imagesLocalDataSource =>
-      _imagesLocalDataSource ??= MockImagesLocalDataSource();
+  MockExpressionsLocalDataSource? _expressionsLocalDataSource;
+  MockExpressionsLocalDataSource get expressionsLocalDataSource =>
+      _expressionsLocalDataSource ??= MockExpressionsLocalDataSource();
+
+  MockMascotsLocalDataSource? _mascotsLocalDataSource;
+  MockMascotsLocalDataSource get mascotsLocalDataSource =>
+      _mascotsLocalDataSource ??= MockMascotsLocalDataSource();
 
   MockIsarCollection<TestModel>? _isarTestCollection;
   MockIsarCollection<TestModel> get isarTestCollection =>
@@ -49,26 +57,30 @@ class Mocks {
   MockBox<TestModel> get hiveTestCollection =>
       _hiveTestCollection ??= MockBox();
 
-  MockBox<ImageModel>? _hiveImageBox;
-  MockBox<ImageModel> get hiveImageBox => _hiveImageBox ??= MockBox();
+  MockBox<ExpressionModel>? _hiveImageBox;
+  MockBox<ExpressionModel> get hiveImageBox => _hiveImageBox ??= MockBox();
+
+  MockBox<MascotModel>? _hiveMascotBox;
+  MockBox<MascotModel> get hiveMascotBox => _hiveMascotBox ??= MockBox();
+
+  MockExpressionsCollectionAdapter? _expressionsCollectionAdapter;
+  MockExpressionsCollectionAdapter get expressionsCollectionAdapter =>
+      _expressionsCollectionAdapter ??= MockExpressionsCollectionAdapter();
+
+  MockMascotsCollectionAdapter? _mascotsCollectionAdapter;
+  MockMascotsCollectionAdapter get mascotsCollectionAdapter =>
+      _mascotsCollectionAdapter ??= MockMascotsCollectionAdapter();
 
   MockHiveInterface? _hiveInterface;
   MockHiveInterface get hiveInterface => _hiveInterface ??= MockHiveInterface();
 
-  MockLocalImages? _mockLocalImages;
-  MockLocalImages get mockLocalImages => _mockLocalImages ??= MockLocalImages();
+  MockMascotsRepository? _mascotsRepository;
+  MockMascotsRepository get mascotsRepository =>
+      _mascotsRepository ??= MockMascotsRepository();
 
-  MockConvertXfileToImage? _convertXfileToImage;
-  MockConvertXfileToImage get convertXfileToImage =>
-      _convertXfileToImage ??= MockConvertXfileToImage();
+  MockSaveMascot? _saveMascot;
+  MockSaveMascot get saveMascot => _saveMascot ??= MockSaveMascot();
 
-  MockMapImageToImageModel? _mapImageToImageModel;
-  MockMapImageToImageModel get mapImageToImageModel =>
-      _mapImageToImageModel ??= MockMapImageToImageModel();
-
-  MockGetImage? _getImage;
-  MockGetImage get getImage => _getImage ??= MockGetImage();
-
-  MockSaveImage? _saveImage;
-  MockSaveImage get saveImage => _saveImage ??= MockSaveImage();
+  MockGetMascot? _getMascot;
+  MockGetMascot get getMascot => _getMascot ??= MockGetMascot();
 }

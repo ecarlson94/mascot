@@ -3,30 +3,33 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i6;
-import 'dart:typed_data' as _i11;
+import 'dart:async' as _i7;
+import 'dart:typed_data' as _i14;
 
-import 'package:dartz/dartz.dart' as _i3;
-import 'package:hive/hive.dart' as _i5;
-import 'package:hive/src/box/default_compaction_strategy.dart' as _i13;
-import 'package:hive/src/box/default_key_comparator.dart' as _i12;
-import 'package:image_picker/image_picker.dart' as _i16;
+import 'package:dartz/dartz.dart' as _i5;
+import 'package:hive/hive.dart' as _i6;
+import 'package:hive/src/box/default_compaction_strategy.dart' as _i16;
+import 'package:hive/src/box/default_key_comparator.dart' as _i15;
 import 'package:isar/isar.dart' as _i2;
-import 'package:mascot/core/error/failure.dart' as _i8;
-import 'package:mascot/core/utils/input_converters/convert_xfile_to_image.dart'
-    as _i15;
-import 'package:mascot/core/utils/mappers/map_image_to_image_model.dart'
+import 'package:mascot/core/data/collection_adapter.dart' as _i8;
+import 'package:mascot/core/error/failure.dart' as _i10;
+import 'package:mascot/features/expressions/data/datasources/expressions_local_data_source.dart'
+    as _i12;
+import 'package:mascot/features/expressions/data/models/expression_model.dart'
+    as _i3;
+import 'package:mascot/features/expressions/domain/entities/expression.dart'
+    as _i11;
+import 'package:mascot/features/expressions/domain/repositories/expressions_repository.dart'
+    as _i9;
+import 'package:mascot/features/mascot/data/datasources/mascots_local_data_source.dart'
+    as _i13;
+import 'package:mascot/features/mascot/data/models/mascot_model.dart' as _i4;
+import 'package:mascot/features/mascot/domain/entities/mascot.dart' as _i18;
+import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart'
     as _i17;
-import 'package:mascot/features/images/data/datasources/images_collection.dart'
-    as _i14;
-import 'package:mascot/features/images/data/datasources/images_local_data_source.dart'
-    as _i10;
-import 'package:mascot/features/images/data/models/image_model.dart' as _i4;
-import 'package:mascot/features/images/domain/entities/image.dart' as _i9;
-import 'package:mascot/features/images/domain/repositories/images_repository.dart'
-    as _i7;
-import 'package:mascot/features/images/domain/usecases/get_image.dart' as _i18;
-import 'package:mascot/features/images/domain/usecases/save_image.dart' as _i19;
+import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart' as _i20;
+import 'package:mascot/features/mascot/domain/usecases/save_mascot.dart'
+    as _i19;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -51,8 +54,9 @@ class _FakeIsarCollection_0<OBJ> extends _i1.SmartFake
         );
 }
 
-class _FakeEither_1<L, R> extends _i1.SmartFake implements _i3.Either<L, R> {
-  _FakeEither_1(
+class _FakeExpressionModel_1 extends _i1.SmartFake
+    implements _i3.ExpressionModel {
+  _FakeExpressionModel_1(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -61,8 +65,8 @@ class _FakeEither_1<L, R> extends _i1.SmartFake implements _i3.Either<L, R> {
         );
 }
 
-class _FakeImageModel_2 extends _i1.SmartFake implements _i4.ImageModel {
-  _FakeImageModel_2(
+class _FakeMascotModel_2 extends _i1.SmartFake implements _i4.MascotModel {
+  _FakeMascotModel_2(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -71,8 +75,8 @@ class _FakeImageModel_2 extends _i1.SmartFake implements _i4.ImageModel {
         );
 }
 
-class _FakeIsar_3 extends _i1.SmartFake implements _i2.Isar {
-  _FakeIsar_3(
+class _FakeEither_3<L, R> extends _i1.SmartFake implements _i5.Either<L, R> {
+  _FakeEither_3(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -81,9 +85,19 @@ class _FakeIsar_3 extends _i1.SmartFake implements _i2.Isar {
         );
 }
 
-class _FakeCollectionSchema_4<OBJ> extends _i1.SmartFake
+class _FakeIsar_4 extends _i1.SmartFake implements _i2.Isar {
+  _FakeIsar_4(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeCollectionSchema_5<OBJ> extends _i1.SmartFake
     implements _i2.CollectionSchema<OBJ> {
-  _FakeCollectionSchema_4(
+  _FakeCollectionSchema_5(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -92,9 +106,9 @@ class _FakeCollectionSchema_4<OBJ> extends _i1.SmartFake
         );
 }
 
-class _FakeQueryBuilder_5<OBJ, R, S> extends _i1.SmartFake
+class _FakeQueryBuilder_6<OBJ, R, S> extends _i1.SmartFake
     implements _i2.QueryBuilder<OBJ, R, S> {
-  _FakeQueryBuilder_5(
+  _FakeQueryBuilder_6(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -103,8 +117,8 @@ class _FakeQueryBuilder_5<OBJ, R, S> extends _i1.SmartFake
         );
 }
 
-class _FakeQuery_6<T> extends _i1.SmartFake implements _i2.Query<T> {
-  _FakeQuery_6(
+class _FakeQuery_7<T> extends _i1.SmartFake implements _i2.Query<T> {
+  _FakeQuery_7(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -113,8 +127,8 @@ class _FakeQuery_6<T> extends _i1.SmartFake implements _i2.Query<T> {
         );
 }
 
-class _FakeBox_7<E> extends _i1.SmartFake implements _i5.Box<E> {
-  _FakeBox_7(
+class _FakeBox_8<E> extends _i1.SmartFake implements _i6.Box<E> {
+  _FakeBox_8(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -123,8 +137,8 @@ class _FakeBox_7<E> extends _i1.SmartFake implements _i5.Box<E> {
         );
 }
 
-class _FakeLazyBox_8<E> extends _i1.SmartFake implements _i5.LazyBox<E> {
-  _FakeLazyBox_8(
+class _FakeLazyBox_9<E> extends _i1.SmartFake implements _i6.LazyBox<E> {
+  _FakeLazyBox_9(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -158,18 +172,18 @@ class MockIsar extends _i1.Mock implements _i2.Isar {
         returnValueForMissingStub: null,
       );
   @override
-  _i6.Future<T> txn<T>(_i6.Future<T> Function()? callback) =>
+  _i7.Future<T> txn<T>(_i7.Future<T> Function()? callback) =>
       (super.noSuchMethod(
         Invocation.method(
           #txn,
           [callback],
         ),
-        returnValue: _i6.Future<T>.value(null),
-        returnValueForMissingStub: _i6.Future<T>.value(null),
-      ) as _i6.Future<T>);
+        returnValue: _i7.Future<T>.value(null),
+        returnValueForMissingStub: _i7.Future<T>.value(null),
+      ) as _i7.Future<T>);
   @override
-  _i6.Future<T> writeTxn<T>(
-    _i6.Future<T> Function()? callback, {
+  _i7.Future<T> writeTxn<T>(
+    _i7.Future<T> Function()? callback, {
     bool? silent = false,
   }) =>
       (super.noSuchMethod(
@@ -178,9 +192,9 @@ class MockIsar extends _i1.Mock implements _i2.Isar {
           [callback],
           {#silent: silent},
         ),
-        returnValue: _i6.Future<T>.value(null),
-        returnValueForMissingStub: _i6.Future<T>.value(null),
-      ) as _i6.Future<T>);
+        returnValue: _i7.Future<T>.value(null),
+        returnValueForMissingStub: _i7.Future<T>.value(null),
+      ) as _i7.Future<T>);
   @override
   T txnSync<T>(T Function()? callback) => throw UnsupportedError(
       '\'txnSync\' cannot be used without a mockito fallback generator.');
@@ -252,14 +266,14 @@ class MockIsar extends _i1.Mock implements _i2.Isar {
         returnValueForMissingStub: null,
       ) as _i2.IsarCollection<dynamic>?);
   @override
-  _i6.Future<void> clear() => (super.noSuchMethod(
+  _i7.Future<void> clear() => (super.noSuchMethod(
         Invocation.method(
           #clear,
           [],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
   @override
   void clearSync() => super.noSuchMethod(
         Invocation.method(
@@ -269,7 +283,7 @@ class MockIsar extends _i1.Mock implements _i2.Isar {
         returnValueForMissingStub: null,
       );
   @override
-  _i6.Future<int> getSize({
+  _i7.Future<int> getSize({
     bool? includeIndexes = false,
     bool? includeLinks = false,
   }) =>
@@ -282,9 +296,9 @@ class MockIsar extends _i1.Mock implements _i2.Isar {
             #includeLinks: includeLinks,
           },
         ),
-        returnValue: _i6.Future<int>.value(0),
-        returnValueForMissingStub: _i6.Future<int>.value(0),
-      ) as _i6.Future<int>);
+        returnValue: _i7.Future<int>.value(0),
+        returnValueForMissingStub: _i7.Future<int>.value(0),
+      ) as _i7.Future<int>);
   @override
   int getSizeSync({
     bool? includeIndexes = false,
@@ -303,115 +317,320 @@ class MockIsar extends _i1.Mock implements _i2.Isar {
         returnValueForMissingStub: 0,
       ) as int);
   @override
-  _i6.Future<void> copyToFile(String? targetPath) => (super.noSuchMethod(
+  _i7.Future<void> copyToFile(String? targetPath) => (super.noSuchMethod(
         Invocation.method(
           #copyToFile,
           [targetPath],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
   @override
-  _i6.Future<bool> close({bool? deleteFromDisk = false}) => (super.noSuchMethod(
+  _i7.Future<bool> close({bool? deleteFromDisk = false}) => (super.noSuchMethod(
         Invocation.method(
           #close,
           [],
           {#deleteFromDisk: deleteFromDisk},
         ),
-        returnValue: _i6.Future<bool>.value(false),
-        returnValueForMissingStub: _i6.Future<bool>.value(false),
-      ) as _i6.Future<bool>);
+        returnValue: _i7.Future<bool>.value(false),
+        returnValueForMissingStub: _i7.Future<bool>.value(false),
+      ) as _i7.Future<bool>);
   @override
-  _i6.Future<void> verify() => (super.noSuchMethod(
+  _i7.Future<void> verify() => (super.noSuchMethod(
         Invocation.method(
           #verify,
           [],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
 }
 
-/// A class which mocks [ImagesRepository].
+/// A class which mocks [CollectionAdapter].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockImagesRepository extends _i1.Mock implements _i7.ImagesRepository {
-  MockImagesRepository() {
+class MockExpressionsCollectionAdapter extends _i1.Mock
+    implements _i8.CollectionAdapter<_i3.ExpressionModel> {
+  @override
+  _i7.Future<_i3.ExpressionModel> get(int? id) => (super.noSuchMethod(
+        Invocation.method(
+          #get,
+          [id],
+        ),
+        returnValue:
+            _i7.Future<_i3.ExpressionModel>.value(_FakeExpressionModel_1(
+          this,
+          Invocation.method(
+            #get,
+            [id],
+          ),
+        )),
+        returnValueForMissingStub:
+            _i7.Future<_i3.ExpressionModel>.value(_FakeExpressionModel_1(
+          this,
+          Invocation.method(
+            #get,
+            [id],
+          ),
+        )),
+      ) as _i7.Future<_i3.ExpressionModel>);
+  @override
+  _i7.Future<int> add(_i3.ExpressionModel? item) => (super.noSuchMethod(
+        Invocation.method(
+          #add,
+          [item],
+        ),
+        returnValue: _i7.Future<int>.value(0),
+        returnValueForMissingStub: _i7.Future<int>.value(0),
+      ) as _i7.Future<int>);
+  @override
+  _i7.Future<void> remove(int? id) => (super.noSuchMethod(
+        Invocation.method(
+          #remove,
+          [id],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+  @override
+  _i7.Future<List<_i3.ExpressionModel>> getMany(Iterable<int>? ids) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getMany,
+          [ids],
+        ),
+        returnValue: _i7.Future<List<_i3.ExpressionModel>>.value(
+            <_i3.ExpressionModel>[]),
+        returnValueForMissingStub: _i7.Future<List<_i3.ExpressionModel>>.value(
+            <_i3.ExpressionModel>[]),
+      ) as _i7.Future<List<_i3.ExpressionModel>>);
+}
+
+/// A class which mocks [CollectionAdapter].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockMascotsCollectionAdapter extends _i1.Mock
+    implements _i8.CollectionAdapter<_i4.MascotModel> {
+  @override
+  _i7.Future<_i4.MascotModel> get(int? id) => (super.noSuchMethod(
+        Invocation.method(
+          #get,
+          [id],
+        ),
+        returnValue: _i7.Future<_i4.MascotModel>.value(_FakeMascotModel_2(
+          this,
+          Invocation.method(
+            #get,
+            [id],
+          ),
+        )),
+        returnValueForMissingStub:
+            _i7.Future<_i4.MascotModel>.value(_FakeMascotModel_2(
+          this,
+          Invocation.method(
+            #get,
+            [id],
+          ),
+        )),
+      ) as _i7.Future<_i4.MascotModel>);
+  @override
+  _i7.Future<int> add(_i4.MascotModel? item) => (super.noSuchMethod(
+        Invocation.method(
+          #add,
+          [item],
+        ),
+        returnValue: _i7.Future<int>.value(0),
+        returnValueForMissingStub: _i7.Future<int>.value(0),
+      ) as _i7.Future<int>);
+  @override
+  _i7.Future<void> remove(int? id) => (super.noSuchMethod(
+        Invocation.method(
+          #remove,
+          [id],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+  @override
+  _i7.Future<List<_i4.MascotModel>> getMany(Iterable<int>? ids) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getMany,
+          [ids],
+        ),
+        returnValue:
+            _i7.Future<List<_i4.MascotModel>>.value(<_i4.MascotModel>[]),
+        returnValueForMissingStub:
+            _i7.Future<List<_i4.MascotModel>>.value(<_i4.MascotModel>[]),
+      ) as _i7.Future<List<_i4.MascotModel>>);
+}
+
+/// A class which mocks [ExpressionsRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockExpressionsRepository extends _i1.Mock
+    implements _i9.ExpressionsRepository {
+  MockExpressionsRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.Future<_i3.Either<_i8.Failure, _i9.Image>> saveImage(_i9.Image? image) =>
+  _i7.Future<_i5.Either<_i10.Failure, int>> addExpression(
+          _i11.Expression? image) =>
       (super.noSuchMethod(
         Invocation.method(
-          #saveImage,
+          #addExpression,
           [image],
         ),
-        returnValue: _i6.Future<_i3.Either<_i8.Failure, _i9.Image>>.value(
-            _FakeEither_1<_i8.Failure, _i9.Image>(
+        returnValue: _i7.Future<_i5.Either<_i10.Failure, int>>.value(
+            _FakeEither_3<_i10.Failure, int>(
           this,
           Invocation.method(
-            #saveImage,
+            #addExpression,
             [image],
           ),
         )),
-      ) as _i6.Future<_i3.Either<_i8.Failure, _i9.Image>>);
+      ) as _i7.Future<_i5.Either<_i10.Failure, int>>);
   @override
-  _i6.Future<_i3.Either<_i8.Failure, _i9.Image>> getImage(int? id) =>
+  _i7.Future<_i5.Either<_i10.Failure, List<int>>> addExpressions(
+          List<_i11.Expression>? images) =>
       (super.noSuchMethod(
         Invocation.method(
-          #getImage,
-          [id],
+          #addExpressions,
+          [images],
         ),
-        returnValue: _i6.Future<_i3.Either<_i8.Failure, _i9.Image>>.value(
-            _FakeEither_1<_i8.Failure, _i9.Image>(
+        returnValue: _i7.Future<_i5.Either<_i10.Failure, List<int>>>.value(
+            _FakeEither_3<_i10.Failure, List<int>>(
           this,
           Invocation.method(
-            #getImage,
+            #addExpressions,
+            [images],
+          ),
+        )),
+      ) as _i7.Future<_i5.Either<_i10.Failure, List<int>>>);
+  @override
+  _i7.Future<_i5.Either<_i10.Failure, _i11.Expression>> getExpression(
+          int? id) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getExpression,
+          [id],
+        ),
+        returnValue:
+            _i7.Future<_i5.Either<_i10.Failure, _i11.Expression>>.value(
+                _FakeEither_3<_i10.Failure, _i11.Expression>(
+          this,
+          Invocation.method(
+            #getExpression,
             [id],
           ),
         )),
-      ) as _i6.Future<_i3.Either<_i8.Failure, _i9.Image>>);
+      ) as _i7.Future<_i5.Either<_i10.Failure, _i11.Expression>>);
+  @override
+  _i7.Future<_i5.Either<_i10.Failure, List<_i11.Expression>>> getExpressions(
+          List<int>? ids) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getExpressions,
+          [ids],
+        ),
+        returnValue:
+            _i7.Future<_i5.Either<_i10.Failure, List<_i11.Expression>>>.value(
+                _FakeEither_3<_i10.Failure, List<_i11.Expression>>(
+          this,
+          Invocation.method(
+            #getExpressions,
+            [ids],
+          ),
+        )),
+      ) as _i7.Future<_i5.Either<_i10.Failure, List<_i11.Expression>>>);
 }
 
-/// A class which mocks [ImagesLocalDataSource].
+/// A class which mocks [ExpressionsLocalDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockImagesLocalDataSource extends _i1.Mock
-    implements _i10.ImagesLocalDataSource {
-  MockImagesLocalDataSource() {
+class MockExpressionsLocalDataSource extends _i1.Mock
+    implements _i12.ExpressionsLocalDataSource {
+  MockExpressionsLocalDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.Future<_i4.ImageModel> saveImage(_i4.ImageModel? image) =>
+  _i7.Future<int> addExpression(_i3.ExpressionModel? image) =>
       (super.noSuchMethod(
         Invocation.method(
-          #saveImage,
+          #addExpression,
           [image],
         ),
-        returnValue: _i6.Future<_i4.ImageModel>.value(_FakeImageModel_2(
-          this,
-          Invocation.method(
-            #saveImage,
-            [image],
-          ),
-        )),
-      ) as _i6.Future<_i4.ImageModel>);
+        returnValue: _i7.Future<int>.value(0),
+      ) as _i7.Future<int>);
   @override
-  _i6.Future<_i4.ImageModel> getImage(int? id) => (super.noSuchMethod(
+  _i7.Future<_i3.ExpressionModel> getExpression(int? id) => (super.noSuchMethod(
         Invocation.method(
-          #getImage,
+          #getExpression,
           [id],
         ),
-        returnValue: _i6.Future<_i4.ImageModel>.value(_FakeImageModel_2(
+        returnValue:
+            _i7.Future<_i3.ExpressionModel>.value(_FakeExpressionModel_1(
           this,
           Invocation.method(
-            #getImage,
+            #getExpression,
             [id],
           ),
         )),
-      ) as _i6.Future<_i4.ImageModel>);
+      ) as _i7.Future<_i3.ExpressionModel>);
+  @override
+  _i7.Future<void> removeExpression(int? id) => (super.noSuchMethod(
+        Invocation.method(
+          #removeExpression,
+          [id],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+  @override
+  _i7.Future<List<_i3.ExpressionModel>> getExpressions(List<int>? ids) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getExpressions,
+          [ids],
+        ),
+        returnValue: _i7.Future<List<_i3.ExpressionModel>>.value(
+            <_i3.ExpressionModel>[]),
+      ) as _i7.Future<List<_i3.ExpressionModel>>);
+}
+
+/// A class which mocks [MascotsLocalDataSource].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockMascotsLocalDataSource extends _i1.Mock
+    implements _i13.MascotsLocalDataSource {
+  MockMascotsLocalDataSource() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i7.Future<int> addMascot(_i4.MascotModel? mascot) => (super.noSuchMethod(
+        Invocation.method(
+          #addMascot,
+          [mascot],
+        ),
+        returnValue: _i7.Future<int>.value(0),
+      ) as _i7.Future<int>);
+  @override
+  _i7.Future<_i4.MascotModel> getMascot(int? id) => (super.noSuchMethod(
+        Invocation.method(
+          #getMascot,
+          [id],
+        ),
+        returnValue: _i7.Future<_i4.MascotModel>.value(_FakeMascotModel_2(
+          this,
+          Invocation.method(
+            #getMascot,
+            [id],
+          ),
+        )),
+      ) as _i7.Future<_i4.MascotModel>);
 }
 
 /// A class which mocks [IsarCollection].
@@ -426,7 +645,7 @@ class MockIsarCollection<OBJ> extends _i1.Mock
   @override
   _i2.Isar get isar => (super.noSuchMethod(
         Invocation.getter(#isar),
-        returnValue: _FakeIsar_3(
+        returnValue: _FakeIsar_4(
           this,
           Invocation.getter(#isar),
         ),
@@ -434,7 +653,7 @@ class MockIsarCollection<OBJ> extends _i1.Mock
   @override
   _i2.CollectionSchema<OBJ> get schema => (super.noSuchMethod(
         Invocation.getter(#schema),
-        returnValue: _FakeCollectionSchema_4<OBJ>(
+        returnValue: _FakeCollectionSchema_5<OBJ>(
           this,
           Invocation.getter(#schema),
         ),
@@ -445,26 +664,26 @@ class MockIsarCollection<OBJ> extends _i1.Mock
         returnValue: '',
       ) as String);
   @override
-  _i6.Future<OBJ?> get(int? id) => (super.noSuchMethod(
+  _i7.Future<OBJ?> get(int? id) => (super.noSuchMethod(
         Invocation.method(
           #get,
           [id],
         ),
-        returnValue: _i6.Future<OBJ?>.value(),
-      ) as _i6.Future<OBJ?>);
+        returnValue: _i7.Future<OBJ?>.value(),
+      ) as _i7.Future<OBJ?>);
   @override
   OBJ? getSync(int? id) => (super.noSuchMethod(Invocation.method(
         #getSync,
         [id],
       )) as OBJ?);
   @override
-  _i6.Future<List<OBJ?>> getAll(List<int>? ids) => (super.noSuchMethod(
+  _i7.Future<List<OBJ?>> getAll(List<int>? ids) => (super.noSuchMethod(
         Invocation.method(
           #getAll,
           [ids],
         ),
-        returnValue: _i6.Future<List<OBJ?>>.value(<OBJ?>[]),
-      ) as _i6.Future<List<OBJ?>>);
+        returnValue: _i7.Future<List<OBJ?>>.value(<OBJ?>[]),
+      ) as _i7.Future<List<OBJ?>>);
   @override
   List<OBJ?> getAllSync(List<int>? ids) => (super.noSuchMethod(
         Invocation.method(
@@ -474,7 +693,7 @@ class MockIsarCollection<OBJ> extends _i1.Mock
         returnValue: <OBJ?>[],
       ) as List<OBJ?>);
   @override
-  _i6.Future<OBJ?> getByIndex(
+  _i7.Future<OBJ?> getByIndex(
     String? indexName,
     List<Object?>? key,
   ) =>
@@ -486,8 +705,8 @@ class MockIsarCollection<OBJ> extends _i1.Mock
             key,
           ],
         ),
-        returnValue: _i6.Future<OBJ?>.value(),
-      ) as _i6.Future<OBJ?>);
+        returnValue: _i7.Future<OBJ?>.value(),
+      ) as _i7.Future<OBJ?>);
   @override
   OBJ? getByIndexSync(
     String? indexName,
@@ -501,7 +720,7 @@ class MockIsarCollection<OBJ> extends _i1.Mock
         ],
       )) as OBJ?);
   @override
-  _i6.Future<List<OBJ?>> getAllByIndex(
+  _i7.Future<List<OBJ?>> getAllByIndex(
     String? indexName,
     List<List<Object?>>? keys,
   ) =>
@@ -513,8 +732,8 @@ class MockIsarCollection<OBJ> extends _i1.Mock
             keys,
           ],
         ),
-        returnValue: _i6.Future<List<OBJ?>>.value(<OBJ?>[]),
-      ) as _i6.Future<List<OBJ?>>);
+        returnValue: _i7.Future<List<OBJ?>>.value(<OBJ?>[]),
+      ) as _i7.Future<List<OBJ?>>);
   @override
   List<OBJ?> getAllByIndexSync(
     String? indexName,
@@ -531,13 +750,13 @@ class MockIsarCollection<OBJ> extends _i1.Mock
         returnValue: <OBJ?>[],
       ) as List<OBJ?>);
   @override
-  _i6.Future<int> put(OBJ? object) => (super.noSuchMethod(
+  _i7.Future<int> put(OBJ? object) => (super.noSuchMethod(
         Invocation.method(
           #put,
           [object],
         ),
-        returnValue: _i6.Future<int>.value(0),
-      ) as _i6.Future<int>);
+        returnValue: _i7.Future<int>.value(0),
+      ) as _i7.Future<int>);
   @override
   int putSync(
     OBJ? object, {
@@ -552,13 +771,13 @@ class MockIsarCollection<OBJ> extends _i1.Mock
         returnValue: 0,
       ) as int);
   @override
-  _i6.Future<List<int>> putAll(List<OBJ>? objects) => (super.noSuchMethod(
+  _i7.Future<List<int>> putAll(List<OBJ>? objects) => (super.noSuchMethod(
         Invocation.method(
           #putAll,
           [objects],
         ),
-        returnValue: _i6.Future<List<int>>.value(<int>[]),
-      ) as _i6.Future<List<int>>);
+        returnValue: _i7.Future<List<int>>.value(<int>[]),
+      ) as _i7.Future<List<int>>);
   @override
   List<int> putAllSync(
     List<OBJ>? objects, {
@@ -573,7 +792,7 @@ class MockIsarCollection<OBJ> extends _i1.Mock
         returnValue: <int>[],
       ) as List<int>);
   @override
-  _i6.Future<int> putByIndex(
+  _i7.Future<int> putByIndex(
     String? indexName,
     OBJ? object,
   ) =>
@@ -585,8 +804,8 @@ class MockIsarCollection<OBJ> extends _i1.Mock
             object,
           ],
         ),
-        returnValue: _i6.Future<int>.value(0),
-      ) as _i6.Future<int>);
+        returnValue: _i7.Future<int>.value(0),
+      ) as _i7.Future<int>);
   @override
   int putByIndexSync(
     String? indexName,
@@ -605,7 +824,7 @@ class MockIsarCollection<OBJ> extends _i1.Mock
         returnValue: 0,
       ) as int);
   @override
-  _i6.Future<List<int>> putAllByIndex(
+  _i7.Future<List<int>> putAllByIndex(
     String? indexName,
     List<OBJ>? objects,
   ) =>
@@ -617,8 +836,8 @@ class MockIsarCollection<OBJ> extends _i1.Mock
             objects,
           ],
         ),
-        returnValue: _i6.Future<List<int>>.value(<int>[]),
-      ) as _i6.Future<List<int>>);
+        returnValue: _i7.Future<List<int>>.value(<int>[]),
+      ) as _i7.Future<List<int>>);
   @override
   List<int> putAllByIndexSync(
     String? indexName,
@@ -637,13 +856,13 @@ class MockIsarCollection<OBJ> extends _i1.Mock
         returnValue: <int>[],
       ) as List<int>);
   @override
-  _i6.Future<bool> delete(int? id) => (super.noSuchMethod(
+  _i7.Future<bool> delete(int? id) => (super.noSuchMethod(
         Invocation.method(
           #delete,
           [id],
         ),
-        returnValue: _i6.Future<bool>.value(false),
-      ) as _i6.Future<bool>);
+        returnValue: _i7.Future<bool>.value(false),
+      ) as _i7.Future<bool>);
   @override
   bool deleteSync(int? id) => (super.noSuchMethod(
         Invocation.method(
@@ -653,13 +872,13 @@ class MockIsarCollection<OBJ> extends _i1.Mock
         returnValue: false,
       ) as bool);
   @override
-  _i6.Future<int> deleteAll(List<int>? ids) => (super.noSuchMethod(
+  _i7.Future<int> deleteAll(List<int>? ids) => (super.noSuchMethod(
         Invocation.method(
           #deleteAll,
           [ids],
         ),
-        returnValue: _i6.Future<int>.value(0),
-      ) as _i6.Future<int>);
+        returnValue: _i7.Future<int>.value(0),
+      ) as _i7.Future<int>);
   @override
   int deleteAllSync(List<int>? ids) => (super.noSuchMethod(
         Invocation.method(
@@ -669,7 +888,7 @@ class MockIsarCollection<OBJ> extends _i1.Mock
         returnValue: 0,
       ) as int);
   @override
-  _i6.Future<bool> deleteByIndex(
+  _i7.Future<bool> deleteByIndex(
     String? indexName,
     List<Object?>? key,
   ) =>
@@ -681,8 +900,8 @@ class MockIsarCollection<OBJ> extends _i1.Mock
             key,
           ],
         ),
-        returnValue: _i6.Future<bool>.value(false),
-      ) as _i6.Future<bool>);
+        returnValue: _i7.Future<bool>.value(false),
+      ) as _i7.Future<bool>);
   @override
   bool deleteByIndexSync(
     String? indexName,
@@ -699,7 +918,7 @@ class MockIsarCollection<OBJ> extends _i1.Mock
         returnValue: false,
       ) as bool);
   @override
-  _i6.Future<int> deleteAllByIndex(
+  _i7.Future<int> deleteAllByIndex(
     String? indexName,
     List<List<Object?>>? keys,
   ) =>
@@ -711,8 +930,8 @@ class MockIsarCollection<OBJ> extends _i1.Mock
             keys,
           ],
         ),
-        returnValue: _i6.Future<int>.value(0),
-      ) as _i6.Future<int>);
+        returnValue: _i7.Future<int>.value(0),
+      ) as _i7.Future<int>);
   @override
   int deleteAllByIndexSync(
     String? indexName,
@@ -729,14 +948,14 @@ class MockIsarCollection<OBJ> extends _i1.Mock
         returnValue: 0,
       ) as int);
   @override
-  _i6.Future<void> clear() => (super.noSuchMethod(
+  _i7.Future<void> clear() => (super.noSuchMethod(
         Invocation.method(
           #clear,
           [],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
   @override
   void clearSync() => super.noSuchMethod(
         Invocation.method(
@@ -746,17 +965,17 @@ class MockIsarCollection<OBJ> extends _i1.Mock
         returnValueForMissingStub: null,
       );
   @override
-  _i6.Future<void> importJsonRaw(_i11.Uint8List? jsonBytes) =>
+  _i7.Future<void> importJsonRaw(_i14.Uint8List? jsonBytes) =>
       (super.noSuchMethod(
         Invocation.method(
           #importJsonRaw,
           [jsonBytes],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
   @override
-  void importJsonRawSync(_i11.Uint8List? jsonBytes) => super.noSuchMethod(
+  void importJsonRawSync(_i14.Uint8List? jsonBytes) => super.noSuchMethod(
         Invocation.method(
           #importJsonRawSync,
           [jsonBytes],
@@ -764,15 +983,15 @@ class MockIsarCollection<OBJ> extends _i1.Mock
         returnValueForMissingStub: null,
       );
   @override
-  _i6.Future<void> importJson(List<Map<String, dynamic>>? json) =>
+  _i7.Future<void> importJson(List<Map<String, dynamic>>? json) =>
       (super.noSuchMethod(
         Invocation.method(
           #importJson,
           [json],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
   @override
   void importJsonSync(List<Map<String, dynamic>>? json) => super.noSuchMethod(
         Invocation.method(
@@ -795,7 +1014,7 @@ class MockIsarCollection<OBJ> extends _i1.Mock
             #sort: sort,
           },
         ),
-        returnValue: _FakeQueryBuilder_5<OBJ, OBJ, _i2.QWhere>(
+        returnValue: _FakeQueryBuilder_6<OBJ, OBJ, _i2.QWhere>(
           this,
           Invocation.method(
             #where,
@@ -814,7 +1033,7 @@ class MockIsarCollection<OBJ> extends _i1.Mock
           #filter,
           [],
         ),
-        returnValue: _FakeQueryBuilder_5<OBJ, OBJ, _i2.QFilterCondition>(
+        returnValue: _FakeQueryBuilder_6<OBJ, OBJ, _i2.QFilterCondition>(
           this,
           Invocation.method(
             #filter,
@@ -850,7 +1069,7 @@ class MockIsarCollection<OBJ> extends _i1.Mock
             #property: property,
           },
         ),
-        returnValue: _FakeQuery_6<R>(
+        returnValue: _FakeQuery_7<R>(
           this,
           Invocation.method(
             #buildQuery,
@@ -870,13 +1089,13 @@ class MockIsarCollection<OBJ> extends _i1.Mock
         ),
       ) as _i2.Query<R>);
   @override
-  _i6.Future<int> count() => (super.noSuchMethod(
+  _i7.Future<int> count() => (super.noSuchMethod(
         Invocation.method(
           #count,
           [],
         ),
-        returnValue: _i6.Future<int>.value(0),
-      ) as _i6.Future<int>);
+        returnValue: _i7.Future<int>.value(0),
+      ) as _i7.Future<int>);
   @override
   int countSync() => (super.noSuchMethod(
         Invocation.method(
@@ -886,7 +1105,7 @@ class MockIsarCollection<OBJ> extends _i1.Mock
         returnValue: 0,
       ) as int);
   @override
-  _i6.Future<int> getSize({
+  _i7.Future<int> getSize({
     bool? includeIndexes = false,
     bool? includeLinks = false,
   }) =>
@@ -899,8 +1118,8 @@ class MockIsarCollection<OBJ> extends _i1.Mock
             #includeLinks: includeLinks,
           },
         ),
-        returnValue: _i6.Future<int>.value(0),
-      ) as _i6.Future<int>);
+        returnValue: _i7.Future<int>.value(0),
+      ) as _i7.Future<int>);
   @override
   int getSizeSync({
     bool? includeIndexes = false,
@@ -918,17 +1137,17 @@ class MockIsarCollection<OBJ> extends _i1.Mock
         returnValue: 0,
       ) as int);
   @override
-  _i6.Stream<void> watchLazy({bool? fireImmediately = false}) =>
+  _i7.Stream<void> watchLazy({bool? fireImmediately = false}) =>
       (super.noSuchMethod(
         Invocation.method(
           #watchLazy,
           [],
           {#fireImmediately: fireImmediately},
         ),
-        returnValue: _i6.Stream<void>.empty(),
-      ) as _i6.Stream<void>);
+        returnValue: _i7.Stream<void>.empty(),
+      ) as _i7.Stream<void>);
   @override
-  _i6.Stream<OBJ?> watchObject(
+  _i7.Stream<OBJ?> watchObject(
     int? id, {
     bool? fireImmediately = false,
   }) =>
@@ -938,10 +1157,10 @@ class MockIsarCollection<OBJ> extends _i1.Mock
           [id],
           {#fireImmediately: fireImmediately},
         ),
-        returnValue: _i6.Stream<OBJ?>.empty(),
-      ) as _i6.Stream<OBJ?>);
+        returnValue: _i7.Stream<OBJ?>.empty(),
+      ) as _i7.Stream<OBJ?>);
   @override
-  _i6.Stream<void> watchObjectLazy(
+  _i7.Stream<void> watchObjectLazy(
     int? id, {
     bool? fireImmediately = false,
   }) =>
@@ -951,19 +1170,19 @@ class MockIsarCollection<OBJ> extends _i1.Mock
           [id],
           {#fireImmediately: fireImmediately},
         ),
-        returnValue: _i6.Stream<void>.empty(),
-      ) as _i6.Stream<void>);
+        returnValue: _i7.Stream<void>.empty(),
+      ) as _i7.Stream<void>);
   @override
-  _i6.Future<void> verify(List<OBJ>? objects) => (super.noSuchMethod(
+  _i7.Future<void> verify(List<OBJ>? objects) => (super.noSuchMethod(
         Invocation.method(
           #verify,
           [objects],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
   @override
-  _i6.Future<void> verifyLink(
+  _i7.Future<void> verifyLink(
     String? linkName,
     List<int>? sourceIds,
     List<int>? targetIds,
@@ -977,15 +1196,15 @@ class MockIsarCollection<OBJ> extends _i1.Mock
             targetIds,
           ],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
 }
 
 /// A class which mocks [Box].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockBox<E> extends _i1.Mock implements _i5.Box<E> {
+class MockBox<E> extends _i1.Mock implements _i6.Box<E> {
   MockBox() {
     _i1.throwOnMissingStub(this);
   }
@@ -1065,14 +1284,14 @@ class MockBox<E> extends _i1.Mock implements _i5.Box<E> {
         [index],
       ));
   @override
-  _i6.Stream<_i5.BoxEvent> watch({dynamic key}) => (super.noSuchMethod(
+  _i7.Stream<_i6.BoxEvent> watch({dynamic key}) => (super.noSuchMethod(
         Invocation.method(
           #watch,
           [],
           {#key: key},
         ),
-        returnValue: _i6.Stream<_i5.BoxEvent>.empty(),
-      ) as _i6.Stream<_i5.BoxEvent>);
+        returnValue: _i7.Stream<_i6.BoxEvent>.empty(),
+      ) as _i7.Stream<_i6.BoxEvent>);
   @override
   bool containsKey(dynamic key) => (super.noSuchMethod(
         Invocation.method(
@@ -1082,7 +1301,7 @@ class MockBox<E> extends _i1.Mock implements _i5.Box<E> {
         returnValue: false,
       ) as bool);
   @override
-  _i6.Future<void> put(
+  _i7.Future<void> put(
     dynamic key,
     E? value,
   ) =>
@@ -1094,11 +1313,11 @@ class MockBox<E> extends _i1.Mock implements _i5.Box<E> {
             value,
           ],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
   @override
-  _i6.Future<void> putAt(
+  _i7.Future<void> putAt(
     int? index,
     E? value,
   ) =>
@@ -1110,111 +1329,111 @@ class MockBox<E> extends _i1.Mock implements _i5.Box<E> {
             value,
           ],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
   @override
-  _i6.Future<void> putAll(Map<dynamic, E>? entries) => (super.noSuchMethod(
+  _i7.Future<void> putAll(Map<dynamic, E>? entries) => (super.noSuchMethod(
         Invocation.method(
           #putAll,
           [entries],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
   @override
-  _i6.Future<int> add(E? value) => (super.noSuchMethod(
+  _i7.Future<int> add(E? value) => (super.noSuchMethod(
         Invocation.method(
           #add,
           [value],
         ),
-        returnValue: _i6.Future<int>.value(0),
-      ) as _i6.Future<int>);
+        returnValue: _i7.Future<int>.value(0),
+      ) as _i7.Future<int>);
   @override
-  _i6.Future<Iterable<int>> addAll(Iterable<E>? values) => (super.noSuchMethod(
+  _i7.Future<Iterable<int>> addAll(Iterable<E>? values) => (super.noSuchMethod(
         Invocation.method(
           #addAll,
           [values],
         ),
-        returnValue: _i6.Future<Iterable<int>>.value(<int>[]),
-      ) as _i6.Future<Iterable<int>>);
+        returnValue: _i7.Future<Iterable<int>>.value(<int>[]),
+      ) as _i7.Future<Iterable<int>>);
   @override
-  _i6.Future<void> delete(dynamic key) => (super.noSuchMethod(
+  _i7.Future<void> delete(dynamic key) => (super.noSuchMethod(
         Invocation.method(
           #delete,
           [key],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
   @override
-  _i6.Future<void> deleteAt(int? index) => (super.noSuchMethod(
+  _i7.Future<void> deleteAt(int? index) => (super.noSuchMethod(
         Invocation.method(
           #deleteAt,
           [index],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
   @override
-  _i6.Future<void> deleteAll(Iterable<dynamic>? keys) => (super.noSuchMethod(
+  _i7.Future<void> deleteAll(Iterable<dynamic>? keys) => (super.noSuchMethod(
         Invocation.method(
           #deleteAll,
           [keys],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
   @override
-  _i6.Future<void> compact() => (super.noSuchMethod(
+  _i7.Future<void> compact() => (super.noSuchMethod(
         Invocation.method(
           #compact,
           [],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
   @override
-  _i6.Future<int> clear() => (super.noSuchMethod(
+  _i7.Future<int> clear() => (super.noSuchMethod(
         Invocation.method(
           #clear,
           [],
         ),
-        returnValue: _i6.Future<int>.value(0),
-      ) as _i6.Future<int>);
+        returnValue: _i7.Future<int>.value(0),
+      ) as _i7.Future<int>);
   @override
-  _i6.Future<void> close() => (super.noSuchMethod(
+  _i7.Future<void> close() => (super.noSuchMethod(
         Invocation.method(
           #close,
           [],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
   @override
-  _i6.Future<void> deleteFromDisk() => (super.noSuchMethod(
+  _i7.Future<void> deleteFromDisk() => (super.noSuchMethod(
         Invocation.method(
           #deleteFromDisk,
           [],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
   @override
-  _i6.Future<void> flush() => (super.noSuchMethod(
+  _i7.Future<void> flush() => (super.noSuchMethod(
         Invocation.method(
           #flush,
           [],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
 }
 
 /// A class which mocks [HiveInterface].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockHiveInterface extends _i1.Mock implements _i5.HiveInterface {
+class MockHiveInterface extends _i1.Mock implements _i6.HiveInterface {
   MockHiveInterface() {
     _i1.throwOnMissingStub(this);
   }
@@ -1222,8 +1441,8 @@ class MockHiveInterface extends _i1.Mock implements _i5.HiveInterface {
   @override
   void init(
     String? path, {
-    _i5.HiveStorageBackendPreference? backendPreference =
-        _i5.HiveStorageBackendPreference.native,
+    _i6.HiveStorageBackendPreference? backendPreference =
+        _i6.HiveStorageBackendPreference.native,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -1234,14 +1453,14 @@ class MockHiveInterface extends _i1.Mock implements _i5.HiveInterface {
         returnValueForMissingStub: null,
       );
   @override
-  _i6.Future<_i5.Box<E>> openBox<E>(
+  _i7.Future<_i6.Box<E>> openBox<E>(
     String? name, {
-    _i5.HiveCipher? encryptionCipher,
-    _i5.KeyComparator? keyComparator = _i12.defaultKeyComparator,
-    _i5.CompactionStrategy? compactionStrategy = _i13.defaultCompactionStrategy,
+    _i6.HiveCipher? encryptionCipher,
+    _i6.KeyComparator? keyComparator = _i15.defaultKeyComparator,
+    _i6.CompactionStrategy? compactionStrategy = _i16.defaultCompactionStrategy,
     bool? crashRecovery = true,
     String? path,
-    _i11.Uint8List? bytes,
+    _i14.Uint8List? bytes,
     String? collection,
     List<int>? encryptionKey,
   }) =>
@@ -1260,7 +1479,7 @@ class MockHiveInterface extends _i1.Mock implements _i5.HiveInterface {
             #encryptionKey: encryptionKey,
           },
         ),
-        returnValue: _i6.Future<_i5.Box<E>>.value(_FakeBox_7<E>(
+        returnValue: _i7.Future<_i6.Box<E>>.value(_FakeBox_8<E>(
           this,
           Invocation.method(
             #openBox,
@@ -1277,13 +1496,13 @@ class MockHiveInterface extends _i1.Mock implements _i5.HiveInterface {
             },
           ),
         )),
-      ) as _i6.Future<_i5.Box<E>>);
+      ) as _i7.Future<_i6.Box<E>>);
   @override
-  _i6.Future<_i5.LazyBox<E>> openLazyBox<E>(
+  _i7.Future<_i6.LazyBox<E>> openLazyBox<E>(
     String? name, {
-    _i5.HiveCipher? encryptionCipher,
-    _i5.KeyComparator? keyComparator = _i12.defaultKeyComparator,
-    _i5.CompactionStrategy? compactionStrategy = _i13.defaultCompactionStrategy,
+    _i6.HiveCipher? encryptionCipher,
+    _i6.KeyComparator? keyComparator = _i15.defaultKeyComparator,
+    _i6.CompactionStrategy? compactionStrategy = _i16.defaultCompactionStrategy,
     bool? crashRecovery = true,
     String? path,
     String? collection,
@@ -1303,7 +1522,7 @@ class MockHiveInterface extends _i1.Mock implements _i5.HiveInterface {
             #encryptionKey: encryptionKey,
           },
         ),
-        returnValue: _i6.Future<_i5.LazyBox<E>>.value(_FakeLazyBox_8<E>(
+        returnValue: _i7.Future<_i6.LazyBox<E>>.value(_FakeLazyBox_9<E>(
           this,
           Invocation.method(
             #openLazyBox,
@@ -1319,35 +1538,35 @@ class MockHiveInterface extends _i1.Mock implements _i5.HiveInterface {
             },
           ),
         )),
-      ) as _i6.Future<_i5.LazyBox<E>>);
+      ) as _i7.Future<_i6.LazyBox<E>>);
   @override
-  _i5.Box<E> box<E>(String? name) => (super.noSuchMethod(
+  _i6.Box<E> box<E>(String? name) => (super.noSuchMethod(
         Invocation.method(
           #box,
           [name],
         ),
-        returnValue: _FakeBox_7<E>(
+        returnValue: _FakeBox_8<E>(
           this,
           Invocation.method(
             #box,
             [name],
           ),
         ),
-      ) as _i5.Box<E>);
+      ) as _i6.Box<E>);
   @override
-  _i5.LazyBox<E> lazyBox<E>(String? name) => (super.noSuchMethod(
+  _i6.LazyBox<E> lazyBox<E>(String? name) => (super.noSuchMethod(
         Invocation.method(
           #lazyBox,
           [name],
         ),
-        returnValue: _FakeLazyBox_8<E>(
+        returnValue: _FakeLazyBox_9<E>(
           this,
           Invocation.method(
             #lazyBox,
             [name],
           ),
         ),
-      ) as _i5.LazyBox<E>);
+      ) as _i6.LazyBox<E>);
   @override
   bool isBoxOpen(String? name) => (super.noSuchMethod(
         Invocation.method(
@@ -1357,16 +1576,16 @@ class MockHiveInterface extends _i1.Mock implements _i5.HiveInterface {
         returnValue: false,
       ) as bool);
   @override
-  _i6.Future<void> close() => (super.noSuchMethod(
+  _i7.Future<void> close() => (super.noSuchMethod(
         Invocation.method(
           #close,
           [],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
   @override
-  _i6.Future<void> deleteBoxFromDisk(
+  _i7.Future<void> deleteBoxFromDisk(
     String? name, {
     String? path,
   }) =>
@@ -1376,18 +1595,18 @@ class MockHiveInterface extends _i1.Mock implements _i5.HiveInterface {
           [name],
           {#path: path},
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
   @override
-  _i6.Future<void> deleteFromDisk() => (super.noSuchMethod(
+  _i7.Future<void> deleteFromDisk() => (super.noSuchMethod(
         Invocation.method(
           #deleteFromDisk,
           [],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
   @override
   List<int> generateSecureKey() => (super.noSuchMethod(
         Invocation.method(
@@ -1397,7 +1616,7 @@ class MockHiveInterface extends _i1.Mock implements _i5.HiveInterface {
         returnValue: <int>[],
       ) as List<int>);
   @override
-  _i6.Future<bool> boxExists(
+  _i7.Future<bool> boxExists(
     String? name, {
     String? path,
   }) =>
@@ -1407,8 +1626,8 @@ class MockHiveInterface extends _i1.Mock implements _i5.HiveInterface {
           [name],
           {#path: path},
         ),
-        returnValue: _i6.Future<bool>.value(false),
-      ) as _i6.Future<bool>);
+        returnValue: _i7.Future<bool>.value(false),
+      ) as _i7.Future<bool>);
   @override
   void resetAdapters() => super.noSuchMethod(
         Invocation.method(
@@ -1419,7 +1638,7 @@ class MockHiveInterface extends _i1.Mock implements _i5.HiveInterface {
       );
   @override
   void registerAdapter<T>(
-    _i5.TypeAdapter<T>? adapter, {
+    _i6.TypeAdapter<T>? adapter, {
     bool? internal = false,
     bool? override = false,
   }) =>
@@ -1452,152 +1671,96 @@ class MockHiveInterface extends _i1.Mock implements _i5.HiveInterface {
       );
 }
 
-/// A class which mocks [LocalImages].
+/// A class which mocks [MascotsRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLocalImages extends _i1.Mock implements _i14.LocalImages {
-  MockLocalImages() {
+class MockMascotsRepository extends _i1.Mock implements _i17.MascotsRepository {
+  MockMascotsRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Box<_i4.ImageModel> get collection => (super.noSuchMethod(
-        Invocation.getter(#collection),
-        returnValue: _FakeBox_7<_i4.ImageModel>(
-          this,
-          Invocation.getter(#collection),
-        ),
-      ) as _i5.Box<_i4.ImageModel>);
-  @override
-  _i6.Future<_i4.ImageModel> get(int? id) => (super.noSuchMethod(
+  _i7.Future<_i5.Either<_i10.Failure, int>> addMascot(_i18.Mascot? mascot) =>
+      (super.noSuchMethod(
         Invocation.method(
-          #get,
-          [id],
+          #addMascot,
+          [mascot],
         ),
-        returnValue: _i6.Future<_i4.ImageModel>.value(_FakeImageModel_2(
+        returnValue: _i7.Future<_i5.Either<_i10.Failure, int>>.value(
+            _FakeEither_3<_i10.Failure, int>(
           this,
           Invocation.method(
-            #get,
+            #addMascot,
+            [mascot],
+          ),
+        )),
+      ) as _i7.Future<_i5.Either<_i10.Failure, int>>);
+  @override
+  _i7.Future<_i5.Either<_i10.Failure, _i18.Mascot>> getMascot(int? id) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getMascot,
+          [id],
+        ),
+        returnValue: _i7.Future<_i5.Either<_i10.Failure, _i18.Mascot>>.value(
+            _FakeEither_3<_i10.Failure, _i18.Mascot>(
+          this,
+          Invocation.method(
+            #getMascot,
             [id],
           ),
         )),
-      ) as _i6.Future<_i4.ImageModel>);
-  @override
-  _i6.Future<_i4.ImageModel> save(_i4.ImageModel? item) => (super.noSuchMethod(
-        Invocation.method(
-          #save,
-          [item],
-        ),
-        returnValue: _i6.Future<_i4.ImageModel>.value(_FakeImageModel_2(
-          this,
-          Invocation.method(
-            #save,
-            [item],
-          ),
-        )),
-      ) as _i6.Future<_i4.ImageModel>);
+      ) as _i7.Future<_i5.Either<_i10.Failure, _i18.Mascot>>);
 }
 
-/// A class which mocks [ConvertXfileToImage].
+/// A class which mocks [SaveMascot].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockConvertXfileToImage extends _i1.Mock
-    implements _i15.ConvertXfileToImage {
-  MockConvertXfileToImage() {
+class MockSaveMascot extends _i1.Mock implements _i19.SaveMascot {
+  MockSaveMascot() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.Future<_i3.Either<_i8.Failure, _i9.Image>> call(_i16.XFile? input) =>
+  _i7.Future<_i5.Either<_i10.Failure, int>> call(_i18.Mascot? mascot) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
-          [input],
+          [mascot],
         ),
-        returnValue: _i6.Future<_i3.Either<_i8.Failure, _i9.Image>>.value(
-            _FakeEither_1<_i8.Failure, _i9.Image>(
+        returnValue: _i7.Future<_i5.Either<_i10.Failure, int>>.value(
+            _FakeEither_3<_i10.Failure, int>(
           this,
           Invocation.method(
             #call,
-            [input],
+            [mascot],
           ),
         )),
-      ) as _i6.Future<_i3.Either<_i8.Failure, _i9.Image>>);
+      ) as _i7.Future<_i5.Either<_i10.Failure, int>>);
 }
 
-/// A class which mocks [MapImageToImageModel].
+/// A class which mocks [GetMascot].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMapImageToImageModel extends _i1.Mock
-    implements _i17.MapImageToImageModel {
-  MockMapImageToImageModel() {
+class MockGetMascot extends _i1.Mock implements _i20.GetMascot {
+  MockGetMascot() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.ImageModel call(_i9.Image? input) => (super.noSuchMethod(
-        Invocation.method(
-          #call,
-          [input],
-        ),
-        returnValue: _FakeImageModel_2(
-          this,
-          Invocation.method(
-            #call,
-            [input],
-          ),
-        ),
-      ) as _i4.ImageModel);
-}
-
-/// A class which mocks [GetImage].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockGetImage extends _i1.Mock implements _i18.GetImage {
-  MockGetImage() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  _i6.Future<_i3.Either<_i8.Failure, _i9.Image>> call(int? params) =>
+  _i7.Future<_i5.Either<_i10.Failure, _i18.Mascot>> call(int? params) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [params],
         ),
-        returnValue: _i6.Future<_i3.Either<_i8.Failure, _i9.Image>>.value(
-            _FakeEither_1<_i8.Failure, _i9.Image>(
+        returnValue: _i7.Future<_i5.Either<_i10.Failure, _i18.Mascot>>.value(
+            _FakeEither_3<_i10.Failure, _i18.Mascot>(
           this,
           Invocation.method(
             #call,
             [params],
           ),
         )),
-      ) as _i6.Future<_i3.Either<_i8.Failure, _i9.Image>>);
-}
-
-/// A class which mocks [SaveImage].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockSaveImage extends _i1.Mock implements _i19.SaveImage {
-  MockSaveImage() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  _i6.Future<_i3.Either<_i8.Failure, _i9.Image>> call(_i9.Image? params) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #call,
-          [params],
-        ),
-        returnValue: _i6.Future<_i3.Either<_i8.Failure, _i9.Image>>.value(
-            _FakeEither_1<_i8.Failure, _i9.Image>(
-          this,
-          Invocation.method(
-            #call,
-            [params],
-          ),
-        )),
-      ) as _i6.Future<_i3.Either<_i8.Failure, _i9.Image>>);
+      ) as _i7.Future<_i5.Either<_i10.Failure, _i18.Mascot>>);
 }
