@@ -13,9 +13,9 @@ import 'package:mascot/features/mascot/domain/entities/mascot.dart';
 import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../fixtures/test_context.dart';
-import '../../../fixtures/test_data.dart';
-import '../../../fixtures/test_x_file.dart';
+import '../../../../fixtures/test_context.dart';
+import '../../../../fixtures/test_data.dart';
+import '../../../../fixtures/test_x_file.dart';
 
 void main() {
   group('CreateMascotBloc', () {
