@@ -21,7 +21,7 @@
     }
   },
   // Use 'postCreateCommand' to run commands after the container is created.
-  // "postCreateCommand": "./scripts/postContainerCreate.sh",
+  "postCreateCommand": "flutter pub get",
   "forwardPorts": [
     5000, // HTTP
     9005

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import 'core/injection/injection_container.dart';
+import 'core/theme/color_schemes.dart';
 import 'features/mascot/presentation/widgets/create_mascot_fab.dart';
 
 Future main() async {
@@ -18,9 +19,14 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'mascot',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        colorScheme: lightColorScheme,
         useMaterial3: true,
       ),
+      darkTheme: ThemeData(
+        colorScheme: darkColorScheme,
+        useMaterial3: true,
+      ),
+      themeMode: ThemeMode.dark,
       builder: (context, child) => ResponsiveWrapper.builder(
         BouncingScrollWrapper.builder(context, child!),
         minWidth: 450,
