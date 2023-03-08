@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../core/utils/constants.dart';
+import '../../../../core/widgets/card_button.dart';
 import '../../domain/entities/image.dart' as model;
 
 class UploadExpression extends StatelessWidget {
@@ -25,39 +25,30 @@ class UploadExpression extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () async {
+    return CardButton(
+      onPressed: () async {
         final ImagePicker picker = ImagePicker();
         var image = await picker.pickImage(source: ImageSource.gallery);
         if (image != null) onImageSelected?.call(image);
       },
-      child: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: Card(
-          shape: const RoundedRectangleBorder(
-            borderRadius: mediumBorderRadius,
-          ),
-          clipBehavior: Clip.hardEdge,
-          child: SizedBox(
-            height: height,
-            width: width,
-            child: defaultImage == null
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.add_photo_alternate_outlined),
-                        const SizedBox(height: 10),
-                        Text(label),
-                      ],
-                    ),
-                  )
-                : Image.memory(
-                    defaultImage!.data,
-                    fit: BoxFit.contain,
-                  ),
-          ),
-        ),
+      child: SizedBox(
+        height: height,
+        width: width,
+        child: defaultImage == null
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.add_photo_alternate_outlined),
+                    const SizedBox(height: 10),
+                    Text(label),
+                  ],
+                ),
+              )
+            : Image.memory(
+                defaultImage!.data,
+                fit: BoxFit.contain,
+              ),
       ),
     );
   }

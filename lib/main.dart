@@ -3,7 +3,8 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 import 'core/injection/injection_container.dart';
 import 'core/theme/color_schemes.dart';
-import 'features/mascot/presentation/widgets/create_mascot_fab.dart';
+import 'features/mascot/presentation/widgets/actions_overlay.dart';
+import 'features/mascot/presentation/widgets/mascot_underlay.dart';
 
 Future main() async {
   await configureDependencies();
@@ -38,11 +39,8 @@ class MyApp extends StatelessWidget {
           const ResponsiveBreakpoint.autoScale(1700, name: 'XL'),
         ],
       ),
-      home: const Scaffold(
-        body: Center(
-          child: SizedBox.shrink(),
-        ),
-        floatingActionButton: CreateMascotFab(),
+      home: Stack(
+        children: const [MascotUnderlay(), ActionsOverlay()],
       ),
     );
   }
