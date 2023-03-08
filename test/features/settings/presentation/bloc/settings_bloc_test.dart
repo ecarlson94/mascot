@@ -16,10 +16,13 @@ void main() {
     late TestContext context;
     late SettingsBloc bloc;
     late BehaviorSubject<Settings> settingsSubject;
+    late BehaviorSubject<int> favoriteMascotIdSubject;
     setUp(() {
       context = TestContext();
       bloc = SettingsBloc(context.mocks.streamSettings);
       settingsSubject = BehaviorSubject<Settings>.seeded(context.data.settings);
+      favoriteMascotIdSubject =
+          BehaviorSubject<int>.seeded(context.data.settings.favoriteMascotId);
 
       when(context.mocks.streamSettings(any))
           .thenAnswer((_) async => Right(settingsSubject));
@@ -60,12 +63,37 @@ void main() {
         },
       );
 
-      late BehaviorSubject<int> favoriteMascotIdSubject;
+      blocTest(
+        'should ignore individual settings updates when the value is the same',
+        build: () => bloc,
+        setUp: () => settingsSubject.add(context.data.settings),
+        act: (bloc) => bloc.add(LoadSettings()),
+        verify: (bloc) {
+          expect(
+            bloc.state.favoriteMascotIdStreamOption.getOrFailTest(),
+            emits(context.data.settings.favoriteMascotId),
+          );
+        },
+      );
+
+      blocTest(
+        'should update individual settings when the value is different',
+        build: () => bloc,
+        act: (bloc) => bloc.add(LoadSettings()),
+        verify: (bloc) {
+          settingsSubject.add(
+            context.data.settings.copyWith(favoriteMascotId: 2),
+          );
+          expect(
+            bloc.state.favoriteMascotIdStreamOption.getOrFailTest(),
+            emitsInOrder([context.data.settings.favoriteMascotId, 2]),
+          );
+        },
+      );
+
       blocTest<SettingsBloc, SettingsState>(
         'should reuse existing stream for individual settings',
         build: () => bloc,
-        setUp: () => favoriteMascotIdSubject =
-            BehaviorSubject<int>.seeded(context.data.settings.favoriteMascotId),
         seed: () => SettingsLoaded(some(favoriteMascotIdSubject)),
         act: (bloc) => bloc.add(LoadSettings()),
         verify: (bloc) => expect(
