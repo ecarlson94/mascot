@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/features/mascot/data/datasources/mascots_local_data_source.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../../fixtures/test_context.dart';
 
@@ -51,6 +52,23 @@ void main() {
           verifyNoMoreInteractions(context.mocks.mascotsCollectionAdapter);
         },
       );
+    });
+
+    group('streamMascot', () {
+      test('should stream MascotModel from local database', () async {
+        // arrange
+        var expectedStream = BehaviorSubject.seeded(context.data.mascotModel);
+        when(context.mocks.mascotsCollectionAdapter.stream(any))
+            .thenAnswer((_) async => expectedStream);
+
+        // act
+        final result = await dataSource.streamMascot(1);
+
+        // assert
+        expect(result, expectedStream);
+        verify(context.mocks.mascotsCollectionAdapter.stream(1));
+        verifyNoMoreInteractions(context.mocks.mascotsCollectionAdapter);
+      });
     });
   });
 }

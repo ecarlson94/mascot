@@ -2,7 +2,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../core/data/mapper.dart';
 import '../../domain/entities/image.dart';
-import '../models/image_model.dart';
+import 'image_model.dart';
 
 @injectable
 class MapImageToImageModel extends Mapper<Image, ImageModel> {

@@ -1,9 +1,8 @@
-import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/clean_architecture/usecase.dart';
-import '../../../../core/error/failure.dart';
+import '../../../../core/data/failure_or_id_future.dart';
 import '../entities/mascot.dart';
 import '../repositories/mascots_repository.dart';
 
@@ -14,6 +13,5 @@ class SaveMascot implements UseCase<Id, Mascot> {
   SaveMascot(this._mascotsRepository);
 
   @override
-  Future<Either<Failure, Id>> call(Mascot mascot) =>
-      _mascotsRepository.addMascot(mascot);
+  FailureOrIdFuture call(Mascot mascot) => _mascotsRepository.addMascot(mascot);
 }

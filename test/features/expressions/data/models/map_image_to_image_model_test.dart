@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mascot/features/expressions/data/repositories/map_image_to_image_model.dart';
+import 'package:mascot/features/expressions/data/models/map_image_to_image_model.dart';
 
 import '../../../../fixtures/test_context.dart';
 

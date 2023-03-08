@@ -1,8 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hive/hive.dart';
 import 'package:mascot/core/clean_architecture/entity.dart';
 import 'package:mascot/core/data/hive_collection_adapter.dart';
 import 'package:mascot/core/error/exception.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../fixtures/test_context.dart';
 import '../../fixtures/test_model.dart';
@@ -173,6 +175,40 @@ void main() {
 
         // assert
         expect(() => call(ids), throwsA(isA<ArgumentException>()));
+      });
+    });
+
+    group('contains', () {
+      test('should return true when item is in hive database', () async {
+        // arrange
+        when(context.mocks.hiveTestCollection.containsKey(any))
+            .thenReturn(true);
+
+        // act
+        final result = await collection.contains(1);
+
+        // assert
+        expect(result, true);
+        verify(context.mocks.hiveTestCollection.containsKey(1));
+        verifyNoMoreInteractions(context.mocks.hiveTestCollection);
+      });
+    });
+
+    group('stream', () {
+      test('should return stream of TestModel from hive database', () async {
+        // arrange
+        var stream = BehaviorSubject<BoxEvent>();
+        when(context.mocks.hiveTestCollection.watch(key: anyNamed('key')))
+            .thenAnswer((_) => stream);
+
+        // act
+        final result = await collection.stream(1);
+        stream.add(BoxEvent(1, model, false));
+
+        // assert
+        expect(result, emits(model));
+        verify(context.mocks.hiveTestCollection.watch(key: 1));
+        verifyNoMoreInteractions(context.mocks.hiveTestCollection);
       });
     });
   });

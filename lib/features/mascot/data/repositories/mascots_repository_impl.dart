@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/data/failure_or_id_future.dart';
@@ -9,8 +12,8 @@ import '../../../expressions/domain/repositories/expressions_repository.dart';
 import '../../domain/entities/mascot.dart';
 import '../../domain/repositories/mascots_repository.dart';
 import '../datasources/mascots_local_data_source.dart';
+import '../models/map_mascot_to_mascot_model.dart';
 import '../models/mascot_model.dart';
-import 'map_mascot_to_mascot_model.dart';
 
 @Injectable(as: MascotsRepository)
 class MascotsRepositoryImpl implements MascotsRepository {
@@ -27,24 +30,20 @@ class MascotsRepositoryImpl implements MascotsRepository {
   @override
   FailureOrMascotFuture getMascot(Id id) async {
     MascotModel mascotModel;
-    List<Id> expressionIds;
     try {
       mascotModel = await _localDataSource.getMascot(id);
-      expressionIds = mascotModel.expressions.map((e) => e.id).toList();
     } on Exception {
       return Left(
         LocalDataSourceFailure(),
       );
     }
 
-    return (await _expressionsRepository.getExpressions(expressionIds)).fold(
-      (l) => Left(l),
-      (expressions) => Right(mascotModel.copyWith(expressions: expressions)),
-    );
+    return await _applyExpressions(mascotModel);
   }
 
   @override
   FailureOrIdFuture addMascot(Mascot mascot) async {
+    // TODO: set favoriteMascotId to this mascot if it's the first one and test
     return (await _expressionsRepository.addExpressions(mascot.expressions))
         .fold(
       (l) => Left(l),
@@ -59,7 +58,7 @@ class MascotsRepositoryImpl implements MascotsRepository {
 
           try {
             var id = await _localDataSource.addMascot(
-              _mapMascotToMascotModel(mascotWithExpressions),
+              await _mapMascotToMascotModel(mascotWithExpressions),
             );
             return Right(id);
           } on Exception {
@@ -70,5 +69,59 @@ class MascotsRepositoryImpl implements MascotsRepository {
         },
       ),
     );
+  }
+
+  @override
+  FailureOrMascotStreamFuture streamMascot(Id id) async {
+    try {
+      var failureOrMascot = await getMascot(id);
+      return await failureOrMascot.fold(
+        (l) => Left(l),
+        (mascot) async {
+          var mascotBehaviorSubject = BehaviorSubject<Mascot?>.seeded(
+            mascot,
+          );
+
+          var mascotStream = await _localDataSource.streamMascot(id);
+          mascotStream.listen((event) async {
+            if (event == null) return;
+
+            var failureOrMascot = await _applyExpressions(event);
+            failureOrMascot.fold(
+              (l) => mascotBehaviorSubject.addError(l),
+              (mascot) => mascotBehaviorSubject.add(mascot),
+            );
+          });
+
+          return Right(mascotBehaviorSubject);
+        },
+      );
+    } on Exception {
+      return Left(
+        LocalDataSourceFailure(),
+      );
+    }
+  }
+
+  Future<Either<Failure, Mascot>> _applyExpressions(
+    MascotModel mascotModel,
+  ) async {
+    try {
+      List<Id> expressionIds =
+          mascotModel.expressions.map((e) => e.id).toList();
+
+      if (expressionIds.isEmpty) return Right(mascotModel);
+
+      var failureOrExpressions =
+          await _expressionsRepository.getExpressions(expressionIds);
+      return failureOrExpressions.fold(
+        (l) => Left(l),
+        (expressions) => Right(mascotModel.copyWith(expressions: expressions)),
+      );
+    } on Exception {
+      return Left(
+        LocalDataSourceFailure(),
+      );
+    }
   }
 }

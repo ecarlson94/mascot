@@ -4,10 +4,10 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../core/data/mapper.dart';
 import '../../../expressions/data/models/expression_model.dart';
-import '../../../expressions/data/repositories/map_expression_to_expression_model.dart';
+import '../../../expressions/data/models/map_expression_to_expression_model.dart';
 import '../../../expressions/domain/entities/expression.dart';
 import '../../domain/entities/mascot.dart';
-import '../models/mascot_model.dart';
+import 'mascot_model.dart';
 
 @injectable
 class MapMascotToMascotModel extends Mapper<Mascot, MascotModel> {
@@ -16,7 +16,7 @@ class MapMascotToMascotModel extends Mapper<Mascot, MascotModel> {
   MapMascotToMascotModel(this._mapExpressionToExpressionModel);
 
   @override
-  MascotModel call(Mascot input) {
+  FutureOr<MascotModel> call(Mascot input) {
     var expressionModels = input.expressions
         .map<ExpressionModel>(_mapExpressionToExpressionModel)
         .toList();

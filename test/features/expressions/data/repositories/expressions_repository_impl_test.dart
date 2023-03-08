@@ -4,8 +4,8 @@ import 'package:mascot/core/clean_architecture/entity.dart';
 import 'package:mascot/core/error/failure.dart';
 import 'package:mascot/features/expressions/data/models/expression_model.dart';
 import 'package:mascot/features/expressions/data/repositories/expressions_repository_impl.dart';
-import 'package:mascot/features/expressions/data/repositories/map_expression_to_expression_model.dart';
-import 'package:mascot/features/expressions/data/repositories/map_image_to_image_model.dart';
+import 'package:mascot/features/expressions/data/models/map_expression_to_expression_model.dart';
+import 'package:mascot/features/expressions/data/models/map_image_to_image_model.dart';
 import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mockito/mockito.dart';
 

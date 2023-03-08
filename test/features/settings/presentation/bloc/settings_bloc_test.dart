@@ -1,0 +1,89 @@
+import 'package:bloc_test/bloc_test.dart';
+import 'package:dartz/dartz.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mascot/core/error/error.dart';
+import 'package:mascot/core/error/failure.dart';
+import 'package:mascot/features/settings/domain/entities/settings.dart';
+import 'package:mascot/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
+
+import '../../../../fixtures/option.dart';
+import '../../../../fixtures/test_context.dart';
+
+void main() {
+  group('SettingsBloc', () {
+    late TestContext context;
+    late SettingsBloc bloc;
+    late BehaviorSubject<Settings> settingsSubject;
+    setUp(() {
+      context = TestContext();
+      bloc = SettingsBloc(context.mocks.streamSettings);
+      settingsSubject = BehaviorSubject<Settings>.seeded(context.data.settings);
+
+      when(context.mocks.streamSettings(any))
+          .thenAnswer((_) async => Right(settingsSubject));
+    });
+
+    test('initialState should be SettingsInitial', () {
+      // assert
+      expect(bloc.state, SettingsInitial(none()));
+    });
+
+    group('LoadSettings', () {
+      blocTest(
+        'should emit [SettingsLoaded] when retrieval of settings is successful',
+        build: () => bloc,
+        act: (bloc) => bloc.add(LoadSettings()),
+        expect: () => [
+          isA<SettingsLoaded>(),
+        ],
+      );
+
+      blocTest(
+        'should use the stream settings usecase',
+        build: () => bloc,
+        act: (bloc) => bloc.add(LoadSettings()),
+        verify: (bloc) => verify(context.mocks.streamSettings(any)),
+      );
+
+      blocTest(
+        'should create streams for individual settings',
+        build: () => bloc,
+        act: (bloc) => bloc.add(LoadSettings()),
+        verify: (bloc) {
+          var settingStreamOption = bloc.state.favoriteMascotIdStreamOption;
+          expect(settingStreamOption, isSome);
+          var stream = settingStreamOption.getOrFailTest();
+          expect(stream.hasValue, isTrue);
+          expect(stream.value, context.data.settings.favoriteMascotId);
+        },
+      );
+
+      late BehaviorSubject<int> favoriteMascotIdSubject;
+      blocTest<SettingsBloc, SettingsState>(
+        'should reuse existing stream for individual settings',
+        build: () => bloc,
+        setUp: () => favoriteMascotIdSubject =
+            BehaviorSubject<int>.seeded(context.data.settings.favoriteMascotId),
+        seed: () => SettingsLoaded(some(favoriteMascotIdSubject)),
+        act: (bloc) => bloc.add(LoadSettings()),
+        verify: (bloc) => expect(
+          bloc.state.favoriteMascotIdStreamOption.getOrFailTest(),
+          favoriteMascotIdSubject,
+        ),
+      );
+
+      blocTest(
+        'should emit [SettingError(${ErrorCodes.loadSettingsFailureCode})] when retrieval of settings fails',
+        build: () => bloc,
+        setUp: () => when(context.mocks.streamSettings(any))
+            .thenAnswer((_) async => Left(LocalDataSourceFailure())),
+        act: (bloc) => bloc.add(LoadSettings()),
+        expect: () => [
+          SettingsError(ErrorCodes.loadSettingsFailureCode, none()),
+        ],
+      );
+    });
+  });
+}

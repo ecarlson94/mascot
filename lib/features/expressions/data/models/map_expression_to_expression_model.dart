@@ -2,7 +2,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../core/data/mapper.dart';
 import '../../domain/entities/expression.dart';
-import '../models/expression_model.dart';
+import 'expression_model.dart';
 import 'map_image_to_image_model.dart';
 
 @injectable

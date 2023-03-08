@@ -37,4 +37,13 @@ class IsarCollectionAdapter<T extends Entity> implements CollectionAdapter<T> {
 
     return items;
   }
+
+  @override
+  Future<Stream<T?>> stream(Id id) async => collection.watchObject(id);
+
+  @override
+  Future<bool> contains(Id id) async {
+    var item = await collection.get(id);
+    return item != null;
+  }
 }

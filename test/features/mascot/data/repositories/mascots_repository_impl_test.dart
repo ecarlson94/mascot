@@ -2,14 +2,15 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/clean_architecture/entity.dart';
 import 'package:mascot/core/error/failure.dart';
-import 'package:mascot/features/expressions/data/repositories/map_expression_to_expression_model.dart';
-import 'package:mascot/features/expressions/data/repositories/map_image_to_image_model.dart';
+import 'package:mascot/features/expressions/data/models/map_expression_to_expression_model.dart';
+import 'package:mascot/features/expressions/data/models/map_image_to_image_model.dart';
 import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mascot/features/mascot/data/models/mascot_model.dart';
-import 'package:mascot/features/mascot/data/repositories/map_mascot_to_mascot_model.dart';
+import 'package:mascot/features/mascot/data/models/map_mascot_to_mascot_model.dart';
 import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../../fixtures/test_context.dart';
 
@@ -34,10 +35,13 @@ void main() {
 
     when(context.mocks.expressionsRepository.addExpressions(any))
         .thenAnswer((_) => Future.value(Right(expressionIds)));
-    when(context.mocks.expressionsRepository.getExpressions(any))
-        .thenAnswer((_) => Future.value(
-              Right(context.data.mascot.expressions),
-            ));
+    when(context.mocks.expressionsRepository.getExpressions(any)).thenAnswer(
+      (_) => Future.value(
+        Right(context.data.mascot.expressions),
+      ),
+    );
+    when(context.mocks.mascotsLocalDataSource.getMascot(any))
+        .thenAnswer((_) => Future.value(context.data.mascotModel));
   });
 
   group('MascotsRepositoryImpl', () {
@@ -45,10 +49,6 @@ void main() {
       test(
         'should return the requested mascot when call to local data source is successful',
         () async {
-          // arrange
-          when(context.mocks.mascotsLocalDataSource.getMascot(any))
-              .thenAnswer((_) => Future.value(context.data.mascotModel));
-
           // act
           final result = await repository.getMascot(context.data.mascot.id);
 
@@ -67,10 +67,6 @@ void main() {
       test(
         'should convert MascotModel to Mascot',
         () async {
-          // arrange
-          when(context.mocks.mascotsLocalDataSource.getMascot(any))
-              .thenAnswer((_) => Future.value(context.data.mascotModel));
-
           // act
           var result = await repository.getMascot(context.data.mascot.id);
 
@@ -84,10 +80,6 @@ void main() {
 
       test('should retrieve expressions for mascot from expressions repository',
           () async {
-        // arrange
-        when(context.mocks.mascotsLocalDataSource.getMascot(any))
-            .thenAnswer((_) => Future.value(context.data.mascotModel));
-
         // act
         await repository.getMascot(context.data.mascot.id);
 
@@ -115,18 +107,30 @@ void main() {
           verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
         },
       );
+
+      test('should return failure when expression applicatian fails', () async {
+        // arrange
+        when(context.mocks.expressionsRepository.getExpressions(any))
+            .thenThrow(Exception());
+
+        // act
+        final result = await repository.getMascot(context.data.mascot.id);
+
+        // assert
+        expect(result, Left(LocalDataSourceFailure()));
+      });
     });
 
     group('addMascot', () {
       late List<Expression> emptyExpressions;
       late MascotModel mascotModelWithEmptyExpressions;
 
-      setUp(() {
+      setUp(() async {
         emptyExpressions = context.data.mascot.expressions
             .map((e) => Expression.empty.copyWith(id: e.id))
             .toList();
         mascotModelWithEmptyExpressions =
-            mapMascotToMascotModel(context.data.mascot.copyWith(
+            await mapMascotToMascotModel(context.data.mascot.copyWith(
           expressions: emptyExpressions,
         ));
       });
@@ -194,6 +198,127 @@ void main() {
           verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
         },
       );
+    });
+
+    group('streamMascot', () {
+      late BehaviorSubject<MascotModel?> modelStream;
+      setUp(() {
+        modelStream = BehaviorSubject<MascotModel>();
+
+        when(context.mocks.mascotsLocalDataSource.getMascot(any))
+            .thenAnswer((_) async => context.data.mascotModel);
+        when(context.mocks.mascotsLocalDataSource.streamMascot(any))
+            .thenAnswer((_) async => modelStream);
+      });
+
+      test('should seed the stream with the current value', () async {
+        //act
+        final result = await repository.streamMascot(context.data.mascot.id);
+
+        // assert
+        expect(result, isA<Right<Failure, Stream<Mascot?>>>());
+        expect(
+          result.getOrElse(() => const Stream.empty()),
+          emitsInOrder([
+            await mapMascotToMascotModel.reverse(context.data.mascotModel),
+          ]),
+        );
+        verify(
+          context.mocks.mascotsLocalDataSource
+              .getMascot(context.data.mascot.id),
+        );
+        verify(
+          context.mocks.mascotsLocalDataSource
+              .streamMascot(context.data.mascot.id),
+        );
+        verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
+      });
+
+      test(
+        'should convert Stream<MascotModel?> to Stream<Mascot?>',
+        () async {
+          // arrange
+          var updatedMascot = context.data.mascot.copyWith(
+            name: 'updated',
+          );
+          var updatedMascotModel = await mapMascotToMascotModel(updatedMascot);
+
+          // act
+          final result = await repository.streamMascot(context.data.mascot.id);
+          modelStream.add(updatedMascotModel);
+
+          // assert
+          expect(result, isA<Right<Failure, Stream<Mascot?>>>());
+          expect(
+            result.getOrElse(() => const Stream.empty()),
+            emitsInOrder([
+              await mapMascotToMascotModel.reverse(context.data.mascotModel),
+              updatedMascot,
+            ]),
+          );
+        },
+      );
+
+      test(
+        'should retrieve expressions for mascot from expressions repository when a new mascot is received',
+        () async {
+          // arrange
+          var mascotWithEmptyExpressions = context.data.mascot.copyWith(
+            name: 'mascot model with empty expressions',
+            expressions: context.data.mascot.expressions
+                .map((e) => Expression.empty.copyWith(id: e.id))
+                .toList(),
+          );
+          var mascotModelWithEmptyExpressions =
+              await mapMascotToMascotModel(mascotWithEmptyExpressions);
+          var expectedMascot = mascotWithEmptyExpressions.copyWith(
+            expressions: context.data.expressions,
+          );
+
+          // act
+          final result = await repository.streamMascot(context.data.mascot.id);
+          modelStream.add(mascotModelWithEmptyExpressions);
+
+          // assert
+          await expectLater(
+            result.getOrElse(() => const Stream.empty()),
+            emitsInOrder([
+              expectedMascot.copyWith(name: context.data.mascot.name),
+              expectedMascot,
+            ]),
+          );
+          verify(context.mocks.expressionsRepository.getExpressions(
+            expressionIds,
+          )).called(2);
+        },
+      );
+
+      test(
+        'should return failure when call to local data source is unsuccessful',
+        () async {
+          // arrange
+          when(context.mocks.mascotsLocalDataSource.streamMascot(any))
+              .thenThrow(Exception());
+
+          // act
+          final result = await repository.streamMascot(context.data.mascot.id);
+
+          // assert
+          expect(result, Left(LocalDataSourceFailure()));
+        },
+      );
+
+      test('should return failure when expression applicatian fails', () async {
+        // arrange
+        when(context.mocks.expressionsRepository.getExpressions(any))
+            .thenThrow(Exception());
+
+        // act
+        final result = await repository.streamMascot(context.data.mascot.id);
+
+        // assert
+        expect(result, Left(LocalDataSourceFailure()));
+      });
     });
   });
 }

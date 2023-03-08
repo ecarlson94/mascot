@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/data/isar_collection_adapter.dart';
 import 'package:mascot/core/error/exception.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../fixtures/test_context.dart';
 import '../../fixtures/test_model.dart';
@@ -133,6 +134,55 @@ void main() {
         // assert
         expect(() => call(ids), throwsA(isA<ArgumentException>()));
       });
+    });
+
+    group('contains', () {
+      test('should return true if item exists in isar database', () async {
+        // arrange
+        when(context.mocks.isarTestCollection.get(any))
+            .thenAnswer((_) async => model);
+
+        // act
+        final result = await collection.contains(1);
+
+        // assert
+        expect(result, true);
+        verify(context.mocks.isarTestCollection.get(1));
+        verifyNoMoreInteractions(context.mocks.isarTestCollection);
+      });
+
+      test('should return false if item does not exist in isar database',
+          () async {
+        // arrange
+        when(context.mocks.isarTestCollection.get(any))
+            .thenAnswer((_) async => null);
+
+        // act
+        final result = await collection.contains(1);
+
+        // assert
+        expect(result, false);
+        verify(context.mocks.isarTestCollection.get(1));
+        verifyNoMoreInteractions(context.mocks.isarTestCollection);
+      });
+    });
+
+    group('stream', () {
+      test(
+        'should return stream of TestModel from the isar database',
+        () async {
+          // arrange
+          var stream = BehaviorSubject<TestModel>();
+          when(context.mocks.isarTestCollection.watchObject(1))
+              .thenAnswer((_) => stream);
+
+          // act
+          final result = await collection.stream(1);
+
+          // assert
+          expect(result, stream);
+        },
+      );
     });
   });
 }

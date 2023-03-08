@@ -10,6 +10,10 @@ import 'package:mascot/features/mascot/data/models/mascot_model.dart';
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart';
 import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart';
 import 'package:mascot/features/mascot/domain/usecases/save_mascot.dart';
+import 'package:mascot/features/settings/data/datasources/settings_local_data_source.dart';
+import 'package:mascot/features/settings/data/models/settings_model.dart';
+import 'package:mascot/features/settings/domain/repositories/settings_repository.dart';
+import 'package:mascot/features/settings/domain/usecases/stream_settings.dart';
 import 'package:mockito/annotations.dart';
 
 import 'mocks.mocks.dart';
@@ -21,6 +25,9 @@ import 'test_model.dart';
     as: #MockExpressionsCollectionAdapter,
   ),
   MockSpec<CollectionAdapter<MascotModel>>(as: #MockMascotsCollectionAdapter),
+  MockSpec<CollectionAdapter<SettingsModel>>(
+    as: #MockSettingsCollectionAdapter,
+  ),
 ])
 @GenerateMocks([
   ExpressionsRepository,
@@ -32,6 +39,9 @@ import 'test_model.dart';
   MascotsRepository,
   SaveMascot,
   GetMascot,
+  SettingsRepository,
+  StreamSettings,
+  SettingsLocalDataSource,
 ])
 class Mocks {
   MockIsar? _isar;
@@ -83,4 +93,23 @@ class Mocks {
 
   MockGetMascot? _getMascot;
   MockGetMascot get getMascot => _getMascot ??= MockGetMascot();
+
+  MockSettingsRepository? _settingsRepository;
+  MockSettingsRepository get settingsRepository =>
+      _settingsRepository ??= MockSettingsRepository();
+
+  MockStreamSettings? _streamSettings;
+  MockStreamSettings get streamSettings =>
+      _streamSettings ??= MockStreamSettings();
+
+  MockBox<SettingsModel>? _hiveSettingsBox;
+  MockBox<SettingsModel> get hiveSettingsBox => _hiveSettingsBox ??= MockBox();
+
+  MockSettingsCollectionAdapter? _settingsCollectionAdapter;
+  MockSettingsCollectionAdapter get settingsCollectionAdapter =>
+      _settingsCollectionAdapter ??= MockSettingsCollectionAdapter();
+
+  MockSettingsLocalDataSource? _settingsLocalDataSource;
+  MockSettingsLocalDataSource get settingsLocalDataSource =>
+      _settingsLocalDataSource ??= MockSettingsLocalDataSource();
 }

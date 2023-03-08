@@ -7,7 +7,7 @@ import '../../../../core/error/failure.dart';
 import '../../domain/entities/expression.dart';
 import '../../domain/repositories/expressions_repository.dart';
 import '../datasources/expressions_local_data_source.dart';
-import 'map_expression_to_expression_model.dart';
+import '../models/map_expression_to_expression_model.dart';
 
 @Injectable(as: ExpressionsRepository)
 class ExpressionsRepositoryImpl implements ExpressionsRepository {

@@ -10,6 +10,9 @@ abstract class MascotsLocalDataSource {
 
   /// Gets a mascot from the local database.
   Future<MascotModel> getMascot(Id id);
+
+  // Stream a mascot from the local database.
+  Future<Stream<MascotModel?>> streamMascot(Id id);
 }
 
 @Injectable(as: MascotsLocalDataSource)
@@ -23,4 +26,7 @@ class MascotsLocalDataSourceImpl implements MascotsLocalDataSource {
 
   @override
   Future<Id> addMascot(MascotModel mascot) => collection.add(mascot);
+
+  @override
+  Future<Stream<MascotModel?>> streamMascot(Id id) => collection.stream(id);
 }

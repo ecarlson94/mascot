@@ -7,6 +7,8 @@ import 'package:mascot/features/expressions/domain/entities/image.dart';
 import 'package:mascot/features/mascot/data/models/mascot_model.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
 import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart';
+import 'package:mascot/features/settings/data/models/settings_model.dart';
+import 'package:mascot/features/settings/domain/entities/settings.dart';
 
 import 'test_x_file.dart';
 
@@ -142,5 +144,11 @@ class TestData {
         ),
       ),
     ],
+  );
+
+  final Settings settings = const Settings(id: 1, favoriteMascotId: 1);
+  final SettingsModel settingsModel = const SettingsModel(
+    id: 1,
+    favoriteMascotId: 1,
   );
 }

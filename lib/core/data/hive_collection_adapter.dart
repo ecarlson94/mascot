@@ -32,4 +32,16 @@ class HiveCollectionAdapter<T extends Entity> implements CollectionAdapter<T> {
   @override
   Future<List<T>> getMany(Iterable<Id> ids) =>
       Future.wait(ids.map((id) => get(id)).toList());
+
+  @override
+  Future<Stream<T?>> stream(Id id) async {
+    return collection
+        .watch(key: id)
+        .map((event) => (event.value as T).copyWithId(id));
+  }
+
+  @override
+  Future<bool> contains(Id id) async {
+    return collection.containsKey(id);
+  }
 }
