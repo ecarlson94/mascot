@@ -28,7 +28,7 @@ import 'package:mascot/features/mascot/data/datasources/mascots_local_data_sourc
     as _i15;
 import 'package:mascot/features/mascot/data/models/map_mascot_to_mascot_model.dart'
     as _i14;
-import 'package:mascot/features/mascot/data/models/mascot_model.dart' as _i9;
+import 'package:mascot/features/mascot/data/models/mascot_model.dart' as _i10;
 import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl.dart'
     as _i23;
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart'
@@ -45,7 +45,7 @@ import 'package:mascot/features/settings/data/datasources/settings_local_data_so
 import 'package:mascot/features/settings/data/models/map_settings_to_settings_model.dart'
     as _i6;
 import 'package:mascot/features/settings/data/models/settings_model.dart'
-    as _i10;
+    as _i9;
 import 'package:mascot/features/settings/data/repositories/settings_repository_impl.dart'
     as _i18;
 import 'package:mascot/features/settings/domain/repositories/settings_repository.dart'
@@ -77,11 +77,11 @@ Future<_i1.GetIt> $init(
   );
   final hiveSingleton = _$HiveSingleton();
   final hiveExpressionsCollection = _$HiveExpressionsCollection();
-  final hiveMascotsCollection = _$HiveMascotsCollection();
   final hiveSettingsCollection = _$HiveSettingsCollection();
+  final hiveMascotsCollection = _$HiveMascotsCollection();
   final expressionsCollectionAdapter = _$ExpressionsCollectionAdapter();
-  final mascotsCollectionAdapter = _$MascotsCollectionAdapter();
   final settingsCollectionAdapter = _$SettingsCollectionAdapter();
+  final mascotsCollectionAdapter = _$MascotsCollectionAdapter();
   gh.factory<_i3.ConvertXfileToImage>(() => _i3.ConvertXfileToImage());
   await gh.factoryAsync<_i4.HiveInterface>(
     () => hiveSingleton.create(),
@@ -94,20 +94,20 @@ Future<_i1.GetIt> $init(
     () => hiveExpressionsCollection.create(gh<_i7.HiveInterface>()),
     preResolve: true,
   );
-  await gh.singletonAsync<_i7.Box<_i9.MascotModel>>(
-    () => hiveMascotsCollection.create(gh<_i7.HiveInterface>()),
+  await gh.singletonAsync<_i7.Box<_i9.SettingsModel>>(
+    () => hiveSettingsCollection.create(gh<_i7.HiveInterface>()),
     preResolve: true,
   );
-  await gh.singletonAsync<_i7.Box<_i10.SettingsModel>>(
-    () => hiveSettingsCollection.create(gh<_i7.HiveInterface>()),
+  await gh.singletonAsync<_i7.Box<_i10.MascotModel>>(
+    () => hiveMascotsCollection.create(gh<_i7.HiveInterface>()),
     preResolve: true,
   );
   gh.factory<_i11.CollectionAdapter<_i8.ExpressionModel>>(() =>
       expressionsCollectionAdapter.create(gh<_i7.Box<_i8.ExpressionModel>>()));
-  gh.factory<_i11.CollectionAdapter<_i9.MascotModel>>(
-      () => mascotsCollectionAdapter.create(gh<_i7.Box<_i9.MascotModel>>()));
-  gh.factory<_i11.CollectionAdapter<_i10.SettingsModel>>(() =>
-      settingsCollectionAdapter.create(gh<_i7.Box<_i10.SettingsModel>>()));
+  gh.factory<_i11.CollectionAdapter<_i9.SettingsModel>>(
+      () => settingsCollectionAdapter.create(gh<_i7.Box<_i9.SettingsModel>>()));
+  gh.factory<_i11.CollectionAdapter<_i10.MascotModel>>(
+      () => mascotsCollectionAdapter.create(gh<_i7.Box<_i10.MascotModel>>()));
   gh.factory<_i12.ExpressionsLocalDataSource>(() =>
       _i12.ImagesLocalDataSourceImpl(
           gh<_i11.CollectionAdapter<_i8.ExpressionModel>>()));
@@ -116,10 +116,10 @@ Future<_i1.GetIt> $init(
   gh.factory<_i14.MapMascotToMascotModel>(() =>
       _i14.MapMascotToMascotModel(gh<_i13.MapExpressionToExpressionModel>()));
   gh.factory<_i15.MascotsLocalDataSource>(() => _i15.MascotsLocalDataSourceImpl(
-      gh<_i11.CollectionAdapter<_i9.MascotModel>>()));
+      gh<_i11.CollectionAdapter<_i10.MascotModel>>()));
   gh.factory<_i16.SettingsLocalDataSource>(() =>
       _i16.SettingsLocalDataSourceImpl(
-          gh<_i11.CollectionAdapter<_i10.SettingsModel>>()));
+          gh<_i11.CollectionAdapter<_i9.SettingsModel>>()));
   gh.factory<_i17.SettingsRepository>(() => _i18.SettingsRepositoryImpl(
         gh<_i16.SettingsLocalDataSource>(),
         gh<_i6.MapSettingsToSettingsModel>(),
@@ -133,6 +133,7 @@ Future<_i1.GetIt> $init(
   gh.factory<_i22.MascotsRepository>(() => _i23.MascotsRepositoryImpl(
         gh<_i15.MascotsLocalDataSource>(),
         gh<_i20.ExpressionsRepository>(),
+        gh<_i17.SettingsRepository>(),
         gh<_i14.MapMascotToMascotModel>(),
       ));
   gh.factory<_i24.SaveMascot>(

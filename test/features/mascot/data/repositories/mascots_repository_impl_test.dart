@@ -28,6 +28,7 @@ void main() {
     repository = MascotsRepositoryImpl(
       context.mocks.mascotsLocalDataSource,
       context.mocks.expressionsRepository,
+      context.mocks.settingsRepository,
       mapMascotToMascotModel,
     );
 
@@ -133,15 +134,19 @@ void main() {
             await mapMascotToMascotModel(context.data.mascot.copyWith(
           expressions: emptyExpressions,
         ));
+
+        when(context.mocks.mascotsLocalDataSource.addMascot(any))
+            .thenAnswer((_) => Future.value(context.data.mascot.id));
+        when(context.mocks.settingsRepository.loadSettings()).thenAnswer(
+            (_) async =>
+                Right(context.data.settings.copyWith(favoriteMascotId: 0)));
+        when(context.mocks.settingsRepository.setFavoriteMascotId(any))
+            .thenAnswer((_) => Future.value(const Right(unit)));
       });
 
       test(
         'should return the id of the added mascot when call to local data source is successful',
         () async {
-          // arrange
-          when(context.mocks.mascotsLocalDataSource.addMascot(any))
-              .thenAnswer((_) => Future.value(context.data.mascot.id));
-
           // act
           final result = await repository.addMascot(context.data.mascot);
 
@@ -160,10 +165,6 @@ void main() {
       test(
         'should add expressions to expressions repository',
         () async {
-          // arrange
-          when(context.mocks.mascotsLocalDataSource.addMascot(any))
-              .thenAnswer((_) => Future.value(context.data.mascot.id));
-
           // act
           final result = await repository.addMascot(context.data.mascot);
 
@@ -196,6 +197,34 @@ void main() {
                 .addMascot(mascotModelWithEmptyExpressions),
           );
           verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
+        },
+      );
+
+      test('should update favorite mascot when adding a new mascot', () async {
+        // act
+        await repository.addMascot(context.data.mascot);
+
+        // assert
+        verify(context.mocks.settingsRepository.loadSettings());
+        verify(context.mocks.settingsRepository.setFavoriteMascotId(
+          context.data.mascot.id,
+        ));
+      });
+
+      test(
+        'should not update favorite mascot when favorite mascot is already set',
+        () async {
+          // arrange
+          when(context.mocks.settingsRepository.loadSettings())
+              .thenAnswer((_) async => Right(context.data.settings));
+
+          // act
+          await repository.addMascot(context.data.mascot);
+
+          // assert
+          verifyNever(context.mocks.settingsRepository.setFavoriteMascotId(
+            context.data.mascot.id,
+          ));
         },
       );
     });
