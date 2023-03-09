@@ -10,6 +10,7 @@ import 'package:mascot/features/mascot/data/models/mascot_model.dart';
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart';
 import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart';
 import 'package:mascot/features/mascot/domain/usecases/save_mascot.dart';
+import 'package:mascot/features/mascot/domain/usecases/stream_mascot.dart';
 import 'package:mascot/features/settings/data/datasources/settings_local_data_source.dart';
 import 'package:mascot/features/settings/data/models/settings_model.dart';
 import 'package:mascot/features/settings/domain/repositories/settings_repository.dart';
@@ -42,6 +43,7 @@ import 'test_model.dart';
   SettingsRepository,
   StreamSettings,
   SettingsLocalDataSource,
+  StreamMascot,
 ])
 class Mocks {
   MockIsar? _isar;
@@ -112,4 +114,7 @@ class Mocks {
   MockSettingsLocalDataSource? _settingsLocalDataSource;
   MockSettingsLocalDataSource get settingsLocalDataSource =>
       _settingsLocalDataSource ??= MockSettingsLocalDataSource();
+
+  MockStreamMascot? _streamMascot;
+  MockStreamMascot get streamMascot => _streamMascot ??= MockStreamMascot();
 }
