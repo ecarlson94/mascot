@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/error/failure.dart';
@@ -6,7 +7,7 @@ import '../entities/settings.dart';
 
 typedef FailureOrSettingsFuture = Future<Either<Failure, Settings>>;
 typedef FailureOrSettingsStreamFuture
-    = Future<Either<Failure, Stream<Settings?>>>;
+    = Future<Either<Failure, BehaviorSubject<Settings?>>>;
 
 abstract class SettingsRepository {
   /// Gets the current application settings.

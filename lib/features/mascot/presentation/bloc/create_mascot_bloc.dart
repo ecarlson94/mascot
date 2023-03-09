@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/error/error.dart';
+import '../../../../core/utils/constants.dart';
 import '../../../../core/utils/input_converters/convert_xfile_to_image.dart';
 import '../../../expressions/domain/entities/expression.dart';
 import '../../domain/entities/mascot.dart';
@@ -15,7 +16,7 @@ part 'create_mascot_state.dart';
 
 @injectable
 class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
-  static const String neutralExpressionName = 'Neutral';
+  static const String neutralExpressionName = defaultExpressionName;
   static const String talkingExpressionName = 'Talking';
   static const String neutralExpressionDescription =
       'The default expression of the mascot';

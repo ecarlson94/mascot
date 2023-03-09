@@ -247,7 +247,7 @@ void main() {
         // assert
         expect(result, isA<Right<Failure, Stream<Mascot?>>>());
         expect(
-          result.getOrElse(() => const Stream.empty()),
+          result.getOrElse(() => BehaviorSubject()),
           emitsInOrder([
             await mapMascotToMascotModel.reverse(context.data.mascotModel),
           ]),
@@ -279,7 +279,7 @@ void main() {
           // assert
           expect(result, isA<Right<Failure, Stream<Mascot?>>>());
           expect(
-            result.getOrElse(() => const Stream.empty()),
+            result.getOrElse(() => BehaviorSubject()),
             emitsInOrder([
               await mapMascotToMascotModel.reverse(context.data.mascotModel),
               updatedMascot,
@@ -310,7 +310,7 @@ void main() {
 
           // assert
           await expectLater(
-            result.getOrElse(() => const Stream.empty()),
+            result.getOrElse(() => BehaviorSubject()),
             emitsInOrder([
               expectedMascot.copyWith(name: context.data.mascot.name),
               expectedMascot,

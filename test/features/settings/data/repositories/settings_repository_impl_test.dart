@@ -119,7 +119,7 @@ void main() {
         // assert
         expect(result, isA<Right<Failure, Stream<Settings?>>>());
         expect(
-          result.getOrElse(() => const Stream.empty()),
+          result.getOrElse(() => BehaviorSubject()),
           emitsInOrder([
             await mapSettingsToSettingsModel
                 .reverse(context.data.settingsModel),
@@ -152,7 +152,7 @@ void main() {
           // assert
           expect(result, isA<Right<Failure, Stream<Settings?>>>());
           expect(
-            result.getOrElse(() => const Stream.empty()),
+            result.getOrElse(() => BehaviorSubject()),
             emitsInOrder([
               await mapSettingsToSettingsModel
                   .reverse(context.data.settingsModel),

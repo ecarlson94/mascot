@@ -13,7 +13,7 @@ part 'settings_model.g.dart';
 //   ignore: {'props', 'stringify'},
 //   inheritance: false,
 // )
-@HiveType(typeId: 3)
+@HiveType(typeId: 4)
 class SettingsModel extends Settings {
   const SettingsModel({
     this.id = 1,
