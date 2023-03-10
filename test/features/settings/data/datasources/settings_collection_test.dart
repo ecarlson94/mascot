@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:mascot/core/data/hive_collection_adapter.dart';
 import 'package:mascot/features/settings/data/models/settings_model.dart';
-import 'package:mascot/features/settings/data/repositories/settings_collection.dart';
+import 'package:mascot/features/settings/data/datasources/settings_collection.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../../fixtures/test_context.dart';

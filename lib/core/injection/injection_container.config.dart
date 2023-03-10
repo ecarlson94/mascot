@@ -60,7 +60,7 @@ import 'package:mascot/features/settings/presentation/bloc/settings_bloc.dart'
 import '../../features/expressions/data/datasources/expressions_collection.dart'
     as _i32;
 import '../../features/mascot/data/datasources/mascots_collection.dart' as _i31;
-import '../../features/settings/data/repositories/settings_collection.dart'
+import '../../features/settings/data/datasources/settings_collection.dart'
     as _i33;
 import 'db_configuration.dart' as _i30;
 
@@ -81,9 +81,9 @@ Future<_i1.GetIt> $init(
   final hiveSettingsCollection = _$HiveSettingsCollection();
   final hiveMascotsCollection = _$HiveMascotsCollection();
   final hiveExpressionsCollection = _$HiveExpressionsCollection();
-  final settingsCollectionAdapter = _$SettingsCollectionAdapter();
-  final expressionsCollectionAdapter = _$ExpressionsCollectionAdapter();
   final mascotsCollectionAdapter = _$MascotsCollectionAdapter();
+  final expressionsCollectionAdapter = _$ExpressionsCollectionAdapter();
+  final settingsCollectionAdapter = _$SettingsCollectionAdapter();
   gh.factory<_i3.ConvertXfileToImage>(() => _i3.ConvertXfileToImage());
   await gh.factoryAsync<_i4.HiveInterface>(
     () => hiveSingleton.create(),
@@ -104,12 +104,12 @@ Future<_i1.GetIt> $init(
     () => hiveExpressionsCollection.create(gh<_i7.HiveInterface>()),
     preResolve: true,
   );
-  gh.factory<_i11.CollectionAdapter<_i8.SettingsModel>>(
-      () => settingsCollectionAdapter.create(gh<_i7.Box<_i8.SettingsModel>>()));
-  gh.factory<_i11.CollectionAdapter<_i10.ExpressionModel>>(() =>
-      expressionsCollectionAdapter.create(gh<_i7.Box<_i10.ExpressionModel>>()));
   gh.factory<_i11.CollectionAdapter<_i9.MascotModel>>(
       () => mascotsCollectionAdapter.create(gh<_i7.Box<_i9.MascotModel>>()));
+  gh.factory<_i11.CollectionAdapter<_i10.ExpressionModel>>(() =>
+      expressionsCollectionAdapter.create(gh<_i7.Box<_i10.ExpressionModel>>()));
+  gh.factory<_i11.CollectionAdapter<_i8.SettingsModel>>(
+      () => settingsCollectionAdapter.create(gh<_i7.Box<_i8.SettingsModel>>()));
   gh.factory<_i12.ExpressionsLocalDataSource>(() =>
       _i12.ImagesLocalDataSourceImpl(
           gh<_i11.CollectionAdapter<_i10.ExpressionModel>>()));
