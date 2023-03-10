@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mascot/features/mascot/data/datasources/mascots_local_data_source.dart';
+import 'package:mascot/features/mascot/data/datasources/hive/mascots_hive_data_source.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -7,16 +7,16 @@ import '../../../../fixtures/test_context.dart';
 
 void main() {
   late TestContext context;
-  late MascotsLocalDataSourceImpl dataSource;
+  late MascotsHiveDataSourceImpl dataSource;
 
   setUp(() {
     context = TestContext();
-    dataSource = MascotsLocalDataSourceImpl(
+    dataSource = MascotsHiveDataSourceImpl(
       context.mocks.mascotsCollectionAdapter,
     );
   });
 
-  group('MascotsLocalDataSourceImpl', () {
+  group('MascotsHiveDataSourceImpl', () {
     group('getMascot', () {
       test('should return MascotModel from local database', () async {
         // arrange

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
-import 'package:mascot/core/data/hive_collection_adapter.dart';
+import 'package:mascot/core/data/hive/hive_collection_adapter.dart';
 import 'package:mascot/features/expressions/data/datasources/expressions_collection.dart';
 import 'package:mascot/features/expressions/data/models/expression_model.dart';
 import 'package:mascot/features/expressions/data/models/image_model.dart';

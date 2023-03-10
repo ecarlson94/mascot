@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mascot/core/data/isar_collection_adapter.dart';
+import 'package:mascot/core/data/isar/isar_collection_adapter.dart';
 import 'package:mascot/core/error/exception.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';

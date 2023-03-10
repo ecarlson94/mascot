@@ -1,30 +1,29 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'mascot_model.dart';
+part of 'hive_mascot.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class MascotModelAdapter extends TypeAdapter<MascotModel> {
+class HiveMascotAdapter extends TypeAdapter<HiveMascot> {
   @override
   final int typeId = 2;
 
   @override
-  MascotModel read(BinaryReader reader) {
+  HiveMascot read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return MascotModel(
+    return HiveMascot(
       id: fields[0] as int,
       name: fields[1] as String,
-      expressions: (fields[2] as List).cast<ExpressionModel>(),
     );
   }
 
   @override
-  void write(BinaryWriter writer, MascotModel obj) {
+  void write(BinaryWriter writer, HiveMascot obj) {
     writer
       ..writeByte(3)
       ..writeByte(0)
@@ -32,7 +31,7 @@ class MascotModelAdapter extends TypeAdapter<MascotModel> {
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.expressions);
+      ..write(obj.expressionsList);
   }
 
   @override
@@ -41,7 +40,7 @@ class MascotModelAdapter extends TypeAdapter<MascotModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is MascotModelAdapter &&
+      other is HiveMascotAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

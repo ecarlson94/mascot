@@ -2,10 +2,11 @@ import 'package:hive/hive.dart';
 import 'package:isar/isar.dart' as isar;
 import 'package:isar/isar.dart';
 import 'package:mascot/core/data/collection_adapter.dart';
+import 'package:mascot/core/data/hive/hive_collection_adapter.dart';
 import 'package:mascot/features/expressions/data/datasources/expressions_local_data_source.dart';
 import 'package:mascot/features/expressions/data/models/expression_model.dart';
 import 'package:mascot/features/expressions/domain/repositories/expressions_repository.dart';
-import 'package:mascot/features/mascot/data/datasources/mascots_local_data_source.dart';
+import 'package:mascot/features/mascot/data/datasources/hive/mascots_hive_data_source.dart';
 import 'package:mascot/features/mascot/data/models/mascot_model.dart';
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart';
 import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart';
@@ -25,7 +26,9 @@ import 'test_model.dart';
   MockSpec<CollectionAdapter<ExpressionModel>>(
     as: #MockExpressionsCollectionAdapter,
   ),
-  MockSpec<CollectionAdapter<MascotModel>>(as: #MockMascotsCollectionAdapter),
+  MockSpec<HiveCollectionAdapter<MascotModel>>(
+    as: #MockMascotsCollectionAdapter,
+  ),
   MockSpec<CollectionAdapter<SettingsModel>>(
     as: #MockSettingsCollectionAdapter,
   ),
@@ -33,7 +36,7 @@ import 'test_model.dart';
 @GenerateMocks([
   ExpressionsRepository,
   ExpressionsLocalDataSource,
-  MascotsLocalDataSource,
+  MascotsHiveDataSource,
   isar.IsarCollection<TestModel>,
   Box<TestModel>,
   HiveInterface,
@@ -57,9 +60,9 @@ class Mocks {
   MockExpressionsLocalDataSource get expressionsLocalDataSource =>
       _expressionsLocalDataSource ??= MockExpressionsLocalDataSource();
 
-  MockMascotsLocalDataSource? _mascotsLocalDataSource;
-  MockMascotsLocalDataSource get mascotsLocalDataSource =>
-      _mascotsLocalDataSource ??= MockMascotsLocalDataSource();
+  MockMascotsHiveDataSource? _mascotsHiveSource;
+  MockMascotsHiveDataSource get mascotsLocalDataSource =>
+      _mascotsHiveSource ??= MockMascotsHiveDataSource();
 
   MockIsarCollection<TestModel>? _isarTestCollection;
   MockIsarCollection<TestModel> get isarTestCollection =>

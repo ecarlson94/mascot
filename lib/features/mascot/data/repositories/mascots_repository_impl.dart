@@ -12,13 +12,13 @@ import '../../../expressions/domain/repositories/expressions_repository.dart';
 import '../../../settings/domain/repositories/settings_repository.dart';
 import '../../domain/entities/mascot.dart';
 import '../../domain/repositories/mascots_repository.dart';
-import '../datasources/mascots_local_data_source.dart';
+import '../datasources/hive/mascots_hive_data_source.dart';
 import '../models/map_mascot_to_mascot_model.dart';
 import '../models/mascot_model.dart';
 
 @Injectable(as: MascotsRepository)
 class MascotsRepositoryImpl implements MascotsRepository {
-  final MascotsLocalDataSource _localDataSource;
+  final MascotsHiveDataSource _localDataSource;
   final ExpressionsRepository _expressionsRepository;
   final SettingsRepository _settingsRepository;
   final MapMascotToMascotModel _mapMascotToMascotModel;
@@ -46,7 +46,9 @@ class MascotsRepositoryImpl implements MascotsRepository {
 
   @override
   FailureOrIdFuture addMascot(Mascot mascot) async {
-    return (await _expressionsRepository.addExpressions(mascot.expressions))
+    return (await _expressionsRepository.addExpressions(
+      mascot.expressions.toList(),
+    ))
         .fold(
       (l) => Left(l),
       (ids) async => (await _expressionsRepository.getExpressions(ids)).fold(
@@ -55,7 +57,7 @@ class MascotsRepositoryImpl implements MascotsRepository {
           final mascotWithExpressions = mascot.copyWith(
             expressions: expressions
                 .map((e) => Expression.empty.copyWith(id: e.id))
-                .toList(),
+                .toSet(),
           );
 
           var failureOrSettings = await _settingsRepository.loadSettings();
@@ -116,6 +118,7 @@ class MascotsRepositoryImpl implements MascotsRepository {
     }
   }
 
+  // TODO: Move this to MascotsHiveDataSourceImpl
   Future<Either<Failure, Mascot>> _applyExpressions(
     MascotModel mascotModel,
   ) async {
@@ -129,7 +132,9 @@ class MascotsRepositoryImpl implements MascotsRepository {
           await _expressionsRepository.getExpressions(expressionIds);
       return failureOrExpressions.fold(
         (l) => Left(l),
-        (expressions) => Right(mascotModel.copyWith(expressions: expressions)),
+        (expressions) => Right(
+          mascotModel.copyWith(expressions: expressions.toSet()),
+        ),
       );
     } on Exception {
       return Left(

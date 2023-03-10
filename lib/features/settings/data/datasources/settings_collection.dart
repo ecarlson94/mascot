@@ -2,9 +2,10 @@
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
+import 'package:mascot/core/data/collection_adapter.dart';
 
-import '../../../../core/data/collection_adapter.dart';
-import '../../../../core/data/hive_collection_adapter.dart';
+import '../../../../core/data/hive/hive_collection_adapter.dart';
+import '../../../../core/data/isar/isar_collection_adapter.dart';
 import '../models/settings_model.dart';
 
 // @module // Uncomment when enabling Isar
@@ -12,6 +13,16 @@ abstract class IsarSettingsCollection {
   @lazySingleton
   IsarCollection<SettingsModel> create(Isar isar) {
     return isar.collection<SettingsModel>();
+  }
+}
+
+// @module
+abstract class IsarSettingsCollectionAdapter {
+  @factoryMethod
+  IsarCollectionAdapter<SettingsModel> create(
+    IsarCollection<SettingsModel> collection,
+  ) {
+    return IsarCollectionAdapter<SettingsModel>(collection);
   }
 }
 
@@ -28,7 +39,7 @@ abstract class HiveSettingsCollection {
 }
 
 @module
-abstract class SettingsCollectionAdapter {
+abstract class SettingsHiveCollectionAdapter {
   @factoryMethod
   CollectionAdapter<SettingsModel> create(
     Box<SettingsModel> collection,

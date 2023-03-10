@@ -83,7 +83,7 @@ class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
         var unchangedExpressions =
             state.mascot.expressions.where((e) => e.name != expressionName);
         var mascot = state.mascot.copyWith(
-          expressions: [...unchangedExpressions, expression],
+          expressions: {...unchangedExpressions, expression},
         );
         emit(SavingExpression(mascot));
 

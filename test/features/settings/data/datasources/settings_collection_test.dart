@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
-import 'package:mascot/core/data/hive_collection_adapter.dart';
+import 'package:mascot/core/data/hive/hive_collection_adapter.dart';
 import 'package:mascot/features/settings/data/models/settings_model.dart';
 import 'package:mascot/features/settings/data/datasources/settings_collection.dart';
 import 'package:mockito/mockito.dart';
@@ -11,7 +11,7 @@ class IsarSettingsCollectionImpl extends IsarSettingsCollection {}
 
 class HiveSettingsCollectionImpl extends HiveSettingsCollection {}
 
-class SettingsCollectionAdapterImpl extends SettingsCollectionAdapter {}
+class SettingsCollectionAdapterImpl extends SettingsHiveCollectionAdapter {}
 
 class MockIsarCollection<T> extends Mock implements IsarCollection<T> {}
 
@@ -76,7 +76,7 @@ void main() {
   });
 
   group('SettingsCollectionAdapter', () {
-    late SettingsCollectionAdapter settingsCollectionAdapter;
+    late SettingsHiveCollectionAdapter settingsCollectionAdapter;
     setUp(() {
       settingsCollectionAdapter = SettingsCollectionAdapterImpl();
     });

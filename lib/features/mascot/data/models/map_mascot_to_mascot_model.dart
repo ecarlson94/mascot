@@ -19,7 +19,7 @@ class MapMascotToMascotModel extends Mapper<Mascot, MascotModel> {
   FutureOr<MascotModel> call(Mascot input) {
     var expressionModels = input.expressions
         .map<ExpressionModel>(_mapExpressionToExpressionModel)
-        .toList();
+        .toSet();
 
     return MascotModel(
       id: input.id,
@@ -34,6 +34,6 @@ class MapMascotToMascotModel extends Mapper<Mascot, MascotModel> {
         name: input.name,
         expressions: input.expressions
             .map<Expression>(_mapExpressionToExpressionModel.reverse)
-            .toList(),
+            .toSet(),
       );
 }

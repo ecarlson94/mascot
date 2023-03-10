@@ -3,7 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 
 import '../../../../core/data/collection_adapter.dart';
-import '../../../../core/data/hive_collection_adapter.dart';
+import '../../../../core/data/hive/hive_collection_adapter.dart';
 import '../models/expression_model.dart';
 import '../models/image_model.dart';
 

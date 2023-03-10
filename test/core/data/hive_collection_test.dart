@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 import 'package:mascot/core/clean_architecture/entity.dart';
-import 'package:mascot/core/data/hive_collection_adapter.dart';
+import 'package:mascot/core/data/hive/hive_collection_adapter.dart';
 import 'package:mascot/core/error/exception.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';

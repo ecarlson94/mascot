@@ -6,7 +6,7 @@ import 'package:mascot/core/clean_architecture/entity.dart' as entity;
 
 part 'test_model.g.dart';
 
-class TestEntity extends entity.EquatableEntity {
+class TestEntity extends entity.Entity {
   final String name;
 
   const TestEntity({required super.id, required this.name});

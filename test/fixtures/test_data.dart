@@ -100,7 +100,7 @@ class TestData {
   final MascotModel mascotModel = MascotModel(
     id: 1,
     name: 'test',
-    expressions: [
+    expressions: {
       ExpressionModel(
         id: 1,
         name: CreateMascotBloc.neutralExpressionName,
@@ -119,12 +119,12 @@ class TestData {
           data: Uint8List(200),
         ),
       ),
-    ],
+    },
   );
   final Mascot mascot = Mascot(
     id: 1,
     name: 'test',
-    expressions: [
+    expressions: {
       Expression(
         id: 1,
         name: CreateMascotBloc.neutralExpressionName,
@@ -143,7 +143,7 @@ class TestData {
           data: Uint8List(200),
         ),
       ),
-    ],
+    },
   );
 
   final Settings settings = const Settings(id: 1, favoriteMascotId: 1);

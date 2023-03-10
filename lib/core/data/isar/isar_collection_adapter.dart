@@ -1,8 +1,8 @@
 import 'package:isar/isar.dart' as isar;
 
-import '../clean_architecture/entity.dart';
-import '../error/exception.dart';
-import 'collection_adapter.dart';
+import '../../clean_architecture/entity.dart';
+import '../../error/exception.dart';
+import '../collection_adapter.dart';
 
 class IsarCollectionAdapter<T extends Entity> implements CollectionAdapter<T> {
   final isar.IsarCollection<T> collection;

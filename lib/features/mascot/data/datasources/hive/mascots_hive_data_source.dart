@@ -1,10 +1,10 @@
 import 'package:injectable/injectable.dart';
 
-import '../../../../core/clean_architecture/entity.dart';
-import '../../../../core/data/collection_adapter.dart';
-import '../models/mascot_model.dart';
+import '../../../../../core/clean_architecture/entity.dart';
+import '../../../../../core/data/hive/hive_collection_adapter.dart';
+import '../../models/mascot_model.dart';
 
-abstract class MascotsLocalDataSource {
+abstract class MascotsHiveDataSource {
   /// Saves a mascot to the local database.
   Future<Id> addMascot(MascotModel mascot);
 
@@ -15,11 +15,11 @@ abstract class MascotsLocalDataSource {
   Future<Stream<MascotModel?>> streamMascot(Id id);
 }
 
-@Injectable(as: MascotsLocalDataSource)
-class MascotsLocalDataSourceImpl implements MascotsLocalDataSource {
-  final CollectionAdapter<MascotModel> collection;
+@Injectable(as: MascotsHiveDataSource)
+class MascotsHiveDataSourceImpl implements MascotsHiveDataSource {
+  final HiveCollectionAdapter<MascotModel> collection;
 
-  MascotsLocalDataSourceImpl(this.collection);
+  MascotsHiveDataSourceImpl(this.collection);
 
   @override
   Future<MascotModel> getMascot(Id id) => collection.get(id);

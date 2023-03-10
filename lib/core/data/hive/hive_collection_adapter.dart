@@ -1,10 +1,12 @@
 import 'package:hive/hive.dart';
 
-import '../clean_architecture/entity.dart';
-import '../error/exception.dart';
-import 'collection_adapter.dart';
+import '../../clean_architecture/entity.dart';
+import '../../error/exception.dart';
+import '../collection_adapter.dart';
+import 'hive_model.dart';
 
-class HiveCollectionAdapter<T extends Entity> implements CollectionAdapter<T> {
+class HiveCollectionAdapter<T extends HiveModel<T>>
+    implements CollectionAdapter<T> {
   final Box<T> collection;
 
   HiveCollectionAdapter(this.collection);
