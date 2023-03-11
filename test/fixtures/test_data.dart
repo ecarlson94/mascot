@@ -1,35 +1,41 @@
 import 'dart:typed_data';
 
-import 'package:mascot/features/expressions/data/models/expression_model.dart';
-import 'package:mascot/features/expressions/data/models/image_model.dart';
+import 'package:mascot/features/expressions/data/datasources/hive/models/hive_expression.dart';
+import 'package:mascot/features/expressions/data/datasources/hive/models/hive_image.dart';
+import 'package:mascot/features/expressions/data/datasources/hive/models/map_expression_to_hive_expression.dart';
+import 'package:mascot/features/expressions/data/datasources/hive/models/map_image_to_hive_image.dart';
 import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mascot/features/expressions/domain/entities/image.dart';
-import 'package:mascot/features/mascot/data/models/mascot_model.dart';
+import 'package:mascot/features/mascot/data/datasources/hive/models/hive_mascot.dart';
+import 'package:mascot/features/mascot/data/datasources/hive/models/map_mascot_to_hive_mascot.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
 import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart';
-import 'package:mascot/features/settings/data/models/settings_model.dart';
+import 'package:mascot/features/settings/data/datasources/hive/models/hive_settings.dart';
+import 'package:mascot/features/settings/data/datasources/hive/models/map_settings_to_hive_settings.dart';
 import 'package:mascot/features/settings/domain/entities/settings.dart';
 
 import 'test_x_file.dart';
 
 class TestData {
-  final ImageModel imageModel = ImageModel(name: 'test', data: Uint8List(200));
   Image get image => Image(
-        name: imageModel.name,
-        data: imageModel.data,
+        name: 'test',
+        data: Uint8List(200),
       );
+  final MapImageToHiveImage mapImageToHiveImage = MapImageToHiveImage();
+  HiveImage get hiveImage => mapImageToHiveImage.map(image);
 
-  final List<ImageModel> imageModels = [
-    ImageModel(
+  final List<Image> images = [
+    Image(
       name: 'test1',
       data: Uint8List(200),
     ),
-    ImageModel(
+    Image(
       name: 'test2',
       data: Uint8List(200),
     ),
   ];
-  List<Image> get images => imageModels;
+  List<HiveImage> get hiveImages =>
+      images.map(mapImageToHiveImage.map).toList();
 
   TestXFile? _xfile;
   TestXFile get xfile => _xfile ??= TestXFile.fromData(
@@ -37,15 +43,6 @@ class TestData {
         name: image.name,
       );
 
-  final ExpressionModel expressionModel = ExpressionModel(
-    id: 1,
-    name: CreateMascotBloc.neutralExpressionName,
-    description: CreateMascotBloc.neutralExpressionDescription,
-    image: ImageModel(
-      name: 'test',
-      data: Uint8List(200),
-    ),
-  );
   final Expression expression = Expression(
     id: 1,
     name: CreateMascotBloc.neutralExpressionName,
@@ -55,27 +52,11 @@ class TestData {
       data: Uint8List(200),
     ),
   );
+  final MapExpressionToHiveExpression mapExpressionToHiveExpression =
+      MapExpressionToHiveExpression(MapImageToHiveImage());
+  HiveExpression get hiveExpression =>
+      mapExpressionToHiveExpression.map(expression);
 
-  final List<ExpressionModel> expressionModels = [
-    ExpressionModel(
-      id: 1,
-      name: CreateMascotBloc.neutralExpressionName,
-      description: CreateMascotBloc.neutralExpressionDescription,
-      image: ImageModel(
-        name: 'neutralFace',
-        data: Uint8List(200),
-      ),
-    ),
-    ExpressionModel(
-      id: 2,
-      name: CreateMascotBloc.talkingExpressionName,
-      description: CreateMascotBloc.talkingExpressionDescription,
-      image: ImageModel(
-        name: 'talkingFace',
-        data: Uint8List(200),
-      ),
-    ),
-  ];
   final List<Expression> expressions = [
     Expression(
       id: 1,
@@ -96,31 +77,9 @@ class TestData {
       ),
     ),
   ];
+  List<HiveExpression> get hiveExpressions =>
+      expressions.map(mapExpressionToHiveExpression.map).toList();
 
-  final MascotModel mascotModel = MascotModel(
-    id: 1,
-    name: 'test',
-    expressions: {
-      ExpressionModel(
-        id: 1,
-        name: CreateMascotBloc.neutralExpressionName,
-        description: CreateMascotBloc.neutralExpressionDescription,
-        image: ImageModel(
-          name: 'neutralFace',
-          data: Uint8List(200),
-        ),
-      ),
-      ExpressionModel(
-        id: 2,
-        name: CreateMascotBloc.talkingExpressionName,
-        description: CreateMascotBloc.talkingExpressionDescription,
-        image: ImageModel(
-          name: 'talkingFace',
-          data: Uint8List(200),
-        ),
-      ),
-    },
-  );
   final Mascot mascot = Mascot(
     id: 1,
     name: 'test',
@@ -145,10 +104,13 @@ class TestData {
       ),
     },
   );
-
-  final Settings settings = const Settings(id: 1, favoriteMascotId: 1);
-  final SettingsModel settingsModel = const SettingsModel(
-    id: 1,
-    favoriteMascotId: 1,
+  final MapMascotToHiveMascot mapMascotToHiveMascot = MapMascotToHiveMascot(
+    MapExpressionToHiveExpression(MapImageToHiveImage()),
   );
+  HiveMascot get mascotModel => mapMascotToHiveMascot.map(mascot);
+
+  final Settings settings = const Settings(favoriteMascotId: 1);
+  final MapSettingsToHiveSettings mapSettingsToHiveSettings =
+      MapSettingsToHiveSettings();
+  HiveSettings get hiveSettings => mapSettingsToHiveSettings.map(settings);
 }

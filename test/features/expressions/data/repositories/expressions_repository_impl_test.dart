@@ -4,8 +4,6 @@ import 'package:mascot/core/clean_architecture/entity.dart';
 import 'package:mascot/core/error/failure.dart';
 import 'package:mascot/features/expressions/data/models/expression_model.dart';
 import 'package:mascot/features/expressions/data/repositories/expressions_repository_impl.dart';
-import 'package:mascot/features/expressions/data/models/map_expression_to_expression_model.dart';
-import 'package:mascot/features/expressions/data/models/map_image_to_image_model.dart';
 import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mockito/mockito.dart';
 
@@ -18,8 +16,8 @@ void main() {
   setUp(() {
     context = TestContext();
     repository = ExpressionsRepositoryImpl(
-      context.mocks.expressionsLocalDataSource,
-      MapExpressionToExpressionModel(MapImageToImageModel()),
+      context.mocks.expressionsHiveDataSource,
+      context.data.mapExpressionToHiveExpression,
     );
   });
 
@@ -29,8 +27,8 @@ void main() {
         'should return the requested expression when call to local data source is successful',
         () async {
           // arrange
-          when(context.mocks.expressionsLocalDataSource.getExpression(any))
-              .thenAnswer((_) => Future.value(context.data.expressionModel));
+          when(context.mocks.expressionsHiveDataSource.getExpression(any))
+              .thenAnswer((_) => Future.value(context.data.hiveExpression));
 
           // act
           final result =
@@ -39,9 +37,9 @@ void main() {
           // assert
           expect(result, Right(context.data.expression));
 
-          verify(context.mocks.expressionsLocalDataSource
+          verify(context.mocks.expressionsHiveDataSource
               .getExpression(context.data.expression.id));
-          verifyNoMoreInteractions(context.mocks.expressionsLocalDataSource);
+          verifyNoMoreInteractions(context.mocks.expressionsHiveDataSource);
         },
       );
 
@@ -49,8 +47,8 @@ void main() {
         'should convert ExpressionModel to Expression',
         () async {
           // arrange
-          when(context.mocks.expressionsLocalDataSource.getExpression(any))
-              .thenAnswer((_) => Future.value(context.data.expressionModel));
+          when(context.mocks.expressionsHiveDataSource.getExpression(any))
+              .thenAnswer((_) => Future.value(context.data.hiveExpression));
 
           // act
           final result =
@@ -68,7 +66,7 @@ void main() {
         'should return failure when call to local data source is unsuccessful',
         () async {
           // arrange
-          when(context.mocks.expressionsLocalDataSource.getExpression(any))
+          when(context.mocks.expressionsHiveDataSource.getExpression(any))
               .thenThrow(Exception());
 
           // act
@@ -86,18 +84,18 @@ void main() {
         'should return new expression id when call to local data source is successful',
         () async {
           // arrange
-          when(context.mocks.expressionsLocalDataSource.addExpression(any))
-              .thenAnswer((_) async => context.data.expressionModel.id);
+          when(context.mocks.expressionsHiveDataSource.addExpression(any))
+              .thenAnswer((_) async => context.data.hiveExpression.id);
 
           // act
           final result =
               await repository.addExpression(context.data.expression);
 
           // assert
-          expect(result, Right(context.data.expressionModel.id));
-          verify(context.mocks.expressionsLocalDataSource
-              .addExpression(context.data.expressionModel));
-          verifyNoMoreInteractions(context.mocks.expressionsLocalDataSource);
+          expect(result, Right(context.data.hiveExpression.id));
+          verify(context.mocks.expressionsHiveDataSource
+              .addExpression(context.data.hiveExpression));
+          verifyNoMoreInteractions(context.mocks.expressionsHiveDataSource);
         },
       );
 
@@ -105,7 +103,7 @@ void main() {
         'should return failure when call to local data source is unsuccessful',
         () async {
           // arrange
-          when(context.mocks.expressionsLocalDataSource.addExpression(any))
+          when(context.mocks.expressionsHiveDataSource.addExpression(any))
               .thenThrow(Exception());
 
           // act
@@ -124,7 +122,7 @@ void main() {
         () async {
           // arrange
           var ids = context.data.expressions.map((e) => e.id).toList();
-          when(context.mocks.expressionsLocalDataSource.addExpression(any))
+          when(context.mocks.expressionsHiveDataSource.addExpression(any))
               .thenAnswer(
             (_) async => (_.positionalArguments[0] as ExpressionModel).id,
           );
@@ -136,11 +134,11 @@ void main() {
           // assert
           expect(result, isA<Right<Failure, List<Id>>>());
           expect(ids, equals(result.getOrElse(() => <Id>[])));
-          for (var expressionModel in context.data.expressionModels) {
-            verify(context.mocks.expressionsLocalDataSource
+          for (var expressionModel in context.data.hiveExpressions) {
+            verify(context.mocks.expressionsHiveDataSource
                 .addExpression(expressionModel));
           }
-          verifyNoMoreInteractions(context.mocks.expressionsLocalDataSource);
+          verifyNoMoreInteractions(context.mocks.expressionsHiveDataSource);
         },
       );
 
@@ -148,7 +146,7 @@ void main() {
         'should return failure when call to local data source is unsuccessful',
         () async {
           // arrange
-          when(context.mocks.expressionsLocalDataSource.addExpression(any))
+          when(context.mocks.expressionsHiveDataSource.addExpression(any))
               .thenThrow(Exception());
 
           // act
@@ -164,17 +162,17 @@ void main() {
         'should remove successful expressions when call to local data source is unsuccessful',
         () async {
           // arrange
-          var expressionModel1 = context.data.expressionModels.first;
-          var expressionModel2 = context.data.expressionModels.skip(1).first;
-          when(context.mocks.expressionsLocalDataSource
+          var expressionModel1 = context.data.hiveExpressions.first;
+          var expressionModel2 = context.data.hiveExpressions.skip(1).first;
+          when(context.mocks.expressionsHiveDataSource
                   .addExpression(expressionModel1))
               .thenAnswer(
             (_) async => (_.positionalArguments[0] as ExpressionModel).id,
           );
-          when(context.mocks.expressionsLocalDataSource
+          when(context.mocks.expressionsHiveDataSource
                   .addExpression(expressionModel2))
               .thenThrow(Exception());
-          when(context.mocks.expressionsLocalDataSource.removeExpression(any))
+          when(context.mocks.expressionsHiveDataSource.removeExpression(any))
               .thenAnswer((_) async {});
 
           // act
@@ -182,7 +180,7 @@ void main() {
 
           // assert
           verify(
-            context.mocks.expressionsLocalDataSource
+            context.mocks.expressionsHiveDataSource
                 .removeExpression(expressionModel1.id),
           );
         },
@@ -195,8 +193,8 @@ void main() {
         () async {
           // arrange
           var ids = context.data.expressions.map((e) => e.id).toList();
-          when(context.mocks.expressionsLocalDataSource.getExpressions(any))
-              .thenAnswer((_) => Future.value(context.data.expressionModels));
+          when(context.mocks.expressionsHiveDataSource.getExpressions(any))
+              .thenAnswer((_) => Future.value(context.data.hiveExpressions));
 
           // act
           final result = await repository.getExpressions(ids);
@@ -207,16 +205,16 @@ void main() {
             result.getOrElse(() => []),
             context.data.expressions,
           );
-          verify(context.mocks.expressionsLocalDataSource.getExpressions(ids));
-          verifyNoMoreInteractions(context.mocks.expressionsLocalDataSource);
+          verify(context.mocks.expressionsHiveDataSource.getExpressions(ids));
+          verifyNoMoreInteractions(context.mocks.expressionsHiveDataSource);
         },
       );
 
       test('should convert ExpressionModels to Expressions', () async {
         // arrange
         var ids = context.data.expressions.map((e) => e.id).toList();
-        when(context.mocks.expressionsLocalDataSource.getExpressions(any))
-            .thenAnswer((_) => Future.value(context.data.expressionModels));
+        when(context.mocks.expressionsHiveDataSource.getExpressions(any))
+            .thenAnswer((_) => Future.value(context.data.hiveExpressions));
 
         // act
         final result = await repository.getExpressions(ids);
@@ -232,7 +230,7 @@ void main() {
           'should return failure when call to local data source is unsuccessful',
           () async {
         // arrange
-        when(context.mocks.expressionsLocalDataSource.getExpressions(any))
+        when(context.mocks.expressionsHiveDataSource.getExpressions(any))
             .thenThrow(Exception());
 
         // act

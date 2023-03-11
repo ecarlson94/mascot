@@ -4,19 +4,22 @@ import 'package:hive/hive.dart';
 
 import '../../../../../../core/clean_architecture/entity.dart';
 import '../../../../../../core/data/hive/hive_model.dart';
-import '../../../../../expressions/data/models/expression_model.dart';
+import '../../../../../expressions/data/datasources/hive/models/hive_expression.dart';
 import '../../../models/mascot_model.dart';
 
 part 'hive_mascot.g.dart';
 
 @HiveType(typeId: 2)
-class HiveMascot extends MascotModel implements HiveModel {
+class HiveMascot extends MascotModel implements HiveModel<HiveMascot> {
   const HiveMascot({
     required this.id,
     required this.name,
-    required List<ExpressionModel> expressions,
-  })  : expressionsList = expressions,
-        super(id: id, name: name, expressions: const {});
+    required this.expressionModels,
+  }) : super(
+          id: id,
+          name: name,
+          expressionModels: expressionModels,
+        );
 
   @HiveField(0)
   @override
@@ -27,17 +30,18 @@ class HiveMascot extends MascotModel implements HiveModel {
   final String name;
 
   @HiveField(2)
-  final List<ExpressionModel> expressionsList;
+  @override
+  final List<HiveExpression> expressionModels;
 
   @override
-  Set<ExpressionModel> get expressions => expressionsList.toSet();
+  Set<HiveExpression> get expressions => expressionModels.toSet();
 
   @override
   HiveMascot copyWithId(Id id) {
     return HiveMascot(
       id: id,
       name: name,
-      expressions: expressionsList,
+      expressionModels: expressionModels,
     );
   }
 }

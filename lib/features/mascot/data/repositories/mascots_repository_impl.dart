@@ -13,7 +13,7 @@ import '../../../settings/domain/repositories/settings_repository.dart';
 import '../../domain/entities/mascot.dart';
 import '../../domain/repositories/mascots_repository.dart';
 import '../datasources/hive/mascots_hive_data_source.dart';
-import '../models/map_mascot_to_mascot_model.dart';
+import '../datasources/hive/models/map_mascot_to_hive_mascot.dart';
 import '../models/mascot_model.dart';
 
 @Injectable(as: MascotsRepository)
@@ -21,13 +21,13 @@ class MascotsRepositoryImpl implements MascotsRepository {
   final MascotsHiveDataSource _localDataSource;
   final ExpressionsRepository _expressionsRepository;
   final SettingsRepository _settingsRepository;
-  final MapMascotToMascotModel _mapMascotToMascotModel;
+  final MapMascotToHiveMascot _mapMascotToHiveMascot;
 
   MascotsRepositoryImpl(
     this._localDataSource,
     this._expressionsRepository,
     this._settingsRepository,
-    this._mapMascotToMascotModel,
+    this._mapMascotToHiveMascot,
   );
 
   @override
@@ -54,6 +54,7 @@ class MascotsRepositoryImpl implements MascotsRepository {
       (ids) async => (await _expressionsRepository.getExpressions(ids)).fold(
         (l) => Left(l),
         (expressions) async {
+          // TODO: move this to the hive data source
           final mascotWithExpressions = mascot.copyWith(
             expressions: expressions
                 .map((e) => Expression.empty.copyWith(id: e.id))
@@ -66,9 +67,10 @@ class MascotsRepositoryImpl implements MascotsRepository {
             (r) async {
               try {
                 var id = await _localDataSource.addMascot(
-                  await _mapMascotToMascotModel(mascotWithExpressions),
+                  _mapMascotToHiveMascot.map(mascotWithExpressions),
                 );
 
+                // TODO: Move this application logic to the use case
                 if (r.favoriteMascotId == 0) {
                   await _settingsRepository.setFavoriteMascotId(id);
                 }
@@ -93,6 +95,7 @@ class MascotsRepositoryImpl implements MascotsRepository {
       return await failureOrMascot.fold(
         (l) => Left(l),
         (mascot) async {
+          // TODO: move this logic to the data source
           var mascotBehaviorSubject = BehaviorSubject<Mascot?>.seeded(
             mascot,
           );

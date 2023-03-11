@@ -1,15 +1,14 @@
-// ignore_for_file: overridden_fields
-
 import '../../../expressions/data/models/expression_model.dart';
 import '../../domain/entities/mascot.dart';
 
-class MascotModel extends Mascot {
+abstract class MascotModel extends Mascot {
   const MascotModel({
     required super.id,
     required super.name,
-    required this.expressions,
-  });
+    required this.expressionModels,
+  }) : super(expressions: const {});
 
+  final Iterable<ExpressionModel> expressionModels;
   @override
-  final Set<ExpressionModel> expressions;
+  Set<ExpressionModel> get expressions;
 }

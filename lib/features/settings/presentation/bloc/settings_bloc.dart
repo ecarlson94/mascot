@@ -51,7 +51,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
     settingsStream.listen((settings) {
       var oldValue = valueStream.hasValue ? valueStream.value : null;
-      var newValue = valueSelector(settings ?? const Settings());
+      var newValue = valueSelector(settings ?? Settings.empty());
       if (alwaysEmit || oldValue != newValue) {
         valueStream.add(newValue);
       }

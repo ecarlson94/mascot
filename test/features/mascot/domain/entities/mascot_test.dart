@@ -52,7 +52,7 @@ void main() {
       test('should copy original object with new expressions', () {
         // arrange
         var mascot = context.data.mascot;
-        var expectedExpressions = [context.data.expression];
+        var expectedExpressions = {context.data.expression};
 
         // act
         var result = mascot.copyWith(expressions: expectedExpressions);
@@ -61,22 +61,6 @@ void main() {
         expect(result.id, mascot.id);
         expect(result.name, mascot.name);
         expect(result.expressions, expectedExpressions);
-      });
-    });
-
-    group('copyWithId', () {
-      test('should copy object with new id', () {
-        // arrange
-        var mascot = context.data.mascot;
-        var expectedId = 20;
-
-        // act
-        var result = mascot.copyWithId(expectedId);
-
-        // assert
-        expect(result.id, expectedId);
-        expect(result.name, mascot.name);
-        expect(result.expressions, mascot.expressions);
       });
     });
   });

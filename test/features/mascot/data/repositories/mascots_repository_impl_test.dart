@@ -2,11 +2,9 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/clean_architecture/entity.dart';
 import 'package:mascot/core/error/failure.dart';
-import 'package:mascot/features/expressions/data/models/map_expression_to_expression_model.dart';
-import 'package:mascot/features/expressions/data/models/map_image_to_image_model.dart';
 import 'package:mascot/features/expressions/domain/entities/expression.dart';
+import 'package:mascot/features/mascot/data/datasources/hive/models/map_mascot_to_hive_mascot.dart';
 import 'package:mascot/features/mascot/data/models/mascot_model.dart';
-import 'package:mascot/features/mascot/data/models/map_mascot_to_mascot_model.dart';
 import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
 import 'package:mockito/mockito.dart';
@@ -17,19 +15,17 @@ import '../../../../fixtures/test_context.dart';
 void main() {
   late TestContext context;
   late MascotsRepositoryImpl repository;
-  late MapMascotToMascotModel mapMascotToMascotModel;
+  late MapMascotToHiveMascot mapMasoctToHiveMascot;
   late List<Id> expressionIds;
 
   setUp(() {
     context = TestContext();
-    mapMascotToMascotModel = MapMascotToMascotModel(
-      MapExpressionToExpressionModel(MapImageToImageModel()),
-    );
+    mapMasoctToHiveMascot = context.data.mapMascotToHiveMascot;
     repository = MascotsRepositoryImpl(
       context.mocks.mascotsLocalDataSource,
       context.mocks.expressionsRepository,
       context.mocks.settingsRepository,
-      mapMascotToMascotModel,
+      mapMasoctToHiveMascot,
     );
 
     expressionIds = context.data.mascot.expressions.map((e) => e.id).toList();
@@ -38,7 +34,7 @@ void main() {
         .thenAnswer((_) => Future.value(Right(expressionIds)));
     when(context.mocks.expressionsRepository.getExpressions(any)).thenAnswer(
       (_) => Future.value(
-        Right(context.data.mascot.expressions),
+        Right(context.data.mascot.expressions.toList()),
       ),
     );
     when(context.mocks.mascotsLocalDataSource.getMascot(any))
@@ -123,15 +119,15 @@ void main() {
     });
 
     group('addMascot', () {
-      late List<Expression> emptyExpressions;
+      late Set<Expression> emptyExpressions;
       late MascotModel mascotModelWithEmptyExpressions;
 
       setUp(() async {
         emptyExpressions = context.data.mascot.expressions
             .map((e) => Expression.empty.copyWith(id: e.id))
-            .toList();
+            .toSet();
         mascotModelWithEmptyExpressions =
-            await mapMascotToMascotModel(context.data.mascot.copyWith(
+            mapMasoctToHiveMascot.map(context.data.mascot.copyWith(
           expressions: emptyExpressions,
         ));
 
@@ -171,7 +167,7 @@ void main() {
           // assert
           expect(result, Right(context.data.mascot.id));
           verify(context.mocks.expressionsRepository.addExpressions(
-            context.data.mascot.expressions,
+            context.data.mascot.expressions.toList(),
           ));
           verify(context.mocks.expressionsRepository.getExpressions(
             expressionIds,
@@ -249,7 +245,7 @@ void main() {
         expect(
           result.getOrElse(() => BehaviorSubject()),
           emitsInOrder([
-            await mapMascotToMascotModel.reverse(context.data.mascotModel),
+            mapMasoctToHiveMascot.reverse(context.data.mascotModel),
           ]),
         );
         verify(
@@ -270,7 +266,7 @@ void main() {
           var updatedMascot = context.data.mascot.copyWith(
             name: 'updated',
           );
-          var updatedMascotModel = await mapMascotToMascotModel(updatedMascot);
+          var updatedMascotModel = mapMasoctToHiveMascot.map(updatedMascot);
 
           // act
           final result = await repository.streamMascot(context.data.mascot.id);
@@ -281,7 +277,7 @@ void main() {
           expect(
             result.getOrElse(() => BehaviorSubject()),
             emitsInOrder([
-              await mapMascotToMascotModel.reverse(context.data.mascotModel),
+              mapMasoctToHiveMascot.reverse(context.data.mascotModel),
               updatedMascot,
             ]),
           );
@@ -296,12 +292,12 @@ void main() {
             name: 'mascot model with empty expressions',
             expressions: context.data.mascot.expressions
                 .map((e) => Expression.empty.copyWith(id: e.id))
-                .toList(),
+                .toSet(),
           );
           var mascotModelWithEmptyExpressions =
-              await mapMascotToMascotModel(mascotWithEmptyExpressions);
+              mapMasoctToHiveMascot.map(mascotWithEmptyExpressions);
           var expectedMascot = mascotWithEmptyExpressions.copyWith(
-            expressions: context.data.expressions,
+            expressions: context.data.expressions.toSet(),
           );
 
           // act

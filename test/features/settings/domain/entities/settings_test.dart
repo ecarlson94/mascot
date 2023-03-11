@@ -21,19 +21,6 @@ main() {
         expect(result, settings);
       });
 
-      test('should copy original object with new id', () {
-        // arrange
-        var settings = context.data.settings;
-        var expectedId = 20;
-
-        // act
-        var result = settings.copyWith(id: expectedId);
-
-        // assert
-        expect(result.id, expectedId);
-        expect(result.favoriteMascotId, settings.favoriteMascotId);
-      });
-
       test('should copy original object with new favoriteMascotId', () {
         // arrange
         var settings = context.data.settings;
@@ -44,23 +31,7 @@ main() {
             settings.copyWith(favoriteMascotId: expectedFavoriteMascotId);
 
         // assert
-        expect(result.id, settings.id);
         expect(result.favoriteMascotId, expectedFavoriteMascotId);
-      });
-    });
-
-    group('copyWithId', () {
-      test('should copy original object with new id', () {
-        // arrange
-        var settings = context.data.settings;
-        var expectedId = 20;
-
-        // act
-        var result = settings.copyWithId(expectedId);
-
-        // assert
-        expect(result.id, expectedId);
-        expect(result.favoriteMascotId, settings.favoriteMascotId);
       });
     });
   });

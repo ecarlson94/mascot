@@ -81,22 +81,5 @@ void main() {
         expect(result.image, expectedImage);
       });
     });
-
-    group('copyWithId', () {
-      test('should copy object with new id', () {
-        // arrange
-        var expression = context.data.expression;
-        var expectedId = 20;
-
-        // act
-        var result = expression.copyWithId(expectedId);
-
-        // assert
-        expect(result.id, expectedId);
-        expect(result.name, expression.name);
-        expect(result.description, expression.description);
-        expect(result.image, expression.image);
-      });
-    });
   });
 }

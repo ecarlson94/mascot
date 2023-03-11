@@ -1,30 +1,19 @@
-import 'package:injectable/injectable.dart';
-
 import '../../../../core/data/mapper.dart';
 import '../../domain/entities/expression.dart';
+import '../datasources/hive/models/map_image_to_hive_image.dart';
 import 'expression_model.dart';
-import 'map_image_to_image_model.dart';
 
-@injectable
-class MapExpressionToExpressionModel
+abstract class MapExpressionToExpressionModel
     extends Mapper<Expression, ExpressionModel> {
-  final MapImageToImageModel _mapImageToImageModel;
+  final MapImageToHiveImage mapImageToHiveImage;
 
-  MapExpressionToExpressionModel(this._mapImageToImageModel);
-
-  @override
-  ExpressionModel call(Expression input) => ExpressionModel(
-        id: input.id,
-        name: input.name,
-        description: input.description,
-        image: _mapImageToImageModel(input.image),
-      );
+  MapExpressionToExpressionModel(this.mapImageToHiveImage);
 
   @override
   Expression reverse(ExpressionModel input) => Expression(
         id: input.id,
         name: input.name,
         description: input.description,
-        image: _mapImageToImageModel.reverse(input.image),
+        image: mapImageToHiveImage.reverse(input.image),
       );
 }

@@ -64,7 +64,7 @@ void main() {
           await Future.delayed(const Duration(milliseconds: 100));
           mascotSubject.add(
             context.data.mascot.copyWith(
-              expressions: context.data.expressions.skip(1).toList(),
+              expressions: context.data.expressions.skip(1).toSet(),
             ),
           );
         },

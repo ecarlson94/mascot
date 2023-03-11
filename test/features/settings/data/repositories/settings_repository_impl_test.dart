@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/error/failure.dart';
 import 'package:mascot/core/utils/input_converters/input_converter.dart';
-import 'package:mascot/features/settings/data/models/map_settings_to_settings_model.dart';
+import 'package:mascot/features/settings/data/datasources/hive/models/map_settings_to_hive_settings.dart';
 import 'package:mascot/features/settings/data/models/settings_model.dart';
 import 'package:mascot/features/settings/data/repositories/settings_repository_impl.dart';
 import 'package:mascot/features/settings/domain/entities/settings.dart';
@@ -14,13 +14,13 @@ import '../../../../fixtures/test_context.dart';
 void main() {
   late TestContext context;
   late SettingsRepositoryImpl repository;
-  late MapSettingsToSettingsModel mapSettingsToSettingsModel;
+  late MapSettingsToHiveSettings mapSettingsToSettingsModel;
 
   setUp(() {
     context = TestContext();
-    mapSettingsToSettingsModel = MapSettingsToSettingsModel();
+    mapSettingsToSettingsModel = MapSettingsToHiveSettings();
     repository = SettingsRepositoryImpl(
-      context.mocks.settingsLocalDataSource,
+      context.mocks.settingsHiveDataSource,
       mapSettingsToSettingsModel,
     );
   });
@@ -29,24 +29,24 @@ void main() {
     group('loadSettings', () {
       test('should return SettingsModel from local database', () async {
         // arrange
-        when(context.mocks.settingsLocalDataSource.loadSettings())
-            .thenAnswer((_) async => context.data.settingsModel);
+        when(context.mocks.settingsHiveDataSource.loadSettings())
+            .thenAnswer((_) async => context.data.hiveSettings);
 
         // act
         final result = await repository.loadSettings();
 
         // assert
         expect(
-          result.getOrElse(() => const Settings()),
-          context.data.settingsModel,
+          result.getOrElse(() => Settings.empty()),
+          context.data.hiveSettings,
         );
-        verify(context.mocks.settingsLocalDataSource.loadSettings());
-        verifyNoMoreInteractions(context.mocks.settingsLocalDataSource);
+        verify(context.mocks.settingsHiveDataSource.loadSettings());
+        verifyNoMoreInteractions(context.mocks.settingsHiveDataSource);
       });
 
       test('should return failure if local database throws', () async {
         // arrange
-        when(context.mocks.settingsLocalDataSource.loadSettings())
+        when(context.mocks.settingsHiveDataSource.loadSettings())
             .thenThrow(Exception());
 
         // act
@@ -58,17 +58,17 @@ void main() {
           result.swap().getOrElse(() => InvalidInputFailure()),
           isA<LocalDataSourceFailure>(),
         );
-        verify(context.mocks.settingsLocalDataSource.loadSettings());
-        verifyNoMoreInteractions(context.mocks.settingsLocalDataSource);
+        verify(context.mocks.settingsHiveDataSource.loadSettings());
+        verifyNoMoreInteractions(context.mocks.settingsHiveDataSource);
       });
     });
 
     group('setFavoriteMascotId', () {
       test('should update favoriteMascotId in local database', () async {
         // arrange
-        when(context.mocks.settingsLocalDataSource.loadSettings())
-            .thenAnswer((_) async => context.data.settingsModel);
-        when(context.mocks.settingsLocalDataSource.saveSettings(any))
+        when(context.mocks.settingsHiveDataSource.loadSettings())
+            .thenAnswer((_) async => context.data.hiveSettings);
+        when(context.mocks.settingsHiveDataSource.saveSettings(any))
             .thenAnswer((_) async => unit);
 
         // act
@@ -77,9 +77,9 @@ void main() {
         // assert
         expect(result, isA<Right<Failure, Unit>>());
         verify(
-          context.mocks.settingsLocalDataSource.saveSettings(
-            await mapSettingsToSettingsModel(
-              context.data.settingsModel.copyWith(favoriteMascotId: 27),
+          context.mocks.settingsHiveDataSource.saveSettings(
+            mapSettingsToSettingsModel.map(
+              context.data.hiveSettings.copyWith(favoriteMascotId: 27),
             ),
           ),
         );
@@ -87,9 +87,9 @@ void main() {
 
       test('should return failure if local database throws', () async {
         // arrange
-        when(context.mocks.settingsLocalDataSource.loadSettings())
-            .thenAnswer((_) async => context.data.settingsModel);
-        when(context.mocks.settingsLocalDataSource.saveSettings(any))
+        when(context.mocks.settingsHiveDataSource.loadSettings())
+            .thenAnswer((_) async => context.data.hiveSettings);
+        when(context.mocks.settingsHiveDataSource.saveSettings(any))
             .thenThrow(Exception());
 
         // act
@@ -108,9 +108,9 @@ void main() {
       test('should seed the stream with the current settings', () async {
         // arrange
         var modelStream = BehaviorSubject<SettingsModel>();
-        when(context.mocks.settingsLocalDataSource.loadSettings())
-            .thenAnswer((_) async => context.data.settingsModel);
-        when(context.mocks.settingsLocalDataSource.streamSettings())
+        when(context.mocks.settingsHiveDataSource.loadSettings())
+            .thenAnswer((_) async => context.data.hiveSettings);
+        when(context.mocks.settingsHiveDataSource.streamSettings())
             .thenAnswer((_) async => modelStream);
 
         // act
@@ -121,13 +121,12 @@ void main() {
         expect(
           result.getOrElse(() => BehaviorSubject()),
           emitsInOrder([
-            await mapSettingsToSettingsModel
-                .reverse(context.data.settingsModel),
+            mapSettingsToSettingsModel.reverse(context.data.hiveSettings),
           ]),
         );
-        verify(context.mocks.settingsLocalDataSource.loadSettings());
-        verify(context.mocks.settingsLocalDataSource.streamSettings());
-        verifyNoMoreInteractions(context.mocks.settingsLocalDataSource);
+        verify(context.mocks.settingsHiveDataSource.loadSettings());
+        verify(context.mocks.settingsHiveDataSource.streamSettings());
+        verifyNoMoreInteractions(context.mocks.settingsHiveDataSource);
       });
 
       test(
@@ -135,15 +134,15 @@ void main() {
         () async {
           // arrange
           var modelStream = BehaviorSubject<SettingsModel>();
-          when(context.mocks.settingsLocalDataSource.loadSettings())
-              .thenAnswer((_) async => context.data.settingsModel);
-          when(context.mocks.settingsLocalDataSource.streamSettings())
+          when(context.mocks.settingsHiveDataSource.loadSettings())
+              .thenAnswer((_) async => context.data.hiveSettings);
+          when(context.mocks.settingsHiveDataSource.streamSettings())
               .thenAnswer((_) async => modelStream);
-          var updatedSettings = context.data.settingsModel.copyWith(
+          var updatedSettings = context.data.hiveSettings.copyWith(
             favoriteMascotId: 27,
           );
           var updatedSettingsModel =
-              await mapSettingsToSettingsModel(updatedSettings);
+              mapSettingsToSettingsModel.map(updatedSettings);
 
           // act
           final result = await repository.streamSettings();
@@ -154,8 +153,7 @@ void main() {
           expect(
             result.getOrElse(() => BehaviorSubject()),
             emitsInOrder([
-              await mapSettingsToSettingsModel
-                  .reverse(context.data.settingsModel),
+              mapSettingsToSettingsModel.reverse(context.data.hiveSettings),
               updatedSettings,
             ]),
           );
@@ -164,7 +162,7 @@ void main() {
 
       test('should return failure if local database throws', () async {
         // arrange
-        when(context.mocks.settingsLocalDataSource.loadSettings())
+        when(context.mocks.settingsHiveDataSource.loadSettings())
             .thenThrow(Exception());
 
         // act
@@ -176,8 +174,8 @@ void main() {
           result.swap().getOrElse(() => InvalidInputFailure()),
           isA<LocalDataSourceFailure>(),
         );
-        verify(context.mocks.settingsLocalDataSource.loadSettings());
-        verifyNoMoreInteractions(context.mocks.settingsLocalDataSource);
+        verify(context.mocks.settingsHiveDataSource.loadSettings());
+        verifyNoMoreInteractions(context.mocks.settingsHiveDataSource);
       });
     });
   });

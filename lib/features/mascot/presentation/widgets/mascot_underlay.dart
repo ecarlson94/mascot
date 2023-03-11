@@ -39,7 +39,6 @@ class MascotUnderlay extends StatelessWidget {
                       },
                     ),
                   );
-                  // return Text(snapshot.data ?? 'Mascot');
                 },
               ),
             );

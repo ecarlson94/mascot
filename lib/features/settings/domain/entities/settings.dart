@@ -1,21 +1,20 @@
-import '../../../../core/clean_architecture/entity.dart';
+import 'package:equatable/equatable.dart';
 
-class Settings extends Entity {
+class Settings extends Equatable {
   final int favoriteMascotId;
 
-  const Settings({super.id = 1, this.favoriteMascotId = 0});
+  const Settings({required this.favoriteMascotId});
 
   @override
-  List<Object?> get props => [id, favoriteMascotId];
+  List<Object?> get props => [favoriteMascotId];
 
   Settings copyWith({
     int? id,
     int? favoriteMascotId,
   }) =>
       Settings(
-        id: id ?? this.id,
         favoriteMascotId: favoriteMascotId ?? this.favoriteMascotId,
       );
 
-  factory Settings.empty() => const Settings(id: 1);
+  factory Settings.empty() => const Settings(favoriteMascotId: 0);
 }

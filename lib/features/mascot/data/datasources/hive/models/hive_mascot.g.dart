@@ -19,6 +19,7 @@ class HiveMascotAdapter extends TypeAdapter<HiveMascot> {
     return HiveMascot(
       id: fields[0] as int,
       name: fields[1] as String,
+      expressionModels: (fields[2] as List).cast<HiveExpression>(),
     );
   }
 
@@ -31,7 +32,7 @@ class HiveMascotAdapter extends TypeAdapter<HiveMascot> {
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.expressionsList);
+      ..write(obj.expressionModels);
   }
 
   @override

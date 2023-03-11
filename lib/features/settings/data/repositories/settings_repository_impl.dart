@@ -6,13 +6,13 @@ import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/error/failure.dart';
 import '../../domain/entities/settings.dart';
 import '../../domain/repositories/settings_repository.dart';
-import '../datasources/settings_local_data_source.dart';
-import '../models/map_settings_to_settings_model.dart';
+import '../datasources/hive/models/map_settings_to_hive_settings.dart';
+import '../datasources/hive/settings_hive_data_source.dart';
 
 @Injectable(as: SettingsRepository)
 class SettingsRepositoryImpl extends SettingsRepository {
-  final SettingsLocalDataSource _localDataSource;
-  final MapSettingsToSettingsModel _mapSettingsToSettingsModel;
+  final SettingsHiveDataSource _localDataSource;
+  final MapSettingsToHiveSettings _mapSettingsToSettingsModel;
 
   SettingsRepositoryImpl(
       this._localDataSource, this._mapSettingsToSettingsModel);
@@ -31,13 +31,13 @@ class SettingsRepositoryImpl extends SettingsRepository {
     try {
       var settings = await _localDataSource.loadSettings();
       var settingsBehaviorSubject = BehaviorSubject<Settings>.seeded(
-        await _mapSettingsToSettingsModel.reverse(settings),
+        _mapSettingsToSettingsModel.reverse(settings),
       );
 
       var settingsStream = await _localDataSource.streamSettings();
       settingsStream.listen((event) async {
         settingsBehaviorSubject.add(
-          await _mapSettingsToSettingsModel.reverse(event ?? settings),
+          _mapSettingsToSettingsModel.reverse(event ?? settings),
         );
       });
 
@@ -54,7 +54,7 @@ class SettingsRepositoryImpl extends SettingsRepository {
       var updatedSettings = settings.copyWith(favoriteMascotId: id);
 
       return Right(await _localDataSource.saveSettings(
-        await _mapSettingsToSettingsModel(updatedSettings),
+        _mapSettingsToSettingsModel.map(updatedSettings),
       ));
     } on Exception {
       return Left(LocalDataSourceFailure());

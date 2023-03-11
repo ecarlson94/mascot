@@ -1,7 +1,7 @@
 import '../../../../core/clean_architecture/entity.dart';
 import 'image.dart';
 
-class Expression extends Entity<Expression> {
+class Expression extends Entity {
   final String name;
   final String description;
   final Image image;

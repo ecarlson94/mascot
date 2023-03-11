@@ -1,7 +1,7 @@
 import '../../../../core/clean_architecture/entity.dart';
 import '../../../expressions/domain/entities/expression.dart';
 
-class Mascot extends Entity<Mascot> {
+class Mascot extends Entity {
   final String name;
   final Set<Expression> expressions;
 
