@@ -24,7 +24,6 @@ void main() {
     repository = MascotsRepositoryImpl(
       context.mocks.mascotsLocalDataSource,
       context.mocks.expressionsRepository,
-      context.mocks.settingsRepository,
       mapMasoctToHiveMascot,
     );
 
@@ -193,34 +192,6 @@ void main() {
                 .addMascot(mascotModelWithEmptyExpressions),
           );
           verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
-        },
-      );
-
-      test('should update favorite mascot when adding a new mascot', () async {
-        // act
-        await repository.addMascot(context.data.mascot);
-
-        // assert
-        verify(context.mocks.settingsRepository.loadSettings());
-        verify(context.mocks.settingsRepository.setFavoriteMascotId(
-          context.data.mascot.id,
-        ));
-      });
-
-      test(
-        'should not update favorite mascot when favorite mascot is already set',
-        () async {
-          // arrange
-          when(context.mocks.settingsRepository.loadSettings())
-              .thenAnswer((_) async => Right(context.data.settings));
-
-          // act
-          await repository.addMascot(context.data.mascot);
-
-          // assert
-          verifyNever(context.mocks.settingsRepository.setFavoriteMascotId(
-            context.data.mascot.id,
-          ));
         },
       );
     });

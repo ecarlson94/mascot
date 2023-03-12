@@ -27,7 +27,7 @@ import 'package:mascot/features/expressions/domain/repositories/expressions_repo
 import 'package:mascot/features/mascot/data/datasources/hive/mascots_hive_data_source.dart'
     as _i14;
 import 'package:mascot/features/mascot/data/datasources/hive/models/hive_mascot.dart'
-    as _i9;
+    as _i8;
 import 'package:mascot/features/mascot/data/datasources/hive/models/map_mascot_to_hive_mascot.dart'
     as _i13;
 import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl.dart'
@@ -44,7 +44,7 @@ import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart
 import 'package:mascot/features/mascot/presentation/bloc/mascot_animator_bloc.dart'
     as _i28;
 import 'package:mascot/features/settings/data/datasources/hive/models/hive_settings.dart'
-    as _i8;
+    as _i9;
 import 'package:mascot/features/settings/data/datasources/hive/models/map_settings_to_hive_settings.dart'
     as _i6;
 import 'package:mascot/features/settings/data/datasources/hive/settings_hive_data_source.dart'
@@ -59,11 +59,11 @@ import 'package:mascot/features/settings/presentation/bloc/settings_bloc.dart'
     as _i25;
 
 import '../../features/expressions/data/datasources/hive/expressions_collection.dart'
-    as _i32;
-import '../../features/mascot/data/datasources/hive/hive_mascots_collection.dart'
     as _i31;
-import '../../features/settings/data/datasources/hive/settings_collection.dart'
+import '../../features/mascot/data/datasources/hive/hive_mascots_collection.dart'
     as _i33;
+import '../../features/settings/data/datasources/hive/settings_collection.dart'
+    as _i32;
 import 'db_configuration.dart' as _i30;
 
 // ignore_for_file: unnecessary_lambdas
@@ -80,12 +80,12 @@ Future<_i1.GetIt> $init(
     environmentFilter,
   );
   final hiveSingleton = _$HiveSingleton();
+  final hiveMascotsCollection = _$HiveMascotsCollection();
   final hiveSettingsCollection = _$HiveSettingsCollection();
-  final mascotsCollection = _$MascotsCollection();
   final expressionsCollection = _$ExpressionsCollection();
-  final settingsHiveCollectionAdapter = _$SettingsHiveCollectionAdapter();
-  final mascotsCollectionAdapter = _$MascotsCollectionAdapter();
   final expressionsCollectionAdapter = _$ExpressionsCollectionAdapter();
+  final mascotsCollectionAdapter = _$MascotsCollectionAdapter();
+  final settingsHiveCollectionAdapter = _$SettingsHiveCollectionAdapter();
   gh.factory<_i3.ConvertXfileToImage>(() => _i3.ConvertXfileToImage());
   await gh.factoryAsync<_i4.HiveInterface>(
     () => hiveSingleton.create(),
@@ -94,34 +94,34 @@ Future<_i1.GetIt> $init(
   gh.factory<_i5.MapImageToHiveImage>(() => _i5.MapImageToHiveImage());
   gh.factory<_i6.MapSettingsToHiveSettings>(
       () => _i6.MapSettingsToHiveSettings());
-  await gh.singletonAsync<_i7.Box<_i8.HiveSettings>>(
-    () => hiveSettingsCollection.create(gh<_i7.HiveInterface>()),
+  await gh.singletonAsync<_i7.Box<_i8.HiveMascot>>(
+    () => hiveMascotsCollection.create(gh<_i7.HiveInterface>()),
     preResolve: true,
   );
-  await gh.singletonAsync<_i7.Box<_i9.HiveMascot>>(
-    () => mascotsCollection.create(gh<_i7.HiveInterface>()),
+  await gh.singletonAsync<_i7.Box<_i9.HiveSettings>>(
+    () => hiveSettingsCollection.create(gh<_i7.HiveInterface>()),
     preResolve: true,
   );
   await gh.singletonAsync<_i7.Box<_i10.HiveExpression>>(
     () => expressionsCollection.create(gh<_i7.HiveInterface>()),
     preResolve: true,
   );
-  gh.factory<_i11.HiveCollectionAdapter<_i8.HiveSettings>>(() =>
-      settingsHiveCollectionAdapter.create(gh<_i7.Box<_i8.HiveSettings>>()));
-  gh.factory<_i11.HiveCollectionAdapter<_i9.HiveMascot>>(
-      () => mascotsCollectionAdapter.create(gh<_i7.Box<_i9.HiveMascot>>()));
   gh.factory<_i11.HiveCollectionAdapter<_i10.HiveExpression>>(() =>
       expressionsCollectionAdapter.create(gh<_i7.Box<_i10.HiveExpression>>()));
+  gh.factory<_i11.HiveCollectionAdapter<_i8.HiveMascot>>(
+      () => mascotsCollectionAdapter.create(gh<_i7.Box<_i8.HiveMascot>>()));
+  gh.factory<_i11.HiveCollectionAdapter<_i9.HiveSettings>>(() =>
+      settingsHiveCollectionAdapter.create(gh<_i7.Box<_i9.HiveSettings>>()));
   gh.factory<_i12.MapExpressionToHiveExpression>(
       () => _i12.MapExpressionToHiveExpression(gh<_i5.MapImageToHiveImage>()));
   gh.factory<_i13.MapMascotToHiveMascot>(() =>
       _i13.MapMascotToHiveMascot(gh<_i12.MapExpressionToHiveExpression>()));
   gh.factory<_i14.MascotsHiveDataSource>(() => _i14.MascotsHiveDataSourceImpl(
-        gh<_i11.HiveCollectionAdapter<_i9.HiveMascot>>(),
+        gh<_i11.HiveCollectionAdapter<_i8.HiveMascot>>(),
         gh<_i13.MapMascotToHiveMascot>(),
       ));
   gh.factory<_i15.SettingsHiveDataSource>(() => _i15.SettingsHiveDataSourceImpl(
-        gh<_i11.HiveCollectionAdapter<_i8.HiveSettings>>(),
+        gh<_i11.HiveCollectionAdapter<_i9.HiveSettings>>(),
         gh<_i6.MapSettingsToHiveSettings>(),
       ));
   gh.factory<_i16.SettingsRepository>(() => _i17.SettingsRepositoryImpl(
@@ -142,11 +142,12 @@ Future<_i1.GetIt> $init(
   gh.factory<_i22.MascotsRepository>(() => _i23.MascotsRepositoryImpl(
         gh<_i14.MascotsHiveDataSource>(),
         gh<_i20.ExpressionsRepository>(),
-        gh<_i16.SettingsRepository>(),
         gh<_i13.MapMascotToHiveMascot>(),
       ));
-  gh.factory<_i24.SaveMascot>(
-      () => _i24.SaveMascot(gh<_i22.MascotsRepository>()));
+  gh.factory<_i24.SaveMascot>(() => _i24.SaveMascot(
+        gh<_i22.MascotsRepository>(),
+        gh<_i16.SettingsRepository>(),
+      ));
   gh.factory<_i25.SettingsBloc>(
       () => _i25.SettingsBloc(gh<_i18.StreamSettings>()));
   gh.factory<_i26.StreamMascot>(
@@ -165,16 +166,16 @@ Future<_i1.GetIt> $init(
 
 class _$HiveSingleton extends _i30.HiveSingleton {}
 
-class _$MascotsCollection extends _i31.HiveMascotsCollection {}
-
-class _$MascotsCollectionAdapter extends _i31.MascotsCollectionAdapter {}
-
-class _$ExpressionsCollection extends _i32.ExpressionsCollection {}
+class _$ExpressionsCollection extends _i31.ExpressionsCollection {}
 
 class _$ExpressionsCollectionAdapter
-    extends _i32.ExpressionsCollectionAdapter {}
+    extends _i31.ExpressionsCollectionAdapter {}
 
-class _$HiveSettingsCollection extends _i33.HiveSettingsCollection {}
+class _$HiveSettingsCollection extends _i32.HiveSettingsCollection {}
 
 class _$SettingsHiveCollectionAdapter
-    extends _i33.SettingsHiveCollectionAdapter {}
+    extends _i32.SettingsHiveCollectionAdapter {}
+
+class _$HiveMascotsCollection extends _i33.HiveMascotsCollection {}
+
+class _$MascotsCollectionAdapter extends _i33.MascotsCollectionAdapter {}

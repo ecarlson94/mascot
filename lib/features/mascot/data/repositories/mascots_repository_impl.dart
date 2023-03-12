@@ -9,7 +9,6 @@ import '../../../../core/data/failure_or_id_future.dart';
 import '../../../../core/error/failure.dart';
 import '../../../expressions/domain/entities/expression.dart';
 import '../../../expressions/domain/repositories/expressions_repository.dart';
-import '../../../settings/domain/repositories/settings_repository.dart';
 import '../../domain/entities/mascot.dart';
 import '../../domain/repositories/mascots_repository.dart';
 import '../datasources/hive/mascots_hive_data_source.dart';
@@ -20,13 +19,11 @@ import '../models/mascot_model.dart';
 class MascotsRepositoryImpl implements MascotsRepository {
   final MascotsHiveDataSource _localDataSource;
   final ExpressionsRepository _expressionsRepository;
-  final SettingsRepository _settingsRepository;
   final MapMascotToHiveMascot _mapMascotToHiveMascot;
 
   MascotsRepositoryImpl(
     this._localDataSource,
     this._expressionsRepository,
-    this._settingsRepository,
     this._mapMascotToHiveMascot,
   );
 
@@ -61,28 +58,17 @@ class MascotsRepositoryImpl implements MascotsRepository {
                 .toSet(),
           );
 
-          var failureOrSettings = await _settingsRepository.loadSettings();
-          return failureOrSettings.fold(
-            (l) => Left(l),
-            (r) async {
-              try {
-                var id = await _localDataSource.addMascot(
-                  _mapMascotToHiveMascot.map(mascotWithExpressions),
-                );
+          try {
+            var id = await _localDataSource.addMascot(
+              _mapMascotToHiveMascot.map(mascotWithExpressions),
+            );
 
-                // TODO: Move this application logic to the use case
-                if (r.favoriteMascotId == 0) {
-                  await _settingsRepository.setFavoriteMascotId(id);
-                }
-
-                return Right(id);
-              } on Exception {
-                return Left(
-                  LocalDataSourceFailure(),
-                );
-              }
-            },
-          );
+            return Right(id);
+          } on Exception {
+            return Left(
+              LocalDataSourceFailure(),
+            );
+          }
         },
       ),
     );
