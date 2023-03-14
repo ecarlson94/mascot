@@ -2,15 +2,8 @@ import 'package:equatable/equatable.dart';
 
 typedef Id = int;
 
-abstract class Entity<T> {
-  Id get id;
-
-  T copyWithId(Id id);
-}
-
-abstract class EquatableEntity<T> extends Equatable implements Entity<T> {
-  @override
+abstract class Entity extends Equatable {
   final Id id;
 
-  const EquatableEntity({required this.id});
+  const Entity({required this.id});
 }

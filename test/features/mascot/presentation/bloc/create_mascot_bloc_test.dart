@@ -68,7 +68,7 @@ void main() {
     for (var params in uploadExpressionEvents) {
       group('${params['type']}', () {
         Mascot getSavingExpressionMascot() => Mascot.empty.copyWith(
-              expressions: [
+              expressions: {
                 Expression.empty.copyWith(
                   name: params['expressionName'] as String,
                   description: params['expressionDescription'] as String,
@@ -77,7 +77,7 @@ void main() {
                     data: context.data.xfile.data,
                   ),
                 )
-              ],
+              },
             );
 
         blocTest(
@@ -123,7 +123,7 @@ void main() {
           verify: (bloc) => verify(
             context.mocks.saveMascot(
               context.data.mascot.copyWith(
-                expressions: [
+                expressions: {
                   ...context.data.mascot.expressions.where(
                     (e) => e.name != params['expressionName'],
                   ),
@@ -133,7 +133,7 @@ void main() {
                     description: params['expressionDescription'] as String,
                     image: Image(name: 'a new name', data: Uint8List(5)),
                   ),
-                ],
+                },
               ),
             ),
           ),
