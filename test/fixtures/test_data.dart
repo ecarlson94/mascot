@@ -107,7 +107,7 @@ class TestData {
   final MapMascotToHiveMascot mapMascotToHiveMascot = MapMascotToHiveMascot(
     MapExpressionToHiveExpression(MapImageToHiveImage()),
   );
-  HiveMascot get mascotModel => mapMascotToHiveMascot.map(mascot);
+  HiveMascot get hiveMascot => mapMascotToHiveMascot.map(mascot);
 
   final Settings settings = const Settings(favoriteMascotId: 1);
   final MapSettingsToHiveSettings mapSettingsToHiveSettings =

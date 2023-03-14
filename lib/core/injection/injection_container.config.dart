@@ -13,7 +13,7 @@ import 'package:mascot/core/data/hive/hive_collection_adapter.dart' as _i11;
 import 'package:mascot/core/utils/input_converters/convert_xfile_to_image.dart'
     as _i3;
 import 'package:mascot/features/expressions/data/datasources/hive/expressions_hive_data_source.dart'
-    as _i19;
+    as _i18;
 import 'package:mascot/features/expressions/data/datasources/hive/models/hive_expression.dart'
     as _i10;
 import 'package:mascot/features/expressions/data/datasources/hive/models/map_expression_to_hive_expression.dart'
@@ -21,11 +21,11 @@ import 'package:mascot/features/expressions/data/datasources/hive/models/map_exp
 import 'package:mascot/features/expressions/data/datasources/hive/models/map_image_to_hive_image.dart'
     as _i5;
 import 'package:mascot/features/expressions/data/repositories/expressions_repository_impl.dart'
-    as _i21;
-import 'package:mascot/features/expressions/domain/repositories/expressions_repository.dart'
     as _i20;
+import 'package:mascot/features/expressions/domain/repositories/expressions_repository.dart'
+    as _i19;
 import 'package:mascot/features/mascot/data/datasources/hive/mascots_hive_data_source.dart'
-    as _i14;
+    as _i21;
 import 'package:mascot/features/mascot/data/datasources/hive/models/hive_mascot.dart'
     as _i8;
 import 'package:mascot/features/mascot/data/datasources/hive/models/map_mascot_to_hive_mascot.dart'
@@ -48,13 +48,13 @@ import 'package:mascot/features/settings/data/datasources/hive/models/hive_setti
 import 'package:mascot/features/settings/data/datasources/hive/models/map_settings_to_hive_settings.dart'
     as _i6;
 import 'package:mascot/features/settings/data/datasources/hive/settings_hive_data_source.dart'
-    as _i15;
+    as _i14;
 import 'package:mascot/features/settings/data/repositories/settings_repository_impl.dart'
-    as _i17;
-import 'package:mascot/features/settings/domain/repositories/settings_repository.dart'
     as _i16;
+import 'package:mascot/features/settings/domain/repositories/settings_repository.dart'
+    as _i15;
 import 'package:mascot/features/settings/domain/usecases/stream_settings.dart'
-    as _i18;
+    as _i17;
 import 'package:mascot/features/settings/presentation/bloc/settings_bloc.dart'
     as _i25;
 
@@ -83,9 +83,9 @@ Future<_i1.GetIt> $init(
   final hiveMascotsCollection = _$HiveMascotsCollection();
   final hiveSettingsCollection = _$HiveSettingsCollection();
   final expressionsCollection = _$ExpressionsCollection();
-  final expressionsCollectionAdapter = _$ExpressionsCollectionAdapter();
   final mascotsCollectionAdapter = _$MascotsCollectionAdapter();
   final settingsHiveCollectionAdapter = _$SettingsHiveCollectionAdapter();
+  final expressionsCollectionAdapter = _$ExpressionsCollectionAdapter();
   gh.factory<_i3.ConvertXfileToImage>(() => _i3.ConvertXfileToImage());
   await gh.factoryAsync<_i4.HiveInterface>(
     () => hiveSingleton.create(),
@@ -106,50 +106,50 @@ Future<_i1.GetIt> $init(
     () => expressionsCollection.create(gh<_i7.HiveInterface>()),
     preResolve: true,
   );
-  gh.factory<_i11.HiveCollectionAdapter<_i10.HiveExpression>>(() =>
-      expressionsCollectionAdapter.create(gh<_i7.Box<_i10.HiveExpression>>()));
   gh.factory<_i11.HiveCollectionAdapter<_i8.HiveMascot>>(
       () => mascotsCollectionAdapter.create(gh<_i7.Box<_i8.HiveMascot>>()));
   gh.factory<_i11.HiveCollectionAdapter<_i9.HiveSettings>>(() =>
       settingsHiveCollectionAdapter.create(gh<_i7.Box<_i9.HiveSettings>>()));
+  gh.factory<_i11.HiveCollectionAdapter<_i10.HiveExpression>>(() =>
+      expressionsCollectionAdapter.create(gh<_i7.Box<_i10.HiveExpression>>()));
   gh.factory<_i12.MapExpressionToHiveExpression>(
       () => _i12.MapExpressionToHiveExpression(gh<_i5.MapImageToHiveImage>()));
   gh.factory<_i13.MapMascotToHiveMascot>(() =>
       _i13.MapMascotToHiveMascot(gh<_i12.MapExpressionToHiveExpression>()));
-  gh.factory<_i14.MascotsHiveDataSource>(() => _i14.MascotsHiveDataSourceImpl(
-        gh<_i11.HiveCollectionAdapter<_i8.HiveMascot>>(),
-        gh<_i13.MapMascotToHiveMascot>(),
-      ));
-  gh.factory<_i15.SettingsHiveDataSource>(() => _i15.SettingsHiveDataSourceImpl(
+  gh.factory<_i14.SettingsHiveDataSource>(() => _i14.SettingsHiveDataSourceImpl(
         gh<_i11.HiveCollectionAdapter<_i9.HiveSettings>>(),
         gh<_i6.MapSettingsToHiveSettings>(),
       ));
-  gh.factory<_i16.SettingsRepository>(() => _i17.SettingsRepositoryImpl(
-        gh<_i15.SettingsHiveDataSource>(),
+  gh.factory<_i15.SettingsRepository>(() => _i16.SettingsRepositoryImpl(
+        gh<_i14.SettingsHiveDataSource>(),
         gh<_i6.MapSettingsToHiveSettings>(),
       ));
-  gh.factory<_i18.StreamSettings>(
-      () => _i18.StreamSettings(gh<_i16.SettingsRepository>()));
-  gh.factory<_i19.ExpressionsHiveDataSource>(
-      () => _i19.ExpressionsHiveDataSourceImpl(
+  gh.factory<_i17.StreamSettings>(
+      () => _i17.StreamSettings(gh<_i15.SettingsRepository>()));
+  gh.factory<_i18.ExpressionsHiveDataSource>(
+      () => _i18.ExpressionsHiveDataSourceImpl(
             gh<_i11.HiveCollectionAdapter<_i10.HiveExpression>>(),
             gh<_i12.MapExpressionToHiveExpression>(),
           ));
-  gh.factory<_i20.ExpressionsRepository>(() => _i21.ExpressionsRepositoryImpl(
-        gh<_i19.ExpressionsHiveDataSource>(),
+  gh.factory<_i19.ExpressionsRepository>(() => _i20.ExpressionsRepositoryImpl(
+        gh<_i18.ExpressionsHiveDataSource>(),
         gh<_i12.MapExpressionToHiveExpression>(),
       ));
+  gh.factory<_i21.MascotsHiveDataSource>(() => _i21.MascotsHiveDataSourceImpl(
+        gh<_i11.HiveCollectionAdapter<_i8.HiveMascot>>(),
+        gh<_i18.ExpressionsHiveDataSource>(),
+        gh<_i13.MapMascotToHiveMascot>(),
+      ));
   gh.factory<_i22.MascotsRepository>(() => _i23.MascotsRepositoryImpl(
-        gh<_i14.MascotsHiveDataSource>(),
-        gh<_i20.ExpressionsRepository>(),
+        gh<_i21.MascotsHiveDataSource>(),
         gh<_i13.MapMascotToHiveMascot>(),
       ));
   gh.factory<_i24.SaveMascot>(() => _i24.SaveMascot(
         gh<_i22.MascotsRepository>(),
-        gh<_i16.SettingsRepository>(),
+        gh<_i15.SettingsRepository>(),
       ));
   gh.factory<_i25.SettingsBloc>(
-      () => _i25.SettingsBloc(gh<_i18.StreamSettings>()));
+      () => _i25.SettingsBloc(gh<_i17.StreamSettings>()));
   gh.factory<_i26.StreamMascot>(
       () => _i26.StreamMascot(gh<_i22.MascotsRepository>()));
   gh.factory<_i27.GetMascot>(

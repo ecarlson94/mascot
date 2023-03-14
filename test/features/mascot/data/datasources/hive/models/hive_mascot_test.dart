@@ -12,7 +12,7 @@ void main() {
     group('copyWithId', () {
       test('should copy object with new id', () {
         // arrange
-        var mascotModel = context.data.mascotModel;
+        var mascotModel = context.data.hiveMascot;
 
         // act
         var result = mascotModel.copyWithId(2);

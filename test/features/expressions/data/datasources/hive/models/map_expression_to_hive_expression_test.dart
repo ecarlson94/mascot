@@ -16,8 +16,8 @@ void main() {
   group('MapExpressionToHiveExpression', () {
     test('should return an ExpressionModel when the input is valid', () {
       // arrange
-      var expectedExpressionModel = context.data.mascotModel.expressions.first;
-      var inputExpression = context.data.mascotModel.expressions.first;
+      var expectedExpressionModel = context.data.hiveMascot.expressions.first;
+      var inputExpression = context.data.hiveMascot.expressions.first;
 
       // act
       final result = mapExpressionToHiveExpression.map(inputExpression);
@@ -29,7 +29,7 @@ void main() {
     test('reverse should return an Expression when the input is valid', () {
       // arrange
       var expectedExpression = context.data.mascot.expressions.first;
-      var inputExpressionModel = context.data.mascotModel.expressions.first;
+      var inputExpressionModel = context.data.hiveMascot.expressions.first;
 
       // act
       final result =

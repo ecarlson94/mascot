@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/features/mascot/data/datasources/hive/mascots_hive_data_source.dart';
+import 'package:mascot/features/mascot/data/models/mascot_model.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -13,22 +14,26 @@ void main() {
     context = TestContext();
     dataSource = MascotsHiveDataSourceImpl(
       context.mocks.mascotsCollectionAdapter,
+      context.mocks.expressionsHiveDataSource,
       context.data.mapMascotToHiveMascot,
     );
+
+    when(context.mocks.mascotsCollectionAdapter.get(any))
+        .thenAnswer((_) async => context.data.hiveMascot);
+    when(context.mocks.expressionsHiveDataSource.getExpressions(any))
+        .thenAnswer((_) async => context.data.hiveMascot.expressions.toList());
+    when(context.mocks.expressionsHiveDataSource.addExpression(any))
+        .thenAnswer((_) async => 1);
   });
 
   group('MascotsHiveDataSourceImpl', () {
     group('getMascot', () {
       test('should return MascotModel from local database', () async {
-        // arrange
-        when(context.mocks.mascotsCollectionAdapter.get(any))
-            .thenAnswer((_) async => context.data.mascotModel);
-
         // act
         final result = await dataSource.getMascot(1);
 
         // assert
-        expect(result, context.data.mascotModel);
+        expect(result, context.data.hiveMascot);
         verify(context.mocks.mascotsCollectionAdapter.get(1));
         verifyNoMoreInteractions(context.mocks.mascotsCollectionAdapter);
       });
@@ -44,12 +49,12 @@ void main() {
               .thenAnswer((_) async => id);
 
           // act
-          final result = await dataSource.addMascot(context.data.mascotModel);
+          final result = await dataSource.addMascot(context.data.hiveMascot);
 
           // assert
           expect(result, equals(id));
           verify(context.mocks.mascotsCollectionAdapter
-              .add(context.data.mascotModel));
+              .add(context.data.hiveMascot));
           verifyNoMoreInteractions(context.mocks.mascotsCollectionAdapter);
         },
       );
@@ -58,15 +63,14 @@ void main() {
     group('streamMascot', () {
       test('should stream MascotModel from local database', () async {
         // arrange
-        var expectedStream = BehaviorSubject.seeded(context.data.mascotModel);
-        when(context.mocks.mascotsCollectionAdapter.stream(any))
-            .thenAnswer((_) async => expectedStream);
+        when(context.mocks.mascotsCollectionAdapter.stream(any)).thenAnswer(
+            (_) async => BehaviorSubject.seeded(context.data.hiveMascot));
 
         // act
         final result = await dataSource.streamMascot(1);
 
         // assert
-        expect(result, expectedStream);
+        expect(result, isA<Stream<MascotModel?>>());
         verify(context.mocks.mascotsCollectionAdapter.stream(1));
         verifyNoMoreInteractions(context.mocks.mascotsCollectionAdapter);
       });

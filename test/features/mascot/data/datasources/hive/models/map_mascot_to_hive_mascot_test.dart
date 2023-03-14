@@ -15,7 +15,7 @@ void main() {
   group('MapMascotToHiveMascot', () {
     test('should return a MascotModel when the input is valid', () {
       // arrange
-      var expectedMascotModel = context.data.mascotModel;
+      var expectedMascotModel = context.data.hiveMascot;
       var inputMascot = context.data.mascot;
 
       // act
@@ -28,7 +28,7 @@ void main() {
     test('reverse should return a Mascot when the input is valid', () {
       // arrange
       var expectedMascot = context.data.mascot;
-      var inputMascotModel = context.data.mascotModel;
+      var inputMascotModel = context.data.hiveMascot;
 
       // act
       final result = mapMascotToHiveMascot.reverse(inputMascotModel);

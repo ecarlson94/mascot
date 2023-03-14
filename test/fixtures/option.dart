@@ -98,6 +98,12 @@ extension TestOptionX<T> on Option<T> {
       getOrElse(() => throw TestFailure('option should be Some'));
 }
 
+extension TestEither<X, R> on Either<X, R> {
+  /// Returns the value or makes the test fail.
+  R getOrFailTest() =>
+      fold((l) => throw TestFailure('either should be Right'), (r) => r);
+}
+
 /// Matcher that tries to extract the value of a [Some] instance to match
 /// it against [matcher]
 ///

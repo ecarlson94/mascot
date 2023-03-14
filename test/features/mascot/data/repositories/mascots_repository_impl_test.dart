@@ -2,14 +2,13 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/clean_architecture/entity.dart';
 import 'package:mascot/core/error/failure.dart';
-import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mascot/features/mascot/data/datasources/hive/models/map_mascot_to_hive_mascot.dart';
 import 'package:mascot/features/mascot/data/models/mascot_model.dart';
 import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl.dart';
-import 'package:mascot/features/mascot/domain/entities/mascot.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../../fixtures/option.dart';
 import '../../../../fixtures/test_context.dart';
 
 void main() {
@@ -23,7 +22,6 @@ void main() {
     mapMasoctToHiveMascot = context.data.mapMascotToHiveMascot;
     repository = MascotsRepositoryImpl(
       context.mocks.mascotsLocalDataSource,
-      context.mocks.expressionsRepository,
       mapMasoctToHiveMascot,
     );
 
@@ -37,7 +35,7 @@ void main() {
       ),
     );
     when(context.mocks.mascotsLocalDataSource.getMascot(any))
-        .thenAnswer((_) => Future.value(context.data.mascotModel));
+        .thenAnswer((_) => Future.value(context.data.hiveMascot));
   });
 
   group('MascotsRepositoryImpl', () {
@@ -47,11 +45,12 @@ void main() {
         () async {
           // act
           final result = await repository.getMascot(context.data.mascot.id);
+          final mascot = result.getOrFailTest();
 
           // assert
           expect(
-            result,
-            Right<Failure, Mascot>(context.data.mascot.copyWith()),
+            mascot,
+            mapMasoctToHiveMascot.map(context.data.mascot),
           );
 
           verify(context.mocks.mascotsLocalDataSource
@@ -59,31 +58,6 @@ void main() {
           verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
         },
       );
-
-      test(
-        'should convert MascotModel to Mascot',
-        () async {
-          // act
-          var result = await repository.getMascot(context.data.mascot.id);
-
-          // assert
-          expect(
-            result.getOrElse(() => Mascot.empty),
-            isNot(isA<MascotModel>()),
-          );
-        },
-      );
-
-      test('should retrieve expressions for mascot from expressions repository',
-          () async {
-        // act
-        await repository.getMascot(context.data.mascot.id);
-
-        // assert
-        verify(
-          context.mocks.expressionsRepository.getExpressions(expressionIds),
-        );
-      });
 
       test(
         'should return failure when call to local data source is unsuccessful',
@@ -103,40 +77,12 @@ void main() {
           verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
         },
       );
-
-      test('should return failure when expression applicatian fails', () async {
-        // arrange
-        when(context.mocks.expressionsRepository.getExpressions(any))
-            .thenThrow(Exception());
-
-        // act
-        final result = await repository.getMascot(context.data.mascot.id);
-
-        // assert
-        expect(result, Left(LocalDataSourceFailure()));
-      });
     });
 
     group('addMascot', () {
-      late Set<Expression> emptyExpressions;
-      late MascotModel mascotModelWithEmptyExpressions;
-
       setUp(() async {
-        emptyExpressions = context.data.mascot.expressions
-            .map((e) => Expression.empty.copyWith(id: e.id))
-            .toSet();
-        mascotModelWithEmptyExpressions =
-            mapMasoctToHiveMascot.map(context.data.mascot.copyWith(
-          expressions: emptyExpressions,
-        ));
-
         when(context.mocks.mascotsLocalDataSource.addMascot(any))
             .thenAnswer((_) => Future.value(context.data.mascot.id));
-        when(context.mocks.settingsRepository.loadSettings()).thenAnswer(
-            (_) async =>
-                Right(context.data.settings.copyWith(favoriteMascotId: 0)));
-        when(context.mocks.settingsRepository.setFavoriteMascotId(any))
-            .thenAnswer((_) => Future.value(const Right(unit)));
       });
 
       test(
@@ -150,27 +96,10 @@ void main() {
 
           verify(
             context.mocks.mascotsLocalDataSource.addMascot(
-              mascotModelWithEmptyExpressions,
+              mapMasoctToHiveMascot.map(context.data.mascot),
             ),
           );
           verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
-        },
-      );
-
-      test(
-        'should add expressions to expressions repository',
-        () async {
-          // act
-          final result = await repository.addMascot(context.data.mascot);
-
-          // assert
-          expect(result, Right(context.data.mascot.id));
-          verify(context.mocks.expressionsRepository.addExpressions(
-            context.data.mascot.expressions.toList(),
-          ));
-          verify(context.mocks.expressionsRepository.getExpressions(
-            expressionIds,
-          ));
         },
       );
 
@@ -188,8 +117,9 @@ void main() {
           expect(result, Left(LocalDataSourceFailure()));
 
           verify(
-            context.mocks.mascotsLocalDataSource
-                .addMascot(mascotModelWithEmptyExpressions),
+            context.mocks.mascotsLocalDataSource.addMascot(
+              mapMasoctToHiveMascot.map(context.data.mascot),
+            ),
           );
           verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
         },
@@ -202,7 +132,7 @@ void main() {
         modelStream = BehaviorSubject<MascotModel>();
 
         when(context.mocks.mascotsLocalDataSource.getMascot(any))
-            .thenAnswer((_) async => context.data.mascotModel);
+            .thenAnswer((_) async => context.data.hiveMascot);
         when(context.mocks.mascotsLocalDataSource.streamMascot(any))
             .thenAnswer((_) async => modelStream);
       });
@@ -212,11 +142,11 @@ void main() {
         final result = await repository.streamMascot(context.data.mascot.id);
 
         // assert
-        expect(result, isA<Right<Failure, Stream<Mascot?>>>());
+        var subject = result.getOrFailTest();
         expect(
-          result.getOrElse(() => BehaviorSubject()),
+          subject,
           emitsInOrder([
-            mapMasoctToHiveMascot.reverse(context.data.mascotModel),
+            context.data.hiveMascot,
           ]),
         );
         verify(
@@ -229,65 +159,6 @@ void main() {
         );
         verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
       });
-
-      test(
-        'should convert Stream<MascotModel?> to Stream<Mascot?>',
-        () async {
-          // arrange
-          var updatedMascot = context.data.mascot.copyWith(
-            name: 'updated',
-          );
-          var updatedMascotModel = mapMasoctToHiveMascot.map(updatedMascot);
-
-          // act
-          final result = await repository.streamMascot(context.data.mascot.id);
-          modelStream.add(updatedMascotModel);
-
-          // assert
-          expect(result, isA<Right<Failure, Stream<Mascot?>>>());
-          expect(
-            result.getOrElse(() => BehaviorSubject()),
-            emitsInOrder([
-              mapMasoctToHiveMascot.reverse(context.data.mascotModel),
-              updatedMascot,
-            ]),
-          );
-        },
-      );
-
-      test(
-        'should retrieve expressions for mascot from expressions repository when a new mascot is received',
-        () async {
-          // arrange
-          var mascotWithEmptyExpressions = context.data.mascot.copyWith(
-            name: 'mascot model with empty expressions',
-            expressions: context.data.mascot.expressions
-                .map((e) => Expression.empty.copyWith(id: e.id))
-                .toSet(),
-          );
-          var mascotModelWithEmptyExpressions =
-              mapMasoctToHiveMascot.map(mascotWithEmptyExpressions);
-          var expectedMascot = mascotWithEmptyExpressions.copyWith(
-            expressions: context.data.expressions.toSet(),
-          );
-
-          // act
-          final result = await repository.streamMascot(context.data.mascot.id);
-          modelStream.add(mascotModelWithEmptyExpressions);
-
-          // assert
-          await expectLater(
-            result.getOrElse(() => BehaviorSubject()),
-            emitsInOrder([
-              expectedMascot.copyWith(name: context.data.mascot.name),
-              expectedMascot,
-            ]),
-          );
-          verify(context.mocks.expressionsRepository.getExpressions(
-            expressionIds,
-          )).called(2);
-        },
-      );
 
       test(
         'should return failure when call to local data source is unsuccessful',
@@ -303,18 +174,6 @@ void main() {
           expect(result, Left(LocalDataSourceFailure()));
         },
       );
-
-      test('should return failure when expression applicatian fails', () async {
-        // arrange
-        when(context.mocks.expressionsRepository.getExpressions(any))
-            .thenThrow(Exception());
-
-        // act
-        final result = await repository.streamMascot(context.data.mascot.id);
-
-        // assert
-        expect(result, Left(LocalDataSourceFailure()));
-      });
     });
   });
 }
