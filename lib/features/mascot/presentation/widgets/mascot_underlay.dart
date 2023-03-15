@@ -31,7 +31,7 @@ class MascotUnderlay extends StatelessWidget {
                         return state.expressionMapOption.fold(
                           () => const SizedBox.shrink(),
                           (expressionMap) => Image.memory(
-                            expressionMap[state.expression]?.image.data ??
+                            expressionMap[state.expression]?.image ??
                                 Uint8List(0),
                             fit: BoxFit.contain,
                           ),

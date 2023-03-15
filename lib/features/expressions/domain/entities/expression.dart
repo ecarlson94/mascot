@@ -1,10 +1,11 @@
+import 'package:drift/drift.dart';
+
 import '../../../../core/clean_architecture/entity.dart';
-import 'image.dart';
 
 class Expression extends Entity {
   final String name;
   final String description;
-  final Image image;
+  final Uint8List image;
 
   const Expression({
     required super.id,
@@ -20,7 +21,7 @@ class Expression extends Entity {
     Id? id,
     String? name,
     String? description,
-    Image? image,
+    Uint8List? image,
   }) {
     return Expression(
       id: id ?? this.id,
@@ -34,6 +35,6 @@ class Expression extends Entity {
     id: 0,
     name: '',
     description: '',
-    image: Image.empty,
+    image: Uint8List(0),
   );
 }

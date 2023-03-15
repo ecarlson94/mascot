@@ -6,9 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mascot/core/error/error.dart';
 import 'package:mascot/core/error/failure.dart';
-import 'package:mascot/core/utils/input_converters/convert_xfile_to_image.dart';
 import 'package:mascot/features/expressions/domain/entities/expression.dart';
-import 'package:mascot/features/expressions/domain/entities/image.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
 import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart';
 import 'package:mockito/mockito.dart';
@@ -25,7 +23,6 @@ void main() {
     setUp(() {
       context = TestContext();
       bloc = CreateMascotBloc(
-        ConvertXfileToImage(),
         context.mocks.saveMascot,
         context.mocks.getMascot,
       );
@@ -72,26 +69,10 @@ void main() {
                 Expression.empty.copyWith(
                   name: params['expressionName'] as String,
                   description: params['expressionDescription'] as String,
-                  image: Image(
-                    name: context.data.xfile.name,
-                    data: context.data.xfile.data,
-                  ),
+                  image: context.data.xfile.data,
                 )
               },
             );
-
-        blocTest(
-          'should emit [UploadExpressionError(${ErrorCodes.invalidXfileFailureCode})] when the input is invalid',
-          build: () => bloc,
-          act: (bloc) =>
-              bloc.add(params['invalidXFileUpload'] as CreateMascotEvent),
-          expect: () => [
-            const UploadExpressionError(
-              ErrorCodes.invalidXfileFailureCode,
-              Mascot.empty,
-            ),
-          ],
-        );
 
         blocTest(
           'should emit [SavingExpression, MascotUpdated] when upload is successful',
@@ -131,7 +112,7 @@ void main() {
                     id: params['expressionId'] as int,
                     name: params['expressionName'] as String,
                     description: params['expressionDescription'] as String,
-                    image: Image(name: 'a new name', data: Uint8List(5)),
+                    image: Uint8List(5),
                   ),
                 },
               ),

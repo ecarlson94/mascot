@@ -7,8 +7,8 @@ import '../../../../core/error/failure.dart';
 import '../entities/mascot.dart';
 
 typedef FailureOrMascotFuture = Future<Either<Failure, Mascot>>;
-typedef FailureOrMascotStreamFuture
-    = Future<Either<Failure, BehaviorSubject<Mascot?>>>;
+typedef FailureOrMascotSubjectFuture
+    = Future<Either<Failure, BehaviorSubject<Mascot>>>;
 
 abstract class MascotsRepository {
   /// Adds a mascot
@@ -18,5 +18,5 @@ abstract class MascotsRepository {
   FailureOrMascotFuture getMascot(Id id);
 
   /// Stream of a specific mascot
-  FailureOrMascotStreamFuture streamMascot(Id id);
+  FailureOrMascotSubjectFuture streamMascot(Id id);
 }

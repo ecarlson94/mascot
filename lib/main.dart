@@ -8,8 +8,8 @@ import 'features/mascot/presentation/widgets/actions_overlay.dart';
 import 'features/mascot/presentation/widgets/mascot_underlay.dart';
 import 'features/settings/presentation/bloc/settings_bloc.dart';
 
-Future main() async {
-  await configureDependencies();
+main() {
+  configureDependencies();
   runApp(const MyApp());
 }
 

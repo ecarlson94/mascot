@@ -6,13 +6,13 @@ import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/error/failure.dart';
 import '../../domain/entities/settings.dart';
 import '../../domain/repositories/settings_repository.dart';
-import '../datasources/hive/models/map_settings_to_hive_settings.dart';
-import '../datasources/hive/settings_hive_data_source.dart';
+import '../datasources/drift/models/map_settings_to_drift_settings.dart';
+import '../datasources/drift/settings_drift_data_source.dart';
 
 @Injectable(as: SettingsRepository)
 class SettingsRepositoryImpl extends SettingsRepository {
-  final SettingsHiveDataSource _localDataSource;
-  final MapSettingsToHiveSettings _mapSettingsToSettingsModel;
+  final SettingsDriftDataSource _localDataSource;
+  final MapSettingsToDriftSettings _mapSettingsToSettingsModel;
 
   SettingsRepositoryImpl(
       this._localDataSource, this._mapSettingsToSettingsModel);
@@ -27,18 +27,16 @@ class SettingsRepositoryImpl extends SettingsRepository {
   }
 
   @override
-  FailureOrSettingsStreamFuture streamSettings() async {
+  FailureOrSettingsSubjectFuture streamSettings() async {
     try {
       var settings = await _localDataSource.loadSettings();
       var settingsBehaviorSubject = BehaviorSubject<Settings>.seeded(
-        _mapSettingsToSettingsModel.reverse(settings),
+        settings,
       );
 
-      var settingsStream = await _localDataSource.streamSettings();
+      var settingsStream = _localDataSource.streamSettings();
       settingsStream.listen((event) async {
-        settingsBehaviorSubject.add(
-          _mapSettingsToSettingsModel.reverse(event ?? settings),
-        );
+        settingsBehaviorSubject.add(event ?? settings);
       });
 
       return Right(settingsBehaviorSubject);
@@ -53,9 +51,11 @@ class SettingsRepositoryImpl extends SettingsRepository {
       var settings = await _localDataSource.loadSettings();
       var updatedSettings = settings.copyWith(favoriteMascotId: id);
 
-      return Right(await _localDataSource.saveSettings(
-        _mapSettingsToSettingsModel.map(updatedSettings),
-      ));
+      return Right(
+        await _localDataSource.saveSettings(
+          _mapSettingsToSettingsModel.map(updatedSettings),
+        ),
+      );
     } on Exception {
       return Left(LocalDataSourceFailure());
     }

@@ -1,9 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mascot/core/clean_architecture/entity.dart';
 import 'package:mascot/core/error/failure.dart';
-import 'package:mascot/features/mascot/data/datasources/hive/models/map_mascot_to_hive_mascot.dart';
-import 'package:mascot/features/mascot/data/models/mascot_model.dart';
+import 'package:mascot/features/mascot/data/datasources/drift/models/drift_mascot.dart';
 import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
@@ -14,28 +12,19 @@ import '../../../../fixtures/test_context.dart';
 void main() {
   late TestContext context;
   late MascotsRepositoryImpl repository;
-  late MapMascotToHiveMascot mapMasoctToHiveMascot;
-  late List<Id> expressionIds;
+
+  DriftMascot getMascotModel() =>
+      context.data.mapMascotToMascotModel.map(context.data.mascot);
 
   setUp(() {
     context = TestContext();
-    mapMasoctToHiveMascot = context.data.mapMascotToHiveMascot;
     repository = MascotsRepositoryImpl(
       context.mocks.mascotsLocalDataSource,
-      mapMasoctToHiveMascot,
+      context.data.mapMascotToMascotModel,
     );
 
-    expressionIds = context.data.mascot.expressions.map((e) => e.id).toList();
-
-    when(context.mocks.expressionsRepository.addExpressions(any))
-        .thenAnswer((_) => Future.value(Right(expressionIds)));
-    when(context.mocks.expressionsRepository.getExpressions(any)).thenAnswer(
-      (_) => Future.value(
-        Right(context.data.mascot.expressions.toList()),
-      ),
-    );
     when(context.mocks.mascotsLocalDataSource.getMascot(any))
-        .thenAnswer((_) => Future.value(context.data.hiveMascot));
+        .thenAnswer((_) => Future.value(getMascotModel()));
   });
 
   group('MascotsRepositoryImpl', () {
@@ -50,7 +39,7 @@ void main() {
           // assert
           expect(
             mascot,
-            mapMasoctToHiveMascot.map(context.data.mascot),
+            getMascotModel(),
           );
 
           verify(context.mocks.mascotsLocalDataSource
@@ -96,7 +85,7 @@ void main() {
 
           verify(
             context.mocks.mascotsLocalDataSource.addMascot(
-              mapMasoctToHiveMascot.map(context.data.mascot),
+              getMascotModel(),
             ),
           );
           verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
@@ -118,7 +107,7 @@ void main() {
 
           verify(
             context.mocks.mascotsLocalDataSource.addMascot(
-              mapMasoctToHiveMascot.map(context.data.mascot),
+              getMascotModel(),
             ),
           );
           verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
@@ -127,16 +116,17 @@ void main() {
     });
 
     group('streamMascot', () {
-      late BehaviorSubject<MascotModel?> modelStream;
+      late BehaviorSubject<DriftMascot> modelStream;
       setUp(() {
-        modelStream = BehaviorSubject<MascotModel>();
+        modelStream = BehaviorSubject<DriftMascot>();
 
         when(context.mocks.mascotsLocalDataSource.getMascot(any))
-            .thenAnswer((_) async => context.data.hiveMascot);
+            .thenAnswer((_) async => getMascotModel());
         when(context.mocks.mascotsLocalDataSource.streamMascot(any))
             .thenAnswer((_) async => modelStream);
       });
 
+      // TODO: move to drift datasource test
       test('should seed the stream with the current value', () async {
         //act
         final result = await repository.streamMascot(context.data.mascot.id);
@@ -146,7 +136,7 @@ void main() {
         expect(
           subject,
           emitsInOrder([
-            context.data.hiveMascot,
+            getMascotModel(),
           ]),
         );
         verify(

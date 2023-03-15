@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../fixtures/test_context.dart';
@@ -69,7 +70,7 @@ void main() {
       test('should copy original object with new image', () {
         // arrange
         var expression = context.data.expression;
-        var expectedImage = context.data.image;
+        var expectedImage = Uint8List(220);
 
         // act
         var result = expression.copyWith(image: expectedImage);

@@ -5,10 +5,11 @@ abstract class MascotModel extends Mascot {
   const MascotModel({
     required super.id,
     required super.name,
-    required this.expressionModels,
-  }) : super(expressions: const {});
+    required Set<ExpressionModel> expressions,
+  })  : _expressionModels = expressions,
+        super(expressions: expressions);
 
-  final Iterable<ExpressionModel> expressionModels;
+  final Set<ExpressionModel> _expressionModels;
   @override
-  Set<ExpressionModel> get expressions;
+  Set<ExpressionModel> get expressions => _expressionModels;
 }

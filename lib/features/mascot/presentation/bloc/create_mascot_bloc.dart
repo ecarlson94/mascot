@@ -5,7 +5,6 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../core/error/error.dart';
 import '../../../../core/utils/constants.dart';
-import '../../../../core/utils/input_converters/convert_xfile_to_image.dart';
 import '../../../expressions/domain/entities/expression.dart';
 import '../../domain/entities/mascot.dart';
 import '../../domain/usecases/get_mascot.dart';
@@ -23,12 +22,10 @@ class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
   static const String talkingExpressionDescription =
       'The expression that the mascot uses when talking';
 
-  final ConvertXfileToImage _convertXfileToImage;
   final SaveMascot _saveMascot;
   final GetMascot _getMascot;
 
   CreateMascotBloc(
-    this._convertXfileToImage,
     this._saveMascot,
     this._getMascot,
   ) : super(const CreateMascotInitial(Mascot.empty)) {
@@ -61,35 +58,24 @@ class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
     String expressionName,
     String expressionDescription,
   ) async {
-    var imageOrFailure = await _convertXfileToImage(image);
-    await imageOrFailure.fold(
-      (l) async => emit(
-        UploadExpressionError(
-          ErrorCodes.invalidXfileFailureCode,
-          state.mascot,
-        ),
-      ),
-      (image) async {
-        var expression = state.mascot.expressions
-            .firstWhere(
-              (e) => e.name == expressionName,
-              orElse: () => Expression.empty,
-            )
-            .copyWith(
-              name: expressionName,
-              description: expressionDescription,
-              image: image,
-            );
-        var unchangedExpressions =
-            state.mascot.expressions.where((e) => e.name != expressionName);
-        var mascot = state.mascot.copyWith(
-          expressions: {...unchangedExpressions, expression},
+    var expression = state.mascot.expressions
+        .firstWhere(
+          (e) => e.name == expressionName,
+          orElse: () => Expression.empty,
+        )
+        .copyWith(
+          name: expressionName,
+          description: expressionDescription,
+          image: await image.readAsBytes(),
         );
-        emit(SavingExpression(mascot));
-
-        await _updateMascot(mascot, emit);
-      },
+    var unchangedExpressions =
+        state.mascot.expressions.where((e) => e.name != expressionName);
+    var mascot = state.mascot.copyWith(
+      expressions: {...unchangedExpressions, expression},
     );
+    emit(SavingExpression(mascot));
+
+    await _updateMascot(mascot, emit);
   }
 
   Future<void> _updateMascot(

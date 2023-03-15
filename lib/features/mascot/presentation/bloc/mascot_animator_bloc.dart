@@ -41,7 +41,6 @@ class MascotAnimatorBloc
           (stream) {
             stream.listen(
               (value) {
-                if (value == null) return;
                 add(SetMascot(value));
               },
             );
