@@ -29,10 +29,7 @@ class SettingsDriftDataSourceImpl implements SettingsDriftDataSource {
       ..where((s) => s.id.equals(1));
     var settings = await query.getSingleOrNull();
 
-    if (settings == null) {
-      await saveSettings(DriftSettings.empty);
-      settings = await query.getSingle();
-    }
+    settings ??= DriftSettings.empty;
 
     return settings;
   }
