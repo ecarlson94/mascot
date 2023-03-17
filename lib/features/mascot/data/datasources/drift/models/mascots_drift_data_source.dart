@@ -4,11 +4,11 @@ import 'package:drift/drift.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../../core/clean_architecture/entity.dart';
-import '../../../../../core/data/drift/drift_database.dart';
-import '../../../../expressions/data/datasources/drift/expressions_drift_data_source.dart';
-import '../../../../expressions/data/datasources/drift/models/drift_expression.dart';
-import 'models/drift_mascot.dart';
+import '../../../../../../core/clean_architecture/entity.dart';
+import '../../../../../../core/data/drift/drift_database.dart';
+import '../../../../../expressions/data/datasources/drift/expressions_drift_data_source.dart';
+import '../../../../../expressions/data/datasources/drift/models/drift_expression.dart';
+import 'drift_mascot.dart';
 
 abstract class MascotsDriftDataSource {
   /// Saves a mascot to the local database.
@@ -18,7 +18,7 @@ abstract class MascotsDriftDataSource {
   Future<DriftMascot> getMascot(Id id);
 
   // Stream a mascot from the local database.
-  Future<BehaviorSubject<DriftMascot>> streamMascot(Id id);
+  Future<Stream<DriftMascot?>> streamMascot(Id id);
 }
 
 @Injectable(as: MascotsDriftDataSource)
@@ -42,9 +42,8 @@ class MascotsDriftDataSourceImpl implements MascotsDriftDataSource {
       _getDriftMascotForMascot(() => _getMascot(id));
 
   @override
-  Future<BehaviorSubject<DriftMascot>> streamMascot(Id id) async {
-    final driftMascot = await getMascot(id);
-    final subject = BehaviorSubject.seeded(driftMascot);
+  Future<Stream<DriftMascot?>> streamMascot(Id id) async {
+    final subject = BehaviorSubject<DriftMascot?>();
 
     // listen to stream of mascot
     final mascotStream = (_database.select(_database.mascots)

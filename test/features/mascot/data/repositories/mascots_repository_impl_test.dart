@@ -39,7 +39,7 @@ void main() {
           // assert
           expect(
             mascot,
-            getMascotModel(),
+            context.data.mapMascotToMascotModel.reverse(getMascotModel()),
           );
 
           verify(context.mocks.mascotsLocalDataSource
@@ -125,8 +125,6 @@ void main() {
         when(context.mocks.mascotsLocalDataSource.streamMascot(any))
             .thenAnswer((_) async => modelStream);
       });
-
-      // TODO: move to drift datasource test
       test('should seed the stream with the current value', () async {
         //act
         final result = await repository.streamMascot(context.data.mascot.id);
@@ -136,7 +134,7 @@ void main() {
         expect(
           subject,
           emitsInOrder([
-            getMascotModel(),
+            context.data.mapMascotToMascotModel.reverse(getMascotModel()),
           ]),
         );
         verify(

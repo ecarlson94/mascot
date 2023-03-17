@@ -20,12 +20,16 @@ class MascotUnderlay extends StatelessWidget {
           builder: (context, state) {
             return state.favoriteMascotIdStreamOption.fold(
               () => const SizedBox.shrink(),
-              (favoriteMascotIdStream) => StreamBuilder<int>(
+              (favoriteMascotIdStream) => StreamBuilder<int?>(
                 stream: favoriteMascotIdStream,
                 builder: (context, snapshot) {
+                  if (!snapshot.hasData || snapshot.data == null) {
+                    return const SizedBox.shrink();
+                  }
+
                   return BlocProvider<MascotAnimatorBloc>(
                     create: (_) => getIt<MascotAnimatorBloc>()
-                      ..add(LoadMascot(snapshot.data ?? 0)),
+                      ..add(LoadMascot(snapshot.data!)),
                     child: BlocBuilder<MascotAnimatorBloc, MascotAnimatorState>(
                       builder: (context, state) {
                         return state.expressionMapOption.fold(

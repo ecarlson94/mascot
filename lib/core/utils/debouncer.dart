@@ -3,7 +3,7 @@ import 'dart:async';
 class Debouncer {
   final Duration duration;
 
-  Debouncer({this.duration = const Duration(milliseconds: 300)});
+  Debouncer({this.duration = const Duration(milliseconds: 500)});
 
   Timer? _timer;
 

@@ -40,7 +40,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   }
 
   Option<BehaviorSubject<T>> _settingValueStreamOption<T>(
-    Stream<Settings?> settingsStream,
+    Stream<Settings> settingsStream,
     Option<BehaviorSubject<T>> Function(SettingsState state) currentValueStream,
     T Function(Settings settings) valueSelector, {
     bool alwaysEmit = false,
@@ -51,7 +51,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
     settingsStream.listen((settings) {
       var oldValue = valueStream.hasValue ? valueStream.value : null;
-      var newValue = valueSelector(settings ?? Settings.empty());
+      var newValue = valueSelector(settings);
       if (alwaysEmit || oldValue != newValue) {
         valueStream.add(newValue);
       }

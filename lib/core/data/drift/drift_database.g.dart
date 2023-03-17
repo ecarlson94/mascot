@@ -540,8 +540,8 @@ class $SettingsTable extends Settings
       const VerificationMeta('favoriteMascotId');
   @override
   late final GeneratedColumn<int> favoriteMascotId = GeneratedColumn<int>(
-      'favorite_mascot_id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+      'favorite_mascot_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [id, favoriteMascotId];
   @override
@@ -561,8 +561,6 @@ class $SettingsTable extends Settings
           _favoriteMascotIdMeta,
           favoriteMascotId.isAcceptableOrUnknown(
               data['favorite_mascot_id']!, _favoriteMascotIdMeta));
-    } else if (isInserting) {
-      context.missing(_favoriteMascotIdMeta);
     }
     return context;
   }
@@ -573,8 +571,8 @@ class $SettingsTable extends Settings
   DriftSettings map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return DriftSettings(
-      favoriteMascotId: attachedDatabase.typeMapping.read(
-          DriftSqlType.int, data['${effectivePrefix}favorite_mascot_id'])!,
+      favoriteMascotId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}favorite_mascot_id']),
     );
   }
 
@@ -586,15 +584,15 @@ class $SettingsTable extends Settings
 
 class SettingsCompanion extends UpdateCompanion<DriftSettings> {
   final Value<int> id;
-  final Value<int> favoriteMascotId;
+  final Value<int?> favoriteMascotId;
   const SettingsCompanion({
     this.id = const Value.absent(),
     this.favoriteMascotId = const Value.absent(),
   });
   SettingsCompanion.insert({
     this.id = const Value.absent(),
-    required int favoriteMascotId,
-  }) : favoriteMascotId = Value(favoriteMascotId);
+    this.favoriteMascotId = const Value.absent(),
+  });
   static Insertable<DriftSettings> custom({
     Expression<int>? id,
     Expression<int>? favoriteMascotId,
@@ -605,7 +603,7 @@ class SettingsCompanion extends UpdateCompanion<DriftSettings> {
     });
   }
 
-  SettingsCompanion copyWith({Value<int>? id, Value<int>? favoriteMascotId}) {
+  SettingsCompanion copyWith({Value<int>? id, Value<int?>? favoriteMascotId}) {
     return SettingsCompanion(
       id: id ?? this.id,
       favoriteMascotId: favoriteMascotId ?? this.favoriteMascotId,

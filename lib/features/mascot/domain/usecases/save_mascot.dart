@@ -25,7 +25,7 @@ class SaveMascot implements UseCase<Id, Mascot> {
         return failureOrSettings.fold(
           (l) => Right(id),
           (settings) async {
-            if (settings.favoriteMascotId != 0) return Right(id);
+            if (settings.favoriteMascotId != null) return Right(id);
 
             var failureOrSettings =
                 await _settingsRepository.setFavoriteMascotId(id);

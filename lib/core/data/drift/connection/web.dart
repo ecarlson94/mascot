@@ -14,9 +14,10 @@ const _useWorker = true;
 /// Obtains a database connection for running drift on the web.
 DatabaseConnection connect({bool isInWebWorker = false}) {
   if (_useWorker && !isInWebWorker) {
-    final worker = SharedWorker('shared_worker.dart.js');
+    final worker = SharedWorker('worker.dart.js');
     return DatabaseConnection.delayed(
-        connectToRemoteAndInitialize(worker.port!.channel()));
+      connectToRemoteAndInitialize(worker.port!.channel()),
+    );
   } else {
     return DatabaseConnection.delayed(
       Future.sync(() async {
@@ -34,7 +35,8 @@ DatabaseConnection connect({bool isInWebWorker = false}) {
 
         final databaseImpl = WasmDatabase(
           sqlite3: sqlite3,
-          path: '/drift/mascot/app.db',
+          path: 'app.db',
+          logStatements: true,
         );
         return DatabaseConnection(databaseImpl);
       }),

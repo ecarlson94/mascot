@@ -24,9 +24,18 @@ class SettingsDriftDataSourceImpl implements SettingsDriftDataSource {
   SettingsDriftDataSourceImpl(this._database);
 
   @override
-  Future<DriftSettings> loadSettings() =>
-      (_database.select(_database.settings)..where((s) => s.id.equals(1)))
-          .getSingle();
+  Future<DriftSettings> loadSettings() async {
+    var query = _database.select(_database.settings)
+      ..where((s) => s.id.equals(1));
+    var settings = await query.getSingleOrNull();
+
+    if (settings == null) {
+      await saveSettings(const DriftSettings(favoriteMascotId: null));
+      settings = await query.getSingle();
+    }
+
+    return settings;
+  }
 
   @override
   Future<Unit> saveSettings(DriftSettings settings) async {

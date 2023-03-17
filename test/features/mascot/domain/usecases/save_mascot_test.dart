@@ -20,7 +20,7 @@ void main() {
     when(context.mocks.mascotsRepository.addMascot(any))
         .thenAnswer((_) async => Right(context.data.mascot.id));
     when(context.mocks.settingsRepository.loadSettings())
-        .thenAnswer((_) async => const Right(Settings(favoriteMascotId: 0)));
+        .thenAnswer((_) async => const Right(Settings(favoriteMascotId: null)));
     when(context.mocks.settingsRepository.setFavoriteMascotId(any))
         .thenAnswer((_) async => const Right(unit));
   });

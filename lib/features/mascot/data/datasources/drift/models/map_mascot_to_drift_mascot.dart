@@ -9,7 +9,8 @@ import 'drift_mascot.dart';
 class MapMascotToDriftMascot extends MapMascotToMascotModel {
   final MapExpressionToDriftExpression mapExpressionToDriftExpression;
 
-  MapMascotToDriftMascot(this.mapExpressionToDriftExpression);
+  MapMascotToDriftMascot(this.mapExpressionToDriftExpression)
+      : super(mapExpressionToDriftExpression);
 
   @override
   DriftMascot map(Mascot input) => DriftMascot(

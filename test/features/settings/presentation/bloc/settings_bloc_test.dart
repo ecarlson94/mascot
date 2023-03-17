@@ -16,13 +16,13 @@ void main() {
     late TestContext context;
     late SettingsBloc bloc;
     late BehaviorSubject<Settings> settingsSubject;
-    late BehaviorSubject<int> favoriteMascotIdSubject;
+    late BehaviorSubject<int?> favoriteMascotIdSubject;
     setUp(() {
       context = TestContext();
       bloc = SettingsBloc(context.mocks.streamSettings);
       settingsSubject = BehaviorSubject<Settings>.seeded(context.data.settings);
       favoriteMascotIdSubject =
-          BehaviorSubject<int>.seeded(context.data.settings.favoriteMascotId);
+          BehaviorSubject.seeded(context.data.settings.favoriteMascotId);
 
       when(context.mocks.streamSettings(any))
           .thenAnswer((_) async => Right(settingsSubject));

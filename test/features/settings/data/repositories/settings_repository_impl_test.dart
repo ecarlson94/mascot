@@ -39,7 +39,7 @@ void main() {
         // assert
         expect(
           result.getOrElse(() => Settings.empty()),
-          getSettingsModel(),
+          context.data.mapSettingsToSettingsModel.reverse(getSettingsModel()),
         );
         verify(context.mocks.settingsLocalDataSource.loadSettings());
         verifyNoMoreInteractions(context.mocks.settingsLocalDataSource);
@@ -121,7 +121,9 @@ void main() {
         expect(result, isA<Right<Failure, Stream<Settings?>>>());
         expect(
           result.getOrElse(() => BehaviorSubject()),
-          emitsInOrder([getSettingsModel()]),
+          emitsInOrder([
+            context.data.mapSettingsToSettingsModel.reverse(getSettingsModel()),
+          ]),
         );
         verify(context.mocks.settingsLocalDataSource.loadSettings());
         verify(context.mocks.settingsLocalDataSource.streamSettings());
@@ -150,8 +152,10 @@ void main() {
           expect(
             result.getOrElse(() => BehaviorSubject()),
             emitsInOrder([
-              getSettingsModel(),
-              updatedSettingsModel,
+              context.data.mapSettingsToSettingsModel
+                  .reverse(getSettingsModel()),
+              context.data.mapSettingsToSettingsModel
+                  .reverse(updatedSettingsModel),
             ]),
           );
         },

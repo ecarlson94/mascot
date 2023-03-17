@@ -12,10 +12,10 @@ import 'package:mascot/features/expressions/data/datasources/drift/expressions_d
     as _i4;
 import 'package:mascot/features/expressions/data/datasources/drift/models/map_expression_to_drift_expression.dart'
     as _i5;
-import 'package:mascot/features/mascot/data/datasources/drift/mascots_drift_data_source.dart'
-    as _i8;
 import 'package:mascot/features/mascot/data/datasources/drift/models/map_mascot_to_drift_mascot.dart'
     as _i6;
+import 'package:mascot/features/mascot/data/datasources/drift/models/mascots_drift_data_source.dart'
+    as _i8;
 import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl.dart'
     as _i10;
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart'

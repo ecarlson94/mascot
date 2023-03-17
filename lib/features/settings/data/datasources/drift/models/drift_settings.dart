@@ -14,12 +14,16 @@ class DriftSettings extends SettingsModel implements Insertable<DriftSettings> {
         id: Value(id),
         favoriteMascotId: Value(favoriteMascotId),
       ).toColumns(nullToAbsent);
+
+  @override
+  DriftSettings copyWith({int? favoriteMascotId}) => DriftSettings(
+      favoriteMascotId: favoriteMascotId ?? this.favoriteMascotId);
 }
 
 @UseRowClass(DriftSettings)
 class Settings extends Table {
   IntColumn get id => integer()();
-  IntColumn get favoriteMascotId => integer()();
+  IntColumn get favoriteMascotId => integer().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};

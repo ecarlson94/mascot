@@ -20,7 +20,8 @@ class SettingsRepositoryImpl extends SettingsRepository {
   @override
   FailureOrSettingsFuture loadSettings() async {
     try {
-      return Right(await _localDataSource.loadSettings());
+      var settingsModel = await _localDataSource.loadSettings();
+      return Right(_mapSettingsToSettingsModel.reverse(settingsModel));
     } on Exception {
       return Left(LocalDataSourceFailure());
     }
@@ -29,14 +30,16 @@ class SettingsRepositoryImpl extends SettingsRepository {
   @override
   FailureOrSettingsSubjectFuture streamSettings() async {
     try {
-      var settings = await _localDataSource.loadSettings();
+      var settingsModel = await _localDataSource.loadSettings();
       var settingsBehaviorSubject = BehaviorSubject<Settings>.seeded(
-        settings,
+        _mapSettingsToSettingsModel.reverse(settingsModel),
       );
 
       var settingsStream = _localDataSource.streamSettings();
       settingsStream.listen((event) async {
-        settingsBehaviorSubject.add(event ?? settings);
+        settingsBehaviorSubject.add(
+          _mapSettingsToSettingsModel.reverse(event ?? settingsModel),
+        );
       });
 
       return Right(settingsBehaviorSubject);

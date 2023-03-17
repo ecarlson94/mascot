@@ -1,7 +1,7 @@
 part of 'settings_bloc.dart';
 
 abstract class SettingsState extends Equatable {
-  final Option<BehaviorSubject<Id>> favoriteMascotIdStreamOption;
+  final Option<BehaviorSubject<Id?>> favoriteMascotIdStreamOption;
 
   const SettingsState(this.favoriteMascotIdStreamOption);
 
