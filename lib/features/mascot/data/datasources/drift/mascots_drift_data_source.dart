@@ -36,7 +36,7 @@ class MascotsDriftDataSourceImpl implements MascotsDriftDataSource {
 
     await _createExpressionsForMascot(driftMascot.expressions, mascotId);
 
-    return mascotId;
+    return driftMascot.id == 0 ? mascotId : driftMascot.id;
   }
 
   @override

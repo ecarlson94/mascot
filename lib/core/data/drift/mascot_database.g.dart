@@ -171,189 +171,6 @@ class MascotsCompanion extends UpdateCompanion<Mascot> {
   }
 }
 
-class $MascotExpressionMapsTable extends MascotExpressionMaps
-    with TableInfo<$MascotExpressionMapsTable, MascotExpressionMap> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $MascotExpressionMapsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _mascotIdMeta =
-      const VerificationMeta('mascotId');
-  @override
-  late final GeneratedColumn<int> mascotId = GeneratedColumn<int>(
-      'mascot_id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _expressionIdMeta =
-      const VerificationMeta('expressionId');
-  @override
-  late final GeneratedColumn<int> expressionId = GeneratedColumn<int>(
-      'expression_id', aliasedName, false,
-      type: DriftSqlType.int,
-      requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'));
-  @override
-  List<GeneratedColumn> get $columns => [mascotId, expressionId];
-  @override
-  String get aliasedName => _alias ?? 'mascot_expression_maps';
-  @override
-  String get actualTableName => 'mascot_expression_maps';
-  @override
-  VerificationContext validateIntegrity(
-      Insertable<MascotExpressionMap> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('mascot_id')) {
-      context.handle(_mascotIdMeta,
-          mascotId.isAcceptableOrUnknown(data['mascot_id']!, _mascotIdMeta));
-    } else if (isInserting) {
-      context.missing(_mascotIdMeta);
-    }
-    if (data.containsKey('expression_id')) {
-      context.handle(
-          _expressionIdMeta,
-          expressionId.isAcceptableOrUnknown(
-              data['expression_id']!, _expressionIdMeta));
-    } else if (isInserting) {
-      context.missing(_expressionIdMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {mascotId, expressionId};
-  @override
-  MascotExpressionMap map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return MascotExpressionMap(
-      mascotId: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}mascot_id'])!,
-      expressionId: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}expression_id'])!,
-    );
-  }
-
-  @override
-  $MascotExpressionMapsTable createAlias(String alias) {
-    return $MascotExpressionMapsTable(attachedDatabase, alias);
-  }
-}
-
-class MascotExpressionMap extends DataClass
-    implements Insertable<MascotExpressionMap> {
-  final int mascotId;
-  final int expressionId;
-  const MascotExpressionMap(
-      {required this.mascotId, required this.expressionId});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['mascot_id'] = Variable<int>(mascotId);
-    map['expression_id'] = Variable<int>(expressionId);
-    return map;
-  }
-
-  MascotExpressionMapsCompanion toCompanion(bool nullToAbsent) {
-    return MascotExpressionMapsCompanion(
-      mascotId: Value(mascotId),
-      expressionId: Value(expressionId),
-    );
-  }
-
-  factory MascotExpressionMap.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return MascotExpressionMap(
-      mascotId: serializer.fromJson<int>(json['mascotId']),
-      expressionId: serializer.fromJson<int>(json['expressionId']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'mascotId': serializer.toJson<int>(mascotId),
-      'expressionId': serializer.toJson<int>(expressionId),
-    };
-  }
-
-  MascotExpressionMap copyWith({int? mascotId, int? expressionId}) =>
-      MascotExpressionMap(
-        mascotId: mascotId ?? this.mascotId,
-        expressionId: expressionId ?? this.expressionId,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('MascotExpressionMap(')
-          ..write('mascotId: $mascotId, ')
-          ..write('expressionId: $expressionId')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(mascotId, expressionId);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is MascotExpressionMap &&
-          other.mascotId == this.mascotId &&
-          other.expressionId == this.expressionId);
-}
-
-class MascotExpressionMapsCompanion
-    extends UpdateCompanion<MascotExpressionMap> {
-  final Value<int> mascotId;
-  final Value<int> expressionId;
-  const MascotExpressionMapsCompanion({
-    this.mascotId = const Value.absent(),
-    this.expressionId = const Value.absent(),
-  });
-  MascotExpressionMapsCompanion.insert({
-    required int mascotId,
-    required int expressionId,
-  })  : mascotId = Value(mascotId),
-        expressionId = Value(expressionId);
-  static Insertable<MascotExpressionMap> custom({
-    Expression<int>? mascotId,
-    Expression<int>? expressionId,
-  }) {
-    return RawValuesInsertable({
-      if (mascotId != null) 'mascot_id': mascotId,
-      if (expressionId != null) 'expression_id': expressionId,
-    });
-  }
-
-  MascotExpressionMapsCompanion copyWith(
-      {Value<int>? mascotId, Value<int>? expressionId}) {
-    return MascotExpressionMapsCompanion(
-      mascotId: mascotId ?? this.mascotId,
-      expressionId: expressionId ?? this.expressionId,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (mascotId.present) {
-      map['mascot_id'] = Variable<int>(mascotId.value);
-    }
-    if (expressionId.present) {
-      map['expression_id'] = Variable<int>(expressionId.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('MascotExpressionMapsCompanion(')
-          ..write('mascotId: $mascotId, ')
-          ..write('expressionId: $expressionId')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $ExpressionsTable extends Expressions
     with TableInfo<$ExpressionsTable, DriftExpression> {
   @override
@@ -516,6 +333,193 @@ class ExpressionsCompanion extends UpdateCompanion<DriftExpression> {
           ..write('name: $name, ')
           ..write('description: $description, ')
           ..write('image: $image')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $MascotExpressionMapsTable extends MascotExpressionMaps
+    with TableInfo<$MascotExpressionMapsTable, MascotExpressionMap> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MascotExpressionMapsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _mascotIdMeta =
+      const VerificationMeta('mascotId');
+  @override
+  late final GeneratedColumn<int> mascotId = GeneratedColumn<int>(
+      'mascot_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES mascots (id)'));
+  static const VerificationMeta _expressionIdMeta =
+      const VerificationMeta('expressionId');
+  @override
+  late final GeneratedColumn<int> expressionId = GeneratedColumn<int>(
+      'expression_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'UNIQUE REFERENCES expressions (id)'));
+  @override
+  List<GeneratedColumn> get $columns => [mascotId, expressionId];
+  @override
+  String get aliasedName => _alias ?? 'mascot_expression_maps';
+  @override
+  String get actualTableName => 'mascot_expression_maps';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<MascotExpressionMap> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('mascot_id')) {
+      context.handle(_mascotIdMeta,
+          mascotId.isAcceptableOrUnknown(data['mascot_id']!, _mascotIdMeta));
+    } else if (isInserting) {
+      context.missing(_mascotIdMeta);
+    }
+    if (data.containsKey('expression_id')) {
+      context.handle(
+          _expressionIdMeta,
+          expressionId.isAcceptableOrUnknown(
+              data['expression_id']!, _expressionIdMeta));
+    } else if (isInserting) {
+      context.missing(_expressionIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {mascotId, expressionId};
+  @override
+  MascotExpressionMap map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MascotExpressionMap(
+      mascotId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}mascot_id'])!,
+      expressionId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}expression_id'])!,
+    );
+  }
+
+  @override
+  $MascotExpressionMapsTable createAlias(String alias) {
+    return $MascotExpressionMapsTable(attachedDatabase, alias);
+  }
+}
+
+class MascotExpressionMap extends DataClass
+    implements Insertable<MascotExpressionMap> {
+  final int mascotId;
+  final int expressionId;
+  const MascotExpressionMap(
+      {required this.mascotId, required this.expressionId});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['mascot_id'] = Variable<int>(mascotId);
+    map['expression_id'] = Variable<int>(expressionId);
+    return map;
+  }
+
+  MascotExpressionMapsCompanion toCompanion(bool nullToAbsent) {
+    return MascotExpressionMapsCompanion(
+      mascotId: Value(mascotId),
+      expressionId: Value(expressionId),
+    );
+  }
+
+  factory MascotExpressionMap.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MascotExpressionMap(
+      mascotId: serializer.fromJson<int>(json['mascotId']),
+      expressionId: serializer.fromJson<int>(json['expressionId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'mascotId': serializer.toJson<int>(mascotId),
+      'expressionId': serializer.toJson<int>(expressionId),
+    };
+  }
+
+  MascotExpressionMap copyWith({int? mascotId, int? expressionId}) =>
+      MascotExpressionMap(
+        mascotId: mascotId ?? this.mascotId,
+        expressionId: expressionId ?? this.expressionId,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('MascotExpressionMap(')
+          ..write('mascotId: $mascotId, ')
+          ..write('expressionId: $expressionId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(mascotId, expressionId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MascotExpressionMap &&
+          other.mascotId == this.mascotId &&
+          other.expressionId == this.expressionId);
+}
+
+class MascotExpressionMapsCompanion
+    extends UpdateCompanion<MascotExpressionMap> {
+  final Value<int> mascotId;
+  final Value<int> expressionId;
+  const MascotExpressionMapsCompanion({
+    this.mascotId = const Value.absent(),
+    this.expressionId = const Value.absent(),
+  });
+  MascotExpressionMapsCompanion.insert({
+    required int mascotId,
+    required int expressionId,
+  })  : mascotId = Value(mascotId),
+        expressionId = Value(expressionId);
+  static Insertable<MascotExpressionMap> custom({
+    Expression<int>? mascotId,
+    Expression<int>? expressionId,
+  }) {
+    return RawValuesInsertable({
+      if (mascotId != null) 'mascot_id': mascotId,
+      if (expressionId != null) 'expression_id': expressionId,
+    });
+  }
+
+  MascotExpressionMapsCompanion copyWith(
+      {Value<int>? mascotId, Value<int>? expressionId}) {
+    return MascotExpressionMapsCompanion(
+      mascotId: mascotId ?? this.mascotId,
+      expressionId: expressionId ?? this.expressionId,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (mascotId.present) {
+      map['mascot_id'] = Variable<int>(mascotId.value);
+    }
+    if (expressionId.present) {
+      map['expression_id'] = Variable<int>(expressionId.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MascotExpressionMapsCompanion(')
+          ..write('mascotId: $mascotId, ')
+          ..write('expressionId: $expressionId')
           ..write(')'))
         .toString();
   }
@@ -780,9 +784,9 @@ class $MascotExpressionsView
 abstract class _$MascotDatabase extends GeneratedDatabase {
   _$MascotDatabase(QueryExecutor e) : super(e);
   late final $MascotsTable mascots = $MascotsTable(this);
+  late final $ExpressionsTable expressions = $ExpressionsTable(this);
   late final $MascotExpressionMapsTable mascotExpressionMaps =
       $MascotExpressionMapsTable(this);
-  late final $ExpressionsTable expressions = $ExpressionsTable(this);
   late final $SettingsTable settings = $SettingsTable(this);
   late final $MascotExpressionsView mascotExpressions =
       $MascotExpressionsView(this);
@@ -791,5 +795,5 @@ abstract class _$MascotDatabase extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [mascots, mascotExpressionMaps, expressions, settings, mascotExpressions];
+      [mascots, expressions, mascotExpressionMaps, settings, mascotExpressions];
 }

@@ -11,20 +11,22 @@ import '../../../../../fixtures/test_context.dart';
 
 void main() {
   late TestContext context;
-  late MascotsDriftDataSource dataSource;
   late MascotDatabase database;
+  late MascotsDriftDataSource classUnderTest;
+
   late List<DriftExpression> expressionModels;
   late DriftMascot mascotModel;
-  late List<Id> insertedIds;
+  late List<Id> insertedExpressionIds;
 
   setUp(() {
     context = TestContext();
     database = context.database;
-    dataSource = MascotsDriftDataSourceImpl(
+    classUnderTest = MascotsDriftDataSourceImpl(
       database,
       ExpressionsDriftDataSourceImpl(database),
     );
-    insertedIds = context.data.expressions.map((e) => e.id).toList();
+
+    insertedExpressionIds = context.data.expressions.map((e) => e.id).toList();
     expressionModels = context.data.expressions
         .map(context.data.mapExpressionToExpressionModel.map)
         .toList();
@@ -41,7 +43,7 @@ void main() {
         'should insert mascot into mascots table',
         () async {
           // act
-          await dataSource.addMascot(mascotModel);
+          await classUnderTest.addMascot(mascotModel);
 
           // assert
           var mascot = await database.select(database.mascots).getSingle();
@@ -54,14 +56,14 @@ void main() {
         'should insert expressions into expressions table',
         () async {
           // act
-          await dataSource.addMascot(mascotModel);
+          await classUnderTest.addMascot(mascotModel);
 
           // assert
           var expressions = await database.select(database.expressions).get();
           expect(expressions.length, equals(2));
           expect(
             expressions.map((e) => e.id),
-            equals(insertedIds),
+            equals(insertedExpressionIds),
           );
           expect(
             expressions.map((e) => e.name),
@@ -78,7 +80,7 @@ void main() {
         'should insert mascot expression maps into mascot expression maps table',
         () async {
           // act
-          await dataSource.addMascot(mascotModel);
+          await classUnderTest.addMascot(mascotModel);
 
           // assert
           var maps = await database.select(database.mascotExpressionMaps).get();
@@ -89,7 +91,7 @@ void main() {
           );
           expect(
             maps.map((e) => e.expressionId),
-            equals(insertedIds),
+            equals(insertedExpressionIds),
           );
         },
       );
@@ -98,7 +100,7 @@ void main() {
         'should return mascot id',
         () async {
           // act
-          var id = await dataSource.addMascot(mascotModel);
+          var id = await classUnderTest.addMascot(mascotModel);
 
           // assert
           expect(id, equals(1));
@@ -106,20 +108,43 @@ void main() {
       );
 
       test(
+        'should auto-increment mascot id',
+        () async {
+          // arrange
+          await classUnderTest.addMascot(mascotModel);
+          var mascotModel2 = context.data.mapMascotToMascotModel.map(
+            context.data.mascot.copyWith(id: 0, name: 'mascot 2'),
+          );
+
+          // act
+          var id = await classUnderTest.addMascot(mascotModel2);
+
+          // assert
+          expect(id, equals(2));
+        },
+      );
+
+      test(
         'should update mascot if it already exists',
         () async {
           // arrange
-          await dataSource.addMascot(mascotModel);
+          await classUnderTest.addMascot(mascotModel);
+          var mascotModel2 = context.data.mapMascotToMascotModel.map(
+            context.data.mascot.copyWith(id: 2, name: 'new guy'),
+          );
+          await classUnderTest.addMascot(mascotModel2);
           var updatedMascot = context.data.mascot.copyWith(name: 'updated');
 
           // act
-          await dataSource.addMascot(
+          var id = await classUnderTest.addMascot(
             context.data.mapMascotToMascotModel.map(updatedMascot),
           );
 
           // assert
-          var mascot = await database.select(database.mascots).getSingle();
-          expect(mascot.id, equals(1));
+          expect(id, equals(1));
+          var mascot = await (database.select(database.mascots)
+                ..where((m) => m.id.equals(1)))
+              .getSingle();
           expect(mascot.name, equals(updatedMascot.name));
         },
       );
@@ -128,7 +153,7 @@ void main() {
         'should update expressions if they already exist',
         () async {
           // arrange
-          await dataSource.addMascot(mascotModel);
+          await classUnderTest.addMascot(mascotModel);
           var updatedExpressions = context.data.expressions
               .asMap()
               .entries
@@ -139,7 +164,7 @@ void main() {
               .toSet();
 
           // act
-          await dataSource.addMascot(
+          await classUnderTest.addMascot(
             context.data.mapMascotToMascotModel.map(
               context.data.mascot.copyWith(expressions: updatedExpressions),
             ),
@@ -150,7 +175,7 @@ void main() {
           expect(expressions.length, equals(2));
           expect(
             expressions.map((e) => e.id),
-            equals(insertedIds),
+            equals(insertedExpressionIds),
           );
           expect(
             expressions.map((e) => e.name),
@@ -173,10 +198,10 @@ void main() {
         'should construct DriftMascot from mascots and expressions table',
         () async {
           // arrange
-          await dataSource.addMascot(mascotModel);
+          await classUnderTest.addMascot(mascotModel);
 
           // act
-          var result = await dataSource.getMascot(context.data.mascot.id);
+          var result = await classUnderTest.getMascot(context.data.mascot.id);
 
           // assert
           expect(result, mascotModel);
@@ -189,8 +214,8 @@ void main() {
         'should emit DriftMascot with latest expressions when mascot is updated',
         () async {
           // arrange
-          await dataSource.addMascot(mascotModel);
-          var stream = dataSource.streamMascot(context.data.mascot.id);
+          await classUnderTest.addMascot(mascotModel);
+          var stream = classUnderTest.streamMascot(context.data.mascot.id);
           var updatedMascotModel = context.data.mapMascotToMascotModel
               .map(context.data.mascot.copyWith(name: 'updated'));
 
@@ -213,8 +238,8 @@ void main() {
         'should emit DriftMascot with latest mascot values when expression is updated',
         () async {
           // arrange
-          await dataSource.addMascot(mascotModel);
-          var stream = dataSource.streamMascot(context.data.mascot.id);
+          await classUnderTest.addMascot(mascotModel);
+          var stream = classUnderTest.streamMascot(context.data.mascot.id);
           var updatedExpressionModel = context
               .data.mapExpressionToExpressionModel
               .map(context.data.mascot.expressions.first
@@ -246,8 +271,8 @@ void main() {
         'should emit DriftMascot with latest mascot values when expression is deleted',
         () async {
           // arrange
-          await dataSource.addMascot(mascotModel);
-          var stream = dataSource.streamMascot(context.data.mascot.id);
+          await classUnderTest.addMascot(mascotModel);
+          var stream = classUnderTest.streamMascot(context.data.mascot.id);
           var updatedMascotModel = context.data.mapMascotToMascotModel.map(
             context.data.mascot.copyWith(
               expressions: {
@@ -274,8 +299,8 @@ void main() {
         'should emit DriftMascot with when expression map is added',
         () async {
           // arrange
-          await dataSource.addMascot(mascotModel);
-          var stream = dataSource.streamMascot(context.data.mascot.id);
+          await classUnderTest.addMascot(mascotModel);
+          var stream = classUnderTest.streamMascot(context.data.mascot.id);
           var newExpression = context.data.expression.copyWith(
             id: 3,
             name: 'new expression',
@@ -319,8 +344,8 @@ void main() {
         'should emit DriftMascot with when expression map is deleted',
         () async {
           // arrange
-          await dataSource.addMascot(mascotModel);
-          var stream = dataSource.streamMascot(context.data.mascot.id);
+          await classUnderTest.addMascot(mascotModel);
+          var stream = classUnderTest.streamMascot(context.data.mascot.id);
           var updatedMascotModel = context.data.mapMascotToMascotModel.map(
             context.data.mascot.copyWith(
               expressions: {

@@ -28,8 +28,13 @@ class ExpressionsDriftDataSourceImpl implements ExpressionsDriftDataSource {
   ExpressionsDriftDataSourceImpl(this._database);
 
   @override
-  Future<Id> upsertExpression(DriftExpression expression) =>
-      _database.into(_database.expressions).insertOnConflictUpdate(expression);
+  Future<Id> upsertExpression(DriftExpression expression) async {
+    var expressionId = await _database
+        .into(_database.expressions)
+        .insertOnConflictUpdate(expression);
+
+    return expression.id == 0 ? expressionId : expression.id;
+  }
 
   @override
   Future<List<Id>> upsertExpressions(
@@ -39,7 +44,7 @@ class ExpressionsDriftDataSourceImpl implements ExpressionsDriftDataSource {
       var id = await _database
           .into(_database.expressions)
           .insertOnConflictUpdate(expression);
-      ids.add(id);
+      ids.add(expression.id == 0 ? id : expression.id);
     }
 
     return ids;
@@ -51,9 +56,14 @@ class ExpressionsDriftDataSourceImpl implements ExpressionsDriftDataSource {
           .get();
 
   @override
-  Future<void> removeExpression(Id id) =>
-      (_database.delete(_database.expressions)..where((e) => e.id.equals(id)))
-          .go();
+  Future<void> removeExpression(Id id) async {
+    await (_database.delete(_database.mascotExpressionMaps)
+          ..where((e) => e.expressionId.equals(id)))
+        .go();
+    await (_database.delete(_database.expressions)
+          ..where((e) => e.id.equals(id)))
+        .go();
+  }
 
   @override
   Stream<List<DriftExpression>> streamExpressions(Iterable<Id> ids) =>

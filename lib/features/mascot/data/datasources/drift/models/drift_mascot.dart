@@ -31,8 +31,9 @@ class Mascots extends Table {
 }
 
 class MascotExpressionMaps extends Table {
-  IntColumn get mascotId => integer()();
-  IntColumn get expressionId => integer().unique()();
+  IntColumn get mascotId => integer().references(Mascots, #id)();
+  IntColumn get expressionId =>
+      integer().unique().references(Expressions, #id)();
 
   @override
   Set<Column> get primaryKey => {mascotId, expressionId};
