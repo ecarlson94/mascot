@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'drift_database.dart';
+part of 'mascot_database.dart';
 
 // ignore_for_file: type=lint
 class $MascotsTable extends Mascots with TableInfo<$MascotsTable, Mascot> {
@@ -221,11 +221,7 @@ class $MascotExpressionMapsTable extends MascotExpressionMaps
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
-  @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-        {mascotId, expressionId},
-      ];
+  Set<GeneratedColumn> get $primaryKey => {mascotId, expressionId};
   @override
   MascotExpressionMap map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -711,7 +707,7 @@ class $MascotExpressionsView
     implements HasResultSet {
   final String? _alias;
   @override
-  final _$DriftyDatabase attachedDatabase;
+  final _$MascotDatabase attachedDatabase;
   $MascotExpressionsView(this.attachedDatabase, [this._alias]);
   $MascotExpressionMapsTable get mascotExpressionMaps =>
       attachedDatabase.mascotExpressionMaps.createAlias('t0');
@@ -781,8 +777,8 @@ class $MascotExpressionsView
   Set<String> get readTables => const {'mascot_expression_maps', 'expressions'};
 }
 
-abstract class _$DriftyDatabase extends GeneratedDatabase {
-  _$DriftyDatabase(QueryExecutor e) : super(e);
+abstract class _$MascotDatabase extends GeneratedDatabase {
+  _$MascotDatabase(QueryExecutor e) : super(e);
   late final $MascotsTable mascots = $MascotsTable(this);
   late final $MascotExpressionMapsTable mascotExpressionMaps =
       $MascotExpressionMapsTable(this);

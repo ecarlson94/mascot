@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../../../core/data/drift/drift_database.dart';
+import '../../../../../core/data/drift/mascot_database.dart';
 import 'models/drift_settings.dart';
 
 abstract class SettingsDriftDataSource {
@@ -19,7 +19,7 @@ abstract class SettingsDriftDataSource {
 
 @Injectable(as: SettingsDriftDataSource)
 class SettingsDriftDataSourceImpl implements SettingsDriftDataSource {
-  final DriftyDatabase _database;
+  final MascotDatabase _database;
 
   SettingsDriftDataSourceImpl(this._database);
 

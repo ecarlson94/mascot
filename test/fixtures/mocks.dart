@@ -24,7 +24,7 @@ import 'mocks.mocks.dart';
 ])
 class Mocks {
   MockExpressionsDriftDataSource? _expressionsLocalDataSource;
-  MockExpressionsDriftDataSource get expressionsHiveDataSource =>
+  MockExpressionsDriftDataSource get expressionsLocalDataSource =>
       _expressionsLocalDataSource ??= MockExpressionsDriftDataSource();
 
   MockMascotsDriftDataSource? _mascotsLocalDataSource;

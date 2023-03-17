@@ -1,9 +1,10 @@
 import 'package:drift/drift.dart';
 
+import '../../../../../../core/data/drift/mascot_database.dart';
 import '../../../../../expressions/data/datasources/drift/models/drift_expression.dart';
 import '../../../models/mascot_model.dart';
 
-class DriftMascot extends MascotModel {
+class DriftMascot extends MascotModel implements Insertable<Mascot> {
   const DriftMascot({
     required super.id,
     required super.name,
@@ -15,6 +16,13 @@ class DriftMascot extends MascotModel {
 
   @override
   Set<DriftExpression> get expressions => _expressions;
+
+  @override
+  Map<String, Expression<Object>> toColumns(bool nullToAbsent) =>
+      MascotsCompanion(
+        id: id == 0 ? const Value.absent() : Value(id),
+        name: Value(name),
+      ).toColumns(nullToAbsent);
 }
 
 class Mascots extends Table {
@@ -27,9 +35,7 @@ class MascotExpressionMaps extends Table {
   IntColumn get expressionId => integer().unique()();
 
   @override
-  List<Set<Column>> get uniqueKeys => [
-        {mascotId, expressionId}
-      ];
+  Set<Column> get primaryKey => {mascotId, expressionId};
 }
 
 abstract class MascotExpressions extends View {

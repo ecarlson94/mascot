@@ -128,6 +128,16 @@ class MockExpressionsDriftDataSource extends _i1.Mock
         returnValue: _i8.Future<int>.value(0),
       ) as _i8.Future<int>);
   @override
+  _i8.Future<List<int>> upsertExpressions(
+          Iterable<_i9.DriftExpression>? expressions) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #upsertExpressions,
+          [expressions],
+        ),
+        returnValue: _i8.Future<List<int>>.value(<int>[]),
+      ) as _i8.Future<List<int>>);
+  @override
   _i8.Future<void> removeExpression(int? id) => (super.noSuchMethod(
         Invocation.method(
           #removeExpression,
@@ -137,7 +147,7 @@ class MockExpressionsDriftDataSource extends _i1.Mock
         returnValueForMissingStub: _i8.Future<void>.value(),
       ) as _i8.Future<void>);
   @override
-  _i8.Future<List<_i9.DriftExpression>> getExpressions(List<int>? ids) =>
+  _i8.Future<List<_i9.DriftExpression>> getExpressions(Iterable<int>? ids) =>
       (super.noSuchMethod(
         Invocation.method(
           #getExpressions,
@@ -147,7 +157,7 @@ class MockExpressionsDriftDataSource extends _i1.Mock
             <_i9.DriftExpression>[]),
       ) as _i8.Future<List<_i9.DriftExpression>>);
   @override
-  _i8.Stream<List<_i9.DriftExpression>> streamExpressions(List<int>? ids) =>
+  _i8.Stream<List<_i9.DriftExpression>> streamExpressions(Iterable<int>? ids) =>
       (super.noSuchMethod(
         Invocation.method(
           #streamExpressions,

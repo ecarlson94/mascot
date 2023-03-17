@@ -5,7 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../../../core/clean_architecture/entity.dart';
-import '../../../../../core/data/drift/drift_database.dart';
+import '../../../../../core/data/drift/mascot_database.dart';
 import '../../../../expressions/data/datasources/drift/expressions_drift_data_source.dart';
 import '../../../../expressions/data/datasources/drift/models/drift_expression.dart';
 import 'models/drift_mascot.dart';
@@ -23,14 +23,16 @@ abstract class MascotsDriftDataSource {
 
 @Injectable(as: MascotsDriftDataSource)
 class MascotsDriftDataSourceImpl implements MascotsDriftDataSource {
-  final DriftyDatabase _database;
+  final MascotDatabase _database;
   final ExpressionsDriftDataSource _expressions;
 
   MascotsDriftDataSourceImpl(this._database, this._expressions);
 
   @override
   Future<Id> addMascot(DriftMascot driftMascot) async {
-    final mascotId = await _updateMascot(driftMascot);
+    var mascotId = await _database
+        .into(_database.mascots)
+        .insertOnConflictUpdate(driftMascot);
 
     await _createExpressionsForMascot(driftMascot.expressions, mascotId);
 
@@ -100,28 +102,29 @@ class MascotsDriftDataSourceImpl implements MascotsDriftDataSource {
     return expressions;
   }
 
-  Future<int> _updateMascot(DriftMascot driftMascot) async {
-    final mascot = MascotsCompanion.insert(
-      id: driftMascot.id == 0 ? const Value.absent() : Value(driftMascot.id),
-      name: driftMascot.name,
-    );
-    var mascotId =
-        await _database.into(_database.mascots).insertOnConflictUpdate(mascot);
-    return mascotId;
-  }
-
   Future<void> _createExpressionsForMascot(
     Iterable<DriftExpression> expressions,
     int mascotId,
   ) async {
-    for (var expression in expressions) {
-      var id = await _expressions.upsertExpression(expression);
-      await _database.into(_database.mascotExpressionMaps).insert(
-            MascotExpressionMapsCompanion.insert(
-              mascotId: mascotId,
-              expressionId: id,
-            ),
-          );
-    }
+    var ids = await _expressions.upsertExpressions(expressions);
+
+    var savedMascotExpressionMaps =
+        await (_database.select(_database.mascotExpressionMaps)
+              ..where((m) => m.expressionId.isIn(ids)))
+            .get();
+    var unsavedExpressionIds = ids.where(
+        (id) => !savedMascotExpressionMaps.any((m) => m.expressionId == id));
+
+    await _database.batch(
+      (batch) async => batch.insertAllOnConflictUpdate(
+        _database.mascotExpressionMaps,
+        unsavedExpressionIds.map(
+          (id) => MascotExpressionMapsCompanion.insert(
+            mascotId: mascotId,
+            expressionId: id,
+          ),
+        ),
+      ),
+    );
   }
 }

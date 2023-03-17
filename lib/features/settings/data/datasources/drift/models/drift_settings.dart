@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
 
-import '../../../../../../core/data/drift/drift_database.dart';
+import '../../../../../../core/data/drift/mascot_database.dart';
 import '../../../models/settings_model.dart';
 
 class DriftSettings extends SettingsModel implements Insertable<DriftSettings> {
