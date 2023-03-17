@@ -38,7 +38,7 @@ void main() {
 
         // assert
         expect(
-          result.getOrElse(() => Settings.empty()),
+          result.getOrElse(() => Settings.empty),
           context.data.mapSettingsToSettingsModel.reverse(getSettingsModel()),
         );
         verify(context.mocks.settingsLocalDataSource.loadSettings());

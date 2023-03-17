@@ -15,5 +15,5 @@ class Settings extends Equatable {
         favoriteMascotId: favoriteMascotId ?? this.favoriteMascotId,
       );
 
-  factory Settings.empty() => const Settings(favoriteMascotId: null);
+  static const Settings empty = Settings(favoriteMascotId: null);
 }

@@ -30,7 +30,7 @@ class SettingsDriftDataSourceImpl implements SettingsDriftDataSource {
     var settings = await query.getSingleOrNull();
 
     if (settings == null) {
-      await saveSettings(const DriftSettings(favoriteMascotId: null));
+      await saveSettings(DriftSettings.empty);
       settings = await query.getSingle();
     }
 

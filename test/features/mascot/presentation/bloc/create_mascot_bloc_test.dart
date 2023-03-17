@@ -24,12 +24,9 @@ void main() {
       context = TestContext();
       bloc = CreateMascotBloc(
         context.mocks.saveMascot,
-        context.mocks.getMascot,
       );
 
       when(context.mocks.saveMascot(any))
-          .thenAnswer((_) async => Right(context.data.mascot.id));
-      when(context.mocks.getMascot(any))
           .thenAnswer((_) async => Right(context.data.mascot));
     });
 
@@ -137,24 +134,6 @@ void main() {
             ),
           ],
         );
-
-        blocTest(
-          'should emit [SavingExpression, SaveMascotError(${ErrorCodes.getMascotFailureCode})] when mascot retrieval fails',
-          build: () => bloc,
-          setUp: () {
-            when(context.mocks.getMascot(any))
-                .thenAnswer((_) async => Left(LocalDataSourceFailure()));
-          },
-          act: (bloc) =>
-              bloc.add(params['validXFileUpload'] as CreateMascotEvent),
-          expect: () => [
-            SavingExpression(getSavingExpressionMascot()),
-            SaveMascotError(
-              ErrorCodes.getMascotFailureCode,
-              getSavingExpressionMascot(),
-            ),
-          ],
-        );
       });
     }
 
@@ -172,23 +151,6 @@ void main() {
           MascotUpdated(
             context.data.mascot,
           ), // Name is set in persistant storage
-        ],
-      );
-
-      blocTest(
-        'should emit [MascotUpdated, SaveMascotError(${ErrorCodes.getMascotFailureCode})] when mascot retrieval fails',
-        build: () => bloc,
-        setUp: () {
-          when(context.mocks.getMascot(any))
-              .thenAnswer((_) async => Left(LocalDataSourceFailure()));
-        },
-        act: (bloc) => bloc.add(const SetMascotName(validName)),
-        expect: () => [
-          MascotUpdated(Mascot.empty.copyWith(name: validName)),
-          SaveMascotError(
-            ErrorCodes.getMascotFailureCode,
-            Mascot.empty.copyWith(name: validName),
-          ),
         ],
       );
     });

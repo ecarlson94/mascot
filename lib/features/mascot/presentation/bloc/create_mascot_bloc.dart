@@ -7,7 +7,6 @@ import '../../../../core/error/error.dart';
 import '../../../../core/utils/constants.dart';
 import '../../../expressions/domain/entities/expression.dart';
 import '../../domain/entities/mascot.dart';
-import '../../domain/usecases/get_mascot.dart';
 import '../../domain/usecases/save_mascot.dart';
 
 part 'create_mascot_event.dart';
@@ -23,11 +22,9 @@ class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
       'The expression that the mascot uses when talking';
 
   final SaveMascot _saveMascot;
-  final GetMascot _getMascot;
 
   CreateMascotBloc(
     this._saveMascot,
-    this._getMascot,
   ) : super(const CreateMascotInitial(Mascot.empty)) {
     on<CreateMascotEvent>((event, emit) async {
       if (event is UploadNeutralExpression) {
@@ -70,38 +67,27 @@ class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
         );
     var unchangedExpressions =
         state.mascot.expressions.where((e) => e.name != expressionName);
-    var mascot = state.mascot.copyWith(
+    var newMascot = state.mascot.copyWith(
       expressions: {...unchangedExpressions, expression},
     );
-    emit(SavingExpression(mascot));
+    emit(SavingExpression(newMascot));
 
-    await _updateMascot(mascot, emit);
+    await _updateMascot(newMascot, emit);
   }
 
   Future<void> _updateMascot(
-    Mascot mascot,
+    Mascot mascotToUpdate,
     Emitter<CreateMascotState> emit,
   ) async {
-    var mascotIdOrFailure = await _saveMascot(mascot);
-    await mascotIdOrFailure.fold(
+    var mascotOrFailure = await _saveMascot(mascotToUpdate);
+    mascotOrFailure.fold(
       (l) async => emit(
         SaveMascotError(
           ErrorCodes.saveMascotFailureCode,
-          mascot,
+          state.mascot,
         ),
       ),
-      (mascotId) async {
-        var mascotOrFailure = await _getMascot(mascotId);
-        await mascotOrFailure.fold(
-          (l) async => emit(
-            SaveMascotError(
-              ErrorCodes.getMascotFailureCode,
-              mascot,
-            ),
-          ),
-          (updatedMascot) async => emit(MascotUpdated(updatedMascot)),
-        );
-      },
+      (mascot) => emit(MascotUpdated(mascot)),
     );
   }
 }

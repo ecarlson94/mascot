@@ -7,8 +7,8 @@ import '../../../../core/data/failure_or_id_future.dart';
 import '../../../../core/error/failure.dart';
 import '../../domain/entities/mascot.dart';
 import '../../domain/repositories/mascots_repository.dart';
+import '../datasources/drift/mascots_drift_data_source.dart';
 import '../datasources/drift/models/map_mascot_to_drift_mascot.dart';
-import '../datasources/drift/models/mascots_drift_data_source.dart';
 
 @Injectable(as: MascotsRepository)
 class MascotsRepositoryImpl implements MascotsRepository {

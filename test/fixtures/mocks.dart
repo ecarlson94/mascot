@@ -1,5 +1,5 @@
 import 'package:mascot/features/expressions/data/datasources/drift/expressions_drift_data_source.dart';
-import 'package:mascot/features/mascot/data/datasources/drift/models/mascots_drift_data_source.dart';
+import 'package:mascot/features/mascot/data/datasources/drift/mascots_drift_data_source.dart';
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart';
 import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart';
 import 'package:mascot/features/mascot/domain/usecases/save_mascot.dart';

@@ -12,10 +12,10 @@ import 'package:mascot/features/expressions/data/datasources/drift/expressions_d
     as _i4;
 import 'package:mascot/features/expressions/data/datasources/drift/models/map_expression_to_drift_expression.dart'
     as _i5;
+import 'package:mascot/features/mascot/data/datasources/drift/mascots_drift_data_source.dart'
+    as _i8;
 import 'package:mascot/features/mascot/data/datasources/drift/models/map_mascot_to_drift_mascot.dart'
     as _i6;
-import 'package:mascot/features/mascot/data/datasources/drift/models/mascots_drift_data_source.dart'
-    as _i8;
 import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl.dart'
     as _i10;
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart'
@@ -91,9 +91,7 @@ _i1.GetIt $init(
       ));
   gh.factory<_i19.SettingsBloc>(
       () => _i19.SettingsBloc(gh<_i15.StreamSettings>()));
-  gh.factory<_i20.CreateMascotBloc>(() => _i20.CreateMascotBloc(
-        gh<_i18.SaveMascot>(),
-        gh<_i16.GetMascot>(),
-      ));
+  gh.factory<_i20.CreateMascotBloc>(
+      () => _i20.CreateMascotBloc(gh<_i18.SaveMascot>()));
   return getIt;
 }

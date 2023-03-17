@@ -18,6 +18,8 @@ class DriftSettings extends SettingsModel implements Insertable<DriftSettings> {
   @override
   DriftSettings copyWith({int? favoriteMascotId}) => DriftSettings(
       favoriteMascotId: favoriteMascotId ?? this.favoriteMascotId);
+
+  static const DriftSettings empty = DriftSettings(favoriteMascotId: null);
 }
 
 @UseRowClass(DriftSettings)

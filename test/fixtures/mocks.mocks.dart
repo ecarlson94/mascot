@@ -12,10 +12,10 @@ import 'package:mascot/features/expressions/data/datasources/drift/expressions_d
     as _i7;
 import 'package:mascot/features/expressions/data/datasources/drift/models/drift_expression.dart'
     as _i9;
+import 'package:mascot/features/mascot/data/datasources/drift/mascots_drift_data_source.dart'
+    as _i11;
 import 'package:mascot/features/mascot/data/datasources/drift/models/drift_mascot.dart'
     as _i4;
-import 'package:mascot/features/mascot/data/datasources/drift/models/mascots_drift_data_source.dart'
-    as _i11;
 import 'package:mascot/features/mascot/domain/entities/mascot.dart' as _i13;
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart'
     as _i6;
@@ -318,21 +318,21 @@ class MockSaveMascot extends _i1.Mock implements _i15.SaveMascot {
   }
 
   @override
-  _i8.Future<_i3.Either<_i12.Failure, int>> call(_i13.Mascot? mascot) =>
+  _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>> call(_i13.Mascot? mascot) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [mascot],
         ),
-        returnValue: _i8.Future<_i3.Either<_i12.Failure, int>>.value(
-            _FakeEither_3<_i12.Failure, int>(
+        returnValue: _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>>.value(
+            _FakeEither_3<_i12.Failure, _i13.Mascot>(
           this,
           Invocation.method(
             #call,
             [mascot],
           ),
         )),
-      ) as _i8.Future<_i3.Either<_i12.Failure, int>>);
+      ) as _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>>);
 }
 
 /// A class which mocks [GetMascot].
