@@ -50,7 +50,7 @@ class MascotsRepositoryImpl implements MascotsRepository {
       var mascotBehaviorSubject = BehaviorSubject<Mascot>.seeded(
           _mapMascotToMascotModel.reverse(mascot));
 
-      var mascotStream = await _localDataSource.streamMascot(id);
+      var mascotStream = _localDataSource.streamMascot(id);
       mascotStream.listen((event) async {
         mascotBehaviorSubject.add(
           _mapMascotToMascotModel.reverse(event ?? mascot),

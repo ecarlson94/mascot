@@ -13,7 +13,7 @@ import 'test_x_file.dart';
 class TestData {
   TestXFile? _xfile;
   TestXFile get xfile => _xfile ??= TestXFile.fromData(
-        Uint8List(200),
+        Uint8List(5),
         name: 'test',
       );
 
@@ -21,7 +21,7 @@ class TestData {
     id: 1,
     name: CreateMascotBloc.neutralExpressionName,
     description: CreateMascotBloc.neutralExpressionDescription,
-    image: Uint8List(200),
+    image: Uint8List(5),
   );
   final MapExpressionToDriftExpression mapExpressionToExpressionModel =
       MapExpressionToDriftExpression();
@@ -31,13 +31,13 @@ class TestData {
       id: 1,
       name: CreateMascotBloc.neutralExpressionName,
       description: CreateMascotBloc.neutralExpressionDescription,
-      image: Uint8List(200),
+      image: Uint8List(5),
     ),
     Expression(
       id: 2,
       name: CreateMascotBloc.talkingExpressionName,
       description: CreateMascotBloc.talkingExpressionDescription,
-      image: Uint8List(200),
+      image: Uint8List(5),
     ),
   ];
 
@@ -49,13 +49,13 @@ class TestData {
         id: 1,
         name: CreateMascotBloc.neutralExpressionName,
         description: CreateMascotBloc.neutralExpressionDescription,
-        image: Uint8List(200),
+        image: Uint8List(5),
       ),
       Expression(
         id: 2,
         name: CreateMascotBloc.talkingExpressionName,
         description: CreateMascotBloc.talkingExpressionDescription,
-        image: Uint8List(200),
+        image: Uint8List(5),
       ),
     },
   );

@@ -17,8 +17,8 @@ abstract class MascotsDriftDataSource {
   /// Gets a mascot from the local database.
   Future<DriftMascot> getMascot(Id id);
 
-  // Stream a mascot from the local database.
-  Future<Stream<DriftMascot?>> streamMascot(Id id);
+  // Stream a mascot rom the local database.
+  Stream<DriftMascot?> streamMascot(Id id);
 }
 
 @Injectable(as: MascotsDriftDataSource)
@@ -44,7 +44,7 @@ class MascotsDriftDataSourceImpl implements MascotsDriftDataSource {
       _getDriftMascotForMascot(() => _getMascot(id));
 
   @override
-  Future<Stream<DriftMascot?>> streamMascot(Id id) async {
+  Stream<DriftMascot?> streamMascot(Id id) {
     final subject = BehaviorSubject<DriftMascot?>();
 
     // listen to stream of mascot

@@ -116,14 +116,14 @@ void main() {
     });
 
     group('streamMascot', () {
-      late BehaviorSubject<DriftMascot> modelStream;
+      late BehaviorSubject<DriftMascot?> modelStream;
       setUp(() {
-        modelStream = BehaviorSubject<DriftMascot>();
+        modelStream = BehaviorSubject<DriftMascot?>();
 
         when(context.mocks.mascotsLocalDataSource.getMascot(any))
             .thenAnswer((_) async => getMascotModel());
         when(context.mocks.mascotsLocalDataSource.streamMascot(any))
-            .thenAnswer((_) async => modelStream);
+            .thenAnswer((_) => modelStream);
       });
       test('should seed the stream with the current value', () async {
         //act

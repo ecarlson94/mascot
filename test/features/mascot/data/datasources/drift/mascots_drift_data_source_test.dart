@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/clean_architecture/entity.dart';
 import 'package:mascot/core/data/drift/mascot_database.dart';
@@ -28,6 +29,10 @@ void main() {
         .map(context.data.mapExpressionToExpressionModel.map)
         .toList();
     mascotModel = context.data.mapMascotToMascotModel.map(context.data.mascot);
+  });
+
+  tearDown(() async {
+    await database.close();
   });
 
   group('MascotsDriftDataSourceImpl', () {
@@ -182,22 +187,157 @@ void main() {
     group('streamMascot', () {
       test(
         'should emit DriftMascot with latest expressions when mascot is updated',
-        () async {},
+        () async {
+          // arrange
+          await dataSource.addMascot(mascotModel);
+          var stream = dataSource.streamMascot(context.data.mascot.id);
+          var updatedMascotModel = context.data.mapMascotToMascotModel
+              .map(context.data.mascot.copyWith(name: 'updated'));
+
+          // act
+          await database.update(database.mascots).replace(updatedMascotModel);
+
+          // assert
+          await expectLater(
+            stream,
+            emitsInOrder([
+              mascotModel,
+              updatedMascotModel,
+              updatedMascotModel,
+            ]),
+          );
+        },
       );
 
       test(
         'should emit DriftMascot with latest mascot values when expression is updated',
-        () async {},
+        () async {
+          // arrange
+          await dataSource.addMascot(mascotModel);
+          var stream = dataSource.streamMascot(context.data.mascot.id);
+          var updatedExpressionModel = context
+              .data.mapExpressionToExpressionModel
+              .map(context.data.mascot.expressions.first
+                  .copyWith(name: 'updated'));
+          var updatedMascotModel = context.data.mapMascotToMascotModel.map(
+            context.data.mascot.copyWith(
+              expressions: {
+                updatedExpressionModel,
+                context.data.mascot.expressions.last,
+              },
+            ),
+          );
+
+          // act
+          // await Future.delayed(const Duration(milliseconds: 100));
+          await database
+              .update(database.expressions)
+              .replace(updatedExpressionModel);
+
+          // assert
+          await expectLater(
+            stream,
+            emits(updatedMascotModel),
+          );
+        },
       );
 
       test(
         'should emit DriftMascot with latest mascot values when expression is deleted',
-        () async {},
+        () async {
+          // arrange
+          await dataSource.addMascot(mascotModel);
+          var stream = dataSource.streamMascot(context.data.mascot.id);
+          var updatedMascotModel = context.data.mapMascotToMascotModel.map(
+            context.data.mascot.copyWith(
+              expressions: {
+                context.data.mascot.expressions.last,
+              },
+            ),
+          );
+
+          // act
+          await (database.delete(database.expressions)
+                ..where((e) =>
+                    e.id.equals(context.data.mascot.expressions.first.id)))
+              .go();
+
+          // assert
+          await expectLater(
+            stream,
+            emits(updatedMascotModel),
+          );
+        },
       );
 
       test(
-        'should emit DriftMascot with latest mascot values when expression is added',
-        () async {},
+        'should emit DriftMascot with when expression map is added',
+        () async {
+          // arrange
+          await dataSource.addMascot(mascotModel);
+          var stream = dataSource.streamMascot(context.data.mascot.id);
+          var newExpression = context.data.expression.copyWith(
+            id: 3,
+            name: 'new expression',
+            description: 'new expression',
+          );
+          var updatedMascotModel = context.data.mapMascotToMascotModel.map(
+            context.data.mascot.copyWith(
+              expressions: {
+                ...context.data.mascot.expressions,
+                newExpression,
+              },
+            ),
+          );
+
+          // act
+          await database.into(database.expressions).insert(
+                context.data.mapExpressionToExpressionModel.map(
+                  newExpression,
+                ),
+              );
+          await database.into(database.mascotExpressionMaps).insert(
+                MascotExpressionMapsCompanion(
+                  mascotId: Value(context.data.mascot.id),
+                  expressionId: Value(newExpression.id),
+                ),
+              );
+
+          // assert
+          await expectLater(
+            stream,
+            emitsInOrder([
+              mascotModel,
+              mascotModel,
+              updatedMascotModel,
+            ]),
+          );
+        },
+      );
+
+      test(
+        'should emit DriftMascot with when expression map is deleted',
+        () async {
+          // arrange
+          await dataSource.addMascot(mascotModel);
+          var stream = dataSource.streamMascot(context.data.mascot.id);
+          var updatedMascotModel = context.data.mapMascotToMascotModel.map(
+            context.data.mascot.copyWith(
+              expressions: {
+                context.data.mascot.expressions.last,
+              },
+            ),
+          );
+
+          // act
+          await (database.delete(database.mascotExpressionMaps)
+                ..where((e) => e.expressionId
+                    .equals(context.data.mascot.expressions.first.id)))
+              .go();
+
+          // assert
+          await expectLater(stream, emits(updatedMascotModel));
+        },
       );
     });
   });

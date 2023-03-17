@@ -247,15 +247,13 @@ class MockMascotsDriftDataSource extends _i1.Mock
         )),
       ) as _i8.Future<_i4.DriftMascot>);
   @override
-  _i8.Future<_i8.Stream<_i4.DriftMascot?>> streamMascot(int? id) =>
-      (super.noSuchMethod(
+  _i8.Stream<_i4.DriftMascot?> streamMascot(int? id) => (super.noSuchMethod(
         Invocation.method(
           #streamMascot,
           [id],
         ),
-        returnValue: _i8.Future<_i8.Stream<_i4.DriftMascot?>>.value(
-            _i8.Stream<_i4.DriftMascot?>.empty()),
-      ) as _i8.Future<_i8.Stream<_i4.DriftMascot?>>);
+        returnValue: _i8.Stream<_i4.DriftMascot?>.empty(),
+      ) as _i8.Stream<_i4.DriftMascot?>);
 }
 
 /// A class which mocks [MascotsRepository].
