@@ -1,15 +1,15 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/widgets/card_button.dart';
-import '../../domain/entities/image.dart' as model;
 
 class UploadExpression extends StatelessWidget {
   static const double _defaultWidth = 400;
   static const double _defaultHeight = 300;
 
   final String label;
-  final model.Image? defaultImage;
+  final Uint8List? defaultImage;
   final Function(XFile)? onImageSelected;
   final double width;
   final double height;
@@ -46,7 +46,7 @@ class UploadExpression extends StatelessWidget {
                 ),
               )
             : Image.memory(
-                defaultImage!.data,
+                defaultImage!,
                 fit: BoxFit.contain,
               ),
       ),

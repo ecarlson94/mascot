@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../fixtures/test_context.dart';
@@ -69,7 +70,7 @@ void main() {
       test('should copy original object with new image', () {
         // arrange
         var expression = context.data.expression;
-        var expectedImage = context.data.image;
+        var expectedImage = Uint8List(220);
 
         // act
         var result = expression.copyWith(image: expectedImage);
@@ -79,23 +80,6 @@ void main() {
         expect(result.name, expression.name);
         expect(result.description, expression.description);
         expect(result.image, expectedImage);
-      });
-    });
-
-    group('copyWithId', () {
-      test('should copy object with new id', () {
-        // arrange
-        var expression = context.data.expression;
-        var expectedId = 20;
-
-        // act
-        var result = expression.copyWithId(expectedId);
-
-        // assert
-        expect(result.id, expectedId);
-        expect(result.name, expression.name);
-        expect(result.description, expression.description);
-        expect(result.image, expression.image);
       });
     });
   });

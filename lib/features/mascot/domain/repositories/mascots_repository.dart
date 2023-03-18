@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/data/failure_or_id_future.dart';
@@ -6,6 +7,8 @@ import '../../../../core/error/failure.dart';
 import '../entities/mascot.dart';
 
 typedef FailureOrMascotFuture = Future<Either<Failure, Mascot>>;
+typedef FailureOrMascotSubjectFuture
+    = Future<Either<Failure, BehaviorSubject<Mascot>>>;
 
 abstract class MascotsRepository {
   /// Adds a mascot
@@ -13,4 +16,7 @@ abstract class MascotsRepository {
 
   /// Gets a mascot by Id
   FailureOrMascotFuture getMascot(Id id);
+
+  /// Stream of a specific mascot
+  FailureOrMascotSubjectFuture streamMascot(Id id);
 }

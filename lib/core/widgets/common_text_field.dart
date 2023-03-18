@@ -20,8 +20,7 @@ class CommonTextField extends StatefulWidget {
 }
 
 class _CommonTextFieldState extends State<CommonTextField> {
-  final Debouncer _debouncer =
-      Debouncer(duration: const Duration(milliseconds: 300));
+  final Debouncer _debouncer = Debouncer();
 
   @override
   Widget build(BuildContext context) {
