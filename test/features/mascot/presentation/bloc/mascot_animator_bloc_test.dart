@@ -1,6 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mascot/core/error/error.dart';
+import 'package:mascot/core/error/failure.dart';
 import 'package:mascot/core/utils/constants.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
 import 'package:mascot/features/mascot/presentation/bloc/mascot_animator_bloc.dart';
@@ -83,6 +85,24 @@ void main() {
             {for (var e in context.data.mascot.expressions.skip(1)) e.name: e},
           );
         },
+      );
+
+      blocTest(
+        'should emit [MascotAnimatorLoading, MascotAnimatorError(${ErrorCodes.loadMascotFailureCode})] when retrieval of mascot stream is unsuccessful',
+        build: () => bloc,
+        setUp: () {
+          when(context.mocks.streamMascot(any))
+              .thenAnswer((_) async => Left(LocalDataSourceFailure()));
+        },
+        act: (bloc) => bloc.add(LoadMascot(context.data.mascot.id)),
+        expect: () => [
+          MascotAnimatorLoading(none(), defaultExpressionName),
+          MascotAnimatorError(
+            ErrorCodes.loadMascotFailureCode,
+            none(),
+            defaultExpressionName,
+          ),
+        ],
       );
     });
   });
