@@ -8,5 +8,6 @@ lcov --remove coverage/lcov.info \
     '*/*_event.dart' \
     '*/entity.dart' \
     '*/data/*/models/*.dart' \
+    '*/core/data/drift/*.dart' \
     '*/error.dart' \
     '*/generated_plugin_registrant.dart' -o coverage/lcov.info
