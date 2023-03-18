@@ -541,7 +541,10 @@ class $SettingsTable extends Settings
   @override
   late final GeneratedColumn<int> favoriteMascotId = GeneratedColumn<int>(
       'favorite_mascot_id', aliasedName, true,
-      type: DriftSqlType.int, requiredDuringInsert: false);
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES mascots (id)'));
   @override
   List<GeneratedColumn> get $columns => [id, favoriteMascotId];
   @override
