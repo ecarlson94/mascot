@@ -1,5 +1,4 @@
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../features/expressions/data/datasources/drift/models/drift_expression.dart';
@@ -24,7 +23,7 @@ part 'mascot_database.g.dart';
 class MascotDatabase extends _$MascotDatabase {
   MascotDatabase() : super(impl.connect());
 
-  MascotDatabase.memory() : super(NativeDatabase.memory());
+  MascotDatabase.memory() : super(impl.connect(isInMemory: true));
 
   @override
   int get schemaVersion => 1;

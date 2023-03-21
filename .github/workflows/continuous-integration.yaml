@@ -39,6 +39,9 @@ jobs:
       - name: Dart Code Metrics
         run: dart run dart_code_metrics:metrics analyze --reporter=github --fatal-style --fatal-performance --fatal-warnings lib
 
+      - name: Build Source
+        run: flutter build web
+
       - name: Run unit / integration tests
         run: ./scripts/test.sh
 

@@ -12,7 +12,7 @@ import 'package:sqlite3/wasm.dart';
 const _useWorker = true;
 
 /// Obtains a database connection for running drift on the web.
-DatabaseConnection connect({bool isInWebWorker = false}) {
+QueryExecutor connect({bool isInWebWorker = false, bool isInMemory = false}) {
   if (_useWorker && !isInWebWorker) {
     final worker = SharedWorker('worker.dart.js');
     return DatabaseConnection.delayed(
@@ -33,11 +33,13 @@ DatabaseConnection connect({bool isInWebWorker = false}) {
           SqliteEnvironment(fileSystem: fs),
         );
 
-        final databaseImpl = WasmDatabase(
-          sqlite3: sqlite3,
-          path: 'mascot.db',
-          logStatements: true,
-        );
+        final databaseImpl = isInMemory
+            ? WasmDatabase.inMemory(sqlite3)
+            : WasmDatabase(
+                sqlite3: sqlite3,
+                path: 'mascot.db',
+                logStatements: true,
+              );
         return DatabaseConnection(databaseImpl);
       }),
     );
