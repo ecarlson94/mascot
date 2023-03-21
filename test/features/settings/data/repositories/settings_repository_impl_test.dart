@@ -19,12 +19,12 @@ void main() {
     context = TestContext();
     repository = SettingsRepositoryImpl(
       context.mocks.settingsLocalDataSource,
-      context.data.mapSettingsToSettingsModel,
+      context.data.driftSettingsMapper,
     );
   });
 
   DriftSettings getSettingsModel() =>
-      context.data.mapSettingsToSettingsModel.map(context.data.settings);
+      context.data.driftSettingsMapper.fromSettings(context.data.settings);
 
   group('SettingsRepositoryImpl', () {
     group('loadSettings', () {
@@ -39,7 +39,7 @@ void main() {
         // assert
         expect(
           result.getOrElse(() => Settings.empty),
-          context.data.mapSettingsToSettingsModel.reverse(getSettingsModel()),
+          context.data.driftSettingsMapper.toSettings(getSettingsModel()),
         );
         verify(context.mocks.settingsLocalDataSource.loadSettings());
         verifyNoMoreInteractions(context.mocks.settingsLocalDataSource);
@@ -79,7 +79,7 @@ void main() {
         expect(result, isA<Right<Failure, Unit>>());
         verify(
           context.mocks.settingsLocalDataSource.saveSettings(
-            context.data.mapSettingsToSettingsModel.map(
+            context.data.driftSettingsMapper.fromSettings(
               getSettingsModel().copyWith(favoriteMascotId: 27),
             ),
           ),
@@ -122,7 +122,7 @@ void main() {
         expect(
           result.getOrElse(() => BehaviorSubject()),
           emitsInOrder([
-            context.data.mapSettingsToSettingsModel.reverse(getSettingsModel()),
+            context.data.driftSettingsMapper.toSettings(getSettingsModel()),
           ]),
         );
         verify(context.mocks.settingsLocalDataSource.loadSettings());
@@ -140,8 +140,8 @@ void main() {
               .thenAnswer((_) async => settings);
           when(context.mocks.settingsLocalDataSource.streamSettings())
               .thenAnswer((_) => modelStream);
-          var updatedSettingsModel = context.data.mapSettingsToSettingsModel
-              .map(settings.copyWith(favoriteMascotId: 27));
+          var updatedSettingsModel = context.data.driftSettingsMapper
+              .fromSettings(settings.copyWith(favoriteMascotId: 27));
 
           // act
           final result = await repository.streamSettings();
@@ -152,10 +152,8 @@ void main() {
           expect(
             result.getOrElse(() => BehaviorSubject()),
             emitsInOrder([
-              context.data.mapSettingsToSettingsModel
-                  .reverse(getSettingsModel()),
-              context.data.mapSettingsToSettingsModel
-                  .reverse(updatedSettingsModel),
+              context.data.driftSettingsMapper.toSettings(getSettingsModel()),
+              context.data.driftSettingsMapper.toSettings(updatedSettingsModel),
             ]),
           );
         },

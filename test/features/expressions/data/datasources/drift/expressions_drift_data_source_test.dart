@@ -20,9 +20,9 @@ void main() {
     classUnderTest = ExpressionsDriftDataSourceImpl(database);
 
     expressionModels = context.data.expressions
-        .map(context.data.mapExpressionToExpressionModel.map)
+        .map(context.data.driftExpressionMapper.fromExpression)
         .toList();
-    expressionModel = context.data.mapExpressionToExpressionModel.map(
+    expressionModel = context.data.driftExpressionMapper.fromExpression(
       context.data.expressions.first,
     );
   });
@@ -159,7 +159,7 @@ void main() {
         () async {
           // arrange
           await database.into(database.mascots).insert(
-                context.data.mapMascotToMascotModel.map(
+                context.data.driftMascotMapper.fromMascot(
                   context.data.mascot.copyWith(
                     expressions: {context.data.mascot.expressions.first},
                   ),

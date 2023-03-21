@@ -28,9 +28,10 @@ void main() {
 
     insertedExpressionIds = context.data.expressions.map((e) => e.id).toList();
     expressionModels = context.data.expressions
-        .map(context.data.mapExpressionToExpressionModel.map)
+        .map(context.data.driftExpressionMapper.fromExpression)
         .toList();
-    mascotModel = context.data.mapMascotToMascotModel.map(context.data.mascot);
+    mascotModel =
+        context.data.driftMascotMapper.fromMascot(context.data.mascot);
   });
 
   tearDown(() async {
@@ -112,7 +113,7 @@ void main() {
         () async {
           // arrange
           await classUnderTest.addMascot(mascotModel);
-          var mascotModel2 = context.data.mapMascotToMascotModel.map(
+          var mascotModel2 = context.data.driftMascotMapper.fromMascot(
             context.data.mascot.copyWith(id: 0, name: 'mascot 2'),
           );
 
@@ -129,7 +130,7 @@ void main() {
         () async {
           // arrange
           await classUnderTest.addMascot(mascotModel);
-          var mascotModel2 = context.data.mapMascotToMascotModel.map(
+          var mascotModel2 = context.data.driftMascotMapper.fromMascot(
             context.data.mascot.copyWith(id: 2, name: 'new guy'),
           );
           await classUnderTest.addMascot(mascotModel2);
@@ -137,7 +138,7 @@ void main() {
 
           // act
           var id = await classUnderTest.addMascot(
-            context.data.mapMascotToMascotModel.map(updatedMascot),
+            context.data.driftMascotMapper.fromMascot(updatedMascot),
           );
 
           // assert
@@ -165,7 +166,7 @@ void main() {
 
           // act
           await classUnderTest.addMascot(
-            context.data.mapMascotToMascotModel.map(
+            context.data.driftMascotMapper.fromMascot(
               context.data.mascot.copyWith(expressions: updatedExpressions),
             ),
           );
@@ -216,8 +217,8 @@ void main() {
           // arrange
           await classUnderTest.addMascot(mascotModel);
           var stream = classUnderTest.streamMascot(context.data.mascot.id);
-          var updatedMascotModel = context.data.mapMascotToMascotModel
-              .map(context.data.mascot.copyWith(name: 'updated'));
+          var updatedMascotModel = context.data.driftMascotMapper
+              .fromMascot(context.data.mascot.copyWith(name: 'updated'));
 
           // act
           await database.update(database.mascots).replace(updatedMascotModel);
@@ -240,11 +241,10 @@ void main() {
           // arrange
           await classUnderTest.addMascot(mascotModel);
           var stream = classUnderTest.streamMascot(context.data.mascot.id);
-          var updatedExpressionModel = context
-              .data.mapExpressionToExpressionModel
-              .map(context.data.mascot.expressions.first
+          var updatedExpressionModel = context.data.driftExpressionMapper
+              .fromExpression(context.data.mascot.expressions.first
                   .copyWith(name: 'updated'));
-          var updatedMascotModel = context.data.mapMascotToMascotModel.map(
+          var updatedMascotModel = context.data.driftMascotMapper.fromMascot(
             context.data.mascot.copyWith(
               expressions: {
                 updatedExpressionModel,
@@ -273,7 +273,7 @@ void main() {
           // arrange
           await classUnderTest.addMascot(mascotModel);
           var stream = classUnderTest.streamMascot(context.data.mascot.id);
-          var updatedMascotModel = context.data.mapMascotToMascotModel.map(
+          var updatedMascotModel = context.data.driftMascotMapper.fromMascot(
             context.data.mascot.copyWith(
               expressions: {
                 context.data.mascot.expressions.last,
@@ -306,7 +306,7 @@ void main() {
             name: 'new expression',
             description: 'new expression',
           );
-          var updatedMascotModel = context.data.mapMascotToMascotModel.map(
+          var updatedMascotModel = context.data.driftMascotMapper.fromMascot(
             context.data.mascot.copyWith(
               expressions: {
                 ...context.data.mascot.expressions,
@@ -317,7 +317,7 @@ void main() {
 
           // act
           await database.into(database.expressions).insert(
-                context.data.mapExpressionToExpressionModel.map(
+                context.data.driftExpressionMapper.fromExpression(
                   newExpression,
                 ),
               );
@@ -346,7 +346,7 @@ void main() {
           // arrange
           await classUnderTest.addMascot(mascotModel);
           var stream = classUnderTest.streamMascot(context.data.mascot.id);
-          var updatedMascotModel = context.data.mapMascotToMascotModel.map(
+          var updatedMascotModel = context.data.driftMascotMapper.fromMascot(
             context.data.mascot.copyWith(
               expressions: {
                 context.data.mascot.expressions.last,

@@ -14,13 +14,13 @@ void main() {
   late MascotsRepositoryImpl repository;
 
   DriftMascot getMascotModel() =>
-      context.data.mapMascotToMascotModel.map(context.data.mascot);
+      context.data.driftMascotMapper.fromMascot(context.data.mascot);
 
   setUp(() {
     context = TestContext();
     repository = MascotsRepositoryImpl(
       context.mocks.mascotsLocalDataSource,
-      context.data.mapMascotToMascotModel,
+      context.data.driftMascotMapper,
     );
 
     when(context.mocks.mascotsLocalDataSource.getMascot(any))
@@ -39,7 +39,7 @@ void main() {
           // assert
           expect(
             mascot,
-            context.data.mapMascotToMascotModel.reverse(getMascotModel()),
+            context.data.driftMascotMapper.toMascot(getMascotModel()),
           );
 
           verify(context.mocks.mascotsLocalDataSource
@@ -134,7 +134,7 @@ void main() {
         expect(
           subject,
           emitsInOrder([
-            context.data.mapMascotToMascotModel.reverse(getMascotModel()),
+            context.data.driftMascotMapper.toMascot(getMascotModel()),
           ]),
         );
         verify(
