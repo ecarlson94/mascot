@@ -3,7 +3,15 @@ FROM cirrusci/flutter
 RUN sudo apt-get update \
     && sudo apt-get upgrade -y \
     && export DEBIAN_FRONTEND=noninteractive \
-    && sudo apt-get install --yes --no-install-recommends lcov wget clang cmake ninja-build pkg-config libgtk-3-dev
+    && sudo apt-get install --yes --no-install-recommends lcov wget clang cmake ninja-build pkg-config libgtk-3-dev \
+    && sudo apt-get install -y curl unzip git xvfb libxi6 libgconf-2-4 \
+    && curl -sSL https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o chrome.deb \
+    && dpkg -i chrome.deb || apt-get install -yf \
+    && rm chrome.deb
+
+ENV CHROME_BIN=/usr/bin/google-chrome-stable
+ENV CHROME_PATH=/usr/bin/google-chrome-stable
+ENV DISPLAY=:99
 
 # Install AWS CLI
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
