@@ -8,23 +8,23 @@ import '../../../../core/error/failure.dart';
 import '../../domain/entities/mascot.dart';
 import '../../domain/repositories/mascots_repository.dart';
 import '../datasources/drift/mascots_drift_data_source.dart';
-import '../datasources/drift/models/map_mascot_to_drift_mascot.dart';
+import '../datasources/drift/models/drift_mascot_mapper.dart';
 
 @Injectable(as: MascotsRepository)
 class MascotsRepositoryImpl implements MascotsRepository {
   final MascotsDriftDataSource _localDataSource;
-  final MapMascotToDriftMascot _mapMascotToMascotModel;
+  final DriftMascotMapper _driftMascotMapper;
 
   MascotsRepositoryImpl(
     this._localDataSource,
-    this._mapMascotToMascotModel,
+    this._driftMascotMapper,
   );
 
   @override
   FailureOrMascotFuture getMascot(Id id) async {
     try {
       var mascotModel = await _localDataSource.getMascot(id);
-      return Right(_mapMascotToMascotModel.reverse(mascotModel));
+      return Right(_driftMascotMapper.toMascot(mascotModel));
     } on Exception {
       return Left(LocalDataSourceFailure());
     }
@@ -34,7 +34,7 @@ class MascotsRepositoryImpl implements MascotsRepository {
   FailureOrIdFuture addMascot(Mascot mascot) async {
     try {
       var id = await _localDataSource.addMascot(
-        _mapMascotToMascotModel.map(mascot),
+        _driftMascotMapper.fromMascot(mascot),
       );
 
       return Right(id);
@@ -46,14 +46,15 @@ class MascotsRepositoryImpl implements MascotsRepository {
   @override
   FailureOrMascotSubjectFuture streamMascot(Id id) async {
     try {
-      var mascot = await _localDataSource.getMascot(id);
+      var mascotModel = await _localDataSource.getMascot(id);
       var mascotBehaviorSubject = BehaviorSubject<Mascot>.seeded(
-          _mapMascotToMascotModel.reverse(mascot));
+        _driftMascotMapper.toMascot(mascotModel),
+      );
 
       var mascotStream = _localDataSource.streamMascot(id);
       mascotStream.listen((event) async {
         mascotBehaviorSubject.add(
-          _mapMascotToMascotModel.reverse(event ?? mascot),
+          _driftMascotMapper.toMascot(event ?? mascotModel),
         );
       });
 

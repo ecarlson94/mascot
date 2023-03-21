@@ -10,11 +10,11 @@ import 'package:injectable/injectable.dart' as _i2;
 import 'package:mascot/core/data/drift/mascot_database.dart' as _i6;
 import 'package:mascot/features/expressions/data/datasources/drift/expressions_drift_data_source.dart'
     as _i11;
-import 'package:mascot/features/expressions/data/datasources/drift/models/map_expression_to_drift_expression.dart'
+import 'package:mascot/features/expressions/data/datasources/drift/models/drift_expression_mapper.dart'
     as _i3;
 import 'package:mascot/features/mascot/data/datasources/drift/mascots_drift_data_source.dart'
     as _i12;
-import 'package:mascot/features/mascot/data/datasources/drift/models/map_mascot_to_drift_mascot.dart'
+import 'package:mascot/features/mascot/data/datasources/drift/models/drift_mascot_mapper.dart'
     as _i4;
 import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl.dart'
     as _i14;
@@ -29,7 +29,7 @@ import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart
     as _i18;
 import 'package:mascot/features/mascot/presentation/bloc/mascot_animator_bloc.dart'
     as _i20;
-import 'package:mascot/features/settings/data/datasources/drift/models/map_settings_to_drift_settings.dart'
+import 'package:mascot/features/settings/data/datasources/drift/models/drift_settings_mapper.dart'
     as _i5;
 import 'package:mascot/features/settings/data/datasources/drift/settings_drift_data_source.dart'
     as _i7;
@@ -55,18 +55,17 @@ _i1.GetIt $init(
     environment,
     environmentFilter,
   );
-  gh.factory<_i3.MapExpressionToDriftExpression>(
-      () => _i3.MapExpressionToDriftExpression());
-  gh.factory<_i4.MapMascotToDriftMascot>(() =>
-      _i4.MapMascotToDriftMascot(gh<_i3.MapExpressionToDriftExpression>()));
-  gh.factory<_i5.MapSettingsToDriftSettings>(
-      () => _i5.MapSettingsToDriftSettings());
+  gh.lazySingleton<_i3.DriftExpressionMapper>(
+      () => _i3.DriftExpressionMapperImpl());
+  gh.lazySingleton<_i4.DriftMascotMapper>(() => _i4.DriftMascotMapperImpl());
+  gh.lazySingleton<_i5.DriftSettingsMapper>(
+      () => _i5.DriftSettingsMapperImpl());
   gh.singleton<_i6.MascotDatabase>(_i6.MascotDatabase());
   gh.factory<_i7.SettingsDriftDataSource>(
       () => _i7.SettingsDriftDataSourceImpl(gh<_i6.MascotDatabase>()));
   gh.factory<_i8.SettingsRepository>(() => _i9.SettingsRepositoryImpl(
         gh<_i7.SettingsDriftDataSource>(),
-        gh<_i5.MapSettingsToDriftSettings>(),
+        gh<_i5.DriftSettingsMapper>(),
       ));
   gh.factory<_i10.StreamSettings>(
       () => _i10.StreamSettings(gh<_i8.SettingsRepository>()));
@@ -78,7 +77,7 @@ _i1.GetIt $init(
       ));
   gh.factory<_i13.MascotsRepository>(() => _i14.MascotsRepositoryImpl(
         gh<_i12.MascotsDriftDataSource>(),
-        gh<_i4.MapMascotToDriftMascot>(),
+        gh<_i4.DriftMascotMapper>(),
       ));
   gh.factory<_i15.SaveMascot>(() => _i15.SaveMascot(
         gh<_i13.MascotsRepository>(),

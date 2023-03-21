@@ -17,7 +17,7 @@ void main() {
     database = context.database;
     classUnderTest = SettingsDriftDataSourceImpl(database);
 
-    settingsModel = context.data.mapSettingsToSettingsModel.map(
+    settingsModel = context.data.driftSettingsMapper.fromSettings(
       context.data.settings,
     );
   });

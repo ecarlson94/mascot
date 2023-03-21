@@ -6,22 +6,24 @@ import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/error/failure.dart';
 import '../../domain/entities/settings.dart';
 import '../../domain/repositories/settings_repository.dart';
-import '../datasources/drift/models/map_settings_to_drift_settings.dart';
+import '../datasources/drift/models/drift_settings_mapper.dart';
 import '../datasources/drift/settings_drift_data_source.dart';
 
 @Injectable(as: SettingsRepository)
 class SettingsRepositoryImpl extends SettingsRepository {
   final SettingsDriftDataSource _localDataSource;
-  final MapSettingsToDriftSettings _mapSettingsToSettingsModel;
+  final DriftSettingsMapper _driftSettingsMapper;
 
   SettingsRepositoryImpl(
-      this._localDataSource, this._mapSettingsToSettingsModel);
+    this._localDataSource,
+    this._driftSettingsMapper,
+  );
 
   @override
   FailureOrSettingsFuture loadSettings() async {
     try {
       var settingsModel = await _localDataSource.loadSettings();
-      return Right(_mapSettingsToSettingsModel.reverse(settingsModel));
+      return Right(_driftSettingsMapper.toSettings(settingsModel));
     } on Exception {
       return Left(LocalDataSourceFailure());
     }
@@ -32,13 +34,13 @@ class SettingsRepositoryImpl extends SettingsRepository {
     try {
       var settingsModel = await _localDataSource.loadSettings();
       var settingsBehaviorSubject = BehaviorSubject<Settings>.seeded(
-        _mapSettingsToSettingsModel.reverse(settingsModel),
+        _driftSettingsMapper.toSettings(settingsModel),
       );
 
       var settingsStream = _localDataSource.streamSettings();
       settingsStream.listen((event) async {
         settingsBehaviorSubject.add(
-          _mapSettingsToSettingsModel.reverse(event ?? settingsModel),
+          _driftSettingsMapper.toSettings(event ?? settingsModel),
         );
       });
 
@@ -56,7 +58,7 @@ class SettingsRepositoryImpl extends SettingsRepository {
 
       return Right(
         await _localDataSource.saveSettings(
-          _mapSettingsToSettingsModel.map(updatedSettings),
+          _driftSettingsMapper.fromSettings(updatedSettings),
         ),
       );
     } on Exception {
