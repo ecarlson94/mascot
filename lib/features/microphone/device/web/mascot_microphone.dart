@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:developer' as developer;
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -47,11 +49,17 @@ class MascotMicrophone {
         'audio': true,
       });
     } catch (e) {
+      var message = 'Error getting microphone stream:';
       if (e is DomException && e.name == 'NotAllowedError') {
-        print('Microphone permission denied');
-      } else {
-        print('Error getting microphone stream: $e');
+        message = 'Microphone permission denied:';
       }
+
+      developer.log(
+        message,
+        name: 'MascotMicrophone',
+        error: jsonEncode(e),
+      );
+
       if (throwOnError) rethrow;
     }
 
