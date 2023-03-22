@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:drift/drift.dart';
+import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -21,10 +22,11 @@ abstract class MascotsDriftDataSource {
   Stream<DriftMascot?> streamMascot(Id id);
 }
 
-@Injectable(as: MascotsDriftDataSource)
-class MascotsDriftDataSourceImpl implements MascotsDriftDataSource {
+@LazySingleton(as: MascotsDriftDataSource)
+class MascotsDriftDataSourceImpl implements MascotsDriftDataSource, Disposable {
   final MascotDatabase _database;
   final ExpressionsDriftDataSource _expressions;
+  final List<StreamSubscription> _subscriptions = List.empty(growable: true);
 
   MascotsDriftDataSourceImpl(this._database, this._expressions);
 
@@ -51,7 +53,7 @@ class MascotsDriftDataSourceImpl implements MascotsDriftDataSource {
     final mascotStream = (_database.select(_database.mascots)
           ..where((m) => m.id.equals(id)))
         .watchSingle();
-    mascotStream.listen(
+    var mascotSub = mascotStream.listen(
       (mascot) async => subject.add(
         await _getDriftMascotForMascot(() => mascot),
       ),
@@ -59,7 +61,7 @@ class MascotsDriftDataSourceImpl implements MascotsDriftDataSource {
 
     // listen to stream of expressions
     final expressionsStream = _queryExpressionsForMascot(id).watch();
-    expressionsStream.listen((e) async {
+    var expressionSub = expressionsStream.listen((e) async {
       final mascot = await _getMascot(id);
       subject.add(DriftMascot(
         id: mascot.id,
@@ -67,6 +69,8 @@ class MascotsDriftDataSourceImpl implements MascotsDriftDataSource {
         expressions: e.toSet(),
       ));
     });
+
+    _subscriptions.addAll([mascotSub, expressionSub]);
 
     return subject;
   }
@@ -126,5 +130,12 @@ class MascotsDriftDataSourceImpl implements MascotsDriftDataSource {
         ),
       ),
     );
+  }
+
+  @override
+  FutureOr onDispose() {
+    for (var sub in _subscriptions) {
+      sub.cancel();
+    }
   }
 }

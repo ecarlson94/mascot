@@ -21,7 +21,7 @@ abstract class ExpressionsDriftDataSource {
   Stream<List<DriftExpression>> streamExpressions(Iterable<Id> ids);
 }
 
-@Injectable(as: ExpressionsDriftDataSource)
+@LazySingleton(as: ExpressionsDriftDataSource)
 class ExpressionsDriftDataSourceImpl implements ExpressionsDriftDataSource {
   final MascotDatabase _database;
 

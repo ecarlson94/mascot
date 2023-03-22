@@ -17,7 +17,7 @@ abstract class SettingsDriftDataSource {
   Future<Unit> saveSettings(DriftSettings settings);
 }
 
-@Injectable(as: SettingsDriftDataSource)
+@LazySingleton(as: SettingsDriftDataSource)
 class SettingsDriftDataSourceImpl implements SettingsDriftDataSource {
   final MascotDatabase _database;
 
