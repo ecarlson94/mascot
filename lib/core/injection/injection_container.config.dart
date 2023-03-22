@@ -68,8 +68,7 @@ _i1.GetIt $init(
   gh.lazySingleton<_i6.DriftSettingsMapper>(
       () => _i6.DriftSettingsMapperImpl());
   gh.singleton<_i7.MascotDatabase>(_i7.MascotDatabase());
-  gh.lazySingleton<_i8.MascotMicrophone>(
-      () => _i8.MascotMicrophone(gh<_i3.AudioContext>()));
+  gh.factory<_i8.MascotMicrophoneLogger>(() => _i8.MascotMicrophoneLogger());
   gh.lazySingleton<_i9.SettingsDriftDataSource>(
       () => _i9.SettingsDriftDataSourceImpl(gh<_i7.MascotDatabase>()));
   gh.factory<_i10.SettingsRepository>(() => _i11.SettingsRepositoryImpl(
@@ -80,6 +79,10 @@ _i1.GetIt $init(
       () => _i12.StreamSettings(gh<_i10.SettingsRepository>()));
   gh.lazySingleton<_i13.ExpressionsDriftDataSource>(
       () => _i13.ExpressionsDriftDataSourceImpl(gh<_i7.MascotDatabase>()));
+  gh.lazySingleton<_i8.MascotMicrophone>(() => _i8.MascotMicrophone(
+        gh<_i3.AudioContext>(),
+        gh<_i8.MascotMicrophoneLogger>(),
+      ));
   gh.lazySingleton<_i14.MascotsDriftDataSource>(
       () => _i14.MascotsDriftDataSourceImpl(
             gh<_i7.MascotDatabase>(),

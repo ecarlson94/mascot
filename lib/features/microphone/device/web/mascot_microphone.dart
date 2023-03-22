@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:developer' as developer;
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -8,12 +6,17 @@ import 'package:injectable/injectable.dart';
 import 'package:universal_html/html.dart';
 
 import '../../../../core/device/web/js_interop/web_audio_js.dart';
+import '../../../../core/utils/logger.dart';
+
+@injectable
+class MascotMicrophoneLogger extends Logger<MascotMicrophone> {}
 
 @LazySingleton()
 class MascotMicrophone {
   final AudioContext _audioContext;
+  final MascotMicrophoneLogger _logger;
 
-  MascotMicrophone(this._audioContext);
+  MascotMicrophone(this._audioContext, this._logger);
 
   Future<bool> hasPermission() async {
     await _setStream();
@@ -54,17 +57,18 @@ class MascotMicrophone {
         message = 'Microphone permission denied:';
       }
 
-      developer.log(
+      _logger.logError(
         message,
-        name: 'MascotMicrophone',
-        error: jsonEncode(e),
+        e,
       );
 
       if (throwOnError) rethrow;
     }
 
     if (throwOnError && _stream == null) {
-      throw Exception('Failed to get microphone stream');
+      var e = Exception('Failed to get microphone stream');
+      _logger.logError(e.toString(), e);
+      throw e;
     }
   }
 
