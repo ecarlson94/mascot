@@ -30,7 +30,7 @@ import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart
     as _i20;
 import 'package:mascot/features/mascot/presentation/bloc/mascot_animator_bloc.dart'
     as _i22;
-import 'package:mascot/features/microphone/device/web/mascot_microphone.dart'
+import 'package:mascot/features/microphone/device/web/web_microphone_impl.dart'
     as _i8;
 import 'package:mascot/features/settings/data/datasources/drift/models/drift_settings_mapper.dart'
     as _i6;
@@ -77,12 +77,12 @@ _i1.GetIt $init(
       ));
   gh.factory<_i12.StreamSettings>(
       () => _i12.StreamSettings(gh<_i10.SettingsRepository>()));
-  gh.lazySingleton<_i13.ExpressionsDriftDataSource>(
-      () => _i13.ExpressionsDriftDataSourceImpl(gh<_i7.MascotDatabase>()));
-  gh.lazySingleton<_i8.MascotMicrophone>(() => _i8.MascotMicrophone(
+  gh.lazySingleton<_i8.WebMicrophone>(() => _i8.WebMicrophoneImpl(
         gh<_i3.AudioContext>(),
         gh<_i8.MascotMicrophoneLogger>(),
       ));
+  gh.lazySingleton<_i13.ExpressionsDriftDataSource>(
+      () => _i13.ExpressionsDriftDataSourceImpl(gh<_i7.MascotDatabase>()));
   gh.lazySingleton<_i14.MascotsDriftDataSource>(
       () => _i14.MascotsDriftDataSourceImpl(
             gh<_i7.MascotDatabase>(),

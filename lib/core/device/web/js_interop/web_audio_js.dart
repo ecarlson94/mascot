@@ -62,7 +62,7 @@ class AudioNodeOptions {
 
 @JS()
 @staticInterop
-class AudioNode extends EventTarget {
+class AudioNode {
   external factory AudioNode([AudioNodeOptions options]);
 }
 
