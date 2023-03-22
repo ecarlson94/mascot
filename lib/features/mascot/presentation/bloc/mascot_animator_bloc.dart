@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../../../core/data/stream_subscriber.dart';
 import '../../../../core/error/error.dart';
 import '../../../../core/utils/constants.dart';
 import '../../../expressions/domain/entities/expression.dart';
@@ -13,8 +14,9 @@ part 'mascot_animator_event.dart';
 part 'mascot_animator_state.dart';
 
 @injectable
-class MascotAnimatorBloc
-    extends Bloc<MascotAnimatorEvent, MascotAnimatorState> {
+class MascotAnimatorBloc extends Bloc<MascotAnimatorEvent, MascotAnimatorState>
+    with SubscriptionDisposer
+    implements StreamSubcriber {
   final StreamMascot streamMascot;
 
   MascotAnimatorBloc(this.streamMascot)
@@ -38,13 +40,11 @@ class MascotAnimatorBloc
               state.expression,
             ),
           ),
-          (stream) {
+          (stream) => subscriptions.add(
             stream.listen(
-              (value) {
-                add(SetMascot(value));
-              },
-            );
-          },
+              (value) => add(SetMascot(value)),
+            ),
+          ),
         );
       } else if (event is SetMascot) {
         var expressionMap = {for (var e in event.mascot.expressions) e.name: e};

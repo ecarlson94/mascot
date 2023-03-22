@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:drift/drift.dart';
-import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../../../core/clean_architecture/entity.dart';
 import '../../../../../core/data/drift/mascot_database.dart';
+import '../../../../../core/data/stream_subscriber.dart';
 import '../../../../expressions/data/datasources/drift/expressions_drift_data_source.dart';
 import '../../../../expressions/data/datasources/drift/models/drift_expression.dart';
 import 'models/drift_mascot.dart';
@@ -23,10 +23,10 @@ abstract class MascotsDriftDataSource {
 }
 
 @LazySingleton(as: MascotsDriftDataSource)
-class MascotsDriftDataSourceImpl implements MascotsDriftDataSource, Disposable {
+class MascotsDriftDataSourceImpl extends StreamSubcriber
+    implements MascotsDriftDataSource {
   final MascotDatabase _database;
   final ExpressionsDriftDataSource _expressions;
-  final List<StreamSubscription> _subscriptions = List.empty(growable: true);
 
   MascotsDriftDataSourceImpl(this._database, this._expressions);
 
@@ -70,7 +70,7 @@ class MascotsDriftDataSourceImpl implements MascotsDriftDataSource, Disposable {
       ));
     });
 
-    _subscriptions.addAll([mascotSub, expressionSub]);
+    subscriptions.addAll([mascotSub, expressionSub]);
 
     return subject;
   }
@@ -130,12 +130,5 @@ class MascotsDriftDataSourceImpl implements MascotsDriftDataSource, Disposable {
         ),
       ),
     );
-  }
-
-  @override
-  FutureOr onDispose() {
-    for (var sub in _subscriptions) {
-      sub.cancel();
-    }
   }
 }
