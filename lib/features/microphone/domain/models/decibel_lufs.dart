@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-class Volume extends Equatable {
+class DecibelLufs extends Equatable {
   final double value;
 
-  const Volume({required this.value});
+  const DecibelLufs(this.value);
 
   @override
   List<Object> get props => [value];

@@ -20,6 +20,7 @@ void main() {
     repository = SettingsRepositoryImpl(
       context.mocks.settingsLocalDataSource,
       context.data.driftSettingsMapper,
+      context.mocks.getLogger(),
     );
   });
 

@@ -7,45 +7,52 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
-import 'package:mascot/core/data/drift/mascot_database.dart' as _i7;
-import 'package:mascot/core/device/web/js_interop/web_audio_js.dart' as _i3;
+import 'package:mascot/core/data/drift/mascot_database.dart' as _i10;
+import 'package:mascot/core/device/web/audio_context.dart' as _i14;
+import 'package:mascot/core/utils/logger.dart' as _i6;
 import 'package:mascot/features/expressions/data/datasources/drift/expressions_drift_data_source.dart'
-    as _i13;
-import 'package:mascot/features/expressions/data/datasources/drift/models/drift_expression_mapper.dart'
-    as _i4;
-import 'package:mascot/features/mascot/data/datasources/drift/mascots_drift_data_source.dart'
-    as _i14;
-import 'package:mascot/features/mascot/data/datasources/drift/models/drift_mascot_mapper.dart'
-    as _i5;
-import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl.dart'
-    as _i16;
-import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart'
     as _i15;
-import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart' as _i21;
-import 'package:mascot/features/mascot/domain/usecases/save_mascot.dart'
-    as _i17;
-import 'package:mascot/features/mascot/domain/usecases/stream_mascot.dart'
-    as _i19;
-import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart'
-    as _i20;
-import 'package:mascot/features/mascot/presentation/bloc/mascot_animator_bloc.dart'
-    as _i22;
-import 'package:mascot/features/microphone/device/web/web_microphone_impl.dart'
+import 'package:mascot/features/expressions/data/datasources/drift/models/drift_expression_mapper.dart'
+    as _i3;
+import 'package:mascot/features/mascot/data/datasources/drift/mascots_drift_data_source.dart'
+    as _i16;
+import 'package:mascot/features/mascot/data/datasources/drift/models/drift_mascot_mapper.dart'
+    as _i4;
+import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl.dart'
     as _i8;
-import 'package:mascot/features/settings/data/datasources/drift/models/drift_settings_mapper.dart'
-    as _i6;
-import 'package:mascot/features/settings/data/datasources/drift/settings_drift_data_source.dart'
+import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart'
+    as _i17;
+import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart' as _i25;
+import 'package:mascot/features/mascot/domain/usecases/save_mascot.dart'
+    as _i20;
+import 'package:mascot/features/mascot/domain/usecases/stream_mascot.dart'
+    as _i22;
+import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart'
+    as _i24;
+import 'package:mascot/features/mascot/presentation/bloc/mascot_animator_bloc.dart'
+    as _i26;
+import 'package:mascot/features/microphone/device/services/microphone_service_impl.dart'
+    as _i19;
+import 'package:mascot/features/microphone/device/web/web_microphone_impl.dart'
     as _i9;
-import 'package:mascot/features/settings/data/repositories/settings_repository_impl.dart'
-    as _i11;
-import 'package:mascot/features/settings/domain/repositories/settings_repository.dart'
-    as _i10;
-import 'package:mascot/features/settings/domain/usecases/stream_settings.dart'
-    as _i12;
-import 'package:mascot/features/settings/presentation/bloc/settings_bloc.dart'
+import 'package:mascot/features/microphone/domain/services/microphone_service.dart'
     as _i18;
-
-import '../device/web/audio_context.dart' as _i23;
+import 'package:mascot/features/microphone/domain/usecases/stream_microphone_volume.dart'
+    as _i23;
+import 'package:mascot/features/microphone/presentation/bloc/microphone_volume_bloc.dart'
+    as _i27;
+import 'package:mascot/features/settings/data/datasources/drift/models/drift_settings_mapper.dart'
+    as _i5;
+import 'package:mascot/features/settings/data/datasources/drift/settings_drift_data_source.dart'
+    as _i11;
+import 'package:mascot/features/settings/data/repositories/settings_repository_impl.dart'
+    as _i7;
+import 'package:mascot/features/settings/domain/repositories/settings_repository.dart'
+    as _i12;
+import 'package:mascot/features/settings/domain/usecases/stream_settings.dart'
+    as _i13;
+import 'package:mascot/features/settings/presentation/bloc/settings_bloc.dart'
+    as _i21;
 
 // ignore_for_file: unnecessary_lambdas
 // ignore_for_file: lines_longer_than_80_chars
@@ -60,53 +67,66 @@ _i1.GetIt $init(
     environment,
     environmentFilter,
   );
-  final audioContextModule = _$AudioContextModule();
-  gh.lazySingleton<_i3.AudioContext>(() => audioContextModule.audioContext);
-  gh.lazySingleton<_i4.DriftExpressionMapper>(
-      () => _i4.DriftExpressionMapperImpl());
-  gh.lazySingleton<_i5.DriftMascotMapper>(() => _i5.DriftMascotMapperImpl());
-  gh.lazySingleton<_i6.DriftSettingsMapper>(
-      () => _i6.DriftSettingsMapperImpl());
-  gh.singleton<_i7.MascotDatabase>(_i7.MascotDatabase());
-  gh.factory<_i8.MascotMicrophoneLogger>(() => _i8.MascotMicrophoneLogger());
-  gh.lazySingleton<_i9.SettingsDriftDataSource>(
-      () => _i9.SettingsDriftDataSourceImpl(gh<_i7.MascotDatabase>()));
-  gh.factory<_i10.SettingsRepository>(() => _i11.SettingsRepositoryImpl(
-        gh<_i9.SettingsDriftDataSource>(),
-        gh<_i6.DriftSettingsMapper>(),
+  gh.lazySingleton<_i3.DriftExpressionMapper>(
+      () => _i3.DriftExpressionMapperImpl());
+  gh.lazySingleton<_i4.DriftMascotMapper>(() => _i4.DriftMascotMapperImpl());
+  gh.lazySingleton<_i5.DriftSettingsMapper>(
+      () => _i5.DriftSettingsMapperImpl());
+  gh.factory<_i6.Logger<_i7.SettingsRepositoryImpl>>(
+      () => _i7.SettingsRepositoryLogger());
+  gh.factory<_i6.Logger<_i8.MascotsRepositoryImpl>>(
+      () => _i8.MascotRepositoryLogger());
+  gh.factory<_i6.Logger<_i9.WebMicrophoneImpl>>(
+      () => _i9.MascotMicrophoneLogger());
+  gh.singleton<_i10.MascotDatabase>(_i10.MascotDatabase());
+  gh.lazySingleton<_i11.SettingsDriftDataSource>(
+      () => _i11.SettingsDriftDataSourceImpl(gh<_i10.MascotDatabase>()));
+  gh.factory<_i12.SettingsRepository>(() => _i7.SettingsRepositoryImpl(
+        gh<_i11.SettingsDriftDataSource>(),
+        gh<_i5.DriftSettingsMapper>(),
+        gh<_i6.Logger<_i7.SettingsRepositoryImpl>>(),
       ));
-  gh.factory<_i12.StreamSettings>(
-      () => _i12.StreamSettings(gh<_i10.SettingsRepository>()));
-  gh.lazySingleton<_i8.WebMicrophone>(() => _i8.WebMicrophoneImpl(
-        gh<_i3.AudioContext>(),
-        gh<_i8.MascotMicrophoneLogger>(),
+  gh.factory<_i13.StreamSettings>(
+      () => _i13.StreamSettings(gh<_i12.SettingsRepository>()));
+  gh.lazySingleton<_i14.WebAudio>(
+    () => _i14.WebAudio(),
+    dispose: (i) => i.dispose(),
+  );
+  gh.lazySingleton<_i9.WebMicrophone>(() => _i9.WebMicrophoneImpl(
+        gh<_i14.WebAudio>(),
+        gh<_i6.Logger<_i9.WebMicrophoneImpl>>(),
       ));
-  gh.lazySingleton<_i13.ExpressionsDriftDataSource>(
-      () => _i13.ExpressionsDriftDataSourceImpl(gh<_i7.MascotDatabase>()));
-  gh.lazySingleton<_i14.MascotsDriftDataSource>(
-      () => _i14.MascotsDriftDataSourceImpl(
-            gh<_i7.MascotDatabase>(),
-            gh<_i13.ExpressionsDriftDataSource>(),
+  gh.lazySingleton<_i15.ExpressionsDriftDataSource>(
+      () => _i15.ExpressionsDriftDataSourceImpl(gh<_i10.MascotDatabase>()));
+  gh.lazySingleton<_i16.MascotsDriftDataSource>(
+      () => _i16.MascotsDriftDataSourceImpl(
+            gh<_i10.MascotDatabase>(),
+            gh<_i15.ExpressionsDriftDataSource>(),
           ));
-  gh.factory<_i15.MascotsRepository>(() => _i16.MascotsRepositoryImpl(
-        gh<_i14.MascotsDriftDataSource>(),
-        gh<_i5.DriftMascotMapper>(),
+  gh.factory<_i17.MascotsRepository>(() => _i8.MascotsRepositoryImpl(
+        gh<_i16.MascotsDriftDataSource>(),
+        gh<_i4.DriftMascotMapper>(),
+        gh<_i6.Logger<_i8.MascotsRepositoryImpl>>(),
       ));
-  gh.factory<_i17.SaveMascot>(() => _i17.SaveMascot(
-        gh<_i15.MascotsRepository>(),
-        gh<_i10.SettingsRepository>(),
+  gh.lazySingleton<_i18.MicrophoneService>(
+      () => _i19.MicrophoneServiceImpl(gh<_i9.WebMicrophone>()));
+  gh.factory<_i20.SaveMascot>(() => _i20.SaveMascot(
+        gh<_i17.MascotsRepository>(),
+        gh<_i12.SettingsRepository>(),
       ));
-  gh.factory<_i18.SettingsBloc>(
-      () => _i18.SettingsBloc(gh<_i12.StreamSettings>()));
-  gh.factory<_i19.StreamMascot>(
-      () => _i19.StreamMascot(gh<_i15.MascotsRepository>()));
-  gh.factory<_i20.CreateMascotBloc>(
-      () => _i20.CreateMascotBloc(gh<_i17.SaveMascot>()));
-  gh.factory<_i21.GetMascot>(
-      () => _i21.GetMascot(gh<_i15.MascotsRepository>()));
-  gh.factory<_i22.MascotAnimatorBloc>(
-      () => _i22.MascotAnimatorBloc(gh<_i19.StreamMascot>()));
+  gh.factory<_i21.SettingsBloc>(
+      () => _i21.SettingsBloc(gh<_i13.StreamSettings>()));
+  gh.factory<_i22.StreamMascot>(
+      () => _i22.StreamMascot(gh<_i17.MascotsRepository>()));
+  gh.factory<_i23.StreamMicrophoneVolume>(
+      () => _i23.StreamMicrophoneVolume(gh<_i18.MicrophoneService>()));
+  gh.factory<_i24.CreateMascotBloc>(
+      () => _i24.CreateMascotBloc(gh<_i20.SaveMascot>()));
+  gh.factory<_i25.GetMascot>(
+      () => _i25.GetMascot(gh<_i17.MascotsRepository>()));
+  gh.factory<_i26.MascotAnimatorBloc>(
+      () => _i26.MascotAnimatorBloc(gh<_i22.StreamMascot>()));
+  gh.factory<_i27.MicrophoneVolumeBloc>(
+      () => _i27.MicrophoneVolumeBloc(gh<_i23.StreamMicrophoneVolume>()));
   return getIt;
 }
-
-class _$AudioContextModule extends _i23.AudioContextModule {}

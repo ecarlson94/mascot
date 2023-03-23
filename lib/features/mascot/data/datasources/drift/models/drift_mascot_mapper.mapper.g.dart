@@ -25,7 +25,7 @@ class DriftMascotMapperImpl extends DriftMascotMapper {
     final mascot = Mascot(
       id: driftMascot.id,
       name: driftMascot.name,
-      expressions: driftMascot.expressions.map((e) => e).toSet(),
+      expressions: driftMascot.expressions.map((e) => toExpression(e)).toSet(),
     );
     return mascot;
   }

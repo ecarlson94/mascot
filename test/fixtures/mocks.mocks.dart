@@ -8,6 +8,7 @@ import 'dart:async' as _i8;
 import 'package:dartz/dartz.dart' as _i3;
 import 'package:mascot/core/clean_architecture/usecase.dart' as _i19;
 import 'package:mascot/core/error/failure.dart' as _i12;
+import 'package:mascot/core/utils/logger.dart' as _i21;
 import 'package:mascot/features/expressions/data/datasources/drift/expressions_drift_data_source.dart'
     as _i7;
 import 'package:mascot/features/expressions/data/datasources/drift/models/drift_expression.dart'
@@ -506,4 +507,47 @@ class MockStreamMascot extends _i1.Mock implements _i20.StreamMascot {
         )),
       ) as _i8
           .Future<_i3.Either<_i12.Failure, _i14.BehaviorSubject<_i13.Mascot>>>);
+}
+
+/// A class which mocks [Logger].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockLogger<T> extends _i1.Mock implements _i21.Logger<T> {
+  MockLogger() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  void log(String? message) => super.noSuchMethod(
+        Invocation.method(
+          #log,
+          [message],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void logError(
+    String? message, [
+    Object? error,
+    StackTrace? stackTrace,
+  ]) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #logError,
+          [
+            message,
+            error,
+            stackTrace,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void logWarning(String? message) => super.noSuchMethod(
+        Invocation.method(
+          #logWarning,
+          [message],
+        ),
+        returnValueForMissingStub: null,
+      );
 }

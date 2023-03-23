@@ -30,6 +30,7 @@ extension AudioContextExtension on AudioContext {
   external AnalyzerNode createAnalyser();
 
   external void close();
+  external void resume();
 }
 
 @JS()

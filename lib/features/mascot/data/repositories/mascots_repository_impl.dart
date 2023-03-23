@@ -5,19 +5,25 @@ import 'package:rxdart/rxdart.dart';
 import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/data/failure_or_id_future.dart';
 import '../../../../core/error/failure.dart';
+import '../../../../core/utils/logger.dart';
 import '../../domain/entities/mascot.dart';
 import '../../domain/repositories/mascots_repository.dart';
 import '../datasources/drift/mascots_drift_data_source.dart';
 import '../datasources/drift/models/drift_mascot_mapper.dart';
 
+@Injectable(as: Logger<MascotsRepositoryImpl>)
+class MascotRepositoryLogger extends Logger<MascotsRepositoryImpl> {}
+
 @Injectable(as: MascotsRepository)
 class MascotsRepositoryImpl implements MascotsRepository {
   final MascotsDriftDataSource _localDataSource;
   final DriftMascotMapper _driftMascotMapper;
+  final Logger<MascotsRepositoryImpl> _logger;
 
   MascotsRepositoryImpl(
     this._localDataSource,
     this._driftMascotMapper,
+    this._logger,
   );
 
   @override
@@ -25,7 +31,8 @@ class MascotsRepositoryImpl implements MascotsRepository {
     try {
       var mascotModel = await _localDataSource.getMascot(id);
       return Right(_driftMascotMapper.toMascot(mascotModel));
-    } on Exception {
+    } catch (e) {
+      _logger.logError('Failed to get mascot with id: $id', e);
       return Left(LocalDataSourceFailure());
     }
   }
@@ -38,7 +45,8 @@ class MascotsRepositoryImpl implements MascotsRepository {
       );
 
       return Right(id);
-    } on Exception {
+    } catch (e) {
+      _logger.logError('Failed to add mascot', e);
       return Left(LocalDataSourceFailure());
     }
   }
@@ -59,7 +67,8 @@ class MascotsRepositoryImpl implements MascotsRepository {
       });
 
       return Right(mascotBehaviorSubject);
-    } on Exception {
+    } catch (e) {
+      _logger.logError('Failed to stream mascot with id: $id', e);
       return Left(
         LocalDataSourceFailure(),
       );

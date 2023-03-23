@@ -21,6 +21,7 @@ void main() {
     repository = MascotsRepositoryImpl(
       context.mocks.mascotsLocalDataSource,
       context.data.driftMascotMapper,
+      context.mocks.getLogger(),
     );
 
     when(context.mocks.mascotsLocalDataSource.getMascot(any))

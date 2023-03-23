@@ -1,5 +1,7 @@
+import 'package:mascot/core/utils/logger.dart';
 import 'package:mascot/features/expressions/data/datasources/drift/expressions_drift_data_source.dart';
 import 'package:mascot/features/mascot/data/datasources/drift/mascots_drift_data_source.dart';
+import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl.dart';
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart';
 import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart';
 import 'package:mascot/features/mascot/domain/usecases/save_mascot.dart';
@@ -21,6 +23,7 @@ import 'mocks.mocks.dart';
   SettingsRepository,
   StreamSettings,
   StreamMascot,
+  Logger<MascotsRepositoryImpl>,
 ])
 class Mocks {
   MockExpressionsDriftDataSource? _expressionsLocalDataSource;
@@ -55,4 +58,6 @@ class Mocks {
   MockSettingsDriftDataSource? _settingsLocalDataSource;
   MockSettingsDriftDataSource get settingsLocalDataSource =>
       _settingsLocalDataSource ??= MockSettingsDriftDataSource();
+
+  MockLogger<T> getLogger<T>() => MockLogger<T>();
 }
