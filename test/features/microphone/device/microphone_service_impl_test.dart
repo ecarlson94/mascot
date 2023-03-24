@@ -5,8 +5,8 @@ import 'package:mascot/features/microphone/device/services/microphone_service_im
 import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../fixtures/option.dart';
-import '../../../../fixtures/test_context.dart';
+import '../../../fixtures/option.dart';
+import '../../../fixtures/test_context.dart';
 
 void main() {
   late TestContext context;

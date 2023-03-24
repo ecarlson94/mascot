@@ -30,6 +30,8 @@ import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart'
     as _i23;
 import 'package:mascot/features/microphone/domain/services/microphone_service.dart'
     as _i22;
+import 'package:mascot/features/microphone/domain/usecases/stream_microphone_volume.dart'
+    as _i25;
 import 'package:mascot/features/settings/data/datasources/drift/models/drift_settings.dart'
     as _i2;
 import 'package:mascot/features/settings/data/datasources/drift/settings_drift_data_source.dart'
@@ -607,4 +609,33 @@ class MockMicrophone extends _i1.Mock implements _i24.Microphone {
         ),
         returnValue: _i8.Future<bool>.value(false),
       ) as _i8.Future<bool>);
+}
+
+/// A class which mocks [StreamMicrophoneVolume].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockStreamMicrophoneVolume extends _i1.Mock
+    implements _i25.StreamMicrophoneVolume {
+  MockStreamMicrophoneVolume() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i8.Future<_i3.Either<_i12.Failure, _i8.Stream<_i23.DecibelLufs>>> call(
+          _i19.NoParams? params) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [params],
+        ),
+        returnValue: _i8.Future<
+                _i3.Either<_i12.Failure, _i8.Stream<_i23.DecibelLufs>>>.value(
+            _FakeEither_3<_i12.Failure, _i8.Stream<_i23.DecibelLufs>>(
+          this,
+          Invocation.method(
+            #call,
+            [params],
+          ),
+        )),
+      ) as _i8.Future<_i3.Either<_i12.Failure, _i8.Stream<_i23.DecibelLufs>>>);
 }

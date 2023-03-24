@@ -13,6 +13,6 @@ abstract class ErrorCodes {
   static const int getMascotFailureCode = 104;
   static const int loadSettingsFailureCode = 105;
   static const int loadMascotFailureCode = 106;
-  static const int noMicrophonePermissionFailueCode = 200;
+  static const int noMicrophonePermissionFailureCode = 200;
   static const int microphoneFailureCode = 201;
 }

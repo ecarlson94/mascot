@@ -8,6 +8,7 @@ import 'package:mascot/features/mascot/domain/usecases/save_mascot.dart';
 import 'package:mascot/features/mascot/domain/usecases/stream_mascot.dart';
 import 'package:mascot/features/microphone/device/microphone.dart';
 import 'package:mascot/features/microphone/domain/services/microphone_service.dart';
+import 'package:mascot/features/microphone/domain/usecases/stream_microphone_volume.dart';
 import 'package:mascot/features/settings/data/datasources/drift/settings_drift_data_source.dart';
 import 'package:mascot/features/settings/domain/repositories/settings_repository.dart';
 import 'package:mascot/features/settings/domain/usecases/stream_settings.dart';
@@ -28,6 +29,7 @@ import 'mocks.mocks.dart';
   Logger<MascotsRepositoryImpl>,
   MicrophoneService,
   Microphone,
+  StreamMicrophoneVolume,
 ])
 class Mocks {
   MockExpressionsDriftDataSource? _expressionsLocalDataSource;
@@ -71,4 +73,8 @@ class Mocks {
 
   MockMicrophone? _microphone;
   MockMicrophone get microphone => _microphone ??= MockMicrophone();
+
+  MockStreamMicrophoneVolume? _streamMicrophoneVolume;
+  MockStreamMicrophoneVolume get streamMicrophoneVolume =>
+      _streamMicrophoneVolume ??= MockStreamMicrophoneVolume();
 }

@@ -42,7 +42,7 @@ class MicrophoneVolumeBloc
 
   int _mapMicFailureToErrorCode(Failure failure) {
     if (failure is NoMicrophonePermissionFailure) {
-      return ErrorCodes.noMicrophonePermissionFailueCode;
+      return ErrorCodes.noMicrophonePermissionFailureCode;
     }
     if (failure is MicrophoneFailure) return ErrorCodes.microphoneFailureCode;
     return ErrorCodes.unknownFailureCode;

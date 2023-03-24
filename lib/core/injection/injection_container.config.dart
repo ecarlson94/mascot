@@ -36,9 +36,9 @@ import 'package:mascot/features/mascot/presentation/bloc/mascot_animator_bloc.da
     as _i29;
 import 'package:mascot/features/microphone/device/microphone.dart' as _i13;
 import 'package:mascot/features/microphone/device/services/microphone_service_impl.dart'
-    as _i8;
-import 'package:mascot/features/microphone/device/web/web_microphone.dart'
     as _i9;
+import 'package:mascot/features/microphone/device/web/web_microphone.dart'
+    as _i11;
 import 'package:mascot/features/microphone/domain/services/microphone_service.dart'
     as _i15;
 import 'package:mascot/features/microphone/domain/usecases/stream_microphone_volume.dart'
@@ -50,7 +50,7 @@ import 'package:mascot/features/settings/data/datasources/drift/models/drift_set
 import 'package:mascot/features/settings/data/datasources/drift/settings_drift_data_source.dart'
     as _i16;
 import 'package:mascot/features/settings/data/repositories/settings_repository_impl.dart'
-    as _i11;
+    as _i8;
 import 'package:mascot/features/settings/domain/repositories/settings_repository.dart'
     as _i17;
 import 'package:mascot/features/settings/domain/usecases/stream_settings.dart'
@@ -77,28 +77,29 @@ _i1.GetIt $init(
   gh.lazySingleton<_i5.DriftMascotMapper>(() => _i5.DriftMascotMapperImpl());
   gh.lazySingleton<_i6.DriftSettingsMapper>(
       () => _i6.DriftSettingsMapperImpl());
-  gh.factory<_i7.Logger<_i8.MicrophoneServiceImpl>>(
-      () => _i8.MicrophoneServiceImplLogger());
-  gh.factory<_i7.Logger<_i9.WebMicrophone>>(() => _i9.MascotMicrophoneLogger());
+  gh.factory<_i7.Logger<_i8.SettingsRepositoryImpl>>(
+      () => _i8.SettingsRepositoryLogger());
+  gh.factory<_i7.Logger<_i9.MicrophoneServiceImpl>>(
+      () => _i9.MicrophoneServiceImplLogger());
   gh.factory<_i7.Logger<_i10.MascotsRepositoryImpl>>(
       () => _i10.MascotRepositoryLogger());
-  gh.factory<_i7.Logger<_i11.SettingsRepositoryImpl>>(
-      () => _i11.SettingsRepositoryLogger());
+  gh.factory<_i7.Logger<_i11.WebMicrophone>>(
+      () => _i11.MascotMicrophoneLogger());
   gh.singleton<_i12.MascotDatabase>(_i12.MascotDatabase());
-  gh.lazySingleton<_i13.Microphone>(() => _i9.WebMicrophone(
+  gh.lazySingleton<_i13.Microphone>(() => _i11.WebMicrophone(
         gh<_i14.AudioContext>(),
-        gh<_i7.Logger<_i9.WebMicrophone>>(),
+        gh<_i7.Logger<_i11.WebMicrophone>>(),
       ));
-  gh.lazySingleton<_i15.MicrophoneService>(() => _i8.MicrophoneServiceImpl(
+  gh.lazySingleton<_i15.MicrophoneService>(() => _i9.MicrophoneServiceImpl(
         gh<_i13.Microphone>(),
-        gh<_i7.Logger<_i8.MicrophoneServiceImpl>>(),
+        gh<_i7.Logger<_i9.MicrophoneServiceImpl>>(),
       ));
   gh.lazySingleton<_i16.SettingsDriftDataSource>(
       () => _i16.SettingsDriftDataSourceImpl(gh<_i12.MascotDatabase>()));
-  gh.factory<_i17.SettingsRepository>(() => _i11.SettingsRepositoryImpl(
+  gh.factory<_i17.SettingsRepository>(() => _i8.SettingsRepositoryImpl(
         gh<_i16.SettingsDriftDataSource>(),
         gh<_i6.DriftSettingsMapper>(),
-        gh<_i7.Logger<_i11.SettingsRepositoryImpl>>(),
+        gh<_i7.Logger<_i8.SettingsRepositoryImpl>>(),
       ));
   gh.factory<_i18.StreamMicrophoneVolume>(
       () => _i18.StreamMicrophoneVolume(gh<_i15.MicrophoneService>()));

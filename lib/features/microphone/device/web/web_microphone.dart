@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:injectable/injectable.dart';
 import 'package:universal_html/html.dart' as html;
-import 'package:universal_html/html.dart';
 
 import '../../../../core/device/web/js_interop/web_audio/web_audio.dart';
 import '../../../../core/extensions/extensions.dart';
@@ -45,7 +44,8 @@ class WebMicrophone implements Microphone {
   html.MediaStream? _microphoneStream;
   Future<void> _setMicrophoneStream({bool throwOnError = false}) async {
     try {
-      _microphoneStream ??= await window.navigator.mediaDevices?.getUserMedia({
+      _microphoneStream ??=
+          await html.window.navigator.mediaDevices?.getUserMedia({
         'audio': true,
       });
     } catch (e) {
