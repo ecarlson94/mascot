@@ -13,6 +13,7 @@ import 'package:mascot/features/settings/data/datasources/drift/settings_drift_d
 import 'package:mascot/features/settings/domain/repositories/settings_repository.dart';
 import 'package:mascot/features/settings/domain/usecases/stream_settings.dart';
 import 'package:mockito/annotations.dart';
+import 'package:universal_html/html.dart';
 
 import 'mocks.mocks.dart';
 
@@ -30,6 +31,9 @@ import 'mocks.mocks.dart';
   MicrophoneService,
   Microphone,
   AudioContext,
+  Window,
+  Navigator,
+  MediaDevices,
 ])
 class Mocks {
   MockExpressionsDriftDataSource? _expressionsLocalDataSource;
@@ -76,4 +80,7 @@ class Mocks {
 
   MockAudioContext? _audioContext;
   MockAudioContext get audioContext => _audioContext ??= MockAudioContext();
+
+  MockWindow? _window;
+  MockWindow get window => _window ??= MockWindow();
 }

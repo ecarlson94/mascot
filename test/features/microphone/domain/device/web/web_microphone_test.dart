@@ -10,8 +10,13 @@ void main() {
   setUp(() {
     context = TestContext();
     classUnderTest = WebMicrophone(
+      context.mocks.window,
       context.mocks.audioContext,
       context.mocks.getLogger(),
     );
+  });
+
+  group('WebMicrophone', () {
+    group('hasPermission', () {});
   });
 }

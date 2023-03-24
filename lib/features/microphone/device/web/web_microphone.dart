@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:injectable/injectable.dart';
-import 'package:universal_html/html.dart';
+import 'package:universal_html/html.dart' as html;
 
 import '../../../../core/device/web/js_interop/web_audio/web_audio.dart';
 import '../../../../core/extensions/extensions.dart';
@@ -15,10 +15,11 @@ class MascotMicrophoneLogger extends Logger<WebMicrophone> {}
 
 @LazySingleton(as: Microphone)
 class WebMicrophone implements Microphone {
+  final html.Window _webWindow;
   final AudioContext _webAudio;
   final Logger<WebMicrophone> _logger;
 
-  WebMicrophone(this._webAudio, this._logger);
+  WebMicrophone(this._webWindow, this._webAudio, this._logger);
 
   @override
   Future<bool> hasPermission() async {
@@ -41,15 +42,15 @@ class WebMicrophone implements Microphone {
     }
   }
 
-  MediaStream? _stream;
+  html.MediaStream? _stream;
   Future<void> _setStream({bool throwOnError = false}) async {
     try {
-      _stream ??= await window.navigator.mediaDevices?.getUserMedia({
+      _stream ??= await _webWindow.navigator.mediaDevices?.getUserMedia({
         'audio': true,
       });
     } catch (e) {
       var message = 'Error getting microphone stream:';
-      if (e is DomException && e.name == 'NotAllowedError') {
+      if (e is html.DomException && e.name == 'NotAllowedError') {
         message = 'Microphone permission denied:';
       }
 
