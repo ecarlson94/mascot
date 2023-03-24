@@ -51,4 +51,7 @@ class AudioContext {
       AnalyserNode(_jsAudioContext.createAnalyser());
 
   void close() => _jsAudioContext.close();
+
+  @disposeMethod
+  void dispose() => close();
 }
