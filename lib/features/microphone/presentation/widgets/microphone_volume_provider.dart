@@ -5,10 +5,10 @@ import '../../../../core/extensions/extensions.dart';
 import '../../domain/models/decibel_lufs.dart';
 import '../bloc/microphone_volume_bloc.dart';
 
-class MicrophoneVolumeRequired extends StatelessWidget {
+class MicrophoneVolumeProvider extends StatelessWidget {
   final Widget Function(BuildContext, DecibelLufs volume) builder;
 
-  const MicrophoneVolumeRequired({super.key, required this.builder});
+  const MicrophoneVolumeProvider({super.key, required this.builder});
 
   @override
   Widget build(BuildContext context) {

@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/clean_architecture/entity.dart';
 import '../bloc/settings_bloc.dart';
 
-class FavoriteMascotRequired extends StatelessWidget {
+class FavoriteMascotIdProvider extends StatelessWidget {
   final Widget Function(BuildContext context, Id mascotId) builder;
 
-  const FavoriteMascotRequired({super.key, required this.builder});
+  const FavoriteMascotIdProvider({super.key, required this.builder});
 
   @override
   Widget build(BuildContext context) {

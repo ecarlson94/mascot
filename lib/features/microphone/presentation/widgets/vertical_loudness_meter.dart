@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/extensions/build_context_extensions.dart';
 import '../../../../core/utils/constants.dart';
-import 'microphone_volume_required.dart';
+import 'microphone_volume_provider.dart';
 
 class VerticalLoudnessMeter extends StatelessWidget {
   static const double widthRatio = 1 / 5;
@@ -21,7 +21,7 @@ class VerticalLoudnessMeter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MicrophoneVolumeRequired(
+    return MicrophoneVolumeProvider(
       builder: (context, volume) {
         var colorScheme = context.colorScheme;
         var width = height * widthRatio;
