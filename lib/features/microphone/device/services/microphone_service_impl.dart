@@ -4,14 +4,14 @@ import 'package:injectable/injectable.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/utils/logger.dart';
 import '../../domain/services/microphone_service.dart';
-import '../web/web_microphone_impl.dart';
+import '../microphone.dart';
 
 @Injectable(as: Logger<MicrophoneServiceImpl>)
 class MicrophoneServiceImplLogger extends Logger<MicrophoneServiceImpl> {}
 
 @LazySingleton(as: MicrophoneService)
 class MicrophoneServiceImpl implements MicrophoneService {
-  final WebMicrophone _microphone;
+  final Microphone _microphone;
   final Logger<MicrophoneServiceImpl> _logger;
 
   MicrophoneServiceImpl(this._microphone, this._logger);

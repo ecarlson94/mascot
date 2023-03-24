@@ -3,39 +3,51 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i8;
+import 'dart:async' as _i10;
+import 'dart:html' as _i28;
 
 import 'package:dartz/dartz.dart' as _i3;
-import 'package:mascot/core/clean_architecture/usecase.dart' as _i19;
-import 'package:mascot/core/error/failure.dart' as _i12;
-import 'package:mascot/core/utils/logger.dart' as _i21;
-import 'package:mascot/features/expressions/data/datasources/drift/expressions_drift_data_source.dart'
+import 'package:mascot/core/clean_architecture/usecase.dart' as _i21;
+import 'package:mascot/core/device/web/js_interop/web_audio/analyzer_node.dart'
+    as _i8;
+import 'package:mascot/core/device/web/js_interop/web_audio/audio_context.dart'
+    as _i27;
+import 'package:mascot/core/device/web/js_interop/web_audio/media_stream_audio_source_node.dart'
     as _i7;
-import 'package:mascot/features/expressions/data/datasources/drift/models/drift_expression.dart'
+import 'package:mascot/core/error/failure.dart' as _i14;
+import 'package:mascot/core/utils/logger.dart' as _i23;
+import 'package:mascot/features/expressions/data/datasources/drift/expressions_drift_data_source.dart'
     as _i9;
-import 'package:mascot/features/mascot/data/datasources/drift/mascots_drift_data_source.dart'
+import 'package:mascot/features/expressions/data/datasources/drift/models/drift_expression.dart'
     as _i11;
+import 'package:mascot/features/mascot/data/datasources/drift/mascots_drift_data_source.dart'
+    as _i13;
 import 'package:mascot/features/mascot/data/datasources/drift/models/drift_mascot.dart'
     as _i4;
-import 'package:mascot/features/mascot/domain/entities/mascot.dart' as _i13;
+import 'package:mascot/features/mascot/domain/entities/mascot.dart' as _i15;
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart'
     as _i6;
-import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart' as _i16;
+import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart' as _i18;
 import 'package:mascot/features/mascot/domain/usecases/save_mascot.dart'
-    as _i15;
+    as _i17;
 import 'package:mascot/features/mascot/domain/usecases/stream_mascot.dart'
-    as _i20;
+    as _i22;
+import 'package:mascot/features/microphone/device/microphone.dart' as _i26;
+import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart'
+    as _i25;
+import 'package:mascot/features/microphone/domain/services/microphone_service.dart'
+    as _i24;
 import 'package:mascot/features/settings/data/datasources/drift/models/drift_settings.dart'
     as _i2;
 import 'package:mascot/features/settings/data/datasources/drift/settings_drift_data_source.dart'
-    as _i10;
-import 'package:mascot/features/settings/domain/entities/settings.dart' as _i17;
+    as _i12;
+import 'package:mascot/features/settings/domain/entities/settings.dart' as _i19;
 import 'package:mascot/features/settings/domain/repositories/settings_repository.dart'
     as _i5;
 import 'package:mascot/features/settings/domain/usecases/stream_settings.dart'
-    as _i18;
+    as _i20;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:rxdart/rxdart.dart' as _i14;
+import 'package:rxdart/rxdart.dart' as _i16;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -110,151 +122,173 @@ class _FakeMascotsRepository_5 extends _i1.SmartFake
         );
 }
 
+class _FakeMediaStreamAudioSourceNode_6 extends _i1.SmartFake
+    implements _i7.MediaStreamAudioSourceNode {
+  _FakeMediaStreamAudioSourceNode_6(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeAnalyzerNode_7 extends _i1.SmartFake implements _i8.AnalyzerNode {
+  _FakeAnalyzerNode_7(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [ExpressionsDriftDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockExpressionsDriftDataSource extends _i1.Mock
-    implements _i7.ExpressionsDriftDataSource {
+    implements _i9.ExpressionsDriftDataSource {
   MockExpressionsDriftDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i8.Future<int> upsertExpression(_i9.DriftExpression? expression) =>
+  _i10.Future<int> upsertExpression(_i11.DriftExpression? expression) =>
       (super.noSuchMethod(
         Invocation.method(
           #upsertExpression,
           [expression],
         ),
-        returnValue: _i8.Future<int>.value(0),
-      ) as _i8.Future<int>);
+        returnValue: _i10.Future<int>.value(0),
+      ) as _i10.Future<int>);
   @override
-  _i8.Future<List<int>> upsertExpressions(
-          Iterable<_i9.DriftExpression>? expressions) =>
+  _i10.Future<List<int>> upsertExpressions(
+          Iterable<_i11.DriftExpression>? expressions) =>
       (super.noSuchMethod(
         Invocation.method(
           #upsertExpressions,
           [expressions],
         ),
-        returnValue: _i8.Future<List<int>>.value(<int>[]),
-      ) as _i8.Future<List<int>>);
+        returnValue: _i10.Future<List<int>>.value(<int>[]),
+      ) as _i10.Future<List<int>>);
   @override
-  _i8.Future<void> removeExpression(int? id) => (super.noSuchMethod(
+  _i10.Future<void> removeExpression(int? id) => (super.noSuchMethod(
         Invocation.method(
           #removeExpression,
           [id],
         ),
-        returnValue: _i8.Future<void>.value(),
-        returnValueForMissingStub: _i8.Future<void>.value(),
-      ) as _i8.Future<void>);
+        returnValue: _i10.Future<void>.value(),
+        returnValueForMissingStub: _i10.Future<void>.value(),
+      ) as _i10.Future<void>);
   @override
-  _i8.Future<List<_i9.DriftExpression>> getExpressions(Iterable<int>? ids) =>
+  _i10.Future<List<_i11.DriftExpression>> getExpressions(Iterable<int>? ids) =>
       (super.noSuchMethod(
         Invocation.method(
           #getExpressions,
           [ids],
         ),
-        returnValue: _i8.Future<List<_i9.DriftExpression>>.value(
-            <_i9.DriftExpression>[]),
-      ) as _i8.Future<List<_i9.DriftExpression>>);
+        returnValue: _i10.Future<List<_i11.DriftExpression>>.value(
+            <_i11.DriftExpression>[]),
+      ) as _i10.Future<List<_i11.DriftExpression>>);
   @override
-  _i8.Stream<List<_i9.DriftExpression>> streamExpressions(Iterable<int>? ids) =>
+  _i10.Stream<List<_i11.DriftExpression>> streamExpressions(
+          Iterable<int>? ids) =>
       (super.noSuchMethod(
         Invocation.method(
           #streamExpressions,
           [ids],
         ),
-        returnValue: _i8.Stream<List<_i9.DriftExpression>>.empty(),
-      ) as _i8.Stream<List<_i9.DriftExpression>>);
+        returnValue: _i10.Stream<List<_i11.DriftExpression>>.empty(),
+      ) as _i10.Stream<List<_i11.DriftExpression>>);
 }
 
 /// A class which mocks [SettingsDriftDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockSettingsDriftDataSource extends _i1.Mock
-    implements _i10.SettingsDriftDataSource {
+    implements _i12.SettingsDriftDataSource {
   MockSettingsDriftDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i8.Future<_i2.DriftSettings> loadSettings() => (super.noSuchMethod(
+  _i10.Future<_i2.DriftSettings> loadSettings() => (super.noSuchMethod(
         Invocation.method(
           #loadSettings,
           [],
         ),
-        returnValue: _i8.Future<_i2.DriftSettings>.value(_FakeDriftSettings_0(
+        returnValue: _i10.Future<_i2.DriftSettings>.value(_FakeDriftSettings_0(
           this,
           Invocation.method(
             #loadSettings,
             [],
           ),
         )),
-      ) as _i8.Future<_i2.DriftSettings>);
+      ) as _i10.Future<_i2.DriftSettings>);
   @override
-  _i8.Stream<_i2.DriftSettings?> streamSettings() => (super.noSuchMethod(
+  _i10.Stream<_i2.DriftSettings?> streamSettings() => (super.noSuchMethod(
         Invocation.method(
           #streamSettings,
           [],
         ),
-        returnValue: _i8.Stream<_i2.DriftSettings?>.empty(),
-      ) as _i8.Stream<_i2.DriftSettings?>);
+        returnValue: _i10.Stream<_i2.DriftSettings?>.empty(),
+      ) as _i10.Stream<_i2.DriftSettings?>);
   @override
-  _i8.Future<_i3.Unit> saveSettings(_i2.DriftSettings? settings) =>
+  _i10.Future<_i3.Unit> saveSettings(_i2.DriftSettings? settings) =>
       (super.noSuchMethod(
         Invocation.method(
           #saveSettings,
           [settings],
         ),
-        returnValue: _i8.Future<_i3.Unit>.value(_FakeUnit_1(
+        returnValue: _i10.Future<_i3.Unit>.value(_FakeUnit_1(
           this,
           Invocation.method(
             #saveSettings,
             [settings],
           ),
         )),
-      ) as _i8.Future<_i3.Unit>);
+      ) as _i10.Future<_i3.Unit>);
 }
 
 /// A class which mocks [MascotsDriftDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockMascotsDriftDataSource extends _i1.Mock
-    implements _i11.MascotsDriftDataSource {
+    implements _i13.MascotsDriftDataSource {
   MockMascotsDriftDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i8.Future<int> addMascot(_i4.DriftMascot? mascot) => (super.noSuchMethod(
+  _i10.Future<int> addMascot(_i4.DriftMascot? mascot) => (super.noSuchMethod(
         Invocation.method(
           #addMascot,
           [mascot],
         ),
-        returnValue: _i8.Future<int>.value(0),
-      ) as _i8.Future<int>);
+        returnValue: _i10.Future<int>.value(0),
+      ) as _i10.Future<int>);
   @override
-  _i8.Future<_i4.DriftMascot> getMascot(int? id) => (super.noSuchMethod(
+  _i10.Future<_i4.DriftMascot> getMascot(int? id) => (super.noSuchMethod(
         Invocation.method(
           #getMascot,
           [id],
         ),
-        returnValue: _i8.Future<_i4.DriftMascot>.value(_FakeDriftMascot_2(
+        returnValue: _i10.Future<_i4.DriftMascot>.value(_FakeDriftMascot_2(
           this,
           Invocation.method(
             #getMascot,
             [id],
           ),
         )),
-      ) as _i8.Future<_i4.DriftMascot>);
+      ) as _i10.Future<_i4.DriftMascot>);
   @override
-  _i8.Stream<_i4.DriftMascot?> streamMascot(int? id) => (super.noSuchMethod(
+  _i10.Stream<_i4.DriftMascot?> streamMascot(int? id) => (super.noSuchMethod(
         Invocation.method(
           #streamMascot,
           [id],
         ),
-        returnValue: _i8.Stream<_i4.DriftMascot?>.empty(),
-      ) as _i8.Stream<_i4.DriftMascot?>);
+        returnValue: _i10.Stream<_i4.DriftMascot?>.empty(),
+      ) as _i10.Stream<_i4.DriftMascot?>);
 }
 
 /// A class which mocks [MascotsRepository].
@@ -266,108 +300,109 @@ class MockMascotsRepository extends _i1.Mock implements _i6.MascotsRepository {
   }
 
   @override
-  _i8.Future<_i3.Either<_i12.Failure, int>> addMascot(_i13.Mascot? mascot) =>
+  _i10.Future<_i3.Either<_i14.Failure, int>> addMascot(_i15.Mascot? mascot) =>
       (super.noSuchMethod(
         Invocation.method(
           #addMascot,
           [mascot],
         ),
-        returnValue: _i8.Future<_i3.Either<_i12.Failure, int>>.value(
-            _FakeEither_3<_i12.Failure, int>(
+        returnValue: _i10.Future<_i3.Either<_i14.Failure, int>>.value(
+            _FakeEither_3<_i14.Failure, int>(
           this,
           Invocation.method(
             #addMascot,
             [mascot],
           ),
         )),
-      ) as _i8.Future<_i3.Either<_i12.Failure, int>>);
+      ) as _i10.Future<_i3.Either<_i14.Failure, int>>);
   @override
-  _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>> getMascot(int? id) =>
+  _i10.Future<_i3.Either<_i14.Failure, _i15.Mascot>> getMascot(int? id) =>
       (super.noSuchMethod(
         Invocation.method(
           #getMascot,
           [id],
         ),
-        returnValue: _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>>.value(
-            _FakeEither_3<_i12.Failure, _i13.Mascot>(
+        returnValue: _i10.Future<_i3.Either<_i14.Failure, _i15.Mascot>>.value(
+            _FakeEither_3<_i14.Failure, _i15.Mascot>(
           this,
           Invocation.method(
             #getMascot,
             [id],
           ),
         )),
-      ) as _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>>);
+      ) as _i10.Future<_i3.Either<_i14.Failure, _i15.Mascot>>);
   @override
-  _i8.Future<_i3.Either<_i12.Failure, _i14.BehaviorSubject<_i13.Mascot>>>
+  _i10.Future<_i3.Either<_i14.Failure, _i16.BehaviorSubject<_i15.Mascot>>>
       streamMascot(int? id) => (super.noSuchMethod(
             Invocation.method(
               #streamMascot,
               [id],
             ),
-            returnValue: _i8.Future<
-                    _i3.Either<_i12.Failure,
-                        _i14.BehaviorSubject<_i13.Mascot>>>.value(
-                _FakeEither_3<_i12.Failure, _i14.BehaviorSubject<_i13.Mascot>>(
+            returnValue: _i10.Future<
+                    _i3.Either<_i14.Failure,
+                        _i16.BehaviorSubject<_i15.Mascot>>>.value(
+                _FakeEither_3<_i14.Failure, _i16.BehaviorSubject<_i15.Mascot>>(
               this,
               Invocation.method(
                 #streamMascot,
                 [id],
               ),
             )),
-          ) as _i8.Future<
-              _i3.Either<_i12.Failure, _i14.BehaviorSubject<_i13.Mascot>>>);
+          ) as _i10.Future<
+              _i3.Either<_i14.Failure, _i16.BehaviorSubject<_i15.Mascot>>>);
 }
 
 /// A class which mocks [SaveMascot].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSaveMascot extends _i1.Mock implements _i15.SaveMascot {
+class MockSaveMascot extends _i1.Mock implements _i17.SaveMascot {
   MockSaveMascot() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>> call(_i13.Mascot? mascot) =>
+  _i10.Future<_i3.Either<_i14.Failure, _i15.Mascot>> call(
+          _i15.Mascot? mascot) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [mascot],
         ),
-        returnValue: _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>>.value(
-            _FakeEither_3<_i12.Failure, _i13.Mascot>(
+        returnValue: _i10.Future<_i3.Either<_i14.Failure, _i15.Mascot>>.value(
+            _FakeEither_3<_i14.Failure, _i15.Mascot>(
           this,
           Invocation.method(
             #call,
             [mascot],
           ),
         )),
-      ) as _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>>);
+      ) as _i10.Future<_i3.Either<_i14.Failure, _i15.Mascot>>);
 }
 
 /// A class which mocks [GetMascot].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGetMascot extends _i1.Mock implements _i16.GetMascot {
+class MockGetMascot extends _i1.Mock implements _i18.GetMascot {
   MockGetMascot() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>> call(int? params) =>
+  _i10.Future<_i3.Either<_i14.Failure, _i15.Mascot>> call(int? params) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [params],
         ),
-        returnValue: _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>>.value(
-            _FakeEither_3<_i12.Failure, _i13.Mascot>(
+        returnValue: _i10.Future<_i3.Either<_i14.Failure, _i15.Mascot>>.value(
+            _FakeEither_3<_i14.Failure, _i15.Mascot>(
           this,
           Invocation.method(
             #call,
             [params],
           ),
         )),
-      ) as _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>>);
+      ) as _i10.Future<_i3.Either<_i14.Failure, _i15.Mascot>>);
 }
 
 /// A class which mocks [SettingsRepository].
@@ -380,62 +415,63 @@ class MockSettingsRepository extends _i1.Mock
   }
 
   @override
-  _i8.Future<_i3.Either<_i12.Failure, _i17.Settings>> loadSettings() =>
+  _i10.Future<_i3.Either<_i14.Failure, _i19.Settings>> loadSettings() =>
       (super.noSuchMethod(
         Invocation.method(
           #loadSettings,
           [],
         ),
-        returnValue: _i8.Future<_i3.Either<_i12.Failure, _i17.Settings>>.value(
-            _FakeEither_3<_i12.Failure, _i17.Settings>(
+        returnValue: _i10.Future<_i3.Either<_i14.Failure, _i19.Settings>>.value(
+            _FakeEither_3<_i14.Failure, _i19.Settings>(
           this,
           Invocation.method(
             #loadSettings,
             [],
           ),
         )),
-      ) as _i8.Future<_i3.Either<_i12.Failure, _i17.Settings>>);
+      ) as _i10.Future<_i3.Either<_i14.Failure, _i19.Settings>>);
   @override
-  _i8.Future<_i3.Either<_i12.Failure, _i14.BehaviorSubject<_i17.Settings>>>
+  _i10.Future<_i3.Either<_i14.Failure, _i16.BehaviorSubject<_i19.Settings>>>
       streamSettings() => (super.noSuchMethod(
             Invocation.method(
               #streamSettings,
               [],
             ),
-            returnValue: _i8.Future<
-                _i3.Either<_i12.Failure,
-                    _i14.BehaviorSubject<_i17.Settings>>>.value(_FakeEither_3<
-                _i12.Failure, _i14.BehaviorSubject<_i17.Settings>>(
+            returnValue: _i10.Future<
+                _i3.Either<_i14.Failure,
+                    _i16.BehaviorSubject<_i19.Settings>>>.value(_FakeEither_3<
+                _i14.Failure, _i16.BehaviorSubject<_i19.Settings>>(
               this,
               Invocation.method(
                 #streamSettings,
                 [],
               ),
             )),
-          ) as _i8.Future<
-              _i3.Either<_i12.Failure, _i14.BehaviorSubject<_i17.Settings>>>);
+          ) as _i10.Future<
+              _i3.Either<_i14.Failure, _i16.BehaviorSubject<_i19.Settings>>>);
   @override
-  _i8.Future<_i3.Either<_i12.Failure, _i3.Unit>> setFavoriteMascotId(int? id) =>
+  _i10.Future<_i3.Either<_i14.Failure, _i3.Unit>> setFavoriteMascotId(
+          int? id) =>
       (super.noSuchMethod(
         Invocation.method(
           #setFavoriteMascotId,
           [id],
         ),
-        returnValue: _i8.Future<_i3.Either<_i12.Failure, _i3.Unit>>.value(
-            _FakeEither_3<_i12.Failure, _i3.Unit>(
+        returnValue: _i10.Future<_i3.Either<_i14.Failure, _i3.Unit>>.value(
+            _FakeEither_3<_i14.Failure, _i3.Unit>(
           this,
           Invocation.method(
             #setFavoriteMascotId,
             [id],
           ),
         )),
-      ) as _i8.Future<_i3.Either<_i12.Failure, _i3.Unit>>);
+      ) as _i10.Future<_i3.Either<_i14.Failure, _i3.Unit>>);
 }
 
 /// A class which mocks [StreamSettings].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockStreamSettings extends _i1.Mock implements _i18.StreamSettings {
+class MockStreamSettings extends _i1.Mock implements _i20.StreamSettings {
   MockStreamSettings() {
     _i1.throwOnMissingStub(this);
   }
@@ -449,32 +485,32 @@ class MockStreamSettings extends _i1.Mock implements _i18.StreamSettings {
         ),
       ) as _i5.SettingsRepository);
   @override
-  _i8.Future<
-      _i3.Either<_i12.Failure, _i14.BehaviorSubject<_i17.Settings>>> call(
-          _i19.NoParams? params) =>
+  _i10.Future<
+      _i3.Either<_i14.Failure, _i16.BehaviorSubject<_i19.Settings>>> call(
+          _i21.NoParams? params) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [params],
         ),
-        returnValue: _i8.Future<
-                _i3.Either<_i12.Failure,
-                    _i14.BehaviorSubject<_i17.Settings>>>.value(
-            _FakeEither_3<_i12.Failure, _i14.BehaviorSubject<_i17.Settings>>(
+        returnValue: _i10.Future<
+                _i3.Either<_i14.Failure,
+                    _i16.BehaviorSubject<_i19.Settings>>>.value(
+            _FakeEither_3<_i14.Failure, _i16.BehaviorSubject<_i19.Settings>>(
           this,
           Invocation.method(
             #call,
             [params],
           ),
         )),
-      ) as _i8.Future<
-          _i3.Either<_i12.Failure, _i14.BehaviorSubject<_i17.Settings>>>);
+      ) as _i10.Future<
+          _i3.Either<_i14.Failure, _i16.BehaviorSubject<_i19.Settings>>>);
 }
 
 /// A class which mocks [StreamMascot].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockStreamMascot extends _i1.Mock implements _i20.StreamMascot {
+class MockStreamMascot extends _i1.Mock implements _i22.StreamMascot {
   MockStreamMascot() {
     _i1.throwOnMissingStub(this);
   }
@@ -488,31 +524,31 @@ class MockStreamMascot extends _i1.Mock implements _i20.StreamMascot {
         ),
       ) as _i6.MascotsRepository);
   @override
-  _i8.Future<_i3.Either<_i12.Failure, _i14.BehaviorSubject<_i13.Mascot>>> call(
+  _i10.Future<_i3.Either<_i14.Failure, _i16.BehaviorSubject<_i15.Mascot>>> call(
           int? params) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [params],
         ),
-        returnValue: _i8.Future<
-                _i3.Either<_i12.Failure,
-                    _i14.BehaviorSubject<_i13.Mascot>>>.value(
-            _FakeEither_3<_i12.Failure, _i14.BehaviorSubject<_i13.Mascot>>(
+        returnValue: _i10.Future<
+                _i3.Either<_i14.Failure,
+                    _i16.BehaviorSubject<_i15.Mascot>>>.value(
+            _FakeEither_3<_i14.Failure, _i16.BehaviorSubject<_i15.Mascot>>(
           this,
           Invocation.method(
             #call,
             [params],
           ),
         )),
-      ) as _i8
-          .Future<_i3.Either<_i12.Failure, _i14.BehaviorSubject<_i13.Mascot>>>);
+      ) as _i10
+          .Future<_i3.Either<_i14.Failure, _i16.BehaviorSubject<_i15.Mascot>>>);
 }
 
 /// A class which mocks [Logger].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLogger<T> extends _i1.Mock implements _i21.Logger<T> {
+class MockLogger<T> extends _i1.Mock implements _i23.Logger<T> {
   MockLogger() {
     _i1.throwOnMissingStub(this);
   }
@@ -547,6 +583,114 @@ class MockLogger<T> extends _i1.Mock implements _i21.Logger<T> {
         Invocation.method(
           #logWarning,
           [message],
+        ),
+        returnValueForMissingStub: null,
+      );
+}
+
+/// A class which mocks [MicrophoneService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockMicrophoneService extends _i1.Mock implements _i24.MicrophoneService {
+  MockMicrophoneService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i10.Future<_i3.Either<_i14.Failure, _i10.Stream<_i25.DecibelLufs>>>
+      getVolumeStream() => (super.noSuchMethod(
+            Invocation.method(
+              #getVolumeStream,
+              [],
+            ),
+            returnValue: _i10.Future<
+                    _i3.Either<_i14.Failure,
+                        _i10.Stream<_i25.DecibelLufs>>>.value(
+                _FakeEither_3<_i14.Failure, _i10.Stream<_i25.DecibelLufs>>(
+              this,
+              Invocation.method(
+                #getVolumeStream,
+                [],
+              ),
+            )),
+          ) as _i10
+              .Future<_i3.Either<_i14.Failure, _i10.Stream<_i25.DecibelLufs>>>);
+}
+
+/// A class which mocks [Microphone].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockMicrophone extends _i1.Mock implements _i26.Microphone {
+  MockMicrophone() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i10.Stream<_i25.DecibelLufs> get volumeStream => (super.noSuchMethod(
+        Invocation.getter(#volumeStream),
+        returnValue: _i10.Stream<_i25.DecibelLufs>.empty(),
+      ) as _i10.Stream<_i25.DecibelLufs>);
+  @override
+  _i10.Future<bool> hasPermission() => (super.noSuchMethod(
+        Invocation.method(
+          #hasPermission,
+          [],
+        ),
+        returnValue: _i10.Future<bool>.value(false),
+      ) as _i10.Future<bool>);
+}
+
+/// A class which mocks [AudioContext].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockAudioContext extends _i1.Mock implements _i27.AudioContext {
+  MockAudioContext() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i7.MediaStreamAudioSourceNode createMediaStreamSource(
+          _i28.MediaStream? stream) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #createMediaStreamSource,
+          [stream],
+        ),
+        returnValue: _FakeMediaStreamAudioSourceNode_6(
+          this,
+          Invocation.method(
+            #createMediaStreamSource,
+            [stream],
+          ),
+        ),
+      ) as _i7.MediaStreamAudioSourceNode);
+  @override
+  _i8.AnalyzerNode createAnalyser() => (super.noSuchMethod(
+        Invocation.method(
+          #createAnalyser,
+          [],
+        ),
+        returnValue: _FakeAnalyzerNode_7(
+          this,
+          Invocation.method(
+            #createAnalyser,
+            [],
+          ),
+        ),
+      ) as _i8.AnalyzerNode);
+  @override
+  void close() => super.noSuchMethod(
+        Invocation.method(
+          #close,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void resume() => super.noSuchMethod(
+        Invocation.method(
+          #resume,
+          [],
         ),
         returnValueForMissingStub: null,
       );

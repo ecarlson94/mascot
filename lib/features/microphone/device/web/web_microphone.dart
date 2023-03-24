@@ -1,29 +1,24 @@
 import 'dart:async';
-import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:injectable/injectable.dart';
 import 'package:universal_html/html.dart';
 
-import '../../../../core/device/web/audio_context.dart';
-import '../../../../core/device/web/js_interop/web_audio_js.dart';
+import '../../../../core/device/web/js_interop/web_audio/web_audio.dart';
+import '../../../../core/extensions/extensions.dart';
 import '../../../../core/utils/logger.dart';
 import '../../domain/models/decibel_lufs.dart';
+import '../microphone.dart';
 
-@Injectable(as: Logger<WebMicrophoneImpl>)
-class MascotMicrophoneLogger extends Logger<WebMicrophoneImpl> {}
+@Injectable(as: Logger<WebMicrophone>)
+class MascotMicrophoneLogger extends Logger<WebMicrophone> {}
 
-abstract class WebMicrophone {
-  Future<bool> hasPermission();
-  Stream<DecibelLufs> get volumeStream;
-}
+@LazySingleton(as: Microphone)
+class WebMicrophone implements Microphone {
+  final AudioContext _webAudio;
+  final Logger<WebMicrophone> _logger;
 
-@LazySingleton(as: WebMicrophone)
-class WebMicrophoneImpl implements WebMicrophone {
-  final WebAudio _webAudio;
-  final Logger<WebMicrophoneImpl> _logger;
-
-  WebMicrophoneImpl(this._webAudio, this._logger);
+  WebMicrophone(this._webAudio, this._logger);
 
   @override
   Future<bool> hasPermission() async {
@@ -40,20 +35,7 @@ class WebMicrophoneImpl implements WebMicrophone {
       // get the audio data from the analyzer
       analyzer.getFloatTimeDomainData(data);
 
-      // calculate the rms value of the audio data
-      var sum = 0.0;
-      for (final sample in data) {
-        sum += sample * sample;
-      }
-      rms() => math.sqrt(sum / data.length);
-
-      // Convert RMS value to decibels (dB)
-      dB() => 20.0 * math.log(rms()) / math.ln10;
-
-      // Calculate loudness in LUFS (Loudness Units Full Scale)
-      loudness() => dB() + 23.0;
-
-      yield DecibelLufs(loudness());
+      yield DecibelLufs(data.loudness);
 
       await Future.delayed(const Duration(milliseconds: 10));
     }
@@ -90,7 +72,7 @@ class WebMicrophoneImpl implements WebMicrophone {
   Future<AnalyzerNode> _getAnalyzer() async {
     if (_analyzer == null) {
       final source = await _getSource();
-      _analyzer = _webAudio.context.createAnalyser();
+      _analyzer = _webAudio.createAnalyser();
       source.connect(_analyzer!);
     }
 
@@ -101,6 +83,6 @@ class WebMicrophoneImpl implements WebMicrophone {
   Future<MediaStreamAudioSourceNode> _getSource() async {
     await _setStream(throwOnError: true);
 
-    return _source ??= _webAudio.context.createMediaStreamSource(_stream!);
+    return _source ??= _webAudio.createMediaStreamSource(_stream!);
   }
 }

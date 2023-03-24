@@ -1,3 +1,4 @@
+import 'package:mascot/core/device/web/js_interop/web_audio/audio_context.dart';
 import 'package:mascot/core/utils/logger.dart';
 import 'package:mascot/features/expressions/data/datasources/drift/expressions_drift_data_source.dart';
 import 'package:mascot/features/mascot/data/datasources/drift/mascots_drift_data_source.dart';
@@ -6,6 +7,8 @@ import 'package:mascot/features/mascot/domain/repositories/mascots_repository.da
 import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart';
 import 'package:mascot/features/mascot/domain/usecases/save_mascot.dart';
 import 'package:mascot/features/mascot/domain/usecases/stream_mascot.dart';
+import 'package:mascot/features/microphone/device/microphone.dart';
+import 'package:mascot/features/microphone/domain/services/microphone_service.dart';
 import 'package:mascot/features/settings/data/datasources/drift/settings_drift_data_source.dart';
 import 'package:mascot/features/settings/domain/repositories/settings_repository.dart';
 import 'package:mascot/features/settings/domain/usecases/stream_settings.dart';
@@ -24,6 +27,9 @@ import 'mocks.mocks.dart';
   StreamSettings,
   StreamMascot,
   Logger<MascotsRepositoryImpl>,
+  MicrophoneService,
+  Microphone,
+  AudioContext,
 ])
 class Mocks {
   MockExpressionsDriftDataSource? _expressionsLocalDataSource;
@@ -60,4 +66,14 @@ class Mocks {
       _settingsLocalDataSource ??= MockSettingsDriftDataSource();
 
   MockLogger<T> getLogger<T>() => MockLogger<T>();
+
+  MockMicrophoneService? _microphoneService;
+  MockMicrophoneService get microphoneService =>
+      _microphoneService ??= MockMicrophoneService();
+
+  MockMicrophone? _microphone;
+  MockMicrophone get microphone => _microphone ??= MockMicrophone();
+
+  MockAudioContext? _audioContext;
+  MockAudioContext get audioContext => _audioContext ??= MockAudioContext();
 }
