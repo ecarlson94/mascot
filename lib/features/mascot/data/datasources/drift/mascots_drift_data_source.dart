@@ -7,36 +7,37 @@ import 'package:rxdart/rxdart.dart';
 import '../../../../../core/clean_architecture/entity.dart';
 import '../../../../../core/data/drift/mascot_database.dart';
 import '../../../../../core/data/stream_subscriber.dart';
-import '../../../../expressions/data/datasources/drift/expressions_drift_data_source.dart';
 import '../../../../expressions/data/datasources/drift/models/drift_expression.dart';
 import 'models/drift_mascot.dart';
 
 abstract class MascotsDriftDataSource {
   /// Saves a mascot to the local database.
-  Future<Id> addMascot(DriftMascot mascot);
+  Future<Id> upsertMascot(DriftMascot mascot);
 
   /// Gets a mascot from the local database.
   Future<DriftMascot> getMascot(Id id);
 
   // Stream a mascot rom the local database.
   Stream<DriftMascot?> streamMascot(Id id);
+
+  // Stream expressions for a mascot from the local database.
+  Stream<List<DriftExpression>?> streamExpressionsForMascot(Id id);
 }
 
 @LazySingleton(as: MascotsDriftDataSource)
 class MascotsDriftDataSourceImpl extends StreamSubcriber
     implements MascotsDriftDataSource {
   final MascotDatabase _database;
-  final ExpressionsDriftDataSource _expressions;
 
-  MascotsDriftDataSourceImpl(this._database, this._expressions);
+  MascotsDriftDataSourceImpl(this._database);
 
   @override
-  Future<Id> addMascot(DriftMascot driftMascot) async {
+  Future<Id> upsertMascot(DriftMascot driftMascot) async {
     var mascotId = await _database
         .into(_database.mascots)
         .insertOnConflictUpdate(driftMascot);
 
-    await _createExpressionsForMascot(driftMascot.expressions, mascotId);
+    await _mapExpressionsForMascot(driftMascot.expressions, mascotId);
 
     return driftMascot.id == 0 ? mascotId : driftMascot.id;
   }
@@ -59,7 +60,7 @@ class MascotsDriftDataSourceImpl extends StreamSubcriber
       ),
     );
 
-    // listen to stream of expressions
+    // listen to stream of expressions for mascot
     final expressionsStream = _queryExpressionsForMascot(id).watch();
     var expressionSub = expressionsStream.listen((e) async {
       final mascot = await _getMascot(id);
@@ -74,6 +75,10 @@ class MascotsDriftDataSourceImpl extends StreamSubcriber
 
     return subject;
   }
+
+  @override
+  Stream<List<DriftExpression>?> streamExpressionsForMascot(Id mascotId) =>
+      _queryExpressionsForMascot(mascotId).watch();
 
   Future<Mascot> _getMascot(Id id) async {
     final mascot = await (_database.select(_database.mascots)
@@ -106,11 +111,16 @@ class MascotsDriftDataSourceImpl extends StreamSubcriber
     return expressions;
   }
 
-  Future<void> _createExpressionsForMascot(
+  Future<void> _mapExpressionsForMascot(
     Iterable<DriftExpression> expressions,
     int mascotId,
   ) async {
-    var ids = await _expressions.upsertExpressions(expressions);
+    var ids = expressions.map((e) => e.id).toList();
+    if (ids.isEmpty) return;
+
+    if (ids.any((id) => id == 0)) {
+      throw ArgumentError('Expression id cannot be 0.', 'expressions');
+    }
 
     var savedMascotExpressionMaps =
         await (_database.select(_database.mascotExpressionMaps)

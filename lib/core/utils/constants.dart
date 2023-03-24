@@ -7,3 +7,4 @@ const BorderRadius bigBorderRadius = BorderRadius.all(bigRadius);
 const BorderRadius mediumBorderRadius = BorderRadius.all(mediumRadius);
 
 const String defaultExpressionName = 'Neutral';
+const String talkingExpressionName = 'Talking';

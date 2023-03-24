@@ -12,6 +12,6 @@ class StreamMascot implements UseCase<Stream<Mascot?>, Id> {
   StreamMascot(this.mascotsRepository);
 
   @override
-  FailureOrMascotSubjectFuture call(Id params) =>
+  MascotSubjectOrFailureFuture call(Id params) =>
       mascotsRepository.streamMascot(params);
 }

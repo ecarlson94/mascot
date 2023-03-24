@@ -14,6 +14,9 @@ abstract class ExpressionsDriftDataSource {
   /// Removes an expression from the local database.
   Future<void> removeExpression(Id id);
 
+  /// Get an expression from the local databas.
+  Future<DriftExpression> getExpression(Id id);
+
   /// Gets several expressions from the local database.
   Future<List<DriftExpression>> getExpressions(Iterable<Id> ids);
 
@@ -51,9 +54,18 @@ class ExpressionsDriftDataSourceImpl implements ExpressionsDriftDataSource {
   }
 
   @override
-  Future<List<DriftExpression>> getExpressions(Iterable<Id> ids) =>
-      (_database.select(_database.expressions)..where((e) => e.id.isIn(ids)))
-          .get();
+  Future<DriftExpression> getExpression(Id id) =>
+      (_database.select(_database.expressions)..where((e) => e.id.equals(id)))
+          .getSingle();
+
+  @override
+  Future<List<DriftExpression>> getExpressions(Iterable<Id> ids) {
+    if (ids.isEmpty) return Future.value(List.empty());
+
+    return (_database.select(_database.expressions)
+          ..where((e) => e.id.isIn(ids)))
+        .get();
+  }
 
   @override
   Future<void> removeExpression(Id id) async {

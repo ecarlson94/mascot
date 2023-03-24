@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:mascot/core/utils/constants.dart';
 import 'package:mascot/features/expressions/data/datasources/drift/models/drift_expression_mapper.dart';
 import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mascot/features/mascot/data/datasources/drift/models/drift_mascot_mapper.dart';
@@ -35,7 +36,7 @@ class TestData {
     ),
     Expression(
       id: 2,
-      name: CreateMascotBloc.talkingExpressionName,
+      name: talkingExpressionName,
       description: CreateMascotBloc.talkingExpressionDescription,
       image: Uint8List(5),
     ),
@@ -53,7 +54,7 @@ class TestData {
       ),
       Expression(
         id: 2,
-        name: CreateMascotBloc.talkingExpressionName,
+        name: talkingExpressionName,
         description: CreateMascotBloc.talkingExpressionDescription,
         image: Uint8List(5),
       ),

@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mascot/core/error/error.dart';
 import 'package:mascot/core/error/failure.dart';
+import 'package:mascot/core/utils/constants.dart';
 import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
 import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart';
@@ -23,10 +24,10 @@ void main() {
     setUp(() {
       context = TestContext();
       bloc = CreateMascotBloc(
-        context.mocks.saveMascot,
+        context.mocks.addMascot,
       );
 
-      when(context.mocks.saveMascot(any))
+      when(context.mocks.addMascot(any))
           .thenAnswer((_) async => Right(context.data.mascot));
     });
 
@@ -39,7 +40,7 @@ void main() {
       {
         'type': UploadNeutralExpression,
         'expressionId': 1,
-        'expressionName': CreateMascotBloc.neutralExpressionName,
+        'expressionName': defaultExpressionName,
         'expressionDescription': CreateMascotBloc.neutralExpressionDescription,
         'invalidXFileUpload': UploadNeutralExpression(XFile('')),
         'validXFileUpload': UploadNeutralExpression(TestData().xfile),
@@ -50,7 +51,7 @@ void main() {
       {
         'type': UploadTalkingExpression,
         'expressionId': 2,
-        'expressionName': CreateMascotBloc.talkingExpressionName,
+        'expressionName': talkingExpressionName,
         'expressionDescription': CreateMascotBloc.talkingExpressionDescription,
         'invalidXFileUpload': UploadTalkingExpression(XFile('')),
         'validXFileUpload': UploadTalkingExpression(TestData().xfile),
@@ -88,7 +89,7 @@ void main() {
           act: (bloc) =>
               bloc.add(params['validXFileUpload'] as CreateMascotEvent),
           verify: (bloc) => verify(
-            context.mocks.saveMascot(getSavingExpressionMascot()),
+            context.mocks.addMascot(getSavingExpressionMascot()),
           ),
         );
 
@@ -99,7 +100,7 @@ void main() {
           act: (bloc) =>
               bloc.add(params['secondValidXFileUpload'] as CreateMascotEvent),
           verify: (bloc) => verify(
-            context.mocks.saveMascot(
+            context.mocks.addMascot(
               context.data.mascot.copyWith(
                 expressions: {
                   ...context.data.mascot.expressions.where(
@@ -121,7 +122,7 @@ void main() {
           'should emit [SavingExpression, SaveMascotError(${ErrorCodes.saveMascotFailureCode})] when upload fails',
           build: () => bloc,
           setUp: () {
-            when(context.mocks.saveMascot(any))
+            when(context.mocks.addMascot(any))
                 .thenAnswer((_) async => Left(LocalDataSourceFailure()));
           },
           act: (bloc) =>

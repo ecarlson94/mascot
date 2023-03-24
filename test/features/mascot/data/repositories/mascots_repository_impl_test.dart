@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mascot/core/clean_architecture/entity.dart';
 import 'package:mascot/core/error/failure.dart';
 import 'package:mascot/features/mascot/data/datasources/drift/models/drift_mascot.dart';
 import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl.dart';
@@ -69,9 +70,9 @@ void main() {
       );
     });
 
-    group('addMascot', () {
+    group('saveMascot', () {
       setUp(() async {
-        when(context.mocks.mascotsLocalDataSource.addMascot(any))
+        when(context.mocks.mascotsLocalDataSource.upsertMascot(any))
             .thenAnswer((_) => Future.value(context.data.mascot.id));
       });
 
@@ -79,13 +80,13 @@ void main() {
         'should return the id of the added mascot when call to local data source is successful',
         () async {
           // act
-          final result = await repository.addMascot(context.data.mascot);
+          final result = await repository.saveMascot(context.data.mascot);
 
           // assert
           expect(result, Right(context.data.mascot.id));
 
           verify(
-            context.mocks.mascotsLocalDataSource.addMascot(
+            context.mocks.mascotsLocalDataSource.upsertMascot(
               getMascotModel(),
             ),
           );
@@ -97,21 +98,40 @@ void main() {
         'should return failure when call to local data source is unsuccessful',
         () async {
           // arrange
-          when(context.mocks.mascotsLocalDataSource.addMascot(any))
+          when(context.mocks.mascotsLocalDataSource.upsertMascot(any))
               .thenThrow(Exception());
 
           // act
-          final result = await repository.addMascot(context.data.mascot);
+          final result = await repository.saveMascot(context.data.mascot);
 
           // assert
           expect(result, Left(LocalDataSourceFailure()));
 
           verify(
-            context.mocks.mascotsLocalDataSource.addMascot(
+            context.mocks.mascotsLocalDataSource.upsertMascot(
               getMascotModel(),
             ),
           );
           verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
+        },
+      );
+
+      test(
+        'should return InvalidArgumentFailure when mascot has expressions without ids',
+        () async {
+          // arrange
+          final mascot = context.data.mascot.copyWith(
+            expressions: {
+              context.data.expression.copyWith(id: 0),
+              context.data.expression,
+            },
+          );
+
+          // act
+          final result = await repository.saveMascot(mascot);
+
+          // assert
+          expect(result, Left<Failure, Id>(InvalidArgumentFailure()));
         },
       );
     });
@@ -126,6 +146,7 @@ void main() {
         when(context.mocks.mascotsLocalDataSource.streamMascot(any))
             .thenAnswer((_) => modelStream);
       });
+
       test('should seed the stream with the current value', () async {
         //act
         final result = await repository.streamMascot(context.data.mascot.id);

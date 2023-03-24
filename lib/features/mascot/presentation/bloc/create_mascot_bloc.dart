@@ -7,25 +7,27 @@ import '../../../../core/error/error.dart';
 import '../../../../core/utils/constants.dart';
 import '../../../expressions/domain/entities/expression.dart';
 import '../../domain/entities/mascot.dart';
-import '../../domain/usecases/save_mascot.dart';
+import '../../domain/usecases/add_mascot.dart';
 
 part 'create_mascot_event.dart';
 part 'create_mascot_state.dart';
 
 @injectable
+// TODO: only invoke usecase when hitting the submit button
+// TODO: return invalid input error when mascot name is empty
+// TODO: return invalid input error when mascot default expression is empty
+// TODO: return invalid input error when mascot talking expression is empty
 class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
   static const String neutralExpressionName = defaultExpressionName;
-  static const String talkingExpressionName = 'Talking';
   static const String neutralExpressionDescription =
       'The default expression of the mascot';
   static const String talkingExpressionDescription =
       'The expression that the mascot uses when talking';
 
-  final SaveMascot _saveMascot;
+  final AddMascot _addMascot;
 
-  CreateMascotBloc(
-    this._saveMascot,
-  ) : super(const CreateMascotInitial(Mascot.empty)) {
+  CreateMascotBloc(this._addMascot)
+      : super(const CreateMascotInitial(Mascot.empty)) {
     on<CreateMascotEvent>((event, emit) async {
       if (event is UploadNeutralExpression) {
         await _addExpressionToMascot(
@@ -79,7 +81,7 @@ class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
     Mascot mascotToUpdate,
     Emitter<CreateMascotState> emit,
   ) async {
-    var mascotOrFailure = await _saveMascot(mascotToUpdate);
+    var mascotOrFailure = await _addMascot(mascotToUpdate);
     mascotOrFailure.fold(
       (l) async => emit(
         SaveMascotError(

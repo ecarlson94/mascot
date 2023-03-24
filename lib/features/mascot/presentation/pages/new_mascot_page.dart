@@ -5,6 +5,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../../core/extensions/extensions.dart';
 import '../../../../core/injection/injection_container.dart';
+import '../../../../core/utils/constants.dart';
 import '../../../../core/widgets/common_text_field.dart';
 import '../../../expressions/presentation/widgets/upload_expression.dart';
 import '../bloc/create_mascot_bloc.dart';
@@ -53,9 +54,8 @@ class NewMascotPage extends StatelessWidget {
                           child: UploadExpression(
                             label: 'Upload mascot\'s expression for talking',
                             defaultImage: state.mascot.expressions
-                                .firstWhereOrNull((e) =>
-                                    e.name ==
-                                    CreateMascotBloc.talkingExpressionName)
+                                .firstWhereOrNull(
+                                    (e) => e.name == talkingExpressionName)
                                 ?.image,
                             onImageSelected: (image) {
                               bloc.add(UploadTalkingExpression(image));

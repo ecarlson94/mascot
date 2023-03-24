@@ -33,3 +33,5 @@ class SetMascotName extends CreateMascotEvent {
   @override
   List<Object?> get props => [name];
 }
+
+class SaveMascot extends CreateMascotEvent {}
