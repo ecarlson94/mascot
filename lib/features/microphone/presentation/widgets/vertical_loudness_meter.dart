@@ -14,7 +14,7 @@ class VerticalLoudnessMeter extends StatelessWidget {
 
   const VerticalLoudnessMeter({
     super.key,
-    this.minDecibels = -30,
+    this.minDecibels = -40,
     this.maxDecibels = 20,
     this.height = 200,
   });

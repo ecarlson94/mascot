@@ -51,5 +51,4 @@ class AudioContext {
       AnalyserNode(_jsAudioContext.createAnalyser());
 
   void close() => _jsAudioContext.close();
-  void resume() => _jsAudioContext.resume();
 }
