@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:injectable/injectable.dart';
 import 'package:universal_html/html.dart' as html;
+import 'package:universal_html/html.dart';
 
 import '../../../../core/device/web/js_interop/web_audio/web_audio.dart';
 import '../../../../core/extensions/extensions.dart';
@@ -15,16 +16,15 @@ class MascotMicrophoneLogger extends Logger<WebMicrophone> {}
 
 @LazySingleton(as: Microphone)
 class WebMicrophone implements Microphone {
-  final html.Window _webWindow;
   final AudioContext _webAudio;
   final Logger<WebMicrophone> _logger;
 
-  WebMicrophone(this._webWindow, this._webAudio, this._logger);
+  WebMicrophone(this._webAudio, this._logger);
 
   @override
   Future<bool> hasPermission() async {
-    await _setStream();
-    return _stream != null;
+    await _setMicrophoneStream();
+    return _microphoneStream != null;
   }
 
   @override
@@ -42,10 +42,10 @@ class WebMicrophone implements Microphone {
     }
   }
 
-  html.MediaStream? _stream;
-  Future<void> _setStream({bool throwOnError = false}) async {
+  html.MediaStream? _microphoneStream;
+  Future<void> _setMicrophoneStream({bool throwOnError = false}) async {
     try {
-      _stream ??= await _webWindow.navigator.mediaDevices?.getUserMedia({
+      _microphoneStream ??= await window.navigator.mediaDevices?.getUserMedia({
         'audio': true,
       });
     } catch (e) {
@@ -62,15 +62,15 @@ class WebMicrophone implements Microphone {
       if (throwOnError) rethrow;
     }
 
-    if (throwOnError && _stream == null) {
+    if (throwOnError && _microphoneStream == null) {
       var e = Exception('Failed to get microphone stream');
       _logger.logError(e.toString(), e);
       throw e;
     }
   }
 
-  AnalyzerNode? _analyzer;
-  Future<AnalyzerNode> _getAnalyzer() async {
+  AnalyserNode? _analyzer;
+  Future<AnalyserNode> _getAnalyzer() async {
     if (_analyzer == null) {
       final source = await _getSource();
       _analyzer = _webAudio.createAnalyser();
@@ -82,8 +82,8 @@ class WebMicrophone implements Microphone {
 
   MediaStreamAudioSourceNode? _source;
   Future<MediaStreamAudioSourceNode> _getSource() async {
-    await _setStream(throwOnError: true);
+    await _setMicrophoneStream(throwOnError: true);
 
-    return _source ??= _webAudio.createMediaStreamSource(_stream!);
+    return _source ??= _webAudio.createMediaStreamSource(_microphoneStream!);
   }
 }

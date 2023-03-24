@@ -5,7 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:js/js.dart';
 import 'package:universal_html/html.dart';
 
-import 'analyzer_node.dart';
+import 'analyser_node.dart';
 import 'media_stream_audio_source_node.dart';
 
 @JS()
@@ -30,7 +30,7 @@ extension JSAudioContextExtension on JSAudioContext {
     MediaStream stream,
   );
 
-  external JSAnalyzerNode createAnalyser();
+  external JSAnalyserNode createAnalyser();
 
   external void close();
   external void resume();
@@ -47,8 +47,8 @@ class AudioContext {
         _jsAudioContext.createMediaStreamSource(stream),
       );
 
-  AnalyzerNode createAnalyser() =>
-      AnalyzerNode(_jsAudioContext.createAnalyser());
+  AnalyserNode createAnalyser() =>
+      AnalyserNode(_jsAudioContext.createAnalyser());
 
   void close() => _jsAudioContext.close();
   void resume() => _jsAudioContext.resume();

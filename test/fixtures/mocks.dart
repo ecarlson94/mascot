@@ -1,4 +1,3 @@
-import 'package:mascot/core/device/web/js_interop/web_audio/audio_context.dart';
 import 'package:mascot/core/utils/logger.dart';
 import 'package:mascot/features/expressions/data/datasources/drift/expressions_drift_data_source.dart';
 import 'package:mascot/features/mascot/data/datasources/drift/mascots_drift_data_source.dart';
@@ -13,7 +12,6 @@ import 'package:mascot/features/settings/data/datasources/drift/settings_drift_d
 import 'package:mascot/features/settings/domain/repositories/settings_repository.dart';
 import 'package:mascot/features/settings/domain/usecases/stream_settings.dart';
 import 'package:mockito/annotations.dart';
-import 'package:universal_html/html.dart';
 
 import 'mocks.mocks.dart';
 
@@ -30,10 +28,6 @@ import 'mocks.mocks.dart';
   Logger<MascotsRepositoryImpl>,
   MicrophoneService,
   Microphone,
-  AudioContext,
-  Window,
-  Navigator,
-  MediaDevices,
 ])
 class Mocks {
   MockExpressionsDriftDataSource? _expressionsLocalDataSource;
@@ -77,10 +71,4 @@ class Mocks {
 
   MockMicrophone? _microphone;
   MockMicrophone get microphone => _microphone ??= MockMicrophone();
-
-  MockAudioContext? _audioContext;
-  MockAudioContext get audioContext => _audioContext ??= MockAudioContext();
-
-  MockWindow? _window;
-  MockWindow get window => _window ??= MockWindow();
 }

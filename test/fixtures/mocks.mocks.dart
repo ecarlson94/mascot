@@ -3,52 +3,44 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i11;
-import 'dart:html' as _i9;
-import 'dart:math' as _i29;
+import 'dart:async' as _i8;
 
 import 'package:dartz/dartz.dart' as _i3;
-import 'package:mascot/core/clean_architecture/usecase.dart' as _i22;
-import 'package:mascot/core/device/web/js_interop/web_audio/analyzer_node.dart'
-    as _i8;
-import 'package:mascot/core/device/web/js_interop/web_audio/audio_context.dart'
-    as _i28;
-import 'package:mascot/core/device/web/js_interop/web_audio/media_stream_audio_source_node.dart'
-    as _i7;
-import 'package:mascot/core/error/failure.dart' as _i15;
-import 'package:mascot/core/utils/logger.dart' as _i24;
+import 'package:mascot/core/clean_architecture/usecase.dart' as _i19;
+import 'package:mascot/core/error/failure.dart' as _i12;
+import 'package:mascot/core/utils/logger.dart' as _i21;
 import 'package:mascot/features/expressions/data/datasources/drift/expressions_drift_data_source.dart'
-    as _i10;
+    as _i7;
 import 'package:mascot/features/expressions/data/datasources/drift/models/drift_expression.dart'
-    as _i12;
+    as _i9;
 import 'package:mascot/features/mascot/data/datasources/drift/mascots_drift_data_source.dart'
-    as _i14;
+    as _i11;
 import 'package:mascot/features/mascot/data/datasources/drift/models/drift_mascot.dart'
     as _i4;
-import 'package:mascot/features/mascot/domain/entities/mascot.dart' as _i16;
+import 'package:mascot/features/mascot/domain/entities/mascot.dart' as _i13;
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart'
     as _i6;
-import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart' as _i19;
+import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart' as _i16;
 import 'package:mascot/features/mascot/domain/usecases/save_mascot.dart'
-    as _i18;
+    as _i15;
 import 'package:mascot/features/mascot/domain/usecases/stream_mascot.dart'
-    as _i23;
-import 'package:mascot/features/microphone/device/microphone.dart' as _i27;
+    as _i20;
+import 'package:mascot/features/microphone/device/microphone.dart' as _i24;
 import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart'
-    as _i26;
+    as _i23;
 import 'package:mascot/features/microphone/domain/services/microphone_service.dart'
-    as _i25;
+    as _i22;
 import 'package:mascot/features/settings/data/datasources/drift/models/drift_settings.dart'
     as _i2;
 import 'package:mascot/features/settings/data/datasources/drift/settings_drift_data_source.dart'
-    as _i13;
-import 'package:mascot/features/settings/domain/entities/settings.dart' as _i20;
+    as _i10;
+import 'package:mascot/features/settings/domain/entities/settings.dart' as _i17;
 import 'package:mascot/features/settings/domain/repositories/settings_repository.dart'
     as _i5;
 import 'package:mascot/features/settings/domain/usecases/stream_settings.dart'
-    as _i21;
+    as _i18;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:rxdart/rxdart.dart' as _i17;
+import 'package:rxdart/rxdart.dart' as _i14;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -123,336 +115,151 @@ class _FakeMascotsRepository_5 extends _i1.SmartFake
         );
 }
 
-class _FakeMediaStreamAudioSourceNode_6 extends _i1.SmartFake
-    implements _i7.MediaStreamAudioSourceNode {
-  _FakeMediaStreamAudioSourceNode_6(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeAnalyzerNode_7 extends _i1.SmartFake implements _i8.AnalyzerNode {
-  _FakeAnalyzerNode_7(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeDocument_8 extends _i1.SmartFake implements _i9.Document {
-  _FakeDocument_8(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeLocation_9 extends _i1.SmartFake implements _i9.Location {
-  _FakeLocation_9(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeConsole_10 extends _i1.SmartFake implements _i9.Console {
-  _FakeConsole_10(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeHistory_11 extends _i1.SmartFake implements _i9.History {
-  _FakeHistory_11(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeStorage_12 extends _i1.SmartFake implements _i9.Storage {
-  _FakeStorage_12(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeNavigator_13 extends _i1.SmartFake implements _i9.Navigator {
-  _FakeNavigator_13(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakePerformance_14 extends _i1.SmartFake implements _i9.Performance {
-  _FakePerformance_14(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeEvents_15 extends _i1.SmartFake implements _i9.Events {
-  _FakeEvents_15(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeWindowBase_16 extends _i1.SmartFake implements _i9.WindowBase {
-  _FakeWindowBase_16(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeFileSystem_17 extends _i1.SmartFake implements _i9.FileSystem {
-  _FakeFileSystem_17(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeStylePropertyMapReadonly_18 extends _i1.SmartFake
-    implements _i9.StylePropertyMapReadonly {
-  _FakeStylePropertyMapReadonly_18(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeMediaQueryList_19 extends _i1.SmartFake
-    implements _i9.MediaQueryList {
-  _FakeMediaQueryList_19(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeEntry_20 extends _i1.SmartFake implements _i9.Entry {
-  _FakeEntry_20(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeGeolocation_21 extends _i1.SmartFake implements _i9.Geolocation {
-  _FakeGeolocation_21(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeMediaStream_22 extends _i1.SmartFake implements _i9.MediaStream {
-  _FakeMediaStream_22(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeRelatedApplication_23 extends _i1.SmartFake
-    implements _i9.RelatedApplication {
-  _FakeRelatedApplication_23(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
 /// A class which mocks [ExpressionsDriftDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockExpressionsDriftDataSource extends _i1.Mock
-    implements _i10.ExpressionsDriftDataSource {
+    implements _i7.ExpressionsDriftDataSource {
   MockExpressionsDriftDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i11.Future<int> upsertExpression(_i12.DriftExpression? expression) =>
+  _i8.Future<int> upsertExpression(_i9.DriftExpression? expression) =>
       (super.noSuchMethod(
         Invocation.method(
           #upsertExpression,
           [expression],
         ),
-        returnValue: _i11.Future<int>.value(0),
-      ) as _i11.Future<int>);
+        returnValue: _i8.Future<int>.value(0),
+      ) as _i8.Future<int>);
   @override
-  _i11.Future<List<int>> upsertExpressions(
-          Iterable<_i12.DriftExpression>? expressions) =>
+  _i8.Future<List<int>> upsertExpressions(
+          Iterable<_i9.DriftExpression>? expressions) =>
       (super.noSuchMethod(
         Invocation.method(
           #upsertExpressions,
           [expressions],
         ),
-        returnValue: _i11.Future<List<int>>.value(<int>[]),
-      ) as _i11.Future<List<int>>);
+        returnValue: _i8.Future<List<int>>.value(<int>[]),
+      ) as _i8.Future<List<int>>);
   @override
-  _i11.Future<void> removeExpression(int? id) => (super.noSuchMethod(
+  _i8.Future<void> removeExpression(int? id) => (super.noSuchMethod(
         Invocation.method(
           #removeExpression,
           [id],
         ),
-        returnValue: _i11.Future<void>.value(),
-        returnValueForMissingStub: _i11.Future<void>.value(),
-      ) as _i11.Future<void>);
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
   @override
-  _i11.Future<List<_i12.DriftExpression>> getExpressions(Iterable<int>? ids) =>
+  _i8.Future<List<_i9.DriftExpression>> getExpressions(Iterable<int>? ids) =>
       (super.noSuchMethod(
         Invocation.method(
           #getExpressions,
           [ids],
         ),
-        returnValue: _i11.Future<List<_i12.DriftExpression>>.value(
-            <_i12.DriftExpression>[]),
-      ) as _i11.Future<List<_i12.DriftExpression>>);
+        returnValue: _i8.Future<List<_i9.DriftExpression>>.value(
+            <_i9.DriftExpression>[]),
+      ) as _i8.Future<List<_i9.DriftExpression>>);
   @override
-  _i11.Stream<List<_i12.DriftExpression>> streamExpressions(
-          Iterable<int>? ids) =>
+  _i8.Stream<List<_i9.DriftExpression>> streamExpressions(Iterable<int>? ids) =>
       (super.noSuchMethod(
         Invocation.method(
           #streamExpressions,
           [ids],
         ),
-        returnValue: _i11.Stream<List<_i12.DriftExpression>>.empty(),
-      ) as _i11.Stream<List<_i12.DriftExpression>>);
+        returnValue: _i8.Stream<List<_i9.DriftExpression>>.empty(),
+      ) as _i8.Stream<List<_i9.DriftExpression>>);
 }
 
 /// A class which mocks [SettingsDriftDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockSettingsDriftDataSource extends _i1.Mock
-    implements _i13.SettingsDriftDataSource {
+    implements _i10.SettingsDriftDataSource {
   MockSettingsDriftDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i11.Future<_i2.DriftSettings> loadSettings() => (super.noSuchMethod(
+  _i8.Future<_i2.DriftSettings> loadSettings() => (super.noSuchMethod(
         Invocation.method(
           #loadSettings,
           [],
         ),
-        returnValue: _i11.Future<_i2.DriftSettings>.value(_FakeDriftSettings_0(
+        returnValue: _i8.Future<_i2.DriftSettings>.value(_FakeDriftSettings_0(
           this,
           Invocation.method(
             #loadSettings,
             [],
           ),
         )),
-      ) as _i11.Future<_i2.DriftSettings>);
+      ) as _i8.Future<_i2.DriftSettings>);
   @override
-  _i11.Stream<_i2.DriftSettings?> streamSettings() => (super.noSuchMethod(
+  _i8.Stream<_i2.DriftSettings?> streamSettings() => (super.noSuchMethod(
         Invocation.method(
           #streamSettings,
           [],
         ),
-        returnValue: _i11.Stream<_i2.DriftSettings?>.empty(),
-      ) as _i11.Stream<_i2.DriftSettings?>);
+        returnValue: _i8.Stream<_i2.DriftSettings?>.empty(),
+      ) as _i8.Stream<_i2.DriftSettings?>);
   @override
-  _i11.Future<_i3.Unit> saveSettings(_i2.DriftSettings? settings) =>
+  _i8.Future<_i3.Unit> saveSettings(_i2.DriftSettings? settings) =>
       (super.noSuchMethod(
         Invocation.method(
           #saveSettings,
           [settings],
         ),
-        returnValue: _i11.Future<_i3.Unit>.value(_FakeUnit_1(
+        returnValue: _i8.Future<_i3.Unit>.value(_FakeUnit_1(
           this,
           Invocation.method(
             #saveSettings,
             [settings],
           ),
         )),
-      ) as _i11.Future<_i3.Unit>);
+      ) as _i8.Future<_i3.Unit>);
 }
 
 /// A class which mocks [MascotsDriftDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockMascotsDriftDataSource extends _i1.Mock
-    implements _i14.MascotsDriftDataSource {
+    implements _i11.MascotsDriftDataSource {
   MockMascotsDriftDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i11.Future<int> addMascot(_i4.DriftMascot? mascot) => (super.noSuchMethod(
+  _i8.Future<int> addMascot(_i4.DriftMascot? mascot) => (super.noSuchMethod(
         Invocation.method(
           #addMascot,
           [mascot],
         ),
-        returnValue: _i11.Future<int>.value(0),
-      ) as _i11.Future<int>);
+        returnValue: _i8.Future<int>.value(0),
+      ) as _i8.Future<int>);
   @override
-  _i11.Future<_i4.DriftMascot> getMascot(int? id) => (super.noSuchMethod(
+  _i8.Future<_i4.DriftMascot> getMascot(int? id) => (super.noSuchMethod(
         Invocation.method(
           #getMascot,
           [id],
         ),
-        returnValue: _i11.Future<_i4.DriftMascot>.value(_FakeDriftMascot_2(
+        returnValue: _i8.Future<_i4.DriftMascot>.value(_FakeDriftMascot_2(
           this,
           Invocation.method(
             #getMascot,
             [id],
           ),
         )),
-      ) as _i11.Future<_i4.DriftMascot>);
+      ) as _i8.Future<_i4.DriftMascot>);
   @override
-  _i11.Stream<_i4.DriftMascot?> streamMascot(int? id) => (super.noSuchMethod(
+  _i8.Stream<_i4.DriftMascot?> streamMascot(int? id) => (super.noSuchMethod(
         Invocation.method(
           #streamMascot,
           [id],
         ),
-        returnValue: _i11.Stream<_i4.DriftMascot?>.empty(),
-      ) as _i11.Stream<_i4.DriftMascot?>);
+        returnValue: _i8.Stream<_i4.DriftMascot?>.empty(),
+      ) as _i8.Stream<_i4.DriftMascot?>);
 }
 
 /// A class which mocks [MascotsRepository].
@@ -464,109 +271,108 @@ class MockMascotsRepository extends _i1.Mock implements _i6.MascotsRepository {
   }
 
   @override
-  _i11.Future<_i3.Either<_i15.Failure, int>> addMascot(_i16.Mascot? mascot) =>
+  _i8.Future<_i3.Either<_i12.Failure, int>> addMascot(_i13.Mascot? mascot) =>
       (super.noSuchMethod(
         Invocation.method(
           #addMascot,
           [mascot],
         ),
-        returnValue: _i11.Future<_i3.Either<_i15.Failure, int>>.value(
-            _FakeEither_3<_i15.Failure, int>(
+        returnValue: _i8.Future<_i3.Either<_i12.Failure, int>>.value(
+            _FakeEither_3<_i12.Failure, int>(
           this,
           Invocation.method(
             #addMascot,
             [mascot],
           ),
         )),
-      ) as _i11.Future<_i3.Either<_i15.Failure, int>>);
+      ) as _i8.Future<_i3.Either<_i12.Failure, int>>);
   @override
-  _i11.Future<_i3.Either<_i15.Failure, _i16.Mascot>> getMascot(int? id) =>
+  _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>> getMascot(int? id) =>
       (super.noSuchMethod(
         Invocation.method(
           #getMascot,
           [id],
         ),
-        returnValue: _i11.Future<_i3.Either<_i15.Failure, _i16.Mascot>>.value(
-            _FakeEither_3<_i15.Failure, _i16.Mascot>(
+        returnValue: _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>>.value(
+            _FakeEither_3<_i12.Failure, _i13.Mascot>(
           this,
           Invocation.method(
             #getMascot,
             [id],
           ),
         )),
-      ) as _i11.Future<_i3.Either<_i15.Failure, _i16.Mascot>>);
+      ) as _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>>);
   @override
-  _i11.Future<_i3.Either<_i15.Failure, _i17.BehaviorSubject<_i16.Mascot>>>
+  _i8.Future<_i3.Either<_i12.Failure, _i14.BehaviorSubject<_i13.Mascot>>>
       streamMascot(int? id) => (super.noSuchMethod(
             Invocation.method(
               #streamMascot,
               [id],
             ),
-            returnValue: _i11.Future<
-                    _i3.Either<_i15.Failure,
-                        _i17.BehaviorSubject<_i16.Mascot>>>.value(
-                _FakeEither_3<_i15.Failure, _i17.BehaviorSubject<_i16.Mascot>>(
+            returnValue: _i8.Future<
+                    _i3.Either<_i12.Failure,
+                        _i14.BehaviorSubject<_i13.Mascot>>>.value(
+                _FakeEither_3<_i12.Failure, _i14.BehaviorSubject<_i13.Mascot>>(
               this,
               Invocation.method(
                 #streamMascot,
                 [id],
               ),
             )),
-          ) as _i11.Future<
-              _i3.Either<_i15.Failure, _i17.BehaviorSubject<_i16.Mascot>>>);
+          ) as _i8.Future<
+              _i3.Either<_i12.Failure, _i14.BehaviorSubject<_i13.Mascot>>>);
 }
 
 /// A class which mocks [SaveMascot].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSaveMascot extends _i1.Mock implements _i18.SaveMascot {
+class MockSaveMascot extends _i1.Mock implements _i15.SaveMascot {
   MockSaveMascot() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i11.Future<_i3.Either<_i15.Failure, _i16.Mascot>> call(
-          _i16.Mascot? mascot) =>
+  _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>> call(_i13.Mascot? mascot) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [mascot],
         ),
-        returnValue: _i11.Future<_i3.Either<_i15.Failure, _i16.Mascot>>.value(
-            _FakeEither_3<_i15.Failure, _i16.Mascot>(
+        returnValue: _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>>.value(
+            _FakeEither_3<_i12.Failure, _i13.Mascot>(
           this,
           Invocation.method(
             #call,
             [mascot],
           ),
         )),
-      ) as _i11.Future<_i3.Either<_i15.Failure, _i16.Mascot>>);
+      ) as _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>>);
 }
 
 /// A class which mocks [GetMascot].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGetMascot extends _i1.Mock implements _i19.GetMascot {
+class MockGetMascot extends _i1.Mock implements _i16.GetMascot {
   MockGetMascot() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i11.Future<_i3.Either<_i15.Failure, _i16.Mascot>> call(int? params) =>
+  _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>> call(int? params) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [params],
         ),
-        returnValue: _i11.Future<_i3.Either<_i15.Failure, _i16.Mascot>>.value(
-            _FakeEither_3<_i15.Failure, _i16.Mascot>(
+        returnValue: _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>>.value(
+            _FakeEither_3<_i12.Failure, _i13.Mascot>(
           this,
           Invocation.method(
             #call,
             [params],
           ),
         )),
-      ) as _i11.Future<_i3.Either<_i15.Failure, _i16.Mascot>>);
+      ) as _i8.Future<_i3.Either<_i12.Failure, _i13.Mascot>>);
 }
 
 /// A class which mocks [SettingsRepository].
@@ -579,63 +385,62 @@ class MockSettingsRepository extends _i1.Mock
   }
 
   @override
-  _i11.Future<_i3.Either<_i15.Failure, _i20.Settings>> loadSettings() =>
+  _i8.Future<_i3.Either<_i12.Failure, _i17.Settings>> loadSettings() =>
       (super.noSuchMethod(
         Invocation.method(
           #loadSettings,
           [],
         ),
-        returnValue: _i11.Future<_i3.Either<_i15.Failure, _i20.Settings>>.value(
-            _FakeEither_3<_i15.Failure, _i20.Settings>(
+        returnValue: _i8.Future<_i3.Either<_i12.Failure, _i17.Settings>>.value(
+            _FakeEither_3<_i12.Failure, _i17.Settings>(
           this,
           Invocation.method(
             #loadSettings,
             [],
           ),
         )),
-      ) as _i11.Future<_i3.Either<_i15.Failure, _i20.Settings>>);
+      ) as _i8.Future<_i3.Either<_i12.Failure, _i17.Settings>>);
   @override
-  _i11.Future<_i3.Either<_i15.Failure, _i17.BehaviorSubject<_i20.Settings>>>
+  _i8.Future<_i3.Either<_i12.Failure, _i14.BehaviorSubject<_i17.Settings>>>
       streamSettings() => (super.noSuchMethod(
             Invocation.method(
               #streamSettings,
               [],
             ),
-            returnValue: _i11.Future<
-                _i3.Either<_i15.Failure,
-                    _i17.BehaviorSubject<_i20.Settings>>>.value(_FakeEither_3<
-                _i15.Failure, _i17.BehaviorSubject<_i20.Settings>>(
+            returnValue: _i8.Future<
+                _i3.Either<_i12.Failure,
+                    _i14.BehaviorSubject<_i17.Settings>>>.value(_FakeEither_3<
+                _i12.Failure, _i14.BehaviorSubject<_i17.Settings>>(
               this,
               Invocation.method(
                 #streamSettings,
                 [],
               ),
             )),
-          ) as _i11.Future<
-              _i3.Either<_i15.Failure, _i17.BehaviorSubject<_i20.Settings>>>);
+          ) as _i8.Future<
+              _i3.Either<_i12.Failure, _i14.BehaviorSubject<_i17.Settings>>>);
   @override
-  _i11.Future<_i3.Either<_i15.Failure, _i3.Unit>> setFavoriteMascotId(
-          int? id) =>
+  _i8.Future<_i3.Either<_i12.Failure, _i3.Unit>> setFavoriteMascotId(int? id) =>
       (super.noSuchMethod(
         Invocation.method(
           #setFavoriteMascotId,
           [id],
         ),
-        returnValue: _i11.Future<_i3.Either<_i15.Failure, _i3.Unit>>.value(
-            _FakeEither_3<_i15.Failure, _i3.Unit>(
+        returnValue: _i8.Future<_i3.Either<_i12.Failure, _i3.Unit>>.value(
+            _FakeEither_3<_i12.Failure, _i3.Unit>(
           this,
           Invocation.method(
             #setFavoriteMascotId,
             [id],
           ),
         )),
-      ) as _i11.Future<_i3.Either<_i15.Failure, _i3.Unit>>);
+      ) as _i8.Future<_i3.Either<_i12.Failure, _i3.Unit>>);
 }
 
 /// A class which mocks [StreamSettings].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockStreamSettings extends _i1.Mock implements _i21.StreamSettings {
+class MockStreamSettings extends _i1.Mock implements _i18.StreamSettings {
   MockStreamSettings() {
     _i1.throwOnMissingStub(this);
   }
@@ -649,32 +454,32 @@ class MockStreamSettings extends _i1.Mock implements _i21.StreamSettings {
         ),
       ) as _i5.SettingsRepository);
   @override
-  _i11.Future<
-      _i3.Either<_i15.Failure, _i17.BehaviorSubject<_i20.Settings>>> call(
-          _i22.NoParams? params) =>
+  _i8.Future<
+      _i3.Either<_i12.Failure, _i14.BehaviorSubject<_i17.Settings>>> call(
+          _i19.NoParams? params) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [params],
         ),
-        returnValue: _i11.Future<
-                _i3.Either<_i15.Failure,
-                    _i17.BehaviorSubject<_i20.Settings>>>.value(
-            _FakeEither_3<_i15.Failure, _i17.BehaviorSubject<_i20.Settings>>(
+        returnValue: _i8.Future<
+                _i3.Either<_i12.Failure,
+                    _i14.BehaviorSubject<_i17.Settings>>>.value(
+            _FakeEither_3<_i12.Failure, _i14.BehaviorSubject<_i17.Settings>>(
           this,
           Invocation.method(
             #call,
             [params],
           ),
         )),
-      ) as _i11.Future<
-          _i3.Either<_i15.Failure, _i17.BehaviorSubject<_i20.Settings>>>);
+      ) as _i8.Future<
+          _i3.Either<_i12.Failure, _i14.BehaviorSubject<_i17.Settings>>>);
 }
 
 /// A class which mocks [StreamMascot].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockStreamMascot extends _i1.Mock implements _i23.StreamMascot {
+class MockStreamMascot extends _i1.Mock implements _i20.StreamMascot {
   MockStreamMascot() {
     _i1.throwOnMissingStub(this);
   }
@@ -688,31 +493,31 @@ class MockStreamMascot extends _i1.Mock implements _i23.StreamMascot {
         ),
       ) as _i6.MascotsRepository);
   @override
-  _i11.Future<_i3.Either<_i15.Failure, _i17.BehaviorSubject<_i16.Mascot>>> call(
+  _i8.Future<_i3.Either<_i12.Failure, _i14.BehaviorSubject<_i13.Mascot>>> call(
           int? params) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [params],
         ),
-        returnValue: _i11.Future<
-                _i3.Either<_i15.Failure,
-                    _i17.BehaviorSubject<_i16.Mascot>>>.value(
-            _FakeEither_3<_i15.Failure, _i17.BehaviorSubject<_i16.Mascot>>(
+        returnValue: _i8.Future<
+                _i3.Either<_i12.Failure,
+                    _i14.BehaviorSubject<_i13.Mascot>>>.value(
+            _FakeEither_3<_i12.Failure, _i14.BehaviorSubject<_i13.Mascot>>(
           this,
           Invocation.method(
             #call,
             [params],
           ),
         )),
-      ) as _i11
-          .Future<_i3.Either<_i15.Failure, _i17.BehaviorSubject<_i16.Mascot>>>);
+      ) as _i8
+          .Future<_i3.Either<_i12.Failure, _i14.BehaviorSubject<_i13.Mascot>>>);
 }
 
 /// A class which mocks [Logger].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLogger<T> extends _i1.Mock implements _i24.Logger<T> {
+class MockLogger<T> extends _i1.Mock implements _i21.Logger<T> {
   MockLogger() {
     _i1.throwOnMissingStub(this);
   }
@@ -755,1376 +560,51 @@ class MockLogger<T> extends _i1.Mock implements _i24.Logger<T> {
 /// A class which mocks [MicrophoneService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMicrophoneService extends _i1.Mock implements _i25.MicrophoneService {
+class MockMicrophoneService extends _i1.Mock implements _i22.MicrophoneService {
   MockMicrophoneService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i11.Future<_i3.Either<_i15.Failure, _i11.Stream<_i26.DecibelLufs>>>
+  _i8.Future<_i3.Either<_i12.Failure, _i8.Stream<_i23.DecibelLufs>>>
       getVolumeStream() => (super.noSuchMethod(
             Invocation.method(
               #getVolumeStream,
               [],
             ),
-            returnValue: _i11.Future<
-                    _i3.Either<_i15.Failure,
-                        _i11.Stream<_i26.DecibelLufs>>>.value(
-                _FakeEither_3<_i15.Failure, _i11.Stream<_i26.DecibelLufs>>(
+            returnValue: _i8.Future<
+                    _i3.Either<_i12.Failure,
+                        _i8.Stream<_i23.DecibelLufs>>>.value(
+                _FakeEither_3<_i12.Failure, _i8.Stream<_i23.DecibelLufs>>(
               this,
               Invocation.method(
                 #getVolumeStream,
                 [],
               ),
             )),
-          ) as _i11
-              .Future<_i3.Either<_i15.Failure, _i11.Stream<_i26.DecibelLufs>>>);
+          ) as _i8
+              .Future<_i3.Either<_i12.Failure, _i8.Stream<_i23.DecibelLufs>>>);
 }
 
 /// A class which mocks [Microphone].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMicrophone extends _i1.Mock implements _i27.Microphone {
+class MockMicrophone extends _i1.Mock implements _i24.Microphone {
   MockMicrophone() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i11.Stream<_i26.DecibelLufs> get volumeStream => (super.noSuchMethod(
+  _i8.Stream<_i23.DecibelLufs> get volumeStream => (super.noSuchMethod(
         Invocation.getter(#volumeStream),
-        returnValue: _i11.Stream<_i26.DecibelLufs>.empty(),
-      ) as _i11.Stream<_i26.DecibelLufs>);
+        returnValue: _i8.Stream<_i23.DecibelLufs>.empty(),
+      ) as _i8.Stream<_i23.DecibelLufs>);
   @override
-  _i11.Future<bool> hasPermission() => (super.noSuchMethod(
+  _i8.Future<bool> hasPermission() => (super.noSuchMethod(
         Invocation.method(
           #hasPermission,
           [],
         ),
-        returnValue: _i11.Future<bool>.value(false),
-      ) as _i11.Future<bool>);
-}
-
-/// A class which mocks [AudioContext].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockAudioContext extends _i1.Mock implements _i28.AudioContext {
-  MockAudioContext() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  _i7.MediaStreamAudioSourceNode createMediaStreamSource(
-          _i9.MediaStream? stream) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #createMediaStreamSource,
-          [stream],
-        ),
-        returnValue: _FakeMediaStreamAudioSourceNode_6(
-          this,
-          Invocation.method(
-            #createMediaStreamSource,
-            [stream],
-          ),
-        ),
-      ) as _i7.MediaStreamAudioSourceNode);
-  @override
-  _i8.AnalyzerNode createAnalyser() => (super.noSuchMethod(
-        Invocation.method(
-          #createAnalyser,
-          [],
-        ),
-        returnValue: _FakeAnalyzerNode_7(
-          this,
-          Invocation.method(
-            #createAnalyser,
-            [],
-          ),
-        ),
-      ) as _i8.AnalyzerNode);
-  @override
-  void close() => super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  void resume() => super.noSuchMethod(
-        Invocation.method(
-          #resume,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
-}
-
-/// A class which mocks [Window].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockWindow extends _i1.Mock implements _i9.Window {
-  MockWindow() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  _i11.Future<num> get animationFrame => (super.noSuchMethod(
-        Invocation.getter(#animationFrame),
-        returnValue: _i11.Future<num>.value(0),
-      ) as _i11.Future<num>);
-  @override
-  _i9.Document get document => (super.noSuchMethod(
-        Invocation.getter(#document),
-        returnValue: _FakeDocument_8(
-          this,
-          Invocation.getter(#document),
-        ),
-      ) as _i9.Document);
-  @override
-  _i9.Location get location => (super.noSuchMethod(
-        Invocation.getter(#location),
-        returnValue: _FakeLocation_9(
-          this,
-          Invocation.getter(#location),
-        ),
-      ) as _i9.Location);
-  @override
-  set location(_i9.LocationBase? value) => super.noSuchMethod(
-        Invocation.setter(
-          #location,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  _i9.Console get console => (super.noSuchMethod(
-        Invocation.getter(#console),
-        returnValue: _FakeConsole_10(
-          this,
-          Invocation.getter(#console),
-        ),
-      ) as _i9.Console);
-  @override
-  set defaultStatus(String? value) => super.noSuchMethod(
-        Invocation.setter(
-          #defaultStatus,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  set defaultstatus(String? value) => super.noSuchMethod(
-        Invocation.setter(
-          #defaultstatus,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  num get devicePixelRatio => (super.noSuchMethod(
-        Invocation.getter(#devicePixelRatio),
-        returnValue: 0,
-      ) as num);
-  @override
-  _i9.History get history => (super.noSuchMethod(
-        Invocation.getter(#history),
-        returnValue: _FakeHistory_11(
-          this,
-          Invocation.getter(#history),
-        ),
-      ) as _i9.History);
-  @override
-  _i9.Storage get localStorage => (super.noSuchMethod(
-        Invocation.getter(#localStorage),
-        returnValue: _FakeStorage_12(
-          this,
-          Invocation.getter(#localStorage),
-        ),
-      ) as _i9.Storage);
-  @override
-  set name(String? value) => super.noSuchMethod(
-        Invocation.setter(
-          #name,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  _i9.Navigator get navigator => (super.noSuchMethod(
-        Invocation.getter(#navigator),
-        returnValue: _FakeNavigator_13(
-          this,
-          Invocation.getter(#navigator),
-        ),
-      ) as _i9.Navigator);
-  @override
-  set opener(_i9.WindowBase? value) => super.noSuchMethod(
-        Invocation.setter(
-          #opener,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  int get outerHeight => (super.noSuchMethod(
-        Invocation.getter(#outerHeight),
-        returnValue: 0,
-      ) as int);
-  @override
-  int get outerWidth => (super.noSuchMethod(
-        Invocation.getter(#outerWidth),
-        returnValue: 0,
-      ) as int);
-  @override
-  _i9.Performance get performance => (super.noSuchMethod(
-        Invocation.getter(#performance),
-        returnValue: _FakePerformance_14(
-          this,
-          Invocation.getter(#performance),
-        ),
-      ) as _i9.Performance);
-  @override
-  _i9.Storage get sessionStorage => (super.noSuchMethod(
-        Invocation.getter(#sessionStorage),
-        returnValue: _FakeStorage_12(
-          this,
-          Invocation.getter(#sessionStorage),
-        ),
-      ) as _i9.Storage);
-  @override
-  set status(String? value) => super.noSuchMethod(
-        Invocation.setter(
-          #status,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  _i11.Stream<_i9.Event> get onContentLoaded => (super.noSuchMethod(
-        Invocation.getter(#onContentLoaded),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onAbort => (super.noSuchMethod(
-        Invocation.getter(#onAbort),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onBlur => (super.noSuchMethod(
-        Invocation.getter(#onBlur),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onCanPlay => (super.noSuchMethod(
-        Invocation.getter(#onCanPlay),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onCanPlayThrough => (super.noSuchMethod(
-        Invocation.getter(#onCanPlayThrough),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onChange => (super.noSuchMethod(
-        Invocation.getter(#onChange),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.MouseEvent> get onClick => (super.noSuchMethod(
-        Invocation.getter(#onClick),
-        returnValue: _i11.Stream<_i9.MouseEvent>.empty(),
-      ) as _i11.Stream<_i9.MouseEvent>);
-  @override
-  _i11.Stream<_i9.MouseEvent> get onContextMenu => (super.noSuchMethod(
-        Invocation.getter(#onContextMenu),
-        returnValue: _i11.Stream<_i9.MouseEvent>.empty(),
-      ) as _i11.Stream<_i9.MouseEvent>);
-  @override
-  _i11.Stream<_i9.Event> get onDoubleClick => (super.noSuchMethod(
-        Invocation.getter(#onDoubleClick),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.DeviceMotionEvent> get onDeviceMotion => (super.noSuchMethod(
-        Invocation.getter(#onDeviceMotion),
-        returnValue: _i11.Stream<_i9.DeviceMotionEvent>.empty(),
-      ) as _i11.Stream<_i9.DeviceMotionEvent>);
-  @override
-  _i11.Stream<_i9.DeviceOrientationEvent> get onDeviceOrientation =>
-      (super.noSuchMethod(
-        Invocation.getter(#onDeviceOrientation),
-        returnValue: _i11.Stream<_i9.DeviceOrientationEvent>.empty(),
-      ) as _i11.Stream<_i9.DeviceOrientationEvent>);
-  @override
-  _i11.Stream<_i9.MouseEvent> get onDrag => (super.noSuchMethod(
-        Invocation.getter(#onDrag),
-        returnValue: _i11.Stream<_i9.MouseEvent>.empty(),
-      ) as _i11.Stream<_i9.MouseEvent>);
-  @override
-  _i11.Stream<_i9.MouseEvent> get onDragEnd => (super.noSuchMethod(
-        Invocation.getter(#onDragEnd),
-        returnValue: _i11.Stream<_i9.MouseEvent>.empty(),
-      ) as _i11.Stream<_i9.MouseEvent>);
-  @override
-  _i11.Stream<_i9.MouseEvent> get onDragEnter => (super.noSuchMethod(
-        Invocation.getter(#onDragEnter),
-        returnValue: _i11.Stream<_i9.MouseEvent>.empty(),
-      ) as _i11.Stream<_i9.MouseEvent>);
-  @override
-  _i11.Stream<_i9.MouseEvent> get onDragLeave => (super.noSuchMethod(
-        Invocation.getter(#onDragLeave),
-        returnValue: _i11.Stream<_i9.MouseEvent>.empty(),
-      ) as _i11.Stream<_i9.MouseEvent>);
-  @override
-  _i11.Stream<_i9.MouseEvent> get onDragOver => (super.noSuchMethod(
-        Invocation.getter(#onDragOver),
-        returnValue: _i11.Stream<_i9.MouseEvent>.empty(),
-      ) as _i11.Stream<_i9.MouseEvent>);
-  @override
-  _i11.Stream<_i9.MouseEvent> get onDragStart => (super.noSuchMethod(
-        Invocation.getter(#onDragStart),
-        returnValue: _i11.Stream<_i9.MouseEvent>.empty(),
-      ) as _i11.Stream<_i9.MouseEvent>);
-  @override
-  _i11.Stream<_i9.MouseEvent> get onDrop => (super.noSuchMethod(
-        Invocation.getter(#onDrop),
-        returnValue: _i11.Stream<_i9.MouseEvent>.empty(),
-      ) as _i11.Stream<_i9.MouseEvent>);
-  @override
-  _i11.Stream<_i9.Event> get onDurationChange => (super.noSuchMethod(
-        Invocation.getter(#onDurationChange),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onEmptied => (super.noSuchMethod(
-        Invocation.getter(#onEmptied),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onEnded => (super.noSuchMethod(
-        Invocation.getter(#onEnded),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onError => (super.noSuchMethod(
-        Invocation.getter(#onError),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onFocus => (super.noSuchMethod(
-        Invocation.getter(#onFocus),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onHashChange => (super.noSuchMethod(
-        Invocation.getter(#onHashChange),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onInput => (super.noSuchMethod(
-        Invocation.getter(#onInput),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onInvalid => (super.noSuchMethod(
-        Invocation.getter(#onInvalid),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.KeyboardEvent> get onKeyDown => (super.noSuchMethod(
-        Invocation.getter(#onKeyDown),
-        returnValue: _i11.Stream<_i9.KeyboardEvent>.empty(),
-      ) as _i11.Stream<_i9.KeyboardEvent>);
-  @override
-  _i11.Stream<_i9.KeyboardEvent> get onKeyPress => (super.noSuchMethod(
-        Invocation.getter(#onKeyPress),
-        returnValue: _i11.Stream<_i9.KeyboardEvent>.empty(),
-      ) as _i11.Stream<_i9.KeyboardEvent>);
-  @override
-  _i11.Stream<_i9.KeyboardEvent> get onKeyUp => (super.noSuchMethod(
-        Invocation.getter(#onKeyUp),
-        returnValue: _i11.Stream<_i9.KeyboardEvent>.empty(),
-      ) as _i11.Stream<_i9.KeyboardEvent>);
-  @override
-  _i11.Stream<_i9.Event> get onLoad => (super.noSuchMethod(
-        Invocation.getter(#onLoad),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onLoadedData => (super.noSuchMethod(
-        Invocation.getter(#onLoadedData),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onLoadedMetadata => (super.noSuchMethod(
-        Invocation.getter(#onLoadedMetadata),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onLoadStart => (super.noSuchMethod(
-        Invocation.getter(#onLoadStart),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.MessageEvent> get onMessage => (super.noSuchMethod(
-        Invocation.getter(#onMessage),
-        returnValue: _i11.Stream<_i9.MessageEvent>.empty(),
-      ) as _i11.Stream<_i9.MessageEvent>);
-  @override
-  _i11.Stream<_i9.MouseEvent> get onMouseDown => (super.noSuchMethod(
-        Invocation.getter(#onMouseDown),
-        returnValue: _i11.Stream<_i9.MouseEvent>.empty(),
-      ) as _i11.Stream<_i9.MouseEvent>);
-  @override
-  _i11.Stream<_i9.MouseEvent> get onMouseEnter => (super.noSuchMethod(
-        Invocation.getter(#onMouseEnter),
-        returnValue: _i11.Stream<_i9.MouseEvent>.empty(),
-      ) as _i11.Stream<_i9.MouseEvent>);
-  @override
-  _i11.Stream<_i9.MouseEvent> get onMouseLeave => (super.noSuchMethod(
-        Invocation.getter(#onMouseLeave),
-        returnValue: _i11.Stream<_i9.MouseEvent>.empty(),
-      ) as _i11.Stream<_i9.MouseEvent>);
-  @override
-  _i11.Stream<_i9.MouseEvent> get onMouseMove => (super.noSuchMethod(
-        Invocation.getter(#onMouseMove),
-        returnValue: _i11.Stream<_i9.MouseEvent>.empty(),
-      ) as _i11.Stream<_i9.MouseEvent>);
-  @override
-  _i11.Stream<_i9.MouseEvent> get onMouseOut => (super.noSuchMethod(
-        Invocation.getter(#onMouseOut),
-        returnValue: _i11.Stream<_i9.MouseEvent>.empty(),
-      ) as _i11.Stream<_i9.MouseEvent>);
-  @override
-  _i11.Stream<_i9.MouseEvent> get onMouseOver => (super.noSuchMethod(
-        Invocation.getter(#onMouseOver),
-        returnValue: _i11.Stream<_i9.MouseEvent>.empty(),
-      ) as _i11.Stream<_i9.MouseEvent>);
-  @override
-  _i11.Stream<_i9.MouseEvent> get onMouseUp => (super.noSuchMethod(
-        Invocation.getter(#onMouseUp),
-        returnValue: _i11.Stream<_i9.MouseEvent>.empty(),
-      ) as _i11.Stream<_i9.MouseEvent>);
-  @override
-  _i11.Stream<_i9.WheelEvent> get onMouseWheel => (super.noSuchMethod(
-        Invocation.getter(#onMouseWheel),
-        returnValue: _i11.Stream<_i9.WheelEvent>.empty(),
-      ) as _i11.Stream<_i9.WheelEvent>);
-  @override
-  _i11.Stream<_i9.Event> get onOffline => (super.noSuchMethod(
-        Invocation.getter(#onOffline),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onOnline => (super.noSuchMethod(
-        Invocation.getter(#onOnline),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onPageHide => (super.noSuchMethod(
-        Invocation.getter(#onPageHide),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onPageShow => (super.noSuchMethod(
-        Invocation.getter(#onPageShow),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onPause => (super.noSuchMethod(
-        Invocation.getter(#onPause),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onPlay => (super.noSuchMethod(
-        Invocation.getter(#onPlay),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onPlaying => (super.noSuchMethod(
-        Invocation.getter(#onPlaying),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.PopStateEvent> get onPopState => (super.noSuchMethod(
-        Invocation.getter(#onPopState),
-        returnValue: _i11.Stream<_i9.PopStateEvent>.empty(),
-      ) as _i11.Stream<_i9.PopStateEvent>);
-  @override
-  _i11.Stream<_i9.Event> get onProgress => (super.noSuchMethod(
-        Invocation.getter(#onProgress),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onRateChange => (super.noSuchMethod(
-        Invocation.getter(#onRateChange),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onReset => (super.noSuchMethod(
-        Invocation.getter(#onReset),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onResize => (super.noSuchMethod(
-        Invocation.getter(#onResize),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onScroll => (super.noSuchMethod(
-        Invocation.getter(#onScroll),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onSearch => (super.noSuchMethod(
-        Invocation.getter(#onSearch),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onSeeked => (super.noSuchMethod(
-        Invocation.getter(#onSeeked),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onSeeking => (super.noSuchMethod(
-        Invocation.getter(#onSeeking),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onSelect => (super.noSuchMethod(
-        Invocation.getter(#onSelect),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onStalled => (super.noSuchMethod(
-        Invocation.getter(#onStalled),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.StorageEvent> get onStorage => (super.noSuchMethod(
-        Invocation.getter(#onStorage),
-        returnValue: _i11.Stream<_i9.StorageEvent>.empty(),
-      ) as _i11.Stream<_i9.StorageEvent>);
-  @override
-  _i11.Stream<_i9.Event> get onSubmit => (super.noSuchMethod(
-        Invocation.getter(#onSubmit),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onSuspend => (super.noSuchMethod(
-        Invocation.getter(#onSuspend),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onTimeUpdate => (super.noSuchMethod(
-        Invocation.getter(#onTimeUpdate),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.TouchEvent> get onTouchCancel => (super.noSuchMethod(
-        Invocation.getter(#onTouchCancel),
-        returnValue: _i11.Stream<_i9.TouchEvent>.empty(),
-      ) as _i11.Stream<_i9.TouchEvent>);
-  @override
-  _i11.Stream<_i9.TouchEvent> get onTouchEnd => (super.noSuchMethod(
-        Invocation.getter(#onTouchEnd),
-        returnValue: _i11.Stream<_i9.TouchEvent>.empty(),
-      ) as _i11.Stream<_i9.TouchEvent>);
-  @override
-  _i11.Stream<_i9.TouchEvent> get onTouchMove => (super.noSuchMethod(
-        Invocation.getter(#onTouchMove),
-        returnValue: _i11.Stream<_i9.TouchEvent>.empty(),
-      ) as _i11.Stream<_i9.TouchEvent>);
-  @override
-  _i11.Stream<_i9.TouchEvent> get onTouchStart => (super.noSuchMethod(
-        Invocation.getter(#onTouchStart),
-        returnValue: _i11.Stream<_i9.TouchEvent>.empty(),
-      ) as _i11.Stream<_i9.TouchEvent>);
-  @override
-  _i11.Stream<_i9.TransitionEvent> get onTransitionEnd => (super.noSuchMethod(
-        Invocation.getter(#onTransitionEnd),
-        returnValue: _i11.Stream<_i9.TransitionEvent>.empty(),
-      ) as _i11.Stream<_i9.TransitionEvent>);
-  @override
-  _i11.Stream<_i9.Event> get onUnload => (super.noSuchMethod(
-        Invocation.getter(#onUnload),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onVolumeChange => (super.noSuchMethod(
-        Invocation.getter(#onVolumeChange),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.Event> get onWaiting => (super.noSuchMethod(
-        Invocation.getter(#onWaiting),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.AnimationEvent> get onAnimationEnd => (super.noSuchMethod(
-        Invocation.getter(#onAnimationEnd),
-        returnValue: _i11.Stream<_i9.AnimationEvent>.empty(),
-      ) as _i11.Stream<_i9.AnimationEvent>);
-  @override
-  _i11.Stream<_i9.AnimationEvent> get onAnimationIteration =>
-      (super.noSuchMethod(
-        Invocation.getter(#onAnimationIteration),
-        returnValue: _i11.Stream<_i9.AnimationEvent>.empty(),
-      ) as _i11.Stream<_i9.AnimationEvent>);
-  @override
-  _i11.Stream<_i9.AnimationEvent> get onAnimationStart => (super.noSuchMethod(
-        Invocation.getter(#onAnimationStart),
-        returnValue: _i11.Stream<_i9.AnimationEvent>.empty(),
-      ) as _i11.Stream<_i9.AnimationEvent>);
-  @override
-  _i11.Stream<_i9.Event> get onBeforeUnload => (super.noSuchMethod(
-        Invocation.getter(#onBeforeUnload),
-        returnValue: _i11.Stream<_i9.Event>.empty(),
-      ) as _i11.Stream<_i9.Event>);
-  @override
-  _i11.Stream<_i9.WheelEvent> get onWheel => (super.noSuchMethod(
-        Invocation.getter(#onWheel),
-        returnValue: _i11.Stream<_i9.WheelEvent>.empty(),
-      ) as _i11.Stream<_i9.WheelEvent>);
-  @override
-  int get pageXOffset => (super.noSuchMethod(
-        Invocation.getter(#pageXOffset),
-        returnValue: 0,
-      ) as int);
-  @override
-  int get pageYOffset => (super.noSuchMethod(
-        Invocation.getter(#pageYOffset),
-        returnValue: 0,
-      ) as int);
-  @override
-  int get scrollX => (super.noSuchMethod(
-        Invocation.getter(#scrollX),
-        returnValue: 0,
-      ) as int);
-  @override
-  int get scrollY => (super.noSuchMethod(
-        Invocation.getter(#scrollY),
-        returnValue: 0,
-      ) as int);
-  @override
-  _i9.Events get on => (super.noSuchMethod(
-        Invocation.getter(#on),
-        returnValue: _FakeEvents_15(
-          this,
-          Invocation.getter(#on),
-        ),
-      ) as _i9.Events);
-  @override
-  _i9.WindowBase open(
-    String? url,
-    String? name, [
-    String? options,
-  ]) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #open,
-          [
-            url,
-            name,
-            options,
-          ],
-        ),
-        returnValue: _FakeWindowBase_16(
-          this,
-          Invocation.method(
-            #open,
-            [
-              url,
-              name,
-              options,
-            ],
-          ),
-        ),
-      ) as _i9.WindowBase);
-  @override
-  int requestAnimationFrame(_i9.FrameRequestCallback? callback) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #requestAnimationFrame,
-          [callback],
-        ),
-        returnValue: 0,
-      ) as int);
-  @override
-  void cancelAnimationFrame(int? id) => super.noSuchMethod(
-        Invocation.method(
-          #cancelAnimationFrame,
-          [id],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  _i11.Future<_i9.FileSystem> requestFileSystem(
-    int? size, {
-    bool? persistent = false,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #requestFileSystem,
-          [size],
-          {#persistent: persistent},
-        ),
-        returnValue: _i11.Future<_i9.FileSystem>.value(_FakeFileSystem_17(
-          this,
-          Invocation.method(
-            #requestFileSystem,
-            [size],
-            {#persistent: persistent},
-          ),
-        )),
-      ) as _i11.Future<_i9.FileSystem>);
-  @override
-  void alert([String? message]) => super.noSuchMethod(
-        Invocation.method(
-          #alert,
-          [message],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  void cancelIdleCallback(int? handle) => super.noSuchMethod(
-        Invocation.method(
-          #cancelIdleCallback,
-          [handle],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  void close() => super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  bool confirm([String? message]) => (super.noSuchMethod(
-        Invocation.method(
-          #confirm,
-          [message],
-        ),
-        returnValue: false,
-      ) as bool);
-  @override
-  _i11.Future<dynamic> fetch(
-    dynamic input, [
-    Map<dynamic, dynamic>? init,
-  ]) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #fetch,
-          [
-            input,
-            init,
-          ],
-        ),
-        returnValue: _i11.Future<dynamic>.value(),
-      ) as _i11.Future<dynamic>);
-  @override
-  bool find(
-    String? string,
-    bool? caseSensitive,
-    bool? backwards,
-    bool? wrap,
-    bool? wholeWord,
-    bool? searchInFrames,
-    bool? showDialog,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #find,
-          [
-            string,
-            caseSensitive,
-            backwards,
-            wrap,
-            wholeWord,
-            searchInFrames,
-            showDialog,
-          ],
-        ),
-        returnValue: false,
-      ) as bool);
-  @override
-  _i9.StylePropertyMapReadonly getComputedStyleMap(
-    _i9.Element? element,
-    String? pseudoElement,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getComputedStyleMap,
-          [
-            element,
-            pseudoElement,
-          ],
-        ),
-        returnValue: _FakeStylePropertyMapReadonly_18(
-          this,
-          Invocation.method(
-            #getComputedStyleMap,
-            [
-              element,
-              pseudoElement,
-            ],
-          ),
-        ),
-      ) as _i9.StylePropertyMapReadonly);
-  @override
-  List<_i9.CssRule> getMatchedCssRules(
-    _i9.Element? element,
-    String? pseudoElement,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getMatchedCssRules,
-          [
-            element,
-            pseudoElement,
-          ],
-        ),
-        returnValue: <_i9.CssRule>[],
-      ) as List<_i9.CssRule>);
-  @override
-  _i9.MediaQueryList matchMedia(String? query) => (super.noSuchMethod(
-        Invocation.method(
-          #matchMedia,
-          [query],
-        ),
-        returnValue: _FakeMediaQueryList_19(
-          this,
-          Invocation.method(
-            #matchMedia,
-            [query],
-          ),
-        ),
-      ) as _i9.MediaQueryList);
-  @override
-  void moveBy(
-    int? x,
-    int? y,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #moveBy,
-          [
-            x,
-            y,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  void postMessage(
-    dynamic message,
-    String? targetOrigin, [
-    List<Object>? transfer,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #postMessage,
-          [
-            message,
-            targetOrigin,
-            transfer,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  void print() => super.noSuchMethod(
-        Invocation.method(
-          #print,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  int requestIdleCallback(
-    _i9.IdleRequestCallback? callback, [
-    Map<dynamic, dynamic>? options,
-  ]) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #requestIdleCallback,
-          [
-            callback,
-            options,
-          ],
-        ),
-        returnValue: 0,
-      ) as int);
-  @override
-  void resizeBy(
-    int? x,
-    int? y,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #resizeBy,
-          [
-            x,
-            y,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  void resizeTo(
-    int? x,
-    int? y,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #resizeTo,
-          [
-            x,
-            y,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  void scroll([
-    dynamic options_OR_x,
-    dynamic y,
-    Map<dynamic, dynamic>? scrollOptions,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #scroll,
-          [
-            options_OR_x,
-            y,
-            scrollOptions,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  void scrollBy([
-    dynamic options_OR_x,
-    dynamic y,
-    Map<dynamic, dynamic>? scrollOptions,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #scrollBy,
-          [
-            options_OR_x,
-            y,
-            scrollOptions,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  void scrollTo([
-    dynamic options_OR_x,
-    dynamic y,
-    Map<dynamic, dynamic>? scrollOptions,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #scrollTo,
-          [
-            options_OR_x,
-            y,
-            scrollOptions,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  void stop() => super.noSuchMethod(
-        Invocation.method(
-          #stop,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  _i11.Future<_i9.Entry> resolveLocalFileSystemUrl(String? url) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #resolveLocalFileSystemUrl,
-          [url],
-        ),
-        returnValue: _i11.Future<_i9.Entry>.value(_FakeEntry_20(
-          this,
-          Invocation.method(
-            #resolveLocalFileSystemUrl,
-            [url],
-          ),
-        )),
-      ) as _i11.Future<_i9.Entry>);
-  @override
-  String atob(String? atob) => (super.noSuchMethod(
-        Invocation.method(
-          #atob,
-          [atob],
-        ),
-        returnValue: '',
-      ) as String);
-  @override
-  String btoa(String? btoa) => (super.noSuchMethod(
-        Invocation.method(
-          #btoa,
-          [btoa],
-        ),
-        returnValue: '',
-      ) as String);
-  @override
-  void moveTo(_i29.Point<num>? p) => super.noSuchMethod(
-        Invocation.method(
-          #moveTo,
-          [p],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  void addEventListener(
-    String? type,
-    _i9.EventListener? listener, [
-    bool? useCapture,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addEventListener,
-          [
-            type,
-            listener,
-            useCapture,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  void removeEventListener(
-    String? type,
-    _i9.EventListener? listener, [
-    bool? useCapture,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #removeEventListener,
-          [
-            type,
-            listener,
-            useCapture,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  bool dispatchEvent(_i9.Event? event) => (super.noSuchMethod(
-        Invocation.method(
-          #dispatchEvent,
-          [event],
-        ),
-        returnValue: false,
-      ) as bool);
-}
-
-/// A class which mocks [Navigator].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockNavigator extends _i1.Mock implements _i9.Navigator {
-  MockNavigator() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  String get language => (super.noSuchMethod(
-        Invocation.getter(#language),
-        returnValue: '',
-      ) as String);
-  @override
-  _i9.Geolocation get geolocation => (super.noSuchMethod(
-        Invocation.getter(#geolocation),
-        returnValue: _FakeGeolocation_21(
-          this,
-          Invocation.getter(#geolocation),
-        ),
-      ) as _i9.Geolocation);
-  @override
-  String get vendor => (super.noSuchMethod(
-        Invocation.getter(#vendor),
-        returnValue: '',
-      ) as String);
-  @override
-  String get vendorSub => (super.noSuchMethod(
-        Invocation.getter(#vendorSub),
-        returnValue: '',
-      ) as String);
-  @override
-  String get appCodeName => (super.noSuchMethod(
-        Invocation.getter(#appCodeName),
-        returnValue: '',
-      ) as String);
-  @override
-  String get appName => (super.noSuchMethod(
-        Invocation.getter(#appName),
-        returnValue: '',
-      ) as String);
-  @override
-  String get appVersion => (super.noSuchMethod(
-        Invocation.getter(#appVersion),
-        returnValue: '',
-      ) as String);
-  @override
-  String get product => (super.noSuchMethod(
-        Invocation.getter(#product),
-        returnValue: '',
-      ) as String);
-  @override
-  String get userAgent => (super.noSuchMethod(
-        Invocation.getter(#userAgent),
-        returnValue: '',
-      ) as String);
-  @override
-  List<_i9.Gamepad?> getGamepads() => (super.noSuchMethod(
-        Invocation.method(
-          #getGamepads,
-          [],
-        ),
-        returnValue: <_i9.Gamepad?>[],
-      ) as List<_i9.Gamepad?>);
-  @override
-  _i11.Future<_i9.MediaStream> getUserMedia({
-    dynamic audio = false,
-    dynamic video = false,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getUserMedia,
-          [],
-          {
-            #audio: audio,
-            #video: video,
-          },
-        ),
-        returnValue: _i11.Future<_i9.MediaStream>.value(_FakeMediaStream_22(
-          this,
-          Invocation.method(
-            #getUserMedia,
-            [],
-            {
-              #audio: audio,
-              #video: video,
-            },
-          ),
-        )),
-      ) as _i11.Future<_i9.MediaStream>);
-  @override
-  void cancelKeyboardLock() => super.noSuchMethod(
-        Invocation.method(
-          #cancelKeyboardLock,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  _i11.Future<dynamic> getBattery() => (super.noSuchMethod(
-        Invocation.method(
-          #getBattery,
-          [],
-        ),
-        returnValue: _i11.Future<dynamic>.value(),
-      ) as _i11.Future<dynamic>);
-  @override
-  _i11.Future<_i9.RelatedApplication> getInstalledRelatedApps() =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getInstalledRelatedApps,
-          [],
-        ),
-        returnValue: _i11.Future<_i9.RelatedApplication>.value(
-            _FakeRelatedApplication_23(
-          this,
-          Invocation.method(
-            #getInstalledRelatedApps,
-            [],
-          ),
-        )),
-      ) as _i11.Future<_i9.RelatedApplication>);
-  @override
-  _i11.Future<dynamic> getVRDisplays() => (super.noSuchMethod(
-        Invocation.method(
-          #getVRDisplays,
-          [],
-        ),
-        returnValue: _i11.Future<dynamic>.value(),
-      ) as _i11.Future<dynamic>);
-  @override
-  void registerProtocolHandler(
-    String? scheme,
-    String? url,
-    String? title,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #registerProtocolHandler,
-          [
-            scheme,
-            url,
-            title,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  _i11.Future<dynamic> requestKeyboardLock([List<String>? keyCodes]) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #requestKeyboardLock,
-          [keyCodes],
-        ),
-        returnValue: _i11.Future<dynamic>.value(),
-      ) as _i11.Future<dynamic>);
-  @override
-  _i11.Future<dynamic> requestMidiAccess([Map<dynamic, dynamic>? options]) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #requestMidiAccess,
-          [options],
-        ),
-        returnValue: _i11.Future<dynamic>.value(),
-      ) as _i11.Future<dynamic>);
-  @override
-  _i11.Future<dynamic> requestMediaKeySystemAccess(
-    String? keySystem,
-    List<Map<dynamic, dynamic>>? supportedConfigurations,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #requestMediaKeySystemAccess,
-          [
-            keySystem,
-            supportedConfigurations,
-          ],
-        ),
-        returnValue: _i11.Future<dynamic>.value(),
-      ) as _i11.Future<dynamic>);
-  @override
-  bool sendBeacon(
-    String? url,
-    Object? data,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #sendBeacon,
-          [
-            url,
-            data,
-          ],
-        ),
-        returnValue: false,
-      ) as bool);
-  @override
-  _i11.Future<dynamic> share([Map<dynamic, dynamic>? data]) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #share,
-          [data],
-        ),
-        returnValue: _i11.Future<dynamic>.value(),
-      ) as _i11.Future<dynamic>);
-}
-
-/// A class which mocks [MediaDevices].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockMediaDevices extends _i1.Mock implements _i9.MediaDevices {
-  MockMediaDevices() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  _i9.Events get on => (super.noSuchMethod(
-        Invocation.getter(#on),
-        returnValue: _FakeEvents_15(
-          this,
-          Invocation.getter(#on),
-        ),
-      ) as _i9.Events);
-  @override
-  _i11.Future<List<dynamic>> enumerateDevices() => (super.noSuchMethod(
-        Invocation.method(
-          #enumerateDevices,
-          [],
-        ),
-        returnValue: _i11.Future<List<dynamic>>.value(<dynamic>[]),
-      ) as _i11.Future<List<dynamic>>);
-  @override
-  Map<dynamic, dynamic> getSupportedConstraints() => (super.noSuchMethod(
-        Invocation.method(
-          #getSupportedConstraints,
-          [],
-        ),
-        returnValue: <dynamic, dynamic>{},
-      ) as Map<dynamic, dynamic>);
-  @override
-  _i11.Future<_i9.MediaStream> getUserMedia(
-          [Map<dynamic, dynamic>? constraints]) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getUserMedia,
-          [constraints],
-        ),
-        returnValue: _i11.Future<_i9.MediaStream>.value(_FakeMediaStream_22(
-          this,
-          Invocation.method(
-            #getUserMedia,
-            [constraints],
-          ),
-        )),
-      ) as _i11.Future<_i9.MediaStream>);
-  @override
-  void addEventListener(
-    String? type,
-    _i9.EventListener? listener, [
-    bool? useCapture,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addEventListener,
-          [
-            type,
-            listener,
-            useCapture,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  void removeEventListener(
-    String? type,
-    _i9.EventListener? listener, [
-    bool? useCapture,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #removeEventListener,
-          [
-            type,
-            listener,
-            useCapture,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  bool dispatchEvent(_i9.Event? event) => (super.noSuchMethod(
-        Invocation.method(
-          #dispatchEvent,
-          [event],
-        ),
-        returnValue: false,
-      ) as bool);
+        returnValue: _i8.Future<bool>.value(false),
+      ) as _i8.Future<bool>);
 }

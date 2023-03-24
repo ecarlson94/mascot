@@ -9,19 +9,19 @@ import 'audio_node.dart';
 
 @JS('AnalyserNode')
 @staticInterop
-class JSAnalyzerNode extends JSAudioNode {
-  external factory JSAnalyzerNode();
+class JSAnalyserNode extends JSAudioNode {
+  external factory JSAnalyserNode();
 }
 
-extension JSAnalyzerNodeExtension on JSAnalyzerNode {
+extension JSAnalyserNodeExtension on JSAnalyserNode {
   external void getFloatTimeDomainData(Float32List array);
   external int get frequencyBinCount;
 }
 
-class AnalyzerNode extends AudioNode {
-  final JSAnalyzerNode _jsAnalyzerNode;
+class AnalyserNode extends AudioNode {
+  final JSAnalyserNode _jsAnalyzerNode;
 
-  AnalyzerNode(this._jsAnalyzerNode) : super(_jsAnalyzerNode);
+  AnalyserNode(this._jsAnalyzerNode) : super(_jsAnalyzerNode);
 
   void getFloatTimeDomainData(Float32List array) =>
       _jsAnalyzerNode.getFloatTimeDomainData(array);
