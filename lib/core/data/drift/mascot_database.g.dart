@@ -476,30 +476,36 @@ class MascotExpressionMapsCompanion
     extends UpdateCompanion<MascotExpressionMap> {
   final Value<int> mascotId;
   final Value<int> expressionId;
+  final Value<int> rowid;
   const MascotExpressionMapsCompanion({
     this.mascotId = const Value.absent(),
     this.expressionId = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   MascotExpressionMapsCompanion.insert({
     required int mascotId,
     required int expressionId,
+    this.rowid = const Value.absent(),
   })  : mascotId = Value(mascotId),
         expressionId = Value(expressionId);
   static Insertable<MascotExpressionMap> custom({
     Expression<int>? mascotId,
     Expression<int>? expressionId,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (mascotId != null) 'mascot_id': mascotId,
       if (expressionId != null) 'expression_id': expressionId,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   MascotExpressionMapsCompanion copyWith(
-      {Value<int>? mascotId, Value<int>? expressionId}) {
+      {Value<int>? mascotId, Value<int>? expressionId, Value<int>? rowid}) {
     return MascotExpressionMapsCompanion(
       mascotId: mascotId ?? this.mascotId,
       expressionId: expressionId ?? this.expressionId,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -512,6 +518,9 @@ class MascotExpressionMapsCompanion
     if (expressionId.present) {
       map['expression_id'] = Variable<int>(expressionId.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -519,7 +528,8 @@ class MascotExpressionMapsCompanion
   String toString() {
     return (StringBuffer('MascotExpressionMapsCompanion(')
           ..write('mascotId: $mascotId, ')
-          ..write('expressionId: $expressionId')
+          ..write('expressionId: $expressionId, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }

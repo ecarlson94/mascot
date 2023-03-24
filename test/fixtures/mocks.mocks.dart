@@ -8,6 +8,7 @@ import 'dart:async' as _i8;
 import 'package:dartz/dartz.dart' as _i3;
 import 'package:mascot/core/clean_architecture/usecase.dart' as _i19;
 import 'package:mascot/core/error/failure.dart' as _i12;
+import 'package:mascot/core/utils/logger.dart' as _i21;
 import 'package:mascot/features/expressions/data/datasources/drift/expressions_drift_data_source.dart'
     as _i7;
 import 'package:mascot/features/expressions/data/datasources/drift/models/drift_expression.dart'
@@ -24,6 +25,13 @@ import 'package:mascot/features/mascot/domain/usecases/save_mascot.dart'
     as _i15;
 import 'package:mascot/features/mascot/domain/usecases/stream_mascot.dart'
     as _i20;
+import 'package:mascot/features/microphone/device/microphone.dart' as _i24;
+import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart'
+    as _i23;
+import 'package:mascot/features/microphone/domain/services/microphone_service.dart'
+    as _i22;
+import 'package:mascot/features/microphone/domain/usecases/stream_microphone_volume.dart'
+    as _i25;
 import 'package:mascot/features/settings/data/datasources/drift/models/drift_settings.dart'
     as _i2;
 import 'package:mascot/features/settings/data/datasources/drift/settings_drift_data_source.dart'
@@ -506,4 +514,128 @@ class MockStreamMascot extends _i1.Mock implements _i20.StreamMascot {
         )),
       ) as _i8
           .Future<_i3.Either<_i12.Failure, _i14.BehaviorSubject<_i13.Mascot>>>);
+}
+
+/// A class which mocks [Logger].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockLogger<T> extends _i1.Mock implements _i21.Logger<T> {
+  MockLogger() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  void log(String? message) => super.noSuchMethod(
+        Invocation.method(
+          #log,
+          [message],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void logError(
+    String? message, [
+    Object? error,
+    StackTrace? stackTrace,
+  ]) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #logError,
+          [
+            message,
+            error,
+            stackTrace,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void logWarning(String? message) => super.noSuchMethod(
+        Invocation.method(
+          #logWarning,
+          [message],
+        ),
+        returnValueForMissingStub: null,
+      );
+}
+
+/// A class which mocks [MicrophoneService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockMicrophoneService extends _i1.Mock implements _i22.MicrophoneService {
+  MockMicrophoneService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i8.Future<_i3.Either<_i12.Failure, _i8.Stream<_i23.DecibelLufs>>>
+      getVolumeStream() => (super.noSuchMethod(
+            Invocation.method(
+              #getVolumeStream,
+              [],
+            ),
+            returnValue: _i8.Future<
+                    _i3.Either<_i12.Failure,
+                        _i8.Stream<_i23.DecibelLufs>>>.value(
+                _FakeEither_3<_i12.Failure, _i8.Stream<_i23.DecibelLufs>>(
+              this,
+              Invocation.method(
+                #getVolumeStream,
+                [],
+              ),
+            )),
+          ) as _i8
+              .Future<_i3.Either<_i12.Failure, _i8.Stream<_i23.DecibelLufs>>>);
+}
+
+/// A class which mocks [Microphone].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockMicrophone extends _i1.Mock implements _i24.Microphone {
+  MockMicrophone() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i8.Stream<_i23.DecibelLufs> get volumeStream => (super.noSuchMethod(
+        Invocation.getter(#volumeStream),
+        returnValue: _i8.Stream<_i23.DecibelLufs>.empty(),
+      ) as _i8.Stream<_i23.DecibelLufs>);
+  @override
+  _i8.Future<bool> hasPermission() => (super.noSuchMethod(
+        Invocation.method(
+          #hasPermission,
+          [],
+        ),
+        returnValue: _i8.Future<bool>.value(false),
+      ) as _i8.Future<bool>);
+}
+
+/// A class which mocks [StreamMicrophoneVolume].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockStreamMicrophoneVolume extends _i1.Mock
+    implements _i25.StreamMicrophoneVolume {
+  MockStreamMicrophoneVolume() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i8.Future<_i3.Either<_i12.Failure, _i8.Stream<_i23.DecibelLufs>>> call(
+          _i19.NoParams? params) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [params],
+        ),
+        returnValue: _i8.Future<
+                _i3.Either<_i12.Failure, _i8.Stream<_i23.DecibelLufs>>>.value(
+            _FakeEither_3<_i12.Failure, _i8.Stream<_i23.DecibelLufs>>(
+          this,
+          Invocation.method(
+            #call,
+            [params],
+          ),
+        )),
+      ) as _i8.Future<_i3.Either<_i12.Failure, _i8.Stream<_i23.DecibelLufs>>>);
 }

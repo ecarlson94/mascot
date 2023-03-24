@@ -6,3 +6,7 @@ abstract class Failure extends Equatable {
 }
 
 class LocalDataSourceFailure extends Failure {}
+
+class NoMicrophonePermissionFailure extends Failure {}
+
+class MicrophoneFailure extends Failure {}

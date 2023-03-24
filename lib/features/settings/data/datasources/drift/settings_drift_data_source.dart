@@ -17,7 +17,7 @@ abstract class SettingsDriftDataSource {
   Future<Unit> saveSettings(DriftSettings settings);
 }
 
-@Injectable(as: SettingsDriftDataSource)
+@LazySingleton(as: SettingsDriftDataSource)
 class SettingsDriftDataSourceImpl implements SettingsDriftDataSource {
   final MascotDatabase _database;
 
@@ -29,7 +29,10 @@ class SettingsDriftDataSourceImpl implements SettingsDriftDataSource {
       ..where((s) => s.id.equals(1));
     var settings = await query.getSingleOrNull();
 
-    settings ??= DriftSettings.empty;
+    if (settings == null) {
+      settings = DriftSettings.empty;
+      await _database.into(_database.settings).insertOnConflictUpdate(settings);
+    }
 
     return settings;
   }

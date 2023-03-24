@@ -10,5 +10,7 @@ extension BuildContextExtensions on BuildContext {
 
   ThemeData get theme => Theme.of(this);
 
+  ColorScheme get colorScheme => theme.colorScheme;
+
   void back() => Navigator.of(this).pop();
 }

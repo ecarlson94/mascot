@@ -1,6 +1,4 @@
 import 'dart:async';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html';
 
 import 'package:drift/drift.dart';
 import 'package:drift/remote.dart';
@@ -8,6 +6,7 @@ import 'package:drift/wasm.dart';
 import 'package:drift/web.dart';
 import 'package:http/http.dart' as http;
 import 'package:sqlite3/wasm.dart';
+import 'package:universal_html/html.dart';
 
 const _useWorker = true;
 

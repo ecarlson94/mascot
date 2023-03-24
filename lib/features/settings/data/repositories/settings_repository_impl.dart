@@ -4,19 +4,25 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/error/failure.dart';
+import '../../../../core/utils/logger.dart';
 import '../../domain/entities/settings.dart';
 import '../../domain/repositories/settings_repository.dart';
 import '../datasources/drift/models/drift_settings_mapper.dart';
 import '../datasources/drift/settings_drift_data_source.dart';
 
+@Injectable(as: Logger<SettingsRepositoryImpl>)
+class SettingsRepositoryLogger extends Logger<SettingsRepositoryImpl> {}
+
 @Injectable(as: SettingsRepository)
 class SettingsRepositoryImpl extends SettingsRepository {
   final SettingsDriftDataSource _localDataSource;
   final DriftSettingsMapper _driftSettingsMapper;
+  final Logger<SettingsRepositoryImpl> _logger;
 
   SettingsRepositoryImpl(
     this._localDataSource,
     this._driftSettingsMapper,
+    this._logger,
   );
 
   @override
@@ -24,7 +30,8 @@ class SettingsRepositoryImpl extends SettingsRepository {
     try {
       var settingsModel = await _localDataSource.loadSettings();
       return Right(_driftSettingsMapper.toSettings(settingsModel));
-    } on Exception {
+    } catch (e) {
+      _logger.logError('Failed to load settings', e);
       return Left(LocalDataSourceFailure());
     }
   }
@@ -45,7 +52,8 @@ class SettingsRepositoryImpl extends SettingsRepository {
       });
 
       return Right(settingsBehaviorSubject);
-    } on Exception {
+    } catch (e) {
+      _logger.logError('Failed to stream settings', e);
       return Left(LocalDataSourceFailure());
     }
   }
@@ -61,7 +69,8 @@ class SettingsRepositoryImpl extends SettingsRepository {
           _driftSettingsMapper.fromSettings(updatedSettings),
         ),
       );
-    } on Exception {
+    } catch (e) {
+      _logger.logError('Failed to set favorite mascot id', e);
       return Left(LocalDataSourceFailure());
     }
   }
