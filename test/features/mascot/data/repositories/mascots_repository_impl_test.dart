@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/clean_architecture/entity.dart';
 import 'package:mascot/core/error/failure.dart';
-import 'package:mascot/features/mascot/data/datasources/drift/models/drift_mascot.dart';
+import 'package:mascot/features/mascot/data/models/mascot_model.dart';
 import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
@@ -14,14 +14,14 @@ void main() {
   late TestContext context;
   late MascotsRepositoryImpl repository;
 
-  DriftMascot getMascotModel() =>
-      context.data.driftMascotMapper.fromMascot(context.data.mascot);
+  MascotModel getMascotModel() =>
+      context.data.mascotMapper.fromMascot(context.data.mascot);
 
   setUp(() {
     context = TestContext();
     repository = MascotsRepositoryImpl(
       context.mocks.mascotsLocalDataSource,
-      context.data.driftMascotMapper,
+      context.data.mascotMapper,
       context.mocks.getLogger(),
     );
 
@@ -41,7 +41,7 @@ void main() {
           // assert
           expect(
             mascot,
-            context.data.driftMascotMapper.toMascot(getMascotModel()),
+            context.data.mascotMapper.toMascot(getMascotModel()),
           );
 
           verify(context.mocks.mascotsLocalDataSource
@@ -137,9 +137,9 @@ void main() {
     });
 
     group('streamMascot', () {
-      late BehaviorSubject<DriftMascot?> modelStream;
+      late BehaviorSubject<MascotModel?> modelStream;
       setUp(() {
-        modelStream = BehaviorSubject<DriftMascot?>();
+        modelStream = BehaviorSubject<MascotModel?>();
 
         when(context.mocks.mascotsLocalDataSource.getMascot(any))
             .thenAnswer((_) async => getMascotModel());
@@ -156,7 +156,7 @@ void main() {
         expect(
           subject,
           emitsInOrder([
-            context.data.driftMascotMapper.toMascot(getMascotModel()),
+            context.data.mascotMapper.toMascot(getMascotModel()),
           ]),
         );
         verify(

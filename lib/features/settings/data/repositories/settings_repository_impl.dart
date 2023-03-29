@@ -7,8 +7,8 @@ import '../../../../core/error/failure.dart';
 import '../../../../core/utils/logger.dart';
 import '../../domain/entities/settings.dart';
 import '../../domain/repositories/settings_repository.dart';
-import '../datasources/drift/models/drift_settings_mapper.dart';
 import '../datasources/drift/settings_drift_data_source.dart';
+import '../models/settings_mapper.dart';
 
 @Injectable(as: Logger<SettingsRepositoryImpl>)
 class SettingsRepositoryLogger extends Logger<SettingsRepositoryImpl> {}
@@ -16,7 +16,7 @@ class SettingsRepositoryLogger extends Logger<SettingsRepositoryImpl> {}
 @Injectable(as: SettingsRepository)
 class SettingsRepositoryImpl extends SettingsRepository {
   final SettingsDriftDataSource _localDataSource;
-  final DriftSettingsMapper _driftSettingsMapper;
+  final SettingsMapper _driftSettingsMapper;
   final Logger<SettingsRepositoryImpl> _logger;
 
   SettingsRepositoryImpl(
@@ -65,9 +65,7 @@ class SettingsRepositoryImpl extends SettingsRepository {
       var updatedSettings = settings.copyWith(favoriteMascotId: id);
 
       return Right(
-        await _localDataSource.saveSettings(
-          _driftSettingsMapper.fromSettings(updatedSettings),
-        ),
+        await _localDataSource.saveSettings(updatedSettings),
       );
     } catch (e) {
       _logger.logError('Failed to set favorite mascot id', e);

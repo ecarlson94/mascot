@@ -1,19 +1,12 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class Settings extends Equatable {
-  final int? favoriteMascotId;
+import '../../../../core/clean_architecture/entity.dart';
 
-  const Settings({required this.favoriteMascotId});
+part 'settings.freezed.dart';
 
-  @override
-  List<Object?> get props => [favoriteMascotId];
-
-  Settings copyWith({
-    int? favoriteMascotId,
-  }) =>
-      Settings(
-        favoriteMascotId: favoriteMascotId ?? this.favoriteMascotId,
-      );
+@freezed
+class Settings with _$Settings {
+  const factory Settings({required Id? favoriteMascotId}) = _Settings;
 
   static const Settings empty = Settings(favoriteMascotId: null);
 }

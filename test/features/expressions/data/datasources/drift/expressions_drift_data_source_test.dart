@@ -2,7 +2,8 @@ import 'package:drift/drift.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/data/drift/mascot_database.dart';
 import 'package:mascot/features/expressions/data/datasources/drift/expressions_drift_data_source.dart';
-import 'package:mascot/features/expressions/data/datasources/drift/models/drift_expression.dart';
+import 'package:mascot/features/expressions/data/models/expression_model.dart';
+import 'package:mascot/features/mascot/data/datasources/drift/models/drift_mascot.dart';
 
 import '../../../../../fixtures/test_context.dart';
 
@@ -11,8 +12,8 @@ void main() {
   late MascotDatabase database;
   late ExpressionsDriftDataSource classUnderTest;
 
-  late List<DriftExpression> expressionModels;
-  late DriftExpression expressionModel;
+  late List<ExpressionModel> expressionModels;
+  late ExpressionModel expressionModel;
 
   setUp(() {
     context = TestContext();
@@ -20,9 +21,9 @@ void main() {
     classUnderTest = ExpressionsDriftDataSourceImpl(database);
 
     expressionModels = context.data.expressions
-        .map(context.data.driftExpressionMapper.fromExpression)
+        .map(context.data.expressionMapper.fromExpression)
         .toList();
-    expressionModel = context.data.driftExpressionMapper.fromExpression(
+    expressionModel = context.data.expressionMapper.fromExpression(
       context.data.expressions.first,
     );
   });
@@ -48,7 +49,7 @@ void main() {
         () async {
           // arrange
           await classUnderTest.upsertExpression(expressionModel);
-          var expressionModel2 = DriftExpression(
+          var expressionModel2 = ExpressionModel(
             id: 0,
             name: 'test',
             description: 'test',
@@ -68,7 +69,7 @@ void main() {
         () async {
           // arrange
           await classUnderTest.upsertExpressions(expressionModels);
-          var expressionModel2 = DriftExpression(
+          var expressionModel2 = ExpressionModel(
             id: 1,
             name: 'test',
             description: 'test',
@@ -108,7 +109,7 @@ void main() {
           // arrange
           await classUnderTest.upsertExpressions(expressionModels);
           var expressionModels2 = expressionModels.map((e) {
-            return DriftExpression(
+            return ExpressionModel(
               id: e.id,
               name: 'test ${e.id}',
               description: 'test ${e.id}',
@@ -159,11 +160,13 @@ void main() {
         () async {
           // arrange
           await database.into(database.mascots).insert(
-                context.data.driftMascotMapper.fromMascot(
-                  context.data.mascot.copyWith(
-                    expressions: {context.data.mascot.expressions.first},
-                  ),
-                ),
+                context.data.mascotMapper
+                    .fromMascot(
+                      context.data.mascot.copyWith(
+                        expressions: {context.data.mascot.expressions.first},
+                      ),
+                    )
+                    .toCompanion(),
               );
           await database.into(database.mascotExpressionMaps).insert(
                 MascotExpressionMapsCompanion(
@@ -190,7 +193,7 @@ void main() {
           // arrange
           await classUnderTest.upsertExpressions(expressionModels);
           var expressionModels2 = expressionModels.map((e) {
-            return DriftExpression(
+            return ExpressionModel(
               id: 0,
               name: 'test ${e.id}',
               description: 'test ${e.id}',
@@ -211,7 +214,7 @@ void main() {
 
     group('streamExpressions', () {
       test(
-        'should emit DriftExpression when expression is added',
+        'should emit ExpressionModel when expression is added',
         () async {
           // arrange
           var expressionIds = expressionModels.map((e) => e.id);
@@ -229,13 +232,13 @@ void main() {
       );
 
       test(
-        'should emit DriftExpression when expression is updated',
+        'should emit ExpressionModel when expression is updated',
         () async {
           // arrange
           var expressionIds = expressionModels.map((e) => e.id);
           var stream = classUnderTest.streamExpressions(expressionIds);
           await classUnderTest.upsertExpressions(expressionModels);
-          var expressionModel2 = DriftExpression(
+          var expressionModel2 = ExpressionModel(
             id: 1,
             name: 'new expression name',
             description: 'new expression description',

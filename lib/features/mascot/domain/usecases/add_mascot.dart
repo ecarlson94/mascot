@@ -6,7 +6,7 @@ import '../../../../core/error/failure.dart';
 import '../../../../core/utils/constants.dart';
 import '../../../../core/utils/logger.dart';
 import '../../../expressions/domain/entities/expression.dart';
-import '../../../expressions/domain/entities/repositories/expressions_repository.dart';
+import '../../../expressions/domain/repositories/expressions_repository.dart';
 import '../../../settings/domain/repositories/settings_repository.dart';
 import '../entities/mascot.dart';
 import '../repositories/mascots_repository.dart';

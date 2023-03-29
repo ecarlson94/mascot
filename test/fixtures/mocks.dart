@@ -1,6 +1,6 @@
 import 'package:mascot/core/utils/logger.dart';
 import 'package:mascot/features/expressions/data/datasources/drift/expressions_drift_data_source.dart';
-import 'package:mascot/features/expressions/domain/entities/repositories/expressions_repository.dart';
+import 'package:mascot/features/expressions/domain/repositories/expressions_repository.dart';
 import 'package:mascot/features/mascot/data/datasources/drift/mascots_drift_data_source.dart';
 import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl.dart';
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart';

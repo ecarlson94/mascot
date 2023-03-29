@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/data/drift/mascot_database.dart';
-import 'package:mascot/features/settings/data/datasources/drift/models/drift_settings.dart';
 import 'package:mascot/features/settings/data/datasources/drift/settings_drift_data_source.dart';
+import 'package:mascot/features/settings/data/models/settings_model.dart';
 
 import '../../../../../fixtures/test_context.dart';
 
@@ -10,7 +10,7 @@ void main() {
   late MascotDatabase database;
   late SettingsDriftDataSource classUnderTest;
 
-  late DriftSettings settingsModel;
+  late SettingsModel settingsModel;
 
   setUp(() {
     context = TestContext();
@@ -52,7 +52,7 @@ void main() {
         var loadedSettings = await classUnderTest.loadSettings();
 
         // assert
-        expect(loadedSettings, equals(DriftSettings.empty));
+        expect(loadedSettings, equals(SettingsModel.empty()));
       });
     });
 

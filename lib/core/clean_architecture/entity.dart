@@ -1,8 +1,6 @@
-import 'package:equatable/equatable.dart';
-
 typedef Id = int;
 
-abstract class Entity extends Equatable {
+abstract class Entity {
   final Id id;
 
   const Entity({required this.id});

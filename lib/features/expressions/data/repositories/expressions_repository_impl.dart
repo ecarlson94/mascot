@@ -6,9 +6,9 @@ import '../../../../core/data/failure_or_id_future.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/utils/logger.dart';
 import '../../domain/entities/expression.dart';
-import '../../domain/entities/repositories/expressions_repository.dart';
+import '../../domain/repositories/expressions_repository.dart';
 import '../datasources/drift/expressions_drift_data_source.dart';
-import '../datasources/drift/models/drift_expression_mapper.dart';
+import '../models/expression_mapper.dart';
 
 @Injectable(as: Logger<ExpressionsRepositoryImpl>)
 class ExpressionsRepositoryLogger extends Logger<ExpressionsRepositoryImpl> {}
@@ -17,7 +17,7 @@ class ExpressionsRepositoryLogger extends Logger<ExpressionsRepositoryImpl> {}
 @Injectable(as: ExpressionsRepository)
 class ExpressionsRepositoryImpl extends ExpressionsRepository {
   final ExpressionsDriftDataSource _expressionsLocalDataSource;
-  final DriftExpressionMapper _driftExpressionMapper;
+  final ExpressionMapper _driftExpressionMapper;
   final Logger<ExpressionsRepositoryImpl> _logger;
 
   ExpressionsRepositoryImpl(

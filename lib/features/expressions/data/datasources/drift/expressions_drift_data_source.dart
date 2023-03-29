@@ -2,26 +2,27 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../../core/clean_architecture/entity.dart';
 import '../../../../../core/data/drift/mascot_database.dart';
+import '../../models/expression_model.dart';
 import 'models/drift_expression.dart';
 
 abstract class ExpressionsDriftDataSource {
   /// Saves an expression to the local database.
-  Future<Id> upsertExpression(DriftExpression expression);
+  Future<Id> upsertExpression(ExpressionModel expression);
 
   /// Saves several expressions to the local database.
-  Future<List<Id>> upsertExpressions(Iterable<DriftExpression> expressions);
+  Future<List<Id>> upsertExpressions(Iterable<ExpressionModel> expressions);
 
   /// Removes an expression from the local database.
   Future<void> removeExpression(Id id);
 
   /// Get an expression from the local databas.
-  Future<DriftExpression> getExpression(Id id);
+  Future<ExpressionModel> getExpression(Id id);
 
   /// Gets several expressions from the local database.
-  Future<List<DriftExpression>> getExpressions(Iterable<Id> ids);
+  Future<List<ExpressionModel>> getExpressions(Iterable<Id> ids);
 
   /// Streams several expressions from the local database.
-  Stream<List<DriftExpression>> streamExpressions(Iterable<Id> ids);
+  Stream<List<ExpressionModel>> streamExpressions(Iterable<Id> ids);
 }
 
 @LazySingleton(as: ExpressionsDriftDataSource)
@@ -31,22 +32,22 @@ class ExpressionsDriftDataSourceImpl implements ExpressionsDriftDataSource {
   ExpressionsDriftDataSourceImpl(this._database);
 
   @override
-  Future<Id> upsertExpression(DriftExpression expression) async {
+  Future<Id> upsertExpression(ExpressionModel expression) async {
     var expressionId = await _database
         .into(_database.expressions)
-        .insertOnConflictUpdate(expression);
+        .insertOnConflictUpdate(expression.toCompanion());
 
     return expression.id == 0 ? expressionId : expression.id;
   }
 
   @override
   Future<List<Id>> upsertExpressions(
-      Iterable<DriftExpression> expressions) async {
+      Iterable<ExpressionModel> expressions) async {
     final ids = List<Id>.empty(growable: true);
     for (final expression in expressions) {
       var id = await _database
           .into(_database.expressions)
-          .insertOnConflictUpdate(expression);
+          .insertOnConflictUpdate(expression.toCompanion());
       ids.add(expression.id == 0 ? id : expression.id);
     }
 
@@ -54,12 +55,12 @@ class ExpressionsDriftDataSourceImpl implements ExpressionsDriftDataSource {
   }
 
   @override
-  Future<DriftExpression> getExpression(Id id) =>
+  Future<ExpressionModel> getExpression(Id id) =>
       (_database.select(_database.expressions)..where((e) => e.id.equals(id)))
           .getSingle();
 
   @override
-  Future<List<DriftExpression>> getExpressions(Iterable<Id> ids) {
+  Future<List<ExpressionModel>> getExpressions(Iterable<Id> ids) {
     if (ids.isEmpty) return Future.value(List.empty());
 
     return (_database.select(_database.expressions)
@@ -78,7 +79,7 @@ class ExpressionsDriftDataSourceImpl implements ExpressionsDriftDataSource {
   }
 
   @override
-  Stream<List<DriftExpression>> streamExpressions(Iterable<Id> ids) =>
+  Stream<List<ExpressionModel>> streamExpressions(Iterable<Id> ids) =>
       (_database.select(_database.expressions)..where((e) => e.id.isIn(ids)))
           .watch();
 }

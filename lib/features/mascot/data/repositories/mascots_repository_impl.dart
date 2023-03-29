@@ -10,7 +10,7 @@ import '../../../../core/utils/logger.dart';
 import '../../domain/entities/mascot.dart';
 import '../../domain/repositories/mascots_repository.dart';
 import '../datasources/drift/mascots_drift_data_source.dart';
-import '../datasources/drift/models/drift_mascot_mapper.dart';
+import '../models/mascot_mapper.dart';
 
 @Injectable(as: Logger<MascotsRepositoryImpl>)
 class MascotRepositoryLogger extends Logger<MascotsRepositoryImpl> {}
@@ -19,7 +19,7 @@ class MascotRepositoryLogger extends Logger<MascotsRepositoryImpl> {}
 class MascotsRepositoryImpl extends StreamSubcriber
     implements MascotsRepository {
   final MascotsDriftDataSource _mascotsLocalDataSource;
-  final DriftMascotMapper _driftMascotMapper;
+  final MascotMapper _driftMascotMapper;
   final Logger<MascotsRepositoryImpl> _logger;
 
   MascotsRepositoryImpl(

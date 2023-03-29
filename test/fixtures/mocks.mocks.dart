@@ -11,16 +11,15 @@ import 'package:mascot/core/error/failure.dart' as _i11;
 import 'package:mascot/core/utils/logger.dart' as _i23;
 import 'package:mascot/features/expressions/data/datasources/drift/expressions_drift_data_source.dart'
     as _i8;
-import 'package:mascot/features/expressions/data/datasources/drift/models/drift_expression.dart'
+import 'package:mascot/features/expressions/data/models/expression_model.dart'
     as _i2;
 import 'package:mascot/features/expressions/domain/entities/expression.dart'
     as _i12;
-import 'package:mascot/features/expressions/domain/entities/repositories/expressions_repository.dart'
+import 'package:mascot/features/expressions/domain/repositories/expressions_repository.dart'
     as _i10;
 import 'package:mascot/features/mascot/data/datasources/drift/mascots_drift_data_source.dart'
     as _i14;
-import 'package:mascot/features/mascot/data/datasources/drift/models/drift_mascot.dart'
-    as _i5;
+import 'package:mascot/features/mascot/data/models/mascot_model.dart' as _i5;
 import 'package:mascot/features/mascot/domain/entities/mascot.dart' as _i15;
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart'
     as _i7;
@@ -35,10 +34,10 @@ import 'package:mascot/features/microphone/domain/services/microphone_service.da
     as _i24;
 import 'package:mascot/features/microphone/domain/usecases/stream_microphone_volume.dart'
     as _i27;
-import 'package:mascot/features/settings/data/datasources/drift/models/drift_settings.dart'
-    as _i4;
 import 'package:mascot/features/settings/data/datasources/drift/settings_drift_data_source.dart'
     as _i13;
+import 'package:mascot/features/settings/data/models/settings_model.dart'
+    as _i4;
 import 'package:mascot/features/settings/domain/entities/settings.dart' as _i19;
 import 'package:mascot/features/settings/domain/repositories/settings_repository.dart'
     as _i6;
@@ -58,9 +57,9 @@ import 'package:rxdart/rxdart.dart' as _i16;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeDriftExpression_0 extends _i1.SmartFake
-    implements _i2.DriftExpression {
-  _FakeDriftExpression_0(
+class _FakeExpressionModel_0 extends _i1.SmartFake
+    implements _i2.ExpressionModel {
+  _FakeExpressionModel_0(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -79,8 +78,8 @@ class _FakeEither_1<L, R> extends _i1.SmartFake implements _i3.Either<L, R> {
         );
 }
 
-class _FakeDriftSettings_2 extends _i1.SmartFake implements _i4.DriftSettings {
-  _FakeDriftSettings_2(
+class _FakeSettingsModel_2 extends _i1.SmartFake implements _i4.SettingsModel {
+  _FakeSettingsModel_2(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -99,8 +98,8 @@ class _FakeUnit_3 extends _i1.SmartFake implements _i3.Unit {
         );
 }
 
-class _FakeDriftMascot_4 extends _i1.SmartFake implements _i5.DriftMascot {
-  _FakeDriftMascot_4(
+class _FakeMascotModel_4 extends _i1.SmartFake implements _i5.MascotModel {
+  _FakeMascotModel_4(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -141,7 +140,7 @@ class MockExpressionsDriftDataSource extends _i1.Mock
   }
 
   @override
-  _i9.Future<int> upsertExpression(_i2.DriftExpression? expression) =>
+  _i9.Future<int> upsertExpression(_i2.ExpressionModel? expression) =>
       (super.noSuchMethod(
         Invocation.method(
           #upsertExpression,
@@ -151,7 +150,7 @@ class MockExpressionsDriftDataSource extends _i1.Mock
       ) as _i9.Future<int>);
   @override
   _i9.Future<List<int>> upsertExpressions(
-          Iterable<_i2.DriftExpression>? expressions) =>
+          Iterable<_i2.ExpressionModel>? expressions) =>
       (super.noSuchMethod(
         Invocation.method(
           #upsertExpressions,
@@ -169,39 +168,39 @@ class MockExpressionsDriftDataSource extends _i1.Mock
         returnValueForMissingStub: _i9.Future<void>.value(),
       ) as _i9.Future<void>);
   @override
-  _i9.Future<_i2.DriftExpression> getExpression(int? id) => (super.noSuchMethod(
+  _i9.Future<_i2.ExpressionModel> getExpression(int? id) => (super.noSuchMethod(
         Invocation.method(
           #getExpression,
           [id],
         ),
         returnValue:
-            _i9.Future<_i2.DriftExpression>.value(_FakeDriftExpression_0(
+            _i9.Future<_i2.ExpressionModel>.value(_FakeExpressionModel_0(
           this,
           Invocation.method(
             #getExpression,
             [id],
           ),
         )),
-      ) as _i9.Future<_i2.DriftExpression>);
+      ) as _i9.Future<_i2.ExpressionModel>);
   @override
-  _i9.Future<List<_i2.DriftExpression>> getExpressions(Iterable<int>? ids) =>
+  _i9.Future<List<_i2.ExpressionModel>> getExpressions(Iterable<int>? ids) =>
       (super.noSuchMethod(
         Invocation.method(
           #getExpressions,
           [ids],
         ),
-        returnValue: _i9.Future<List<_i2.DriftExpression>>.value(
-            <_i2.DriftExpression>[]),
-      ) as _i9.Future<List<_i2.DriftExpression>>);
+        returnValue: _i9.Future<List<_i2.ExpressionModel>>.value(
+            <_i2.ExpressionModel>[]),
+      ) as _i9.Future<List<_i2.ExpressionModel>>);
   @override
-  _i9.Stream<List<_i2.DriftExpression>> streamExpressions(Iterable<int>? ids) =>
+  _i9.Stream<List<_i2.ExpressionModel>> streamExpressions(Iterable<int>? ids) =>
       (super.noSuchMethod(
         Invocation.method(
           #streamExpressions,
           [ids],
         ),
-        returnValue: _i9.Stream<List<_i2.DriftExpression>>.empty(),
-      ) as _i9.Stream<List<_i2.DriftExpression>>);
+        returnValue: _i9.Stream<List<_i2.ExpressionModel>>.empty(),
+      ) as _i9.Stream<List<_i2.ExpressionModel>>);
 }
 
 /// A class which mocks [ExpressionsRepository].
@@ -260,29 +259,29 @@ class MockSettingsDriftDataSource extends _i1.Mock
   }
 
   @override
-  _i9.Future<_i4.DriftSettings> loadSettings() => (super.noSuchMethod(
+  _i9.Future<_i4.SettingsModel> loadSettings() => (super.noSuchMethod(
         Invocation.method(
           #loadSettings,
           [],
         ),
-        returnValue: _i9.Future<_i4.DriftSettings>.value(_FakeDriftSettings_2(
+        returnValue: _i9.Future<_i4.SettingsModel>.value(_FakeSettingsModel_2(
           this,
           Invocation.method(
             #loadSettings,
             [],
           ),
         )),
-      ) as _i9.Future<_i4.DriftSettings>);
+      ) as _i9.Future<_i4.SettingsModel>);
   @override
-  _i9.Stream<_i4.DriftSettings?> streamSettings() => (super.noSuchMethod(
+  _i9.Stream<_i4.SettingsModel?> streamSettings() => (super.noSuchMethod(
         Invocation.method(
           #streamSettings,
           [],
         ),
-        returnValue: _i9.Stream<_i4.DriftSettings?>.empty(),
-      ) as _i9.Stream<_i4.DriftSettings?>);
+        returnValue: _i9.Stream<_i4.SettingsModel?>.empty(),
+      ) as _i9.Stream<_i4.SettingsModel?>);
   @override
-  _i9.Future<_i3.Unit> saveSettings(_i4.DriftSettings? settings) =>
+  _i9.Future<_i3.Unit> saveSettings(_i4.SettingsModel? settings) =>
       (super.noSuchMethod(
         Invocation.method(
           #saveSettings,
@@ -308,7 +307,7 @@ class MockMascotsDriftDataSource extends _i1.Mock
   }
 
   @override
-  _i9.Future<int> upsertMascot(_i5.DriftMascot? mascot) => (super.noSuchMethod(
+  _i9.Future<int> upsertMascot(_i5.MascotModel? mascot) => (super.noSuchMethod(
         Invocation.method(
           #upsertMascot,
           [mascot],
@@ -316,36 +315,36 @@ class MockMascotsDriftDataSource extends _i1.Mock
         returnValue: _i9.Future<int>.value(0),
       ) as _i9.Future<int>);
   @override
-  _i9.Future<_i5.DriftMascot> getMascot(int? id) => (super.noSuchMethod(
+  _i9.Future<_i5.MascotModel> getMascot(int? id) => (super.noSuchMethod(
         Invocation.method(
           #getMascot,
           [id],
         ),
-        returnValue: _i9.Future<_i5.DriftMascot>.value(_FakeDriftMascot_4(
+        returnValue: _i9.Future<_i5.MascotModel>.value(_FakeMascotModel_4(
           this,
           Invocation.method(
             #getMascot,
             [id],
           ),
         )),
-      ) as _i9.Future<_i5.DriftMascot>);
+      ) as _i9.Future<_i5.MascotModel>);
   @override
-  _i9.Stream<_i5.DriftMascot?> streamMascot(int? id) => (super.noSuchMethod(
+  _i9.Stream<_i5.MascotModel?> streamMascot(int? id) => (super.noSuchMethod(
         Invocation.method(
           #streamMascot,
           [id],
         ),
-        returnValue: _i9.Stream<_i5.DriftMascot?>.empty(),
-      ) as _i9.Stream<_i5.DriftMascot?>);
+        returnValue: _i9.Stream<_i5.MascotModel?>.empty(),
+      ) as _i9.Stream<_i5.MascotModel?>);
   @override
-  _i9.Stream<List<_i2.DriftExpression>?> streamExpressionsForMascot(int? id) =>
+  _i9.Stream<List<_i2.ExpressionModel>?> streamExpressionsForMascot(int? id) =>
       (super.noSuchMethod(
         Invocation.method(
           #streamExpressionsForMascot,
           [id],
         ),
-        returnValue: _i9.Stream<List<_i2.DriftExpression>?>.empty(),
-      ) as _i9.Stream<List<_i2.DriftExpression>?>);
+        returnValue: _i9.Stream<List<_i2.ExpressionModel>?>.empty(),
+      ) as _i9.Stream<List<_i2.ExpressionModel>?>);
 }
 
 /// A class which mocks [MascotsRepository].

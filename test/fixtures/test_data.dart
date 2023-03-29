@@ -1,12 +1,12 @@
 import 'dart:typed_data';
 
 import 'package:mascot/core/utils/constants.dart';
-import 'package:mascot/features/expressions/data/datasources/drift/models/drift_expression_mapper.dart';
+import 'package:mascot/features/expressions/data/models/expression_mapper.dart';
 import 'package:mascot/features/expressions/domain/entities/expression.dart';
-import 'package:mascot/features/mascot/data/datasources/drift/models/drift_mascot_mapper.dart';
+import 'package:mascot/features/mascot/data/models/mascot_mapper.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
 import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart';
-import 'package:mascot/features/settings/data/datasources/drift/models/drift_settings_mapper.dart';
+import 'package:mascot/features/settings/data/models/settings_mapper.dart';
 import 'package:mascot/features/settings/domain/entities/settings.dart';
 
 import 'test_x_file.dart';
@@ -24,8 +24,7 @@ class TestData {
     description: CreateMascotBloc.neutralExpressionDescription,
     image: Uint8List(5),
   );
-  final DriftExpressionMapperImpl driftExpressionMapper =
-      DriftExpressionMapperImpl();
+  final ExpressionMapperImpl expressionMapper = ExpressionMapperImpl();
 
   final List<Expression> expressions = [
     Expression(
@@ -60,8 +59,9 @@ class TestData {
       ),
     },
   );
-  final DriftMascotMapperImpl driftMascotMapper = DriftMascotMapperImpl();
+  final MascotMapperImpl mascotMapper =
+      MascotMapperImpl(ExpressionMapperImpl());
 
   final Settings settings = const Settings(favoriteMascotId: 1);
-  final DriftSettingsMapperImpl driftSettingsMapper = DriftSettingsMapperImpl();
+  final SettingsMapperImpl driftSettingsMapper = SettingsMapperImpl();
 }

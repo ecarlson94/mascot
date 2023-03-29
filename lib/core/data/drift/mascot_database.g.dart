@@ -172,7 +172,7 @@ class MascotsCompanion extends UpdateCompanion<Mascot> {
 }
 
 class $ExpressionsTable extends Expressions
-    with TableInfo<$ExpressionsTable, DriftExpression> {
+    with TableInfo<$ExpressionsTable, ExpressionModel> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -209,7 +209,7 @@ class $ExpressionsTable extends Expressions
   @override
   String get actualTableName => 'expressions';
   @override
-  VerificationContext validateIntegrity(Insertable<DriftExpression> instance,
+  VerificationContext validateIntegrity(Insertable<ExpressionModel> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -242,9 +242,9 @@ class $ExpressionsTable extends Expressions
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  DriftExpression map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ExpressionModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return DriftExpression(
+    return ExpressionModel(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       name: attachedDatabase.typeMapping
@@ -262,7 +262,7 @@ class $ExpressionsTable extends Expressions
   }
 }
 
-class ExpressionsCompanion extends UpdateCompanion<DriftExpression> {
+class ExpressionsCompanion extends UpdateCompanion<ExpressionModel> {
   final Value<int> id;
   final Value<String> name;
   final Value<String> description;
@@ -281,7 +281,7 @@ class ExpressionsCompanion extends UpdateCompanion<DriftExpression> {
   })  : name = Value(name),
         description = Value(description),
         image = Value(image);
-  static Insertable<DriftExpression> custom({
+  static Insertable<ExpressionModel> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<String>? description,
@@ -536,7 +536,7 @@ class MascotExpressionMapsCompanion
 }
 
 class $SettingsTable extends Settings
-    with TableInfo<$SettingsTable, DriftSettings> {
+    with TableInfo<$SettingsTable, SettingsModel> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -562,7 +562,7 @@ class $SettingsTable extends Settings
   @override
   String get actualTableName => 'settings';
   @override
-  VerificationContext validateIntegrity(Insertable<DriftSettings> instance,
+  VerificationContext validateIntegrity(Insertable<SettingsModel> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -581,9 +581,11 @@ class $SettingsTable extends Settings
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  DriftSettings map(Map<String, dynamic> data, {String? tablePrefix}) {
+  SettingsModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return DriftSettings(
+    return SettingsModel(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       favoriteMascotId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}favorite_mascot_id']),
     );
@@ -595,7 +597,7 @@ class $SettingsTable extends Settings
   }
 }
 
-class SettingsCompanion extends UpdateCompanion<DriftSettings> {
+class SettingsCompanion extends UpdateCompanion<SettingsModel> {
   final Value<int> id;
   final Value<int?> favoriteMascotId;
   const SettingsCompanion({
@@ -606,7 +608,7 @@ class SettingsCompanion extends UpdateCompanion<DriftSettings> {
     this.id = const Value.absent(),
     this.favoriteMascotId = const Value.absent(),
   });
-  static Insertable<DriftSettings> custom({
+  static Insertable<SettingsModel> custom({
     Expression<int>? id,
     Expression<int>? favoriteMascotId,
   }) {

@@ -4,6 +4,7 @@ import 'package:mascot/core/error/failure.dart';
 import 'package:mascot/core/utils/input_converters/input_converter.dart';
 import 'package:mascot/features/settings/data/datasources/drift/models/drift_settings.dart'
     hide Settings;
+import 'package:mascot/features/settings/data/models/settings_model.dart';
 import 'package:mascot/features/settings/data/repositories/settings_repository_impl.dart';
 import 'package:mascot/features/settings/domain/entities/settings.dart';
 import 'package:mockito/mockito.dart';
@@ -24,7 +25,7 @@ void main() {
     );
   });
 
-  DriftSettings getSettingsModel() =>
+  SettingsModel getSettingsModel() =>
       context.data.driftSettingsMapper.fromSettings(context.data.settings);
 
   group('SettingsRepositoryImpl', () {
@@ -81,7 +82,7 @@ void main() {
         verify(
           context.mocks.settingsLocalDataSource.saveSettings(
             context.data.driftSettingsMapper.fromSettings(
-              getSettingsModel().copyWith(favoriteMascotId: 27),
+              context.data.settings.copyWith(favoriteMascotId: 27),
             ),
           ),
         );
@@ -109,7 +110,7 @@ void main() {
     group('streamSettings', () {
       test('should seed the stream with the current settings', () async {
         // arrange
-        var modelStream = BehaviorSubject<DriftSettings>();
+        var modelStream = BehaviorSubject<SettingsModel>();
         when(context.mocks.settingsLocalDataSource.loadSettings())
             .thenAnswer((_) async => getSettingsModel());
         when(context.mocks.settingsLocalDataSource.streamSettings())
@@ -135,14 +136,14 @@ void main() {
         'should convert Stream<SettingsModel> to Stream<Settings>',
         () async {
           // arrange
-          var modelStream = BehaviorSubject<DriftSettings>();
-          var settings = getSettingsModel();
+          var modelStream = BehaviorSubject<SettingsModel>();
+          var settingsModel = getSettingsModel();
           when(context.mocks.settingsLocalDataSource.loadSettings())
-              .thenAnswer((_) async => settings);
+              .thenAnswer((_) async => settingsModel);
           when(context.mocks.settingsLocalDataSource.streamSettings())
               .thenAnswer((_) => modelStream);
-          var updatedSettingsModel = context.data.driftSettingsMapper
-              .fromSettings(settings.copyWith(favoriteMascotId: 27));
+          var updatedSettingsModel =
+              settingsModel.copyWith(favoriteMascotId: 27);
 
           // act
           final result = await repository.streamSettings();

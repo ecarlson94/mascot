@@ -3,8 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/clean_architecture/entity.dart';
 import 'package:mascot/core/data/drift/mascot_database.dart';
 import 'package:mascot/features/expressions/data/datasources/drift/expressions_drift_data_source.dart';
+import 'package:mascot/features/expressions/data/datasources/drift/models/drift_expression.dart';
 import 'package:mascot/features/mascot/data/datasources/drift/mascots_drift_data_source.dart';
 import 'package:mascot/features/mascot/data/datasources/drift/models/drift_mascot.dart';
+import 'package:mascot/features/mascot/data/models/mascot_model.dart';
 
 import '../../../../../fixtures/test_context.dart';
 
@@ -14,7 +16,7 @@ void main() {
   late MascotsDriftDataSource classUnderTest;
   late ExpressionsDriftDataSource expressionsDriftDataSource;
 
-  late DriftMascot mascotModel;
+  late MascotModel mascotModel;
   late List<Id> insertedExpressionIds;
 
   setUp(() async {
@@ -26,11 +28,10 @@ void main() {
     );
 
     insertedExpressionIds = context.data.expressions.map((e) => e.id).toList();
-    mascotModel =
-        context.data.driftMascotMapper.fromMascot(context.data.mascot);
+    mascotModel = context.data.mascotMapper.fromMascot(context.data.mascot);
   });
 
-  Future<void> insertMascotAndExpressions(DriftMascot mascotModel) async {
+  Future<void> insertMascotAndExpressions(MascotModel mascotModel) async {
     await classUnderTest.upsertMascot(mascotModel);
     await expressionsDriftDataSource.upsertExpressions(mascotModel.expressions);
   }
@@ -101,7 +102,7 @@ void main() {
         () async {
           // arrange
           await insertMascotAndExpressions(mascotModel);
-          var mascotModel2 = context.data.driftMascotMapper.fromMascot(
+          var mascotModel2 = context.data.mascotMapper.fromMascot(
             context.data.mascot.copyWith(id: 0, name: 'mascot 2'),
           );
 
@@ -118,7 +119,7 @@ void main() {
         () async {
           // arrange
           await insertMascotAndExpressions(mascotModel);
-          var mascotModel2 = context.data.driftMascotMapper.fromMascot(
+          var mascotModel2 = context.data.mascotMapper.fromMascot(
             context.data.mascot.copyWith(id: 2, name: 'new guy'),
           );
           await classUnderTest.upsertMascot(mascotModel2);
@@ -126,7 +127,7 @@ void main() {
 
           // act
           var id = await classUnderTest.upsertMascot(
-            context.data.driftMascotMapper.fromMascot(updatedMascot),
+            context.data.mascotMapper.fromMascot(updatedMascot),
           );
 
           // assert
@@ -162,11 +163,13 @@ void main() {
           // arrange
           await insertMascotAndExpressions(mascotModel);
           var stream = classUnderTest.streamMascot(context.data.mascot.id);
-          var updatedMascotModel = context.data.driftMascotMapper
+          var updatedMascotModel = context.data.mascotMapper
               .fromMascot(context.data.mascot.copyWith(name: 'updated'));
 
           // act
-          await database.update(database.mascots).replace(updatedMascotModel);
+          await database
+              .update(database.mascots)
+              .replace(updatedMascotModel.toCompanion());
 
           // assert
           await expectLater(
@@ -186,13 +189,14 @@ void main() {
           // arrange
           await insertMascotAndExpressions(mascotModel);
           var stream = classUnderTest.streamMascot(context.data.mascot.id);
-          var updatedExpressionModel = context.data.driftExpressionMapper
-              .fromExpression(context.data.mascot.expressions.first
-                  .copyWith(name: 'updated'));
-          var updatedMascotModel = context.data.driftMascotMapper.fromMascot(
+          var updatedExpression =
+              context.data.mascot.expressions.first.copyWith(name: 'updated');
+          var updatedExpressionModel =
+              context.data.expressionMapper.fromExpression(updatedExpression);
+          var updatedMascotModel = context.data.mascotMapper.fromMascot(
             context.data.mascot.copyWith(
               expressions: {
-                updatedExpressionModel,
+                updatedExpression,
                 context.data.mascot.expressions.last,
               },
             ),
@@ -202,7 +206,7 @@ void main() {
           // await Future.delayed(const Duration(milliseconds: 100));
           await database
               .update(database.expressions)
-              .replace(updatedExpressionModel);
+              .replace(updatedExpressionModel.toCompanion());
 
           // assert
           await expectLater(
@@ -218,7 +222,7 @@ void main() {
           // arrange
           await insertMascotAndExpressions(mascotModel);
           var stream = classUnderTest.streamMascot(context.data.mascot.id);
-          var updatedMascotModel = context.data.driftMascotMapper.fromMascot(
+          var updatedMascotModel = context.data.mascotMapper.fromMascot(
             context.data.mascot.copyWith(
               expressions: {
                 context.data.mascot.expressions.last,
@@ -251,7 +255,7 @@ void main() {
             name: 'new expression',
             description: 'new expression',
           );
-          var updatedMascotModel = context.data.driftMascotMapper.fromMascot(
+          var updatedMascotModel = context.data.mascotMapper.fromMascot(
             context.data.mascot.copyWith(
               expressions: {
                 ...context.data.mascot.expressions,
@@ -262,9 +266,11 @@ void main() {
 
           // act
           await database.into(database.expressions).insert(
-                context.data.driftExpressionMapper.fromExpression(
-                  newExpression,
-                ),
+                context.data.expressionMapper
+                    .fromExpression(
+                      newExpression,
+                    )
+                    .toCompanion(),
               );
           await database.into(database.mascotExpressionMaps).insert(
                 MascotExpressionMapsCompanion(
@@ -291,7 +297,7 @@ void main() {
           // arrange
           await insertMascotAndExpressions(mascotModel);
           var stream = classUnderTest.streamMascot(context.data.mascot.id);
-          var updatedMascotModel = context.data.driftMascotMapper.fromMascot(
+          var updatedMascotModel = context.data.mascotMapper.fromMascot(
             context.data.mascot.copyWith(
               expressions: {
                 context.data.mascot.expressions.last,

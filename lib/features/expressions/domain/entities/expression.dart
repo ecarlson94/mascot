@@ -1,35 +1,19 @@
-import 'package:drift/drift.dart';
+import 'dart:typed_data';
+
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../../core/clean_architecture/entity.dart';
 
-class Expression extends Entity {
-  final String name;
-  final String description;
-  final Uint8List image;
+part 'expression.freezed.dart';
 
-  const Expression({
-    required super.id,
-    required this.name,
-    required this.description,
-    required this.image,
-  });
-
-  @override
-  List<Object?> get props => [id, name, description, image];
-
-  Expression copyWith({
-    Id? id,
-    String? name,
-    String? description,
-    Uint8List? image,
-  }) {
-    return Expression(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      image: image ?? this.image,
-    );
-  }
+@freezed
+class Expression extends Entity with _$Expression {
+  const factory Expression({
+    required Id id,
+    required String name,
+    required String description,
+    required Uint8List image,
+  }) = _Expression;
 
   static Expression empty = Expression(
     id: 0,
