@@ -2,8 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/error/failure.dart';
 import 'package:mascot/core/utils/input_converters/input_converter.dart';
-import 'package:mascot/features/settings/data/datasources/drift/models/drift_settings.dart'
-    hide Settings;
 import 'package:mascot/features/settings/data/models/settings_model.dart';
 import 'package:mascot/features/settings/data/repositories/settings_repository_impl.dart';
 import 'package:mascot/features/settings/domain/entities/settings.dart';

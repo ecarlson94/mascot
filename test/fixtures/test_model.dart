@@ -6,9 +6,6 @@ class TestEntity extends entity.Entity {
   final String name;
 
   const TestEntity({required super.id, required this.name});
-
-  @override
-  List<Object?> get props => [id, name];
 }
 
 class TestModel extends TestEntity {

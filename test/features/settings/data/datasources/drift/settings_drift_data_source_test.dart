@@ -52,7 +52,7 @@ void main() {
         var loadedSettings = await classUnderTest.loadSettings();
 
         // assert
-        expect(loadedSettings, equals(SettingsModel.empty()));
+        expect(loadedSettings, equals(SettingsModel.empty));
       });
     });
 

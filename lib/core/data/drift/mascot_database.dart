@@ -5,6 +5,7 @@ import '../../../features/expressions/data/datasources/drift/models/drift_expres
 import '../../../features/expressions/data/models/expression_model.dart';
 import '../../../features/mascot/data/datasources/drift/models/drift_mascot.dart';
 import '../../../features/settings/data/datasources/drift/models/drift_settings.dart';
+import '../../../features/settings/data/models/settings_model.dart';
 import 'connection/connection.dart' as impl;
 
 part 'mascot_database.g.dart';

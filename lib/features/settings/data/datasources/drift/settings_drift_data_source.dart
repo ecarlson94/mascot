@@ -31,7 +31,7 @@ class SettingsDriftDataSourceImpl implements SettingsDriftDataSource {
     var settings = await query.getSingleOrNull();
 
     if (settings == null) {
-      settings = SettingsModel.empty();
+      settings = SettingsModel.empty;
       await saveSettings(settings);
     }
 

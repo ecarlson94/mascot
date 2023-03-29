@@ -9,6 +9,6 @@ class SettingsModel with _$SettingsModel {
   const factory SettingsModel({required Id id, required Id? favoriteMascotId}) =
       _SettingsModel;
 
-  factory SettingsModel.empty() =>
-      const SettingsModel(id: 1, favoriteMascotId: null);
+  static const SettingsModel empty =
+      SettingsModel(id: 1, favoriteMascotId: null);
 }
