@@ -23,11 +23,13 @@ class MascotUnderlay extends StatelessWidget {
             child: BlocBuilder<MascotAnimatorBloc, MascotAnimatorState>(
               builder: (context, state) {
                 return state.expressionMapOption.fold(
-                  () => const SizedBox.shrink(),
-                  (expressionMap) => Image.memory(
-                    expressionMap[state.expression]?.image ?? Uint8List(0),
-                    fit: BoxFit.contain,
-                  ),
+                  () => const CircularProgressIndicator(),
+                  (expressionMap) {
+                    return Image.memory(
+                      expressionMap[state.expression]?.image ?? Uint8List(0),
+                      fit: BoxFit.contain,
+                    );
+                  },
                 );
               },
             ),

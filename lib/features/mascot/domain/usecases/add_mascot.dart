@@ -3,7 +3,6 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../core/clean_architecture/usecase.dart';
 import '../../../../core/error/failure.dart';
-import '../../../../core/utils/constants.dart';
 import '../../../../core/utils/logger.dart';
 import '../../../expressions/domain/entities/expression.dart';
 import '../../../expressions/domain/repositories/expressions_repository.dart';
@@ -40,20 +39,6 @@ class AddMascot implements UseCase<Mascot, Mascot> {
     // TODO: add tests for these early returns
     if (params.id != 0) {
       _logger.logError('Cannot add a mascot that already exists');
-      return Left(InvalidArgumentFailure());
-    }
-
-    // TODO: move to bloc and integrate with validation
-    var requiredExpressionNames = [
-      defaultExpressionName,
-      talkingExpressionName,
-    ];
-    var hasRequiredExpressions = params.expressions
-            .where((e) => requiredExpressionNames.contains(e.name))
-            .length ==
-        requiredExpressionNames.length;
-    if (!hasRequiredExpressions) {
-      _logger.logError('Mascot must have a neutral and talking expression');
       return Left(InvalidArgumentFailure());
     }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -20,6 +21,12 @@ class NewMascotPage extends StatelessWidget {
           create: (context) => getIt<CreateMascotBloc>()..add(Initialize()),
           child: BlocBuilder<CreateMascotBloc, CreateMascotState>(
             builder: (context, state) {
+              var isSaving = state is SavingMascot;
+              if (state is MascotSaved) {
+                SchedulerBinding.instance
+                    .addPostFrameCallback((_) => context.back());
+              }
+
               return state.form.fold(
                 () => const SizedBox.shrink(),
                 (form) {
@@ -68,14 +75,14 @@ class NewMascotPage extends StatelessWidget {
                           SizedBox(
                             width: double.infinity,
                             child: FilledButton(
-                              onPressed: () {
-                                if (form.valid) {
-                                  bloc.add(SaveMascot());
-                                } else {
-                                  form.markAllAsTouched();
-                                }
-                              },
-                              child: const Text('Finish'),
+                              onPressed: isSaving
+                                  ? null
+                                  : () => form.valid
+                                      ? bloc.add(SaveMascot())
+                                      : form.markAllAsTouched(),
+                              child: isSaving
+                                  ? const CircularProgressIndicator()
+                                  : const Text('Save'),
                             ),
                           )
                         ],

@@ -13,6 +13,10 @@ class CreateMascotInitial extends CreateMascotState {
   const CreateMascotInitial(super.form);
 }
 
+class SavingMascot extends CreateMascotState {
+  const SavingMascot(super.form);
+}
+
 class MascotSaved extends CreateMascotState {
   final Mascot mascot;
 

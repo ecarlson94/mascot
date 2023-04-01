@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../features/expressions/data/datasources/drift/models/drift_expression.dart';
@@ -22,11 +23,16 @@ part 'mascot_database.g.dart';
     MascotExpressions,
   ],
 )
-class MascotDatabase extends _$MascotDatabase {
+class MascotDatabase extends _$MascotDatabase implements Disposable {
   MascotDatabase() : super(impl.connect());
 
   MascotDatabase.memory() : super(impl.connect(isInMemory: true));
 
   @override
   int get schemaVersion => 1;
+
+  @override
+  void onDispose() {
+    super.close();
+  }
 }

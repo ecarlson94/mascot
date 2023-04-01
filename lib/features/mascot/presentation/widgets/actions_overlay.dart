@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../microphone/presentation/widgets/vertical_loudness_meter.dart';
 import 'create_mascot_fab.dart';
 
 class ActionsOverlay extends StatelessWidget {
@@ -12,7 +11,7 @@ class ActionsOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       backgroundColor: Colors.transparent,
-      body: VerticalLoudnessMeter(),
+      body: SizedBox.shrink(),
       floatingActionButton: CreateMascotFab(),
     );
   }

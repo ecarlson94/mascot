@@ -12,5 +12,8 @@ extension BuildContextExtensions on BuildContext {
 
   ColorScheme get colorScheme => theme.colorScheme;
 
-  void back() => Navigator.of(this).pop();
+  void back() {
+    var navigation = Navigator.of(this);
+    if (navigation.canPop()) navigation.pop();
+  }
 }

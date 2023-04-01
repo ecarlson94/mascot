@@ -47,7 +47,6 @@ dependencies:
   path: ^1.8.2
   path_provider: ^2.0.13
   reactive_forms: ^14.2.0
-  reactive_image_picker: ^1.0.1
   responsive_framework: ^0.2.0
   rxdart: ^0.27.7
   sqlite3: ^1.9.3

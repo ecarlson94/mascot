@@ -8,6 +8,7 @@ class CommonTextField extends StatelessWidget {
   final void Function(String)? onChanged;
   final String? Function(String?)? validator;
   final String formControlName;
+  final bool? enabled;
 
   const CommonTextField({
     super.key,
@@ -15,6 +16,7 @@ class CommonTextField extends StatelessWidget {
     this.labelText,
     this.onChanged,
     this.validator,
+    this.enabled = true,
   });
 
   @override

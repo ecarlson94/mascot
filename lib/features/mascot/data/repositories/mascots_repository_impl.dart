@@ -19,12 +19,12 @@ class MascotRepositoryLogger extends Logger<MascotsRepositoryImpl> {}
 class MascotsRepositoryImpl extends StreamSubcriber
     implements MascotsRepository {
   final MascotsDriftDataSource _mascotsLocalDataSource;
-  final MascotMapper _driftMascotMapper;
+  final MascotMapper _mascotMapper;
   final Logger<MascotsRepositoryImpl> _logger;
 
   MascotsRepositoryImpl(
     this._mascotsLocalDataSource,
-    this._driftMascotMapper,
+    this._mascotMapper,
     this._logger,
   );
 
@@ -32,7 +32,7 @@ class MascotsRepositoryImpl extends StreamSubcriber
   MascotOrFailureFuture getMascot(Id id) async {
     try {
       var mascotModel = await _mascotsLocalDataSource.getMascot(id);
-      return Right(_driftMascotMapper.toMascot(mascotModel));
+      return Right(_mascotMapper.toMascot(mascotModel));
     } catch (e) {
       _logger.logError('Failed to get mascot with id: $id', e);
       return Left(LocalDataSourceFailure());
@@ -49,7 +49,7 @@ class MascotsRepositoryImpl extends StreamSubcriber
       }
 
       var id = await _mascotsLocalDataSource.upsertMascot(
-        _driftMascotMapper.fromMascot(mascot),
+        _mascotMapper.fromMascot(mascot),
       );
 
       return Right(id);
@@ -64,13 +64,13 @@ class MascotsRepositoryImpl extends StreamSubcriber
     try {
       var mascotModel = await _mascotsLocalDataSource.getMascot(id);
       var mascotBehaviorSubject = BehaviorSubject<Mascot>.seeded(
-        _driftMascotMapper.toMascot(mascotModel),
+        _mascotMapper.toMascot(mascotModel),
       );
 
       var mascotStream = _mascotsLocalDataSource.streamMascot(id);
       var mascotSub = mascotStream.listen((event) async {
         var updatedMascot = event ?? mascotModel;
-        mascotBehaviorSubject.add(_driftMascotMapper.toMascot(updatedMascot));
+        mascotBehaviorSubject.add(_mascotMapper.toMascot(updatedMascot));
       });
       subscriptions.add(mascotSub);
 

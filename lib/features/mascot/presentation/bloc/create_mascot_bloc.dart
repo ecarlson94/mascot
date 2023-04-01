@@ -1,12 +1,14 @@
+import 'dart:typed_data';
+
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:reactive_image_picker/image_file.dart';
 
 import '../../../../core/error/error.dart';
 import '../../../../core/utils/constants.dart';
+import '../../../../core/widgets/reactive_image_picker/image_file.dart';
 import '../../../expressions/domain/entities/expression.dart';
 import '../../domain/entities/mascot.dart';
 import '../../domain/usecases/add_mascot.dart';
@@ -44,19 +46,15 @@ class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
       ],
     ),
   });
-  ImageFile get _neutralExpression =>
+  ImageFile get _neutralExpressionImage =>
       _form.control(neutralExpressionFormControlName).value as ImageFile;
-  ImageFile get _talkingExpression =>
+  ImageFile get _talkingExpressionImage =>
       _form.control(talkingExpressionFormControlName).value as ImageFile;
 
   CreateMascotBloc(this._addMascot) : super(CreateMascotInitial(none())) {
     on<CreateMascotEvent>((event, emit) async {
       if (event is Initialize) {
-        emit(
-          CreateMascotInitial(
-            some(_form),
-          ),
-        );
+        emit(CreateMascotInitial(some(_form)));
       } else if (event is SaveMascot) {
         await _saveMascot(emit);
       }
@@ -71,7 +69,10 @@ class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
       return;
     }
 
-    Mascot mascotToUpdate = await _createMascotFromForm();
+    _form.markAsDisabled();
+    emit(SavingMascot(state.form));
+
+    Mascot mascotToUpdate = _createMascotFromForm();
 
     var mascotOrFailure = await _addMascot(mascotToUpdate);
     mascotOrFailure.fold(
@@ -81,11 +82,14 @@ class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
           state.form,
         ),
       ),
-      (mascot) => emit(MascotSaved(mascot, state.form)),
+      (mascot) => {
+        _form.markAsEnabled(),
+        emit(MascotSaved(mascot, state.form)),
+      },
     );
   }
 
-  Future<Mascot> _createMascotFromForm() async => Mascot(
+  Mascot _createMascotFromForm() => Mascot(
         id: 0,
         name: _form.control(nameFormControlName).value,
         expressions: {
@@ -93,13 +97,13 @@ class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
             id: 0,
             name: neutralExpressionName,
             description: neutralExpressionDescription,
-            image: await _neutralExpression.image!.readAsBytes(),
+            image: _neutralExpressionImage.bytes ?? Uint8List(0),
           ),
           Expression(
             id: 0,
             name: talkingExpressionName,
             description: talkingExpressionDescription,
-            image: await _talkingExpression.image!.readAsBytes(),
+            image: _talkingExpressionImage.bytes ?? Uint8List(0),
           ),
         },
       );
