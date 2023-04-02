@@ -41,6 +41,7 @@ dependencies:
   freezed_annotation: ^2.2.0
   get_it: ^7.2.0
   http: ^0.13.5
+  idb_shim: ^2.3.0+2
   image_picker: ^0.8.6+3
   injectable: ^2.1.0
   js: ^0.6.5

@@ -6,7 +6,7 @@ import 'mascot_model.dart';
 
 abstract class MascotMapper {
   MascotModel fromMascot(Mascot mascot);
-  Mascot toMascot(MascotModel driftMascot);
+  Mascot toMascot(MascotModel mascotModel);
 }
 
 @LazySingleton(as: MascotMapper)
@@ -26,12 +26,12 @@ class MascotMapperImpl extends MascotMapper {
   }
 
   @override
-  Mascot toMascot(MascotModel driftMascot) {
+  Mascot toMascot(MascotModel mascotModel) {
     final mascot = Mascot(
-      id: driftMascot.id,
-      name: driftMascot.name,
+      id: mascotModel.id,
+      name: mascotModel.name,
       expressions:
-          driftMascot.expressions.map(_expressionMapper.toExpression).toSet(),
+          mascotModel.expressions.map(_expressionMapper.toExpression).toSet(),
     );
     return mascot;
   }

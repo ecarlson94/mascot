@@ -7,7 +7,7 @@ import '../../../../core/clean_architecture/entity.dart';
 part 'expression_model.freezed.dart';
 
 @freezed
-class ExpressionModel with _$ExpressionModel {
+class ExpressionModel extends Entity with _$ExpressionModel {
   const factory ExpressionModel({
     required Id id,
     required String name,

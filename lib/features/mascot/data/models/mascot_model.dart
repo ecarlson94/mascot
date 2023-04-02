@@ -6,7 +6,7 @@ import '../../../expressions/data/models/expression_model.dart';
 part 'mascot_model.freezed.dart';
 
 @freezed
-class MascotModel with _$MascotModel {
+class MascotModel extends Entity with _$MascotModel {
   const factory MascotModel({
     required Id id,
     required String name,
