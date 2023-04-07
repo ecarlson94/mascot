@@ -7,7 +7,7 @@ import '../../../../core/error/failure.dart';
 import '../../../../core/utils/logger.dart';
 import '../../domain/entities/settings.dart';
 import '../../domain/repositories/settings_repository.dart';
-import '../datasources/drift/settings_drift_data_source.dart';
+import '../datasources/indexded_db/settings_indexed_db_data_source.dart';
 import '../models/settings_mapper.dart';
 
 @Injectable(as: Logger<SettingsRepositoryImpl>)
@@ -15,7 +15,7 @@ class SettingsRepositoryLogger extends Logger<SettingsRepositoryImpl> {}
 
 @Injectable(as: SettingsRepository)
 class SettingsRepositoryImpl extends SettingsRepository {
-  final SettingsDriftDataSource _localDataSource;
+  final SettingsIndexedDbDataSource _localDataSource;
   final SettingsMapper _driftSettingsMapper;
   final Logger<SettingsRepositoryImpl> _logger;
 
@@ -28,7 +28,7 @@ class SettingsRepositoryImpl extends SettingsRepository {
   @override
   FailureOrSettingsFuture loadSettings() async {
     try {
-      var settingsModel = await _localDataSource.loadSettings();
+      var settingsModel = await _localDataSource.getObject(1);
       return Right(_driftSettingsMapper.toSettings(settingsModel));
     } catch (e) {
       _logger.logError('Failed to load settings', e);
@@ -39,15 +39,15 @@ class SettingsRepositoryImpl extends SettingsRepository {
   @override
   FailureOrSettingsSubjectFuture streamSettings() async {
     try {
-      var settingsModel = await _localDataSource.loadSettings();
+      var settingsModel = await _localDataSource.getObject(1);
       var settingsBehaviorSubject = BehaviorSubject<Settings>.seeded(
         _driftSettingsMapper.toSettings(settingsModel),
       );
 
-      var settingsStream = _localDataSource.streamSettings();
+      var settingsStream = _localDataSource.streamObject(1);
       settingsStream.listen((event) async {
         settingsBehaviorSubject.add(
-          _driftSettingsMapper.toSettings(event ?? settingsModel),
+          _driftSettingsMapper.toSettings(event),
         );
       });
 
@@ -61,12 +61,11 @@ class SettingsRepositoryImpl extends SettingsRepository {
   @override
   Future<Either<Failure, Unit>> setFavoriteMascotId(Id id) async {
     try {
-      var settings = await _localDataSource.loadSettings();
+      var settings = await _localDataSource.getObject(1);
       var updatedSettings = settings.copyWith(favoriteMascotId: id);
+      await _localDataSource.putObject(updatedSettings);
 
-      return Right(
-        await _localDataSource.saveSettings(updatedSettings),
-      );
+      return const Right(unit);
     } catch (e) {
       _logger.logError('Failed to set favorite mascot id', e);
       return Left(LocalDataSourceFailure());

@@ -7,7 +7,7 @@ import '../../../../core/error/failure.dart';
 import '../../../../core/utils/logger.dart';
 import '../../domain/entities/expression.dart';
 import '../../domain/repositories/expressions_repository.dart';
-import '../datasources/drift/expressions_drift_data_source.dart';
+import '../datasources/indexed_db/expressions_indexed_db_data_source.dart';
 import '../models/expression_mapper.dart';
 
 @Injectable(as: Logger<ExpressionsRepositoryImpl>)
@@ -16,7 +16,7 @@ class ExpressionsRepositoryLogger extends Logger<ExpressionsRepositoryImpl> {}
 // TODO: Add tests
 @Injectable(as: ExpressionsRepository)
 class ExpressionsRepositoryImpl extends ExpressionsRepository {
-  final ExpressionsDriftDataSource _expressionsLocalDataSource;
+  final ExpressionsIndexedDbDataSource _expressionsLocalDataSource;
   final ExpressionMapper _driftExpressionMapper;
   final Logger<ExpressionsRepositoryImpl> _logger;
 
@@ -31,7 +31,7 @@ class ExpressionsRepositoryImpl extends ExpressionsRepository {
     try {
       var ids = List<Id>.empty(growable: true);
       for (var expression in expressions) {
-        var id = await _expressionsLocalDataSource.upsertExpression(
+        var id = await _expressionsLocalDataSource.putObject(
           _driftExpressionMapper.fromExpression(expression),
         );
         ids.add(id);
@@ -48,7 +48,7 @@ class ExpressionsRepositoryImpl extends ExpressionsRepository {
   ExpressionsOrFailureFuture getExpressions(Iterable<Id> ids) async {
     try {
       var expressionModels =
-          await _expressionsLocalDataSource.getExpressions(ids);
+          await _expressionsLocalDataSource.getObjects(ids.toList());
 
       var expressions =
           expressionModels.map(_driftExpressionMapper.toExpression).toList();

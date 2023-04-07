@@ -30,7 +30,7 @@ void main() {
     group('loadSettings', () {
       test('should return SettingsModel from local database', () async {
         // arrange
-        when(context.mocks.settingsLocalDataSource.loadSettings())
+        when(context.mocks.settingsLocalDataSource.getObject(1))
             .thenAnswer((_) async => getSettingsModel());
 
         // act
@@ -41,13 +41,13 @@ void main() {
           result.getOrElse(() => Settings.empty),
           context.data.driftSettingsMapper.toSettings(getSettingsModel()),
         );
-        verify(context.mocks.settingsLocalDataSource.loadSettings());
+        verify(context.mocks.settingsLocalDataSource.getObject(1));
         verifyNoMoreInteractions(context.mocks.settingsLocalDataSource);
       });
 
       test('should return failure if local database throws', () async {
         // arrange
-        when(context.mocks.settingsLocalDataSource.loadSettings())
+        when(context.mocks.settingsLocalDataSource.getObject(1))
             .thenThrow(Exception());
 
         // act
@@ -59,7 +59,7 @@ void main() {
           result.swap().getOrElse(() => InvalidInputFailure()),
           isA<LocalDataSourceFailure>(),
         );
-        verify(context.mocks.settingsLocalDataSource.loadSettings());
+        verify(context.mocks.settingsLocalDataSource.getObject(1));
         verifyNoMoreInteractions(context.mocks.settingsLocalDataSource);
       });
     });
@@ -67,10 +67,10 @@ void main() {
     group('setFavoriteMascotId', () {
       test('should update favoriteMascotId in local database', () async {
         // arrange
-        when(context.mocks.settingsLocalDataSource.loadSettings())
+        when(context.mocks.settingsLocalDataSource.getObject(1))
             .thenAnswer((_) async => getSettingsModel());
-        when(context.mocks.settingsLocalDataSource.saveSettings(any))
-            .thenAnswer((_) async => unit);
+        when(context.mocks.settingsLocalDataSource.putObject(any))
+            .thenAnswer((_) async => 1);
 
         // act
         final result = await repository.setFavoriteMascotId(27);
@@ -78,7 +78,7 @@ void main() {
         // assert
         expect(result, isA<Right<Failure, Unit>>());
         verify(
-          context.mocks.settingsLocalDataSource.saveSettings(
+          context.mocks.settingsLocalDataSource.putObject(
             context.data.driftSettingsMapper.fromSettings(
               context.data.settings.copyWith(favoriteMascotId: 27),
             ),
@@ -88,9 +88,9 @@ void main() {
 
       test('should return failure if local database throws', () async {
         // arrange
-        when(context.mocks.settingsLocalDataSource.loadSettings())
+        when(context.mocks.settingsLocalDataSource.getObject(1))
             .thenAnswer((_) async => getSettingsModel());
-        when(context.mocks.settingsLocalDataSource.saveSettings(any))
+        when(context.mocks.settingsLocalDataSource.putObject(any))
             .thenThrow(Exception());
 
         // act
@@ -109,9 +109,9 @@ void main() {
       test('should seed the stream with the current settings', () async {
         // arrange
         var modelStream = BehaviorSubject<SettingsModel>();
-        when(context.mocks.settingsLocalDataSource.loadSettings())
+        when(context.mocks.settingsLocalDataSource.getObject(1))
             .thenAnswer((_) async => getSettingsModel());
-        when(context.mocks.settingsLocalDataSource.streamSettings())
+        when(context.mocks.settingsLocalDataSource.streamObject(1))
             .thenAnswer((_) => modelStream);
 
         // act
@@ -125,8 +125,8 @@ void main() {
             context.data.driftSettingsMapper.toSettings(getSettingsModel()),
           ]),
         );
-        verify(context.mocks.settingsLocalDataSource.loadSettings());
-        verify(context.mocks.settingsLocalDataSource.streamSettings());
+        verify(context.mocks.settingsLocalDataSource.getObject(1));
+        verify(context.mocks.settingsLocalDataSource.streamObject(1));
         verifyNoMoreInteractions(context.mocks.settingsLocalDataSource);
       });
 
@@ -136,9 +136,9 @@ void main() {
           // arrange
           var modelStream = BehaviorSubject<SettingsModel>();
           var settingsModel = getSettingsModel();
-          when(context.mocks.settingsLocalDataSource.loadSettings())
+          when(context.mocks.settingsLocalDataSource.getObject(1))
               .thenAnswer((_) async => settingsModel);
-          when(context.mocks.settingsLocalDataSource.streamSettings())
+          when(context.mocks.settingsLocalDataSource.streamObject(1))
               .thenAnswer((_) => modelStream);
           var updatedSettingsModel =
               settingsModel.copyWith(favoriteMascotId: 27);
@@ -161,7 +161,7 @@ void main() {
 
       test('should return failure if local database throws', () async {
         // arrange
-        when(context.mocks.settingsLocalDataSource.loadSettings())
+        when(context.mocks.settingsLocalDataSource.getObject(1))
             .thenThrow(Exception());
 
         // act
@@ -173,7 +173,7 @@ void main() {
           result.swap().getOrElse(() => InvalidInputFailure()),
           isA<LocalDataSourceFailure>(),
         );
-        verify(context.mocks.settingsLocalDataSource.loadSettings());
+        verify(context.mocks.settingsLocalDataSource.getObject(1));
         verifyNoMoreInteractions(context.mocks.settingsLocalDataSource);
       });
     });
