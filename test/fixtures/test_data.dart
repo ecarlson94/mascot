@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:mascot/core/utils/constants.dart';
+import 'package:mascot/core/widgets/reactive_image_picker/image_file.dart';
 import 'package:mascot/features/expressions/data/models/expression_mapper.dart';
 import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mascot/features/mascot/data/models/mascot_mapper.dart';
@@ -16,6 +17,11 @@ class TestData {
   TestXFile get xfile => _xfile ??= TestXFile.fromData(
         Uint8List(5),
         name: 'test',
+      );
+
+  ImageFile? _imageFile;
+  ImageFile get imageFile => _imageFile ??= ImageFile(
+        bytes: Uint8List(5),
       );
 
   final Expression expression = Expression(

@@ -100,12 +100,8 @@ void main() {
     test(
       'should return InvalidArgumentFailure when mascot already exists',
       () async {
-        // arrange
-        when(context.mocks.mascotsRepository.saveMascot(any))
-            .thenAnswer((_) async => Left(InvalidArgumentFailure()));
-
         // act
-        final result = await usecase(newMascot);
+        final result = await usecase(newMascot.copyWith(id: 1));
 
         // assert
         expect(result, Left(InvalidArgumentFailure()));

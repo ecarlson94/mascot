@@ -16,7 +16,6 @@ import '../../domain/usecases/add_mascot.dart';
 part 'create_mascot_event.dart';
 part 'create_mascot_state.dart';
 
-// TODO: Add tests
 @injectable
 class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
   static const String neutralExpressionName = defaultExpressionName;
@@ -71,7 +70,7 @@ class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
     }
 
     _form.markAsDisabled();
-    emit(SavingMascot(state.form));
+    emit(SavingMascot(some(_form)));
 
     Mascot mascotToUpdate = _createMascotFromForm();
 
@@ -85,7 +84,7 @@ class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
       ),
       (mascot) => {
         _form.markAsEnabled(),
-        emit(MascotSaved(mascot, state.form)),
+        emit(MascotSaved(mascot, some(_form))),
       },
     );
   }

@@ -1,190 +1,279 @@
-Awesome! Now, we need to write tests for the `ExpressionsRepositoryImpl`:
+Great! Now, we need to write tests for the `CreateMascotBloc`:
 ```
+import 'dart:typed_data';
+
+import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
+import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
-import '../../../../core/clean_architecture/entity.dart';
-import '../../../../core/data/failure_or_id_future.dart';
-import '../../../../core/error/failure.dart';
-import '../../../../core/utils/logger.dart';
-import '../../domain/entities/expression.dart';
-import '../../domain/repositories/expressions_repository.dart';
-import '../datasources/indexed_db/expressions_indexed_db_data_source.dart';
-import '../models/expression_mapper.dart';
+import '../../../../core/error/error.dart';
+import '../../../../core/utils/constants.dart';
+import '../../../../core/widgets/reactive_image_picker/image_file.dart';
+import '../../../expressions/domain/entities/expression.dart';
+import '../../domain/entities/mascot.dart';
+import '../../domain/usecases/add_mascot.dart';
 
-@Injectable(as: Logger<ExpressionsRepositoryImpl>)
-class ExpressionsRepositoryLogger extends Logger<ExpressionsRepositoryImpl> {}
+part 'create_mascot_event.dart';
+part 'create_mascot_state.dart';
 
-@Injectable(as: ExpressionsRepository)
-class ExpressionsRepositoryImpl extends ExpressionsRepository {
-  final ExpressionsIndexedDbDataSource _expressionsLocalDataSource;
-  final ExpressionMapper _expressionMapper;
-  final Logger<ExpressionsRepositoryImpl> _logger;
+@injectable
+class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
+  static const String neutralExpressionName = defaultExpressionName;
+  static const String neutralExpressionDescription =
+      'The default expression of the mascot';
+  static const String talkingExpressionDescription =
+      'The expression that the mascot uses when talking';
 
-  ExpressionsRepositoryImpl(
-    this._expressionsLocalDataSource,
-    this._expressionMapper,
-    this._logger,
-  );
+  static const String neutralExpressionFormControlName = 'neutralExpression';
+  static const String talkingExpressionFormControlName = 'talkingExpression';
+  static const String nameFormControlName = 'name';
 
-  @override
-  FailureOrIdsFuture saveExpressions(Iterable<Expression> expressions) async {
-    try {
-      var ids = List<Id>.empty(growable: true);
-      for (var expression in expressions) {
-        var id = await _expressionsLocalDataSource.putObject(
-          _expressionMapper.fromExpression(expression),
-        );
-        ids.add(id);
+  final AddMascot _addMascot;
+
+  final FormGroup _form = FormGroup({
+    neutralExpressionFormControlName: FormControl<ImageFile>(
+      validators: [Validators.required],
+    ),
+    talkingExpressionFormControlName: FormControl<ImageFile>(
+      validators: [Validators.required],
+    ),
+    nameFormControlName: FormControl<String>(
+      validators: [
+        Validators.required,
+        Validators.pattern(
+          r'^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$',
+        ),
+      ],
+    ),
+  });
+  ImageFile get _neutralExpressionImage =>
+      _form.control(neutralExpressionFormControlName).value as ImageFile;
+  ImageFile get _talkingExpressionImage =>
+      _form.control(talkingExpressionFormControlName).value as ImageFile;
+
+  CreateMascotBloc(this._addMascot) : super(CreateMascotInitial(none())) {
+    on<CreateMascotEvent>((event, emit) async {
+      if (event is Initialize) {
+        emit(CreateMascotInitial(some(_form)));
+      } else if (event is SaveMascot) {
+        await _saveMascot(emit);
       }
-
-      return Right(ids);
-    } catch (e) {
-      _logger.logError('Failed to add expressions', e);
-      return Left(LocalDataSourceFailure());
-    }
+    });
   }
 
-  @override
-  ExpressionsOrFailureFuture getExpressions(Iterable<Id> ids) async {
-    try {
-      var expressionModels =
-          await _expressionsLocalDataSource.getObjects(ids.toList());
-
-      var expressions =
-          expressionModels.map(_expressionMapper.toExpression).toList();
-
-      return Right(expressions);
-    } catch (e) {
-      _logger.logError('Failed to get expressions with ids: $ids', e);
-      return Left(LocalDataSourceFailure());
+  Future<void> _saveMascot(
+    Emitter<CreateMascotState> emit,
+  ) async {
+    if (!_form.valid) {
+      emit(SaveMascotError(ErrorCodes.invalidInputFailureCode, state.form));
+      return;
     }
+
+    _form.markAsDisabled();
+    emit(SavingMascot(state.form));
+
+    Mascot mascotToUpdate = _createMascotFromForm();
+
+    var mascotOrFailure = await _addMascot(mascotToUpdate);
+    mascotOrFailure.fold(
+      (l) async => emit(
+        SaveMascotError(
+          ErrorCodes.saveMascotFailureCode,
+          state.form,
+        ),
+      ),
+      (mascot) => {
+        _form.markAsEnabled(),
+        emit(MascotSaved(mascot, state.form)),
+      },
+    );
   }
+
+  Mascot _createMascotFromForm() => Mascot(
+        id: 0,
+        name: _form.control(nameFormControlName).value,
+        expressions: {
+          Expression(
+            id: 0,
+            name: neutralExpressionName,
+            description: neutralExpressionDescription,
+            image: _neutralExpressionImage.bytes ?? Uint8List(0),
+          ),
+          Expression(
+            id: 0,
+            name: talkingExpressionName,
+            description: talkingExpressionDescription,
+            image: _talkingExpressionImage.bytes ?? Uint8List(0),
+          ),
+        },
+      );
 }
 ```
 
-This time I have the class-under-test initialization and test already defined:
+Here are the BLoC states:
 ```
+part of 'create_mascot_bloc.dart';
+
+abstract class CreateMascotState extends Equatable {
+  final Option<FormGroup> form;
+
+  const CreateMascotState(this.form);
+
+  @override
+  List<Object> get props => [form];
+}
+
+class CreateMascotInitial extends CreateMascotState {
+  const CreateMascotInitial(super.form);
+}
+
+class SavingMascot extends CreateMascotState {
+  const SavingMascot(super.form);
+}
+
+class MascotSaved extends CreateMascotState {
+  final Mascot mascot;
+
+  const MascotSaved(this.mascot, super.form);
+
+  @override
+  List<Object> get props => [mascot, form];
+}
+
+abstract class CreateMascotError extends CreateMascotState
+    implements ErrorState {
+  @override
+  final int code;
+
+  const CreateMascotError(this.code, super.form);
+
+  @override
+  List<Object> get props => [code];
+}
+
+class SaveMascotError extends CreateMascotError {
+  const SaveMascotError(super.code, super.form);
+}
+```
+
+Here are the BLoC events:
+```
+part of 'create_mascot_bloc.dart';
+
+abstract class CreateMascotEvent extends Equatable {
+  const CreateMascotEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class SaveMascot extends CreateMascotEvent {}
+
+class Initialize extends CreateMascotEvent {}
+```
+
+Here is the implementation for `ImageFile`:
+```
+import 'dart:typed_data';
+
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'image_file.freezed.dart';
+
+@freezed
+class ImageFile with _$ImageFile {
+  const ImageFile._();
+
+  const factory ImageFile({
+    Uint8List? bytes,
+  }) = _ImageFile;
+
+  bool get isEmpty => bytes == null;
+
+  bool get isNotEmpty => !isEmpty;
+}
+```
+
+This time I have the tests defined and repository already initialized:
+```
+import 'package:bloc_test/bloc_test.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mascot/features/expressions/data/repositories/expressions_repository_impl.dart';
+import 'package:mascot/core/error/error.dart';
+import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart';
+import 'package:mockito/mockito.dart';
 
 import '../../../../fixtures/test_context.dart';
 
 void main() {
-  late TestContext context;
-  late ExpressionsRepositoryImpl repository;
+  group('CreateMascotBloc', () {
+    late TestContext context;
+    late CreateMascotBloc bloc;
 
-  setUp(() {
-    context = TestContext();
-    repository = ExpressionsRepositoryImpl(
-      context.mocks.expressionsLocalDataSource,
-      context.data.expressionMapper,
-      context.mocks.getLogger(),
-    );
-  });
-
-  group('ExpressionsRepositoryImpl', () {
-    group('saveExpressions', () {
-      test(
-        'should save expressions to data source',
-        () async {},
+    setUp(() {
+      context = TestContext();
+      bloc = CreateMascotBloc(
+        context.mocks.addMascot,
       );
 
-      test(
-        'should return newly created expression ids when save is successful',
-        () async {},
-      );
-
-      test(
-        'should return LocalDataSourceFailure when exception occurs',
-        () async {},
-      );
+      when(context.mocks.addMascot(any))
+          .thenAnswer((_) async => Right(context.data.mascot));
     });
 
-    group('getExpressions', () {
-      test(
-        'should return expressions from data source',
-        () async {},
+    test('initialState should be CreateMascotInitial', () {
+      // assert
+      expect(bloc.state, CreateMascotInitial(none()));
+    });
+
+    group('Initialize', () {
+      blocTest(
+        'should emit [CreateMascotInitial] state with empty form',
+        build: () => bloc,
       );
 
-      test(
-        'should return LocalDataSourceFailure when exception occurs',
-        () async {},
+      group('formGroup', () {
+        blocTest(
+          'should not be valid if natural expression is empty but other fields are not',
+          build: () => bloc,
+        );
+
+        blocTest(
+          'should not be valid if talk expression is empty but other fields are not',
+          build: () => bloc,
+        );
+
+        blocTest(
+          'should not be valid if mascot name is empty but other fields are not',
+          build: () => bloc,
+        );
+      });
+    });
+
+    group('SaveMascot', () {
+      blocTest(
+        'should invoke SaveMascot usecase when form is valid',
+        build: () => bloc,
+      );
+
+      blocTest(
+        'should emit [MascotSaved] state when the usecase succeeds',
+        build: () => bloc,
+      );
+
+      blocTest(
+        'should emit [SaveMascotError(${ErrorCodes.invalidInputFailureCode})] when the form is invalid',
+        build: () => bloc,
+      );
+
+      blocTest(
+        'should emit [SaveMascotError(${ErrorCodes.saveMascotFailureCode})] when the usecase fails',
+        build: () => bloc,
       );
     });
   });
 }
 ```
 
-You'll act as an expert in test automation to implement the defined tests.
-
-For reference, here is what the `context.data` looks like:
-```
-import 'dart:typed_data';
-
-import 'package:mascot/core/utils/constants.dart';
-import 'package:mascot/features/expressions/data/models/expression_mapper.dart';
-import 'package:mascot/features/expressions/domain/entities/expression.dart';
-import 'package:mascot/features/mascot/data/models/mascot_mapper.dart';
-import 'package:mascot/features/mascot/domain/entities/mascot.dart';
-import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart';
-import 'package:mascot/features/settings/data/models/settings_mapper.dart';
-import 'package:mascot/features/settings/domain/entities/settings.dart';
-
-import 'test_x_file.dart';
-
-class TestData {
-  TestXFile? _xfile;
-  TestXFile get xfile => _xfile ??= TestXFile.fromData(
-        Uint8List(5),
-        name: 'test',
-      );
-
-  final Expression expression = Expression(
-    id: 1,
-    name: CreateMascotBloc.neutralExpressionName,
-    description: CreateMascotBloc.neutralExpressionDescription,
-    image: Uint8List(5),
-  );
-  final ExpressionMapperImpl expressionMapper = ExpressionMapperImpl();
-
-  final List<Expression> expressions = [
-    Expression(
-      id: 1,
-      name: CreateMascotBloc.neutralExpressionName,
-      description: CreateMascotBloc.neutralExpressionDescription,
-      image: Uint8List(5),
-    ),
-    Expression(
-      id: 2,
-      name: talkingExpressionName,
-      description: CreateMascotBloc.talkingExpressionDescription,
-      image: Uint8List(5),
-    ),
-  ];
-
-  final Mascot mascot = Mascot(
-    id: 1,
-    name: 'test',
-    expressions: {
-      Expression(
-        id: 1,
-        name: CreateMascotBloc.neutralExpressionName,
-        description: CreateMascotBloc.neutralExpressionDescription,
-        image: Uint8List(5),
-      ),
-      Expression(
-        id: 2,
-        name: talkingExpressionName,
-        description: CreateMascotBloc.talkingExpressionDescription,
-        image: Uint8List(5),
-      ),
-    },
-  );
-  final MascotMapperImpl mascotMapper =
-      MascotMapperImpl(ExpressionMapperImpl());
-
-  final Settings settings = const Settings(favoriteMascotId: 1);
-  final SettingsMapperImpl settingsMapper = SettingsMapperImpl();
-}
-```
+You'll act as an expert automated flutter bloc test writer to implement the defined tests.
