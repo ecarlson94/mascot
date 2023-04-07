@@ -33,6 +33,7 @@ abstract class IndexedDbDataSource<T extends Entity> {
   Map<String, dynamic> toJson(T object);
 }
 
+// TODO: Add tests
 abstract class IndexedDbDataSourceImpl<T extends Entity>
     implements IndexedDbDataSource<T>, Disposable {
   final IndexedDbFactory indexedDbFactory;

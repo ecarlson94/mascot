@@ -16,6 +16,7 @@ import '../../domain/usecases/add_mascot.dart';
 part 'create_mascot_event.dart';
 part 'create_mascot_state.dart';
 
+// TODO: Add tests
 @injectable
 class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
   static const String neutralExpressionName = defaultExpressionName;
