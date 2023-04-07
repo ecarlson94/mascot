@@ -36,7 +36,6 @@ class AddMascot implements UseCase<Mascot, Mascot> {
 
   @override
   MascotOrFailureFuture call(Mascot params) async {
-    // TODO: add tests for these early returns
     if (params.id != 0) {
       _logger.logError('Cannot add a mascot that already exists');
       return Left(InvalidArgumentFailure());
@@ -61,18 +60,13 @@ class AddMascot implements UseCase<Mascot, Mascot> {
     return expressionIdsOrFailure.fold(
       (l) => Left(l),
       (expressionIds) async {
-        var expressionsOrFailure =
-            await _expressionsRepository.getExpressions(expressionIds);
-        return expressionsOrFailure.fold(
-          (l) => Left(l),
-          (expressions) async {
-            var mascot = params.copyWith(
-              expressions: expressions.toSet(),
-            );
-
-            return await onComplete(mascot);
-          },
+        var mascot = params.copyWith(
+          expressions: expressionIds
+              .map((id) => Expression.empty.copyWith(id: id))
+              .toSet(),
         );
+
+        return await onComplete(mascot);
       },
     );
   }

@@ -8,7 +8,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../clean_architecture/entity.dart';
 
-@module
+@lazySingleton
 class IndexedDbFactory {
   IdbFactory? _factory;
   IdbFactory? get factory => _factory ??= getIdbFactory();
