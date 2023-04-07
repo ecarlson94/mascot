@@ -1,11 +1,13 @@
 import 'dart:typed_data';
 
-import 'package:mascot/features/expressions/data/datasources/drift/models/drift_expression_mapper.dart';
+import 'package:mascot/core/utils/constants.dart';
+import 'package:mascot/core/widgets/reactive_image_picker/image_file.dart';
+import 'package:mascot/features/expressions/data/models/expression_mapper.dart';
 import 'package:mascot/features/expressions/domain/entities/expression.dart';
-import 'package:mascot/features/mascot/data/datasources/drift/models/drift_mascot_mapper.dart';
+import 'package:mascot/features/mascot/data/models/mascot_mapper.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
 import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart';
-import 'package:mascot/features/settings/data/datasources/drift/models/drift_settings_mapper.dart';
+import 'package:mascot/features/settings/data/models/settings_mapper.dart';
 import 'package:mascot/features/settings/domain/entities/settings.dart';
 
 import 'test_x_file.dart';
@@ -17,14 +19,18 @@ class TestData {
         name: 'test',
       );
 
+  ImageFile? _imageFile;
+  ImageFile get imageFile => _imageFile ??= ImageFile(
+        bytes: Uint8List(5),
+      );
+
   final Expression expression = Expression(
     id: 1,
     name: CreateMascotBloc.neutralExpressionName,
     description: CreateMascotBloc.neutralExpressionDescription,
     image: Uint8List(5),
   );
-  final DriftExpressionMapperImpl driftExpressionMapper =
-      DriftExpressionMapperImpl();
+  final ExpressionMapperImpl expressionMapper = ExpressionMapperImpl();
 
   final List<Expression> expressions = [
     Expression(
@@ -35,7 +41,7 @@ class TestData {
     ),
     Expression(
       id: 2,
-      name: CreateMascotBloc.talkingExpressionName,
+      name: talkingExpressionName,
       description: CreateMascotBloc.talkingExpressionDescription,
       image: Uint8List(5),
     ),
@@ -53,14 +59,15 @@ class TestData {
       ),
       Expression(
         id: 2,
-        name: CreateMascotBloc.talkingExpressionName,
+        name: talkingExpressionName,
         description: CreateMascotBloc.talkingExpressionDescription,
         image: Uint8List(5),
       ),
     },
   );
-  final DriftMascotMapperImpl driftMascotMapper = DriftMascotMapperImpl();
+  final MascotMapperImpl mascotMapper =
+      MascotMapperImpl(ExpressionMapperImpl());
 
   final Settings settings = const Settings(favoriteMascotId: 1);
-  final DriftSettingsMapperImpl driftSettingsMapper = DriftSettingsMapperImpl();
+  final SettingsMapperImpl settingsMapper = SettingsMapperImpl();
 }

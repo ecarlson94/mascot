@@ -1,0 +1,279 @@
+Great! Now, we need to write tests for the `CreateMascotBloc`:
+```
+import 'dart:typed_data';
+
+import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
+import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
+import 'package:reactive_forms/reactive_forms.dart';
+
+import '../../../../core/error/error.dart';
+import '../../../../core/utils/constants.dart';
+import '../../../../core/widgets/reactive_image_picker/image_file.dart';
+import '../../../expressions/domain/entities/expression.dart';
+import '../../domain/entities/mascot.dart';
+import '../../domain/usecases/add_mascot.dart';
+
+part 'create_mascot_event.dart';
+part 'create_mascot_state.dart';
+
+@injectable
+class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
+  static const String neutralExpressionName = defaultExpressionName;
+  static const String neutralExpressionDescription =
+      'The default expression of the mascot';
+  static const String talkingExpressionDescription =
+      'The expression that the mascot uses when talking';
+
+  static const String neutralExpressionFormControlName = 'neutralExpression';
+  static const String talkingExpressionFormControlName = 'talkingExpression';
+  static const String nameFormControlName = 'name';
+
+  final AddMascot _addMascot;
+
+  final FormGroup _form = FormGroup({
+    neutralExpressionFormControlName: FormControl<ImageFile>(
+      validators: [Validators.required],
+    ),
+    talkingExpressionFormControlName: FormControl<ImageFile>(
+      validators: [Validators.required],
+    ),
+    nameFormControlName: FormControl<String>(
+      validators: [
+        Validators.required,
+        Validators.pattern(
+          r'^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$',
+        ),
+      ],
+    ),
+  });
+  ImageFile get _neutralExpressionImage =>
+      _form.control(neutralExpressionFormControlName).value as ImageFile;
+  ImageFile get _talkingExpressionImage =>
+      _form.control(talkingExpressionFormControlName).value as ImageFile;
+
+  CreateMascotBloc(this._addMascot) : super(CreateMascotInitial(none())) {
+    on<CreateMascotEvent>((event, emit) async {
+      if (event is Initialize) {
+        emit(CreateMascotInitial(some(_form)));
+      } else if (event is SaveMascot) {
+        await _saveMascot(emit);
+      }
+    });
+  }
+
+  Future<void> _saveMascot(
+    Emitter<CreateMascotState> emit,
+  ) async {
+    if (!_form.valid) {
+      emit(SaveMascotError(ErrorCodes.invalidInputFailureCode, state.form));
+      return;
+    }
+
+    _form.markAsDisabled();
+    emit(SavingMascot(state.form));
+
+    Mascot mascotToUpdate = _createMascotFromForm();
+
+    var mascotOrFailure = await _addMascot(mascotToUpdate);
+    mascotOrFailure.fold(
+      (l) async => emit(
+        SaveMascotError(
+          ErrorCodes.saveMascotFailureCode,
+          state.form,
+        ),
+      ),
+      (mascot) => {
+        _form.markAsEnabled(),
+        emit(MascotSaved(mascot, state.form)),
+      },
+    );
+  }
+
+  Mascot _createMascotFromForm() => Mascot(
+        id: 0,
+        name: _form.control(nameFormControlName).value,
+        expressions: {
+          Expression(
+            id: 0,
+            name: neutralExpressionName,
+            description: neutralExpressionDescription,
+            image: _neutralExpressionImage.bytes ?? Uint8List(0),
+          ),
+          Expression(
+            id: 0,
+            name: talkingExpressionName,
+            description: talkingExpressionDescription,
+            image: _talkingExpressionImage.bytes ?? Uint8List(0),
+          ),
+        },
+      );
+}
+```
+
+Here are the BLoC states:
+```
+part of 'create_mascot_bloc.dart';
+
+abstract class CreateMascotState extends Equatable {
+  final Option<FormGroup> form;
+
+  const CreateMascotState(this.form);
+
+  @override
+  List<Object> get props => [form];
+}
+
+class CreateMascotInitial extends CreateMascotState {
+  const CreateMascotInitial(super.form);
+}
+
+class SavingMascot extends CreateMascotState {
+  const SavingMascot(super.form);
+}
+
+class MascotSaved extends CreateMascotState {
+  final Mascot mascot;
+
+  const MascotSaved(this.mascot, super.form);
+
+  @override
+  List<Object> get props => [mascot, form];
+}
+
+abstract class CreateMascotError extends CreateMascotState
+    implements ErrorState {
+  @override
+  final int code;
+
+  const CreateMascotError(this.code, super.form);
+
+  @override
+  List<Object> get props => [code];
+}
+
+class SaveMascotError extends CreateMascotError {
+  const SaveMascotError(super.code, super.form);
+}
+```
+
+Here are the BLoC events:
+```
+part of 'create_mascot_bloc.dart';
+
+abstract class CreateMascotEvent extends Equatable {
+  const CreateMascotEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class SaveMascot extends CreateMascotEvent {}
+
+class Initialize extends CreateMascotEvent {}
+```
+
+Here is the implementation for `ImageFile`:
+```
+import 'dart:typed_data';
+
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'image_file.freezed.dart';
+
+@freezed
+class ImageFile with _$ImageFile {
+  const ImageFile._();
+
+  const factory ImageFile({
+    Uint8List? bytes,
+  }) = _ImageFile;
+
+  bool get isEmpty => bytes == null;
+
+  bool get isNotEmpty => !isEmpty;
+}
+```
+
+This time I have the tests defined and repository already initialized:
+```
+import 'package:bloc_test/bloc_test.dart';
+import 'package:dartz/dartz.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mascot/core/error/error.dart';
+import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart';
+import 'package:mockito/mockito.dart';
+
+import '../../../../fixtures/test_context.dart';
+
+void main() {
+  group('CreateMascotBloc', () {
+    late TestContext context;
+    late CreateMascotBloc bloc;
+
+    setUp(() {
+      context = TestContext();
+      bloc = CreateMascotBloc(
+        context.mocks.addMascot,
+      );
+
+      when(context.mocks.addMascot(any))
+          .thenAnswer((_) async => Right(context.data.mascot));
+    });
+
+    test('initialState should be CreateMascotInitial', () {
+      // assert
+      expect(bloc.state, CreateMascotInitial(none()));
+    });
+
+    group('Initialize', () {
+      blocTest(
+        'should emit [CreateMascotInitial] state with empty form',
+        build: () => bloc,
+      );
+
+      group('formGroup', () {
+        blocTest(
+          'should not be valid if natural expression is empty but other fields are not',
+          build: () => bloc,
+        );
+
+        blocTest(
+          'should not be valid if talk expression is empty but other fields are not',
+          build: () => bloc,
+        );
+
+        blocTest(
+          'should not be valid if mascot name is empty but other fields are not',
+          build: () => bloc,
+        );
+      });
+    });
+
+    group('SaveMascot', () {
+      blocTest(
+        'should invoke SaveMascot usecase when form is valid',
+        build: () => bloc,
+      );
+
+      blocTest(
+        'should emit [MascotSaved] state when the usecase succeeds',
+        build: () => bloc,
+      );
+
+      blocTest(
+        'should emit [SaveMascotError(${ErrorCodes.invalidInputFailureCode})] when the form is invalid',
+        build: () => bloc,
+      );
+
+      blocTest(
+        'should emit [SaveMascotError(${ErrorCodes.saveMascotFailureCode})] when the usecase fails',
+        build: () => bloc,
+      );
+    });
+  });
+}
+```
+
+You'll act as an expert automated flutter bloc test writer to implement the defined tests.

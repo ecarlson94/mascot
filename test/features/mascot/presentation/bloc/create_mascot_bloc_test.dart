@@ -1,156 +1,200 @@
-import 'dart:typed_data';
-
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:mascot/core/error/error.dart';
-import 'package:mascot/core/error/failure.dart';
-import 'package:mascot/features/expressions/domain/entities/expression.dart';
-import 'package:mascot/features/mascot/domain/entities/mascot.dart';
+import 'package:mascot/core/utils/input_converters/input_converter.dart';
 import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart';
 import 'package:mockito/mockito.dart';
 
+import '../../../../fixtures/option.dart';
 import '../../../../fixtures/test_context.dart';
-import '../../../../fixtures/test_data.dart';
-import '../../../../fixtures/test_x_file.dart';
 
 void main() {
   group('CreateMascotBloc', () {
+    const blocWaitDuration = Duration(milliseconds: 25);
+
     late TestContext context;
     late CreateMascotBloc bloc;
 
     setUp(() {
       context = TestContext();
       bloc = CreateMascotBloc(
-        context.mocks.saveMascot,
+        context.mocks.addMascot,
       );
 
-      when(context.mocks.saveMascot(any))
+      when(context.mocks.addMascot(any))
           .thenAnswer((_) async => Right(context.data.mascot));
     });
 
     test('initialState should be CreateMascotInitial', () {
       // assert
-      expect(bloc.state, const CreateMascotInitial(Mascot.empty));
+      expect(bloc.state, CreateMascotInitial(none()));
     });
 
-    var uploadExpressionEvents = [
-      {
-        'type': UploadNeutralExpression,
-        'expressionId': 1,
-        'expressionName': CreateMascotBloc.neutralExpressionName,
-        'expressionDescription': CreateMascotBloc.neutralExpressionDescription,
-        'invalidXFileUpload': UploadNeutralExpression(XFile('')),
-        'validXFileUpload': UploadNeutralExpression(TestData().xfile),
-        'secondValidXFileUpload': UploadNeutralExpression(
-          TestXFile.fromData(Uint8List(5), name: 'a new name'),
-        ),
-      },
-      {
-        'type': UploadTalkingExpression,
-        'expressionId': 2,
-        'expressionName': CreateMascotBloc.talkingExpressionName,
-        'expressionDescription': CreateMascotBloc.talkingExpressionDescription,
-        'invalidXFileUpload': UploadTalkingExpression(XFile('')),
-        'validXFileUpload': UploadTalkingExpression(TestData().xfile),
-        'secondValidXFileUpload': UploadTalkingExpression(
-          TestXFile.fromData(Uint8List(5), name: 'a new name'),
-        ),
-      }
-    ];
-    for (var params in uploadExpressionEvents) {
-      group('${params['type']}', () {
-        Mascot getSavingExpressionMascot() => Mascot.empty.copyWith(
-              expressions: {
-                Expression.empty.copyWith(
-                  name: params['expressionName'] as String,
-                  description: params['expressionDescription'] as String,
-                  image: context.data.xfile.data,
-                )
-              },
-            );
-
-        blocTest(
-          'should emit [SavingExpression, MascotUpdated] when upload is successful',
-          build: () => bloc,
-          act: (bloc) =>
-              bloc.add(params['validXFileUpload'] as CreateMascotEvent),
-          expect: () => [
-            SavingExpression(getSavingExpressionMascot()),
-            MascotUpdated(context.data.mascot),
-          ],
-        );
-
-        blocTest(
-          'should add the correct expression to the mascot when upload is successful',
-          build: () => bloc,
-          act: (bloc) =>
-              bloc.add(params['validXFileUpload'] as CreateMascotEvent),
-          verify: (bloc) => verify(
-            context.mocks.saveMascot(getSavingExpressionMascot()),
-          ),
-        );
-
-        blocTest<CreateMascotBloc, CreateMascotState>(
-          'should update the correct expression on the mascot when the expression already exists',
-          build: () => bloc,
-          seed: () => CreateMascotInitial(context.data.mascot),
-          act: (bloc) =>
-              bloc.add(params['secondValidXFileUpload'] as CreateMascotEvent),
-          verify: (bloc) => verify(
-            context.mocks.saveMascot(
-              context.data.mascot.copyWith(
-                expressions: {
-                  ...context.data.mascot.expressions.where(
-                    (e) => e.name != params['expressionName'],
-                  ),
-                  Expression(
-                    id: params['expressionId'] as int,
-                    name: params['expressionName'] as String,
-                    description: params['expressionDescription'] as String,
-                    image: Uint8List(5),
-                  ),
-                },
+    group('Initialize', () {
+      blocTest<CreateMascotBloc, CreateMascotState>(
+        'should emit [CreateMascotInitial] state with empty form',
+        build: () => bloc,
+        act: (bloc) => bloc.add(Initialize()),
+        expect: () => [
+          isA<CreateMascotInitial>()
+              .having((state) => state.form.isSome(), 'isSome', true)
+              .having(
+                (state) => state.form
+                    .getOrFailTest()
+                    .control(CreateMascotBloc.talkingExpressionFormControlName)
+                    .pristine,
+                'talkingExpressionPristine',
+                true,
+              )
+              .having(
+                (state) => state.form
+                    .getOrFailTest()
+                    .control(CreateMascotBloc.neutralExpressionFormControlName)
+                    .pristine,
+                'neutralExpressionPristine',
+                true,
+              )
+              .having(
+                (state) => state.form
+                    .getOrFailTest()
+                    .control(CreateMascotBloc.nameFormControlName)
+                    .pristine,
+                'mascotNamePristine',
+                true,
               ),
-            ),
-          ),
+        ],
+      );
+
+      group('formGroup', () {
+        test(
+          'should not be valid if natural expression is empty but other fields are not',
+          () async {
+            // arrange
+            bloc.add(Initialize());
+            await Future.delayed(blocWaitDuration);
+
+            var form = bloc.state.form.getOrFailTest();
+            form
+                .control(CreateMascotBloc.talkingExpressionFormControlName)
+                .value = context.data.imageFile;
+            form.control(CreateMascotBloc.nameFormControlName).value =
+                'valid_name';
+
+            expect(form.valid, false);
+          },
         );
 
-        blocTest(
-          'should emit [SavingExpression, SaveMascotError(${ErrorCodes.saveMascotFailureCode})] when upload fails',
-          build: () => bloc,
-          setUp: () {
-            when(context.mocks.saveMascot(any))
-                .thenAnswer((_) async => Left(LocalDataSourceFailure()));
+        test(
+          'should not be valid if talk expression is empty but other fields are not',
+          () async {
+            // arrange
+            bloc.add(Initialize());
+            await Future.delayed(blocWaitDuration);
+
+            var form = bloc.state.form.getOrFailTest();
+            form
+                .control(CreateMascotBloc.neutralExpressionFormControlName)
+                .value = context.data.imageFile;
+            form.control(CreateMascotBloc.nameFormControlName).value =
+                'valid_name';
+
+            expect(form.valid, false);
           },
-          act: (bloc) =>
-              bloc.add(params['validXFileUpload'] as CreateMascotEvent),
-          expect: () => [
-            SavingExpression(getSavingExpressionMascot()),
-            SaveMascotError(
-              ErrorCodes.saveMascotFailureCode,
-              getSavingExpressionMascot(),
-            ),
-          ],
+        );
+
+        test(
+          'should not be valid if mascot name is empty but other fields are not',
+          () async {
+            // arrange
+            bloc.add(Initialize());
+            await Future.delayed(blocWaitDuration);
+
+            var form = bloc.state.form.getOrFailTest();
+            form
+                .control(CreateMascotBloc.neutralExpressionFormControlName)
+                .value = context.data.imageFile;
+            form
+                .control(CreateMascotBloc.talkingExpressionFormControlName)
+                .value = context.data.imageFile;
+
+            expect(form.valid, false);
+          },
         );
       });
-    }
+    });
 
-    group('SetMascotName', () {
-      const validName = 'a valid name';
+    group('SaveMascot', () {
+      Future<void> fillAndSaveForm(CreateMascotBloc bloc) async {
+        bloc.add(Initialize());
+        await Future.delayed(blocWaitDuration);
 
-      blocTest(
-        'should emit [MascotUpdated, MascotUpdated] when the name is valid',
+        var form = bloc.state.form.getOrFailTest();
+        form.control(CreateMascotBloc.neutralExpressionFormControlName).value =
+            context.data.imageFile;
+        form.control(CreateMascotBloc.talkingExpressionFormControlName).value =
+            context.data.imageFile;
+        form.control(CreateMascotBloc.nameFormControlName).value = 'valid_name';
+        form.markAllAsTouched();
+
+        bloc.add(SaveMascot());
+        await Future.delayed(blocWaitDuration);
+      }
+
+      blocTest<CreateMascotBloc, CreateMascotState>(
+        'should invoke SaveMascot usecase when form is valid',
         build: () => bloc,
-        act: (bloc) => bloc.add(const SetMascotName(validName)),
+        act: (bloc) async {
+          await fillAndSaveForm(bloc);
+        },
+        verify: (bloc) {
+          verify(context.mocks.addMascot(any)).called(1);
+        },
+      );
+
+      blocTest<CreateMascotBloc, CreateMascotState>(
+        'should emit [MascotSaved] state when the usecase succeeds',
+        build: () => bloc,
+        act: (bloc) async {
+          await fillAndSaveForm(bloc);
+        },
         expect: () => [
-          MascotUpdated(
-            Mascot.empty.copyWith(name: validName),
-          ), // Name is set in state
-          MascotUpdated(
-            context.data.mascot,
-          ), // Name is set in persistant storage
+          isA<CreateMascotInitial>(),
+          isA<SavingMascot>(),
+          isA<MascotSaved>(),
+        ],
+      );
+
+      blocTest<CreateMascotBloc, CreateMascotState>(
+        'should emit [SaveMascotError(${ErrorCodes.invalidInputFailureCode})] when the form is invalid',
+        build: () => bloc,
+        act: (bloc) async {
+          bloc.add(Initialize());
+          await Future.delayed(blocWaitDuration);
+
+          bloc.add(SaveMascot());
+          await Future.delayed(blocWaitDuration);
+        },
+        expect: () => [
+          isA<CreateMascotInitial>(),
+          SaveMascotError(ErrorCodes.invalidInputFailureCode, bloc.state.form),
+        ],
+      );
+
+      blocTest<CreateMascotBloc, CreateMascotState>(
+        'should emit [SaveMascotError(${ErrorCodes.saveMascotFailureCode})] when the usecase fails',
+        build: () {
+          when(context.mocks.addMascot(any))
+              .thenAnswer((_) async => Left(InvalidInputFailure()));
+          return bloc;
+        },
+        act: (bloc) async {
+          await fillAndSaveForm(bloc);
+        },
+        expect: () => [
+          isA<CreateMascotInitial>(),
+          isA<SavingMascot>(),
+          SaveMascotError(ErrorCodes.saveMascotFailureCode, bloc.state.form),
         ],
       );
     });

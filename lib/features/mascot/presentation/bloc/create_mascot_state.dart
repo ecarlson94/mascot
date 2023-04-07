@@ -1,24 +1,29 @@
 part of 'create_mascot_bloc.dart';
 
 abstract class CreateMascotState extends Equatable {
-  final Mascot mascot;
+  final Option<FormGroup> form;
 
-  const CreateMascotState(this.mascot);
+  const CreateMascotState(this.form);
 
   @override
-  List<Object> get props => [mascot];
+  List<Object> get props => [form];
 }
 
 class CreateMascotInitial extends CreateMascotState {
-  const CreateMascotInitial(super.mascot);
+  const CreateMascotInitial(super.form);
 }
 
-class SavingExpression extends CreateMascotState {
-  const SavingExpression(super.mascot);
+class SavingMascot extends CreateMascotState {
+  const SavingMascot(super.form);
 }
 
-class MascotUpdated extends CreateMascotState {
-  const MascotUpdated(super.mascot);
+class MascotSaved extends CreateMascotState {
+  final Mascot mascot;
+
+  const MascotSaved(this.mascot, super.form);
+
+  @override
+  List<Object> get props => [mascot, form];
 }
 
 abstract class CreateMascotError extends CreateMascotState
@@ -26,16 +31,12 @@ abstract class CreateMascotError extends CreateMascotState
   @override
   final int code;
 
-  const CreateMascotError(this.code, super.mascot);
+  const CreateMascotError(this.code, super.form);
 
   @override
-  List<Object> get props => [code, super.mascot];
-}
-
-class UploadExpressionError extends CreateMascotError {
-  const UploadExpressionError(super.code, super.mascot);
+  List<Object> get props => [code];
 }
 
 class SaveMascotError extends CreateMascotError {
-  const SaveMascotError(super.code, super.mascot);
+  const SaveMascotError(super.code, super.form);
 }

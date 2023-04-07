@@ -20,12 +20,14 @@ class MascotAnimatorBloc extends Bloc<MascotAnimatorEvent, MascotAnimatorState>
   final StreamMascot streamMascot;
 
   MascotAnimatorBloc(this.streamMascot)
-      : super(MascotAnimatorInitial(
-          none(),
-          defaultExpressionName,
-        )) {
-    on<MascotAnimatorEvent>((event, emit) async {
-      if (event is LoadMascot) {
+      : super(
+          MascotAnimatorInitial(
+            none(),
+            defaultExpressionName,
+          ),
+        ) {
+    on<LoadMascot>(
+      (event, emit) async {
         emit(MascotAnimatorLoading(
           state.expressionMapOption,
           state.expression,
@@ -42,14 +44,27 @@ class MascotAnimatorBloc extends Bloc<MascotAnimatorEvent, MascotAnimatorState>
           ),
           (stream) => subscriptions.add(
             stream.listen(
-              (value) => add(SetMascot(value)),
+              (mascot) {
+                if (isClosed) return;
+                add(SetMascot(mascot));
+              },
             ),
           ),
         );
-      } else if (event is SetMascot) {
+      },
+    );
+
+    on<SetMascot>(
+      (event, emit) async {
         var expressionMap = {for (var e in event.mascot.expressions) e.name: e};
         emit(MascotLoaded(some(expressionMap), state.expression));
-      }
-    });
+      },
+    );
+  }
+
+  @override
+  Future<void> close() {
+    onDispose();
+    return super.close();
   }
 }

@@ -9,7 +9,7 @@ import 'features/mascot/presentation/widgets/mascot_underlay.dart';
 import 'features/microphone/presentation/bloc/microphone_volume_bloc.dart';
 import 'features/settings/presentation/bloc/settings_bloc.dart';
 
-main() {
+Future<void> main() async {
   configureDependencies();
   runApp(const MyApp());
 }
@@ -46,7 +46,12 @@ class MyApp extends StatelessWidget {
               const ResponsiveBreakpoint.autoScale(1700, name: 'XL'),
             ],
           ),
-          home: Stack(children: const [MascotUnderlay(), ActionsOverlay()]),
+          home: Stack(
+            children: const [
+              MascotUnderlay(),
+              ActionsOverlay(),
+            ],
+          ),
         ),
       ),
     );

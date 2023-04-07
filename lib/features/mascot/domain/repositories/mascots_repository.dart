@@ -6,17 +6,17 @@ import '../../../../core/data/failure_or_id_future.dart';
 import '../../../../core/error/failure.dart';
 import '../entities/mascot.dart';
 
-typedef FailureOrMascotFuture = Future<Either<Failure, Mascot>>;
-typedef FailureOrMascotSubjectFuture
+typedef MascotOrFailureFuture = Future<Either<Failure, Mascot>>;
+typedef MascotSubjectOrFailureFuture
     = Future<Either<Failure, BehaviorSubject<Mascot>>>;
 
 abstract class MascotsRepository {
   /// Adds a mascot
-  FailureOrIdFuture addMascot(Mascot mascot);
+  FailureOrIdFuture saveMascot(Mascot mascot);
 
   /// Gets a mascot by Id
-  FailureOrMascotFuture getMascot(Id id);
+  MascotOrFailureFuture getMascot(Id id);
 
   /// Stream of a specific mascot
-  FailureOrMascotSubjectFuture streamMascot(Id id);
+  MascotSubjectOrFailureFuture streamMascot(Id id);
 }
