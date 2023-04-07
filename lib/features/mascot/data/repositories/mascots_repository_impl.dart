@@ -70,7 +70,7 @@ class MascotsRepositoryImpl extends StreamSubcriber
     try {
       var mascotModel = await _mascotsLocalDataSource.getObject(id);
       var mascotBehaviorSubject = BehaviorSubject<Mascot>.seeded(
-        _mascotMapper.toMascot(mascotModel),
+        await _mapToMascotWithExpressions(mascotModel),
       );
 
       var mascotStream = _mascotsLocalDataSource.streamObject(id);
