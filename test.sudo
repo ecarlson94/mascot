@@ -1,93 +1,337 @@
-Awesome! Now, we need to write tests for the `SettingsIndexedDbDataSource`:
+Awesome! Now, we need to write tests for the `MascotsRepositoryImpl`:
 ```
+import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
 
-import '../../../../../core/clean_architecture/entity.dart';
-import '../../../../../core/data/indexed_db/indexed_db_data_source.dart';
-import '../../models/settings_model.dart';
+import '../../../../core/clean_architecture/entity.dart';
+import '../../../../core/data/failure_or_id_future.dart';
+import '../../../../core/data/stream_subscriber.dart';
+import '../../../../core/error/failure.dart';
+import '../../../../core/utils/logger.dart';
+import '../../../expressions/data/datasources/indexed_db/expressions_indexed_db_data_source.dart';
+import '../../domain/entities/mascot.dart';
+import '../../domain/repositories/mascots_repository.dart';
+import '../datasources/indexed_db/mascots_indexed_db_data_source.dart';
+import '../models/mascot_mapper.dart';
+import '../models/mascot_model.dart';
 
-// TODO: Add tests
-@lazySingleton
-class SettingsIndexedDbDataSource
-    extends IndexedDbDataSourceImpl<SettingsModel> {
-  SettingsIndexedDbDataSource(super.indexedDbFactory, super.settings);
+@Injectable(as: Logger<MascotsRepositoryImpl>)
+class MascotRepositoryLogger extends Logger<MascotsRepositoryImpl> {}
+
+@Injectable(as: MascotsRepository)
+class MascotsRepositoryImpl extends StreamSubcriber
+    implements MascotsRepository {
+  final MascotsIndexedDbDataSource _mascotsLocalDataSource;
+  final ExpressionsIndexedDbDataSource _expressionsLocalDataSource;
+  final MascotMapper _mascotMapper;
+  final Logger<MascotsRepositoryImpl> _logger;
+
+  MascotsRepositoryImpl(
+    this._mascotsLocalDataSource,
+    this._expressionsLocalDataSource,
+    this._mascotMapper,
+    this._logger,
+  );
 
   @override
-  Future<SettingsModel> getObject(Id id) async {
-    var optionSettings = await super.getOptionObject(id);
-    return optionSettings.fold(
-      () async {
-        var settings = SettingsModel.empty;
-        await putObject(settings);
-        return settings;
-      },
-      (s) => s,
-    );
+  MascotOrFailureFuture getMascot(Id id) async {
+    try {
+      var mascotModel = await _mascotsLocalDataSource.getObject(id);
+      return Right(
+        await _mapToMascotWithExpressions(mascotModel),
+      );
+    } catch (e) {
+      _logger.logError('Failed to get mascot with id: $id', e);
+      return Left(LocalDataSourceFailure());
+    }
   }
 
   @override
-  SettingsModel fromJson(Map<String, dynamic> json) {
-    return SettingsModel(
-      id: json['id'] as int,
-      favoriteMascotId: json['favoriteMascotId'] as int?,
-    );
+  FailureOrIdFuture saveMascot(Mascot mascot) async {
+    try {
+      var hasUnsavedExpressions = mascot.expressions.any((e) => e.id == 0);
+      if (hasUnsavedExpressions) {
+        _logger.logError('Expressions must be saved before mascot');
+        return Left(InvalidArgumentFailure());
+      }
+
+      var id = await _mascotsLocalDataSource.putObject(
+        _mascotMapper.fromMascot(mascot),
+      );
+
+      return Right(id);
+    } catch (e) {
+      _logger.logError('Failed to add mascot', e);
+      return Left(LocalDataSourceFailure());
+    }
   }
 
   @override
-  Map<String, dynamic> toJson(SettingsModel object) {
-    return {
-      'id': object.id,
-      'favoriteMascotId': object.favoriteMascotId,
-    };
+  MascotSubjectOrFailureFuture streamMascot(Id id) async {
+    try {
+      var mascotModel = await _mascotsLocalDataSource.getObject(id);
+      var mascotBehaviorSubject = BehaviorSubject<Mascot>.seeded(
+        await _mapToMascotWithExpressions(mascotModel),
+      );
+
+      var mascotStream = _mascotsLocalDataSource.streamObject(id);
+      var mascotSub = mascotStream.listen((event) async {
+        var updatedMascot = event;
+        mascotBehaviorSubject.add(
+          await _mapToMascotWithExpressions(updatedMascot),
+        );
+      });
+      subscriptions.add(mascotSub);
+
+      return Right(mascotBehaviorSubject);
+    } catch (e) {
+      _logger.logError('Failed to stream mascot with id: $id', e);
+      return Left(LocalDataSourceFailure());
+    }
+  }
+
+  Future<Mascot> _mapToMascotWithExpressions(MascotModel mascotModel) async =>
+      _mascotMapper.toMascot(await _fillExpressions(mascotModel));
+
+  Future<MascotModel> _fillExpressions(MascotModel mascotModel) async {
+    var expressions = await _expressionsLocalDataSource
+        .getObjects(mascotModel.expressions.map((e) => e.id));
+
+    return mascotModel.copyWith(
+      expressions: expressions,
+    );
   }
 }
+
 ```
 
-There should be an outer `group` named `SettingsIndexedDbDataSource`. Inside that group, there should be another group for each public method. Here is an example:
+I already have many tests for this file but I need to add more. Here is how the test file is currently implemented:
 ```
+import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/clean_architecture/entity.dart';
-import 'package:mascot/core/data/indexed_db/indexed_db_data_source.dart';
-import 'package:idb_shim/idb_client_memory.dart
+import 'package:mascot/core/error/failure.dart';
+import 'package:mascot/features/expressions/data/models/expression_model.dart';
+import 'package:mascot/features/mascot/data/models/mascot_model.dart';
+import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl.dart';
+import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
 
-import '../../../fixtures/test_model.dart';
+import '../../../../fixtures/option.dart';
+import '../../../../fixtures/test_context.dart';
 
-class TestIndexedDbDataSource extends IndexedDbDataSourceImpl<TestEntity> {
-  TestIndexedDbDataSource(super.indexedDbFactory, super.settings);
+void main() {
+  late TestContext context;
+  late MascotsRepositoryImpl repository;
 
-  @override
-  TestEntity fromJson(Map<String, dynamic> json) {
-    return TestEntity(id: json['id'] as Id, name: json['name'] as String);
-  }
+  MascotModel getMascotModel() =>
+      context.data.mascotMapper.fromMascot(context.data.mascot);
 
-  @override
-  Map<String, dynamic> toJson(TestEntity object) {
-    return {'id': object.id, 'name': object.name};
-  }
-}
+  setUp(() {
+    context = TestContext();
+    repository = MascotsRepositoryImpl(
+      context.mocks.mascotsLocalDataSource,
+      context.mocks.expressionsLocalDataSource,
+      context.data.mascotMapper,
+      context.mocks.getLogger(),
+    );
 
-class TestIdbFactory extends IndexedDbFactory {
-  @override
-  IdbFactory? get factory => idbFactoryMemory;
-}
+    var mascotModel = getMascotModel();
 
-main() {
-  group('SettingsIndexedDbDataSource', () {
-    group('toJson', () {
-      test('should {do some thing} when {condition}', () async {
+    when(context.mocks.mascotsLocalDataSource.getObject(any))
+        .thenAnswer((_) async => mascotModel);
+    when(context.mocks.expressionsLocalDataSource.getObjects(any))
+        .thenAnswer((_) async => mascotModel.expressions);
+  });
+
+  group('MascotsRepositoryImpl', () {
+    group('getMascot', () {
+      test(
+        'should return the requested mascot when call to local data source is successful',
+        () async {
+          // act
+          final result = await repository.getMascot(context.data.mascot.id);
+          final mascot = result.getOrFailTest();
+
+          // assert
+          expect(
+            mascot,
+            context.data.mascotMapper.toMascot(getMascotModel()),
+          );
+
+          verify(context.mocks.mascotsLocalDataSource
+              .getObject(context.data.mascot.id));
+          verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
+        },
+      );
+
+      test('should fetch the expressions from the local data source', () async {
         // arrange
+        var mascotModel = getMascotModel();
+        when(context.mocks.mascotsLocalDataSource.getObject(any)).thenAnswer(
+          (_) async => mascotModel.copyWith(
+            expressions: mascotModel.expressions
+                .map((e) => ExpressionModel.empty().copyWith(id: e.id))
+                .toList(),
+          ),
+        );
 
         // act
+        await repository.getMascot(context.data.mascot.id);
 
         // assert
+        verify(context.mocks.expressionsLocalDataSource
+            .getObjects(mascotModel.expressions.map((e) => e.id)));
+        verifyNoMoreInteractions(context.mocks.expressionsLocalDataSource);
       });
+
+      test(
+        'should return failure when call to local data source is unsuccessful',
+        () async {
+          // arrange
+          when(context.mocks.mascotsLocalDataSource.getObject(any))
+              .thenThrow(Exception());
+
+          // act
+          final result = await repository.getMascot(context.data.mascot.id);
+
+          // assert
+          expect(result, Left(LocalDataSourceFailure()));
+
+          verify(context.mocks.mascotsLocalDataSource
+              .getObject(context.data.mascot.id));
+          verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
+        },
+      );
+    });
+
+    group('saveMascot', () {
+      setUp(() async {
+        when(context.mocks.mascotsLocalDataSource.putObject(any))
+            .thenAnswer((_) => Future.value(context.data.mascot.id));
+      });
+
+      test(
+        'should return the id of the added mascot when call to local data source is successful',
+        () async {
+          // act
+          final result = await repository.saveMascot(context.data.mascot);
+
+          // assert
+          expect(result, Right(context.data.mascot.id));
+
+          verify(
+            context.mocks.mascotsLocalDataSource.putObject(
+              getMascotModel(),
+            ),
+          );
+          verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
+        },
+      );
+
+      test(
+        'should return failure when call to local data source is unsuccessful',
+        () async {
+          // arrange
+          when(context.mocks.mascotsLocalDataSource.putObject(any))
+              .thenThrow(Exception());
+
+          // act
+          final result = await repository.saveMascot(context.data.mascot);
+
+          // assert
+          expect(result, Left(LocalDataSourceFailure()));
+
+          verify(
+            context.mocks.mascotsLocalDataSource.putObject(
+              getMascotModel(),
+            ),
+          );
+          verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
+        },
+      );
+
+      test(
+        'should return InvalidArgumentFailure when mascot has expressions without ids',
+        () async {
+          // arrange
+          final mascot = context.data.mascot.copyWith(
+            expressions: {
+              context.data.expression.copyWith(id: 0),
+              context.data.expression,
+            },
+          );
+
+          // act
+          final result = await repository.saveMascot(mascot);
+
+          // assert
+          expect(result, Left<Failure, Id>(InvalidArgumentFailure()));
+        },
+      );
+    });
+
+    group('streamMascot', () {
+      late BehaviorSubject<MascotModel> modelStream;
+      setUp(() {
+        modelStream = BehaviorSubject<MascotModel>();
+
+        when(context.mocks.mascotsLocalDataSource.getObject(any))
+            .thenAnswer((_) async => getMascotModel());
+        when(context.mocks.mascotsLocalDataSource.streamObject(any))
+            .thenAnswer((_) => modelStream);
+      });
+
+      test('should seed the stream with the current value', () async {
+        //act
+        final result = await repository.streamMascot(context.data.mascot.id);
+
+        // assert
+        var subject = result.getOrFailTest();
+        expect(
+          subject,
+          emitsInOrder([
+            context.data.mascotMapper.toMascot(getMascotModel()),
+          ]),
+        );
+        verify(
+          context.mocks.mascotsLocalDataSource
+              .getObject(context.data.mascot.id),
+        );
+        verify(
+          context.mocks.mascotsLocalDataSource
+              .streamObject(context.data.mascot.id),
+        );
+        verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
+      });
+
+      test(
+        'should return failure when call to local data source is unsuccessful',
+        () async {
+          // arrange
+          when(context.mocks.mascotsLocalDataSource.streamObject(any))
+              .thenThrow(Exception());
+
+          // act
+          final result = await repository.streamMascot(context.data.mascot.id);
+
+          // assert
+          expect(result, Left(LocalDataSourceFailure()));
+        },
+      );
     });
   });
 }
+
 ```
 
-You need to write the setup and tests for `fromJson`, `toJson`, and the overriden `getObject`.
 The test names need to be in the following format:
 ```
 'should {do some thing} when {condition}'
 ```
+
+You'll act as an expert in test automation to write three new tests. They are as follows:
+- Verify that the expressions are populated on the Mascot object when invoking `getMascot`
+- Verify that the expressions are populated on the Mascot object that seeds the stream when invoking `streamMascot`
+- Verify that the expressions are populated on the Mascot object that is added to the stream when invoking `streamMascot`

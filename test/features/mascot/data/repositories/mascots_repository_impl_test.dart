@@ -28,11 +28,16 @@ void main() {
     );
 
     var mascotModel = getMascotModel();
+    mascotModel = mascotModel.copyWith(
+      expressions: mascotModel.expressions
+          .map((e) => ExpressionModel.empty().copyWith(id: e.id))
+          .toList(),
+    );
 
     when(context.mocks.mascotsLocalDataSource.getObject(any))
         .thenAnswer((_) async => mascotModel);
     when(context.mocks.expressionsLocalDataSource.getObjects(any))
-        .thenAnswer((_) async => mascotModel.expressions);
+        .thenAnswer((_) async => getMascotModel().expressions);
   });
 
   group('MascotsRepositoryImpl', () {
@@ -92,6 +97,25 @@ void main() {
           verify(context.mocks.mascotsLocalDataSource
               .getObject(context.data.mascot.id));
           verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
+        },
+      );
+
+      test(
+        'should populate the expressions on the Mascot object when invoking getMascot',
+        () async {
+          // act
+          final result = await repository.getMascot(context.data.mascot.id);
+          final mascot = result.getOrFailTest();
+
+          // assert
+          expect(mascot.expressions, context.data.mascot.expressions);
+
+          verify(context.mocks.mascotsLocalDataSource
+              .getObject(context.data.mascot.id));
+          verify(context.mocks.expressionsLocalDataSource
+              .getObjects(context.data.mascot.expressions.map((e) => e.id)));
+          verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
+          verifyNoMoreInteractions(context.mocks.expressionsLocalDataSource);
         },
       );
     });
@@ -208,6 +232,66 @@ void main() {
 
           // assert
           expect(result, Left(LocalDataSourceFailure()));
+        },
+      );
+
+      test(
+        'should populate the expressions on the Mascot object that seeds the stream when invoking streamMascot',
+        () async {
+          // act
+          final result = await repository.streamMascot(context.data.mascot.id);
+          final subject = result.getOrFailTest();
+
+          // assert
+          expect(
+            subject,
+            emitsInOrder([
+              context.data.mascot,
+            ]),
+          );
+
+          verify(context.mocks.mascotsLocalDataSource
+              .getObject(context.data.mascot.id));
+          verify(context.mocks.mascotsLocalDataSource
+              .streamObject(context.data.mascot.id));
+          verify(context.mocks.expressionsLocalDataSource
+              .getObjects(context.data.mascot.expressions.map((e) => e.id)));
+          verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
+          verifyNoMoreInteractions(context.mocks.expressionsLocalDataSource);
+        },
+      );
+
+      test(
+        'should populate the expressions on the Mascot object that is added to the stream when invoking streamMascot',
+        () async {
+          // arrange
+          final updatedMascot = context.data.mascot.copyWith(id: 2);
+          final updatedMascotModel =
+              context.data.mascotMapper.fromMascot(updatedMascot);
+
+          // act
+          final result = await repository.streamMascot(context.data.mascot.id);
+          final subject = result.getOrFailTest();
+
+          modelStream.add(updatedMascotModel);
+
+          // assert
+          expect(
+            subject,
+            emitsInOrder([
+              context.data.mascot,
+              updatedMascot,
+            ]),
+          );
+
+          verify(context.mocks.mascotsLocalDataSource
+              .getObject(context.data.mascot.id));
+          verify(context.mocks.mascotsLocalDataSource
+              .streamObject(context.data.mascot.id));
+          verify(context.mocks.expressionsLocalDataSource
+              .getObjects(context.data.mascot.expressions.map((e) => e.id)));
+          verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
+          verifyNoMoreInteractions(context.mocks.expressionsLocalDataSource);
         },
       );
     });
