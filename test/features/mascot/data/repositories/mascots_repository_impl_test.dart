@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/clean_architecture/entity.dart';
 import 'package:mascot/core/error/failure.dart';
+import 'package:mascot/features/expressions/data/models/expression_model.dart';
 import 'package:mascot/features/mascot/data/models/mascot_model.dart';
 import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl.dart';
 import 'package:mockito/mockito.dart';
@@ -26,8 +27,12 @@ void main() {
       context.mocks.getLogger(),
     );
 
+    var mascotModel = getMascotModel();
+
     when(context.mocks.mascotsLocalDataSource.getObject(any))
-        .thenAnswer((_) => Future.value(getMascotModel()));
+        .thenAnswer((_) async => mascotModel);
+    when(context.mocks.expressionsLocalDataSource.getObjects(any))
+        .thenAnswer((_) async => mascotModel.expressions);
   });
 
   group('MascotsRepositoryImpl', () {
@@ -50,6 +55,26 @@ void main() {
           verifyNoMoreInteractions(context.mocks.mascotsLocalDataSource);
         },
       );
+
+      test('should fetch the expressions from the local data source', () async {
+        // arrange
+        var mascotModel = getMascotModel();
+        when(context.mocks.mascotsLocalDataSource.getObject(any)).thenAnswer(
+          (_) async => mascotModel.copyWith(
+            expressions: mascotModel.expressions
+                .map((e) => ExpressionModel.empty().copyWith(id: e.id))
+                .toList(),
+          ),
+        );
+
+        // act
+        await repository.getMascot(context.data.mascot.id);
+
+        // assert
+        verify(context.mocks.expressionsLocalDataSource
+            .getObjects(mascotModel.expressions.map((e) => e.id)));
+        verifyNoMoreInteractions(context.mocks.expressionsLocalDataSource);
+      });
 
       test(
         'should return failure when call to local data source is unsuccessful',
