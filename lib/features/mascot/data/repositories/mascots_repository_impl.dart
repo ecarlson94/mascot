@@ -14,6 +14,7 @@ import '../datasources/indexed_db/mascots_indexed_db_data_source.dart';
 import '../models/mascot_mapper.dart';
 import '../models/mascot_model.dart';
 
+// TODO: Add tests (make sure to test expressions being added to the mascot)
 @Injectable(as: Logger<MascotsRepositoryImpl>)
 class MascotRepositoryLogger extends Logger<MascotsRepositoryImpl> {}
 
