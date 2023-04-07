@@ -46,7 +46,6 @@ void main() {
         final id = await dataSource.putObject(testEntity);
 
         // act
-        await Future.delayed(const Duration(seconds: 1));
         final result = await dataSource.getObject(id);
 
         // assert

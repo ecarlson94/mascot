@@ -4,7 +4,6 @@ import '../../../../../core/clean_architecture/entity.dart';
 import '../../../../../core/data/indexed_db/indexed_db_data_source.dart';
 import '../../models/settings_model.dart';
 
-// TODO: Add tests
 @lazySingleton
 class SettingsIndexedDbDataSource
     extends IndexedDbDataSourceImpl<SettingsModel> {

@@ -4,7 +4,6 @@ import '../../../../../core/data/indexed_db/indexed_db_data_source.dart';
 import '../../../../expressions/data/models/expression_model.dart';
 import '../../models/mascot_model.dart';
 
-// TODO: Add tests
 @lazySingleton
 class MascotsIndexedDbDataSource extends IndexedDbDataSourceImpl<MascotModel> {
   MascotsIndexedDbDataSource(super.indexedDbFactory, super.settings);
