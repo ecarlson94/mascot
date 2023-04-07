@@ -12,11 +12,14 @@ class ExpressionsIndexedDbDataSource
 
   @override
   ExpressionModel fromJson(Map<String, dynamic> json) {
+    var image = json['image'];
     return ExpressionModel(
       id: json['id'] as int,
       name: json['name'] as String,
       description: json['description'] as String,
-      image: Uint8List.fromList(json['image'] as List<int>),
+      image: Uint8List.fromList(
+        image is List<int> ? image : (image as List<dynamic>).cast<int>(),
+      ),
     );
   }
 

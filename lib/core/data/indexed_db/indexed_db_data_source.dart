@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dartz/dartz.dart';
 import 'package:get_it/get_it.dart';
 import 'package:idb_shim/idb_browser.dart';
 import 'package:idb_shim/idb_client.dart';
@@ -20,6 +21,7 @@ class IndexDbSettings {
 
 abstract class IndexedDbDataSource<T extends Entity> {
   Future<T> getObject(Id id);
+  Future<Option<T>> getOptionObject(Id id);
   Future<List<T>> getObjects(Iterable<Id> ids);
   Future<int> putObject(T object);
   Future<void> deleteObject(Id id);
@@ -46,17 +48,25 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
 
   @override
   Future<T> getObject(Id id) async {
+    return (await getOptionObject(id)).fold(
+      () => throw Exception('Object not found'),
+      (o) => o,
+    );
+  }
+
+  @override
+  Future<Option<T>> getOptionObject(Id id) async {
     final db = await openDb();
     final transaction = db.transaction(storeName, idbModeReadOnly);
     final store = transaction.objectStore(storeName);
     final value = await store.getObject(id);
 
     if (value != null) {
-      var obj = fromJson(value as Map<String, dynamic>);
+      var obj = _fromJson(value);
       _currentState[obj.id] = obj;
-      return obj;
+      return some(obj);
     } else {
-      throw Exception('Object not found');
+      return none();
     }
   }
 
@@ -65,29 +75,36 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
     final db = await openDb();
     final transaction = db.transaction(storeName, idbModeReadOnly);
     final store = transaction.objectStore(storeName);
-    final values = await store.getAll(ids);
 
-    if (values.isNotEmpty) {
-      var objects = values.map((value) {
-        var obj = fromJson(value as Map<String, dynamic>);
+    final objects = <T>[];
+    for (var id in ids) {
+      final value = await store.getObject(id);
+      if (value != null) {
+        var obj = _fromJson(value);
         _currentState[obj.id] = obj;
-        return obj;
-      }).toList();
-      return objects;
-    } else {
-      throw Exception('Objects not found');
+        objects.add(obj);
+      }
     }
+
+    return objects;
   }
 
   @override
-  Future<int> putObject(T object) async {
+  Future<Id> putObject(T object) async {
     final db = await openDb();
     final transaction = db.transaction(storeName, idbModeReadWrite);
     final store = transaction.objectStore(storeName);
-    final id = await store.put(toJson(object));
 
-    if (id is int) {
-      _currentState[object.id] = object;
+    final jsonObject = toJson(object);
+    if (jsonObject['id'] == 0) {
+      var id = await store.add('');
+      jsonObject['id'] = id;
+    }
+
+    final id = await store.put(jsonObject, jsonObject['id'] as int);
+
+    if (id is Id) {
+      _currentState[id] = fromJson(jsonObject);
       _streamController.add(_currentState);
       return id;
     } else {
@@ -129,7 +146,7 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
   Future<Database> openDb() async {
     var factory = indexedDbFactory.factory;
     if (factory == null) {
-      throw Exception('IndexedDbFactory is could not be initialized');
+      throw Exception('IndexedDbFactory could not be initialized');
     }
 
     return factory.open(
@@ -141,4 +158,10 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
       },
     );
   }
+
+  T _fromJson(Object value) => fromJson(_toStringKeyMap(value));
+
+  Map<String, dynamic> _toStringKeyMap(Object? object) =>
+      (object as Map<dynamic, dynamic>)
+          .map((key, value) => MapEntry(key as String, value));
 }
