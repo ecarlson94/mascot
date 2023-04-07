@@ -1,13 +1,17 @@
 // ignore_for_file: overridden_fields
 
-import 'package:mascot/core/clean_architecture/entity.dart' as entity;
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:mascot/core/clean_architecture/entity.dart';
 
-class TestEntity extends entity.Entity {
-  final String name;
+part 'test_model.freezed.dart';
 
-  const TestEntity({required super.id, required this.name});
+@freezed
+class TestEntity extends Entity with _$TestEntity {
+  const factory TestEntity({required Id id, required String name}) =
+      _TestEntity;
 }
 
-class TestModel extends TestEntity {
-  const TestModel({required super.id, required super.name});
+@freezed
+class TestModel extends Entity with _$TestModel {
+  const factory TestModel({required Id id, required String name}) = _TestModel;
 }
