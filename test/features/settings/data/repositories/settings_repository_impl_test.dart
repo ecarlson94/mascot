@@ -18,13 +18,13 @@ void main() {
     context = TestContext();
     repository = SettingsRepositoryImpl(
       context.mocks.settingsLocalDataSource,
-      context.data.driftSettingsMapper,
+      context.data.settingsMapper,
       context.mocks.getLogger(),
     );
   });
 
   SettingsModel getSettingsModel() =>
-      context.data.driftSettingsMapper.fromSettings(context.data.settings);
+      context.data.settingsMapper.fromSettings(context.data.settings);
 
   group('SettingsRepositoryImpl', () {
     group('loadSettings', () {
@@ -39,7 +39,7 @@ void main() {
         // assert
         expect(
           result.getOrElse(() => Settings.empty),
-          context.data.driftSettingsMapper.toSettings(getSettingsModel()),
+          context.data.settingsMapper.toSettings(getSettingsModel()),
         );
         verify(context.mocks.settingsLocalDataSource.getObject(1));
         verifyNoMoreInteractions(context.mocks.settingsLocalDataSource);
@@ -79,7 +79,7 @@ void main() {
         expect(result, isA<Right<Failure, Unit>>());
         verify(
           context.mocks.settingsLocalDataSource.putObject(
-            context.data.driftSettingsMapper.fromSettings(
+            context.data.settingsMapper.fromSettings(
               context.data.settings.copyWith(favoriteMascotId: 27),
             ),
           ),
@@ -122,7 +122,7 @@ void main() {
         expect(
           result.getOrElse(() => BehaviorSubject()),
           emitsInOrder([
-            context.data.driftSettingsMapper.toSettings(getSettingsModel()),
+            context.data.settingsMapper.toSettings(getSettingsModel()),
           ]),
         );
         verify(context.mocks.settingsLocalDataSource.getObject(1));
@@ -152,8 +152,8 @@ void main() {
           expect(
             result.getOrElse(() => BehaviorSubject()),
             emitsInOrder([
-              context.data.driftSettingsMapper.toSettings(getSettingsModel()),
-              context.data.driftSettingsMapper.toSettings(updatedSettingsModel),
+              context.data.settingsMapper.toSettings(getSettingsModel()),
+              context.data.settingsMapper.toSettings(updatedSettingsModel),
             ]),
           );
         },

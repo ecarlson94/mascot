@@ -13,16 +13,15 @@ import '../models/expression_mapper.dart';
 @Injectable(as: Logger<ExpressionsRepositoryImpl>)
 class ExpressionsRepositoryLogger extends Logger<ExpressionsRepositoryImpl> {}
 
-// TODO: Add tests
 @Injectable(as: ExpressionsRepository)
 class ExpressionsRepositoryImpl extends ExpressionsRepository {
   final ExpressionsIndexedDbDataSource _expressionsLocalDataSource;
-  final ExpressionMapper _driftExpressionMapper;
+  final ExpressionMapper _expressionMapper;
   final Logger<ExpressionsRepositoryImpl> _logger;
 
   ExpressionsRepositoryImpl(
     this._expressionsLocalDataSource,
-    this._driftExpressionMapper,
+    this._expressionMapper,
     this._logger,
   );
 
@@ -32,7 +31,7 @@ class ExpressionsRepositoryImpl extends ExpressionsRepository {
       var ids = List<Id>.empty(growable: true);
       for (var expression in expressions) {
         var id = await _expressionsLocalDataSource.putObject(
-          _driftExpressionMapper.fromExpression(expression),
+          _expressionMapper.fromExpression(expression),
         );
         ids.add(id);
       }
@@ -51,7 +50,7 @@ class ExpressionsRepositoryImpl extends ExpressionsRepository {
           await _expressionsLocalDataSource.getObjects(ids.toList());
 
       var expressions =
-          expressionModels.map(_driftExpressionMapper.toExpression).toList();
+          expressionModels.map(_expressionMapper.toExpression).toList();
 
       return Right(expressions);
     } catch (e) {

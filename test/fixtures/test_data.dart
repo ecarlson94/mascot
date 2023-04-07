@@ -63,5 +63,5 @@ class TestData {
       MascotMapperImpl(ExpressionMapperImpl());
 
   final Settings settings = const Settings(favoriteMascotId: 1);
-  final SettingsMapperImpl driftSettingsMapper = SettingsMapperImpl();
+  final SettingsMapperImpl settingsMapper = SettingsMapperImpl();
 }
