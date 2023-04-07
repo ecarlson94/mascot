@@ -68,7 +68,7 @@ class MascotsDriftDataSourceImpl extends StreamSubcriber
       subject.add(MascotModel(
         id: mascot.id,
         name: mascot.name,
-        expressions: e.toSet(),
+        expressions: e,
       ));
     });
 
@@ -96,7 +96,7 @@ class MascotsDriftDataSourceImpl extends StreamSubcriber
     return MascotModel(
       id: mascot.id,
       name: mascot.name,
-      expressions: expressions.toSet(),
+      expressions: expressions,
     );
   }
 

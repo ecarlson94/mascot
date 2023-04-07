@@ -5,7 +5,7 @@ import '../../../../core/clean_architecture/entity.dart';
 part 'settings_model.freezed.dart';
 
 @freezed
-class SettingsModel with _$SettingsModel {
+class SettingsModel extends Entity with _$SettingsModel {
   const factory SettingsModel({required Id id, required Id? favoriteMascotId}) =
       _SettingsModel;
 

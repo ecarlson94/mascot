@@ -14,4 +14,7 @@ class ExpressionModel extends Entity with _$ExpressionModel {
     required String description,
     required Uint8List image,
   }) = _ExpressionModel;
+
+  factory ExpressionModel.empty() =>
+      ExpressionModel(id: 0, name: '', description: '', image: Uint8List(0));
 }

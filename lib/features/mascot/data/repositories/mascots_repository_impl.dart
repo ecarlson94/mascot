@@ -7,10 +7,12 @@ import '../../../../core/data/failure_or_id_future.dart';
 import '../../../../core/data/stream_subscriber.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/utils/logger.dart';
+import '../../../expressions/data/datasources/indexed_db/expressions_indexed_db_data_source.dart';
 import '../../domain/entities/mascot.dart';
 import '../../domain/repositories/mascots_repository.dart';
-import '../datasources/drift/mascots_drift_data_source.dart';
+import '../datasources/indexed_db/mascots_indexed_db_data_source.dart';
 import '../models/mascot_mapper.dart';
+import '../models/mascot_model.dart';
 
 @Injectable(as: Logger<MascotsRepositoryImpl>)
 class MascotRepositoryLogger extends Logger<MascotsRepositoryImpl> {}
@@ -18,12 +20,14 @@ class MascotRepositoryLogger extends Logger<MascotsRepositoryImpl> {}
 @Injectable(as: MascotsRepository)
 class MascotsRepositoryImpl extends StreamSubcriber
     implements MascotsRepository {
-  final MascotsDriftDataSource _mascotsLocalDataSource;
+  final MascotsIndexedDbDataSource _mascotsLocalDataSource;
+  final ExpressionsIndexedDbDataSource _expressionsLocalDataSource;
   final MascotMapper _mascotMapper;
   final Logger<MascotsRepositoryImpl> _logger;
 
   MascotsRepositoryImpl(
     this._mascotsLocalDataSource,
+    this._expressionsLocalDataSource,
     this._mascotMapper,
     this._logger,
   );
@@ -31,8 +35,10 @@ class MascotsRepositoryImpl extends StreamSubcriber
   @override
   MascotOrFailureFuture getMascot(Id id) async {
     try {
-      var mascotModel = await _mascotsLocalDataSource.getMascot(id);
-      return Right(_mascotMapper.toMascot(mascotModel));
+      var mascotModel = await _mascotsLocalDataSource.getObject(id);
+      return Right(
+        await _mapToMascotWithExpressions(mascotModel),
+      );
     } catch (e) {
       _logger.logError('Failed to get mascot with id: $id', e);
       return Left(LocalDataSourceFailure());
@@ -48,7 +54,7 @@ class MascotsRepositoryImpl extends StreamSubcriber
         return Left(InvalidArgumentFailure());
       }
 
-      var id = await _mascotsLocalDataSource.upsertMascot(
+      var id = await _mascotsLocalDataSource.putObject(
         _mascotMapper.fromMascot(mascot),
       );
 
@@ -62,15 +68,17 @@ class MascotsRepositoryImpl extends StreamSubcriber
   @override
   MascotSubjectOrFailureFuture streamMascot(Id id) async {
     try {
-      var mascotModel = await _mascotsLocalDataSource.getMascot(id);
+      var mascotModel = await _mascotsLocalDataSource.getObject(id);
       var mascotBehaviorSubject = BehaviorSubject<Mascot>.seeded(
         _mascotMapper.toMascot(mascotModel),
       );
 
-      var mascotStream = _mascotsLocalDataSource.streamMascot(id);
+      var mascotStream = _mascotsLocalDataSource.streamObject(id);
       var mascotSub = mascotStream.listen((event) async {
-        var updatedMascot = event ?? mascotModel;
-        mascotBehaviorSubject.add(_mascotMapper.toMascot(updatedMascot));
+        var updatedMascot = event;
+        mascotBehaviorSubject.add(
+          await _mapToMascotWithExpressions(updatedMascot),
+        );
       });
       subscriptions.add(mascotSub);
 
@@ -79,5 +87,17 @@ class MascotsRepositoryImpl extends StreamSubcriber
       _logger.logError('Failed to stream mascot with id: $id', e);
       return Left(LocalDataSourceFailure());
     }
+  }
+
+  Future<Mascot> _mapToMascotWithExpressions(MascotModel mascotModel) async =>
+      _mascotMapper.toMascot(await _fillExpressions(mascotModel));
+
+  Future<MascotModel> _fillExpressions(MascotModel mascotModel) async {
+    var expressions = await _expressionsLocalDataSource
+        .getObjects(mascotModel.expressions.map((e) => e.id));
+
+    return mascotModel.copyWith(
+      expressions: expressions,
+    );
   }
 }

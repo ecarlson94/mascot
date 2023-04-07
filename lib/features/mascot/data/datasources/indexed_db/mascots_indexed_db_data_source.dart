@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
 
-import '../../../../../core/clean_architecture/entity.dart';
 import '../../../../../core/data/indexed_db/indexed_db_data_source.dart';
+import '../../../../expressions/data/models/expression_model.dart';
 import '../../models/mascot_model.dart';
 
 @lazySingleton
@@ -13,7 +13,9 @@ class MascotsIndexedDbDataSource extends IndexedDbDataSourceImpl<MascotModel> {
     return MascotModel(
       id: json['id'] as int,
       name: json['name'] as String,
-      expressionIds: Set<Id>.from(json['expressionsIds'] as List<int>),
+      expressions: (json['expressions'] as List)
+          .map((e) => ExpressionModel.empty().copyWith(id: e as int))
+          .toList(),
     );
   }
 
@@ -22,7 +24,7 @@ class MascotsIndexedDbDataSource extends IndexedDbDataSourceImpl<MascotModel> {
     return {
       'id': object.id,
       'name': object.name,
-      'expressionIds': object.expressionIds.toList(),
+      'expressions': object.expressions.map((e) => e.id).toList(),
     };
   }
 }

@@ -20,11 +20,11 @@ class IndexDbSettings {
 
 abstract class IndexedDbDataSource<T extends Entity> {
   Future<T> getObject(Id id);
-  Future<List<T>> getObjects(List<Id> ids);
+  Future<List<T>> getObjects(Iterable<Id> ids);
   Future<int> putObject(T object);
   Future<void> deleteObject(Id id);
   Stream<T> streamObject(Id id);
-  Stream<List<T>> streamObjects(List<Id> ids);
+  Stream<List<T>> streamObjects(Iterable<Id> ids);
 
   String get storeName;
   T fromJson(Map<String, dynamic> json);
@@ -46,7 +46,7 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
 
   @override
   Future<T> getObject(Id id) async {
-    final db = await _openDb();
+    final db = await openDb();
     final transaction = db.transaction(storeName, idbModeReadOnly);
     final store = transaction.objectStore(storeName);
     final value = await store.getObject(id);
@@ -61,8 +61,8 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
   }
 
   @override
-  Future<List<T>> getObjects(List<Id> ids) async {
-    final db = await _openDb();
+  Future<List<T>> getObjects(Iterable<Id> ids) async {
+    final db = await openDb();
     final transaction = db.transaction(storeName, idbModeReadOnly);
     final store = transaction.objectStore(storeName);
     final values = await store.getAll(ids);
@@ -81,7 +81,7 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
 
   @override
   Future<int> putObject(T object) async {
-    final db = await _openDb();
+    final db = await openDb();
     final transaction = db.transaction(storeName, idbModeReadWrite);
     final store = transaction.objectStore(storeName);
     final id = await store.put(toJson(object));
@@ -97,7 +97,7 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
 
   @override
   Future<void> deleteObject(Id id) async {
-    final db = await _openDb();
+    final db = await openDb();
     final transaction = db.transaction(storeName, idbModeReadWrite);
     final store = transaction.objectStore(storeName);
     await store.delete(id);
@@ -114,7 +114,7 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
   }
 
   @override
-  Stream<List<T>> streamObjects(List<Id> ids) {
+  Stream<List<T>> streamObjects(Iterable<Id> ids) {
     return _streamController.stream.map(
       (data) =>
           data.values.where((item) => ids.contains(item.id)).cast<T>().toList(),
@@ -126,8 +126,7 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
     _streamController.close();
   }
 
-  Future<Database> _openDb() async {
-    // TODO: create store if not exists
+  Future<Database> openDb() async {
     var factory = indexedDbFactory.factory;
     if (factory == null) {
       throw Exception('IndexedDbFactory is could not be initialized');

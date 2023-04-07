@@ -18,7 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$MascotModel {
   int get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  Set<ExpressionModel> get expressions => throw _privateConstructorUsedError;
+  List<ExpressionModel> get expressions => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $MascotModelCopyWith<MascotModel> get copyWith =>
@@ -31,7 +31,7 @@ abstract class $MascotModelCopyWith<$Res> {
           MascotModel value, $Res Function(MascotModel) then) =
       _$MascotModelCopyWithImpl<$Res, MascotModel>;
   @useResult
-  $Res call({int id, String name, Set<ExpressionModel> expressions});
+  $Res call({int id, String name, List<ExpressionModel> expressions});
 }
 
 /// @nodoc
@@ -63,7 +63,7 @@ class _$MascotModelCopyWithImpl<$Res, $Val extends MascotModel>
       expressions: null == expressions
           ? _value.expressions
           : expressions // ignore: cast_nullable_to_non_nullable
-              as Set<ExpressionModel>,
+              as List<ExpressionModel>,
     ) as $Val);
   }
 }
@@ -76,7 +76,7 @@ abstract class _$$_MascotModelCopyWith<$Res>
       __$$_MascotModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, String name, Set<ExpressionModel> expressions});
+  $Res call({int id, String name, List<ExpressionModel> expressions});
 }
 
 /// @nodoc
@@ -106,7 +106,7 @@ class __$$_MascotModelCopyWithImpl<$Res>
       expressions: null == expressions
           ? _value._expressions
           : expressions // ignore: cast_nullable_to_non_nullable
-              as Set<ExpressionModel>,
+              as List<ExpressionModel>,
     ));
   }
 }
@@ -117,19 +117,19 @@ class _$_MascotModel implements _MascotModel {
   const _$_MascotModel(
       {required this.id,
       required this.name,
-      required final Set<ExpressionModel> expressions})
+      required final List<ExpressionModel> expressions})
       : _expressions = expressions;
 
   @override
   final int id;
   @override
   final String name;
-  final Set<ExpressionModel> _expressions;
+  final List<ExpressionModel> _expressions;
   @override
-  Set<ExpressionModel> get expressions {
-    if (_expressions is EqualUnmodifiableSetView) return _expressions;
+  List<ExpressionModel> get expressions {
+    if (_expressions is EqualUnmodifiableListView) return _expressions;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableSetView(_expressions);
+    return EqualUnmodifiableListView(_expressions);
   }
 
   @override
@@ -163,14 +163,14 @@ abstract class _MascotModel implements MascotModel {
   const factory _MascotModel(
       {required final int id,
       required final String name,
-      required final Set<ExpressionModel> expressions}) = _$_MascotModel;
+      required final List<ExpressionModel> expressions}) = _$_MascotModel;
 
   @override
   int get id;
   @override
   String get name;
   @override
-  Set<ExpressionModel> get expressions;
+  List<ExpressionModel> get expressions;
   @override
   @JsonKey(ignore: true)
   _$$_MascotModelCopyWith<_$_MascotModel> get copyWith =>

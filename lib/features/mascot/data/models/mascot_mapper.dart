@@ -20,7 +20,7 @@ class MascotMapperImpl extends MascotMapper {
       id: mascot.id,
       name: mascot.name,
       expressions:
-          mascot.expressions.map(_expressionMapper.fromExpression).toSet(),
+          mascot.expressions.map(_expressionMapper.fromExpression).toList(),
     );
     return driftmascot;
   }

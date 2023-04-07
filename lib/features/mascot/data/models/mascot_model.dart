@@ -10,6 +10,6 @@ class MascotModel extends Entity with _$MascotModel {
   const factory MascotModel({
     required Id id,
     required String name,
-    required Set<ExpressionModel> expressions,
+    required List<ExpressionModel> expressions,
   }) = _MascotModel;
 }
