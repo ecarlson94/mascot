@@ -1,12 +1,28 @@
+Act as an expert Flutter Developer and an expert in Material UI language.
+You will be provided relevant context.
+You can ask for more context if necessary.
+Update the code I provide based on a few requirements.
+You can suggest new code if you need to.
+Your modifications should be concise, but you should explain each step.
+Place comments on their own lines.
+You may ask to see more revelant code if necessary.
+
+First prompt:
+
+I have the following widgets:
+```
 import 'package:flutter/material.dart';
 
-import '../../../../core/extensions/build_context_extensions.dart';
-import '../../../../core/utils/constants.dart';
-import 'microphone_volume_provider.dart';
+import '../../../../../core/utils/constants.dart';
+import '../microphone_volume_provider.dart';
+import 'parts/meter.dart';
+import 'parts/slider_button.dart';
+import 'parts/vertical_threshold_slider.dart';
 
 class VerticalLoudnessMeter extends StatefulWidget {
   static const double widthRatio = 1 / 5;
   static const Radius radius = bigRadius;
+  static const defaultButtonLeftPadding = 5.0;
 
   final double minDecibels;
   final double maxDecibels;
@@ -55,36 +71,45 @@ class _VerticalLoudnessMeterState extends State<VerticalLoudnessMeter> {
             var width = widget.height * VerticalLoudnessMeter.widthRatio;
             var height = widget.height;
             final double normalizedValue = (volume.value - widget.minDecibels) /
-                (widget.maxDecibels - widget.minDecibels);
+                (widget.maxDecibels -
+                    widget.minDecibels); // A number between 0.0 - 1.0
             sliderPosition = sliderPosition ?? 0.5;
+            var sliderTop = (height * sliderPosition);
 
-            // TODO: use gesture detector on button and slider, not on whole meter
-            return GestureDetector(
-              onVerticalDragUpdate: _onDragUpdate,
-              onVerticalDragEnd: _onDragEnd,
-              child: SizedBox(
-                width: width + buttonPadding + maxButtonWidth,
-                height: height,
-                child: Stack(
-                  alignment: AlignmentDirectional.centerStart,
-                  children: [
-                    _Meter(
+            return SizedBox(
+              width: width + buttonPadding + maxButtonWidth,
+              height: height,
+              child: Stack(
+                alignment: AlignmentDirectional.centerStart,
+                children: [
+                  Meter(
+                    width: width,
+                    height: height,
+                    normalizedValue: normalizedValue,
+                    child: Positioned(
+                      top: sliderTop,
+                      left: 0,
+                      child: VerticalThresholdSlider(
+                        width: width,
+                        thresholdMet: volume.value >
+                            _convertSliderPositionToDecibels(sliderPosition),
+                        onVerticalDragUpdate: _onDragUpdate,
+                        onVerticalDragEnd: _onDragEnd,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left:
+                        width + VerticalLoudnessMeter.defaultButtonLeftPadding,
+                    top: (sliderPosition * height) - (maxButtonWidth / 2),
+                    child: SliderButton(
                       width: width,
                       height: height,
-                      normalizedValue: normalizedValue,
-                      sliderPosition: sliderPosition,
-                      sliderPositionOffset: const Offset(
-                          0, -1 * (_SliderButton.maxButtonWidth / 2)),
-                      thresholdMet: volume.value >
-                          _convertSliderPositionToDecibels(sliderPosition),
+                      onVerticalDragUpdate: _onDragUpdate,
+                      onVerticalDragEnd: _onDragEnd,
                     ),
-                    _SliderButton(
-                      width: width,
-                      height: height,
-                      sliderPosition: sliderPosition,
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             );
           },
@@ -97,10 +122,13 @@ class _VerticalLoudnessMeterState extends State<VerticalLoudnessMeter> {
     final newValue =
         _sliderPositionNotifier.value! + details.delta.dy / widget.height;
     final newSliderPosition = newValue.clamp(0.0, 1.0);
+
+    // Prevent the slider from going off the top or bottom of the meter
+    // by calculating the max and min slider positions based on the button size
     final maxSliderPosition =
-        (widget.height - (_SliderButton.maxButtonWidth / 2)) / widget.height;
-    final minSliderPosition =
-        (_SliderButton.maxButtonWidth / 2) / widget.height;
+        (widget.height - (SliderButton.maxButtonWidth / 2)) / widget.height;
+    final minSliderPosition = (SliderButton.maxButtonWidth / 2) / widget.height;
+
     final clampedSliderPosition =
         newSliderPosition.clamp(minSliderPosition, maxSliderPosition);
     _sliderPositionNotifier.value = clampedSliderPosition;
@@ -116,31 +144,34 @@ class _VerticalLoudnessMeterState extends State<VerticalLoudnessMeter> {
         (1 - sliderPosition) * (widget.maxDecibels - widget.minDecibels);
   }
 }
+```
 
-class _Meter extends StatelessWidget {
+```
+import 'package:flutter/material.dart';
+
+import '../../../../../../core/extensions/extensions.dart';
+import '../../../../../../core/utils/constants.dart';
+
+class Meter extends StatelessWidget {
   final double width;
   final double height;
   final double normalizedValue;
-  final double sliderPosition;
-  final Offset sliderPositionOffset;
-  final bool thresholdMet;
+  final Widget? child;
 
-  const _Meter({
+  const Meter({
+    super.key,
     required this.width,
     required this.height,
     required this.normalizedValue,
-    required this.sliderPosition,
-    required this.sliderPositionOffset,
-    required this.thresholdMet,
+    this.child,
   });
 
   @override
   Widget build(BuildContext context) {
-    var sliderTop = (height * sliderPosition);
     return PhysicalModel(
       clipBehavior: Clip.antiAlias,
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(VerticalLoudnessMeter.radius.x),
+      borderRadius: bigBorderRadius,
       child: Stack(
         alignment: AlignmentDirectional.centerStart,
         children: [
@@ -150,13 +181,7 @@ class _Meter extends StatelessWidget {
             normalizedValue: normalizedValue,
             width: width,
           ),
-          _ThresholdSlider(
-            width: width,
-            height: height,
-            sliderPosition: sliderPosition,
-            thresholdMet: thresholdMet,
-            top: sliderTop,
-          )
+          if (child != null) child!,
         ],
       ),
     );
@@ -176,7 +201,7 @@ class _MeterBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return PhysicalModel(
       color: context.colorScheme.tertiaryContainer,
-      borderRadius: BorderRadius.circular(VerticalLoudnessMeter.radius.x),
+      borderRadius: bigBorderRadius,
       clipBehavior: Clip.antiAlias,
       elevation: 2,
       child: SizedBox(
@@ -205,7 +230,7 @@ class _MeterForeground extends StatelessWidget {
       left: 0,
       child: PhysicalModel(
         color: context.colorScheme.tertiary,
-        borderRadius: BorderRadius.circular(VerticalLoudnessMeter.radius.x),
+        borderRadius: bigBorderRadius,
         clipBehavior: Clip.antiAlias,
         elevation: 2,
         child: SizedBox(
@@ -216,28 +241,33 @@ class _MeterForeground extends StatelessWidget {
     );
   }
 }
+```
 
-class _ThresholdSlider extends StatelessWidget {
+```
+import 'package:flutter/material.dart';
+
+import '../../../../../../core/extensions/extensions.dart';
+
+class VerticalThresholdSlider extends StatelessWidget {
   final double width;
-  final double height;
-  final double sliderPosition;
   final bool thresholdMet;
-  final double top;
+  final void Function(DragUpdateDetails details)? onVerticalDragUpdate;
+  final void Function(DragEndDetails details)? onVerticalDragEnd;
 
-  const _ThresholdSlider({
+  const VerticalThresholdSlider({
+    super.key,
     required this.width,
-    required this.height,
-    required this.sliderPosition,
     required this.thresholdMet,
-    required this.top,
+    this.onVerticalDragUpdate,
+    this.onVerticalDragEnd,
   });
 
   @override
   Widget build(BuildContext context) {
     var colorScheme = context.colorScheme;
-    return Positioned(
-      top: (sliderPosition * height),
-      left: 0,
+    return GestureDetector(
+      onVerticalDragUpdate: onVerticalDragUpdate,
+      onVerticalDragEnd: onVerticalDragEnd,
       child: PhysicalModel(
         color: thresholdMet
             ? colorScheme.onTertiary
@@ -252,26 +282,34 @@ class _ThresholdSlider extends StatelessWidget {
     );
   }
 }
+```
 
-class _SliderButton extends StatelessWidget {
+```
+import 'package:flutter/material.dart';
+
+import '../../../../../../core/extensions/extensions.dart';
+
+class SliderButton extends StatelessWidget {
   static const maxButtonWidth = 28.0;
-  static const defaultLeftPadding = 5.0;
 
   final double width;
   final double height;
-  final double sliderPosition;
+  final void Function(DragUpdateDetails details)? onVerticalDragUpdate;
+  final void Function(DragEndDetails details)? onVerticalDragEnd;
 
-  const _SliderButton({
+  const SliderButton({
+    super.key,
     required this.width,
     required this.height,
-    required this.sliderPosition,
+    this.onVerticalDragUpdate,
+    this.onVerticalDragEnd,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      left: width + defaultLeftPadding,
-      top: (sliderPosition * height) - (maxButtonWidth / 2),
+    return GestureDetector(
+      onVerticalDragUpdate: onVerticalDragUpdate,
+      onVerticalDragEnd: onVerticalDragEnd,
       child: PhysicalModel(
         elevation: 3, // Resting level 3
         color: context.colorScheme.tertiaryContainer,
@@ -293,3 +331,14 @@ class _SliderButton extends StatelessWidget {
     );
   }
 }
+```
+
+# Context
+
+Currently, the `onVerticalDragEnd` and `onVerticalDragUpdate` callbacks are working correctly for the `SliderButton`.
+However, the `onVerticalDragEnd` and `onVerticalDragUpdate` callbacks aren't working at all for the the `VerticalThresholdSlider`.
+I have tried rendering the `VerticalThresholdSlider` in between the `Meter` and `SliderButton`, but that did not work either.
+
+# Requirements
+
+Fix the bug.
