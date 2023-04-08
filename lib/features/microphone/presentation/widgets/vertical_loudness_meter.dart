@@ -16,8 +16,8 @@ class VerticalLoudnessMeter extends StatefulWidget {
 
   const VerticalLoudnessMeter({
     Key? key,
-    this.minDecibels = -40,
-    this.maxDecibels = 20,
+    this.minDecibels = -35,
+    this.maxDecibels = 15,
     this.height = 200,
     this.defaultSliderPositon = -10,
     this.onThresholdChanged,
@@ -58,6 +58,7 @@ class _VerticalLoudnessMeterState extends State<VerticalLoudnessMeter> {
                 (widget.maxDecibels - widget.minDecibels);
             sliderPosition = sliderPosition ?? 0.5;
 
+            // TODO: use gesture detector on button and slider, not on whole meter
             return GestureDetector(
               onVerticalDragUpdate: _onDragUpdate,
               onVerticalDragEnd: _onDragEnd,
@@ -137,9 +138,8 @@ class _Meter extends StatelessWidget {
   Widget build(BuildContext context) {
     var sliderTop = (height * sliderPosition);
     return PhysicalModel(
-      elevation: 2, // Resting level 2
-      color: Colors.transparent,
       clipBehavior: Clip.antiAlias,
+      color: Colors.transparent,
       borderRadius: BorderRadius.circular(VerticalLoudnessMeter.radius.x),
       child: Stack(
         alignment: AlignmentDirectional.centerStart,
@@ -174,12 +174,14 @@ class _MeterBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(VerticalLoudnessMeter.radius.x),
-        color: context.colorScheme.tertiaryContainer,
+    return PhysicalModel(
+      color: context.colorScheme.tertiaryContainer,
+      borderRadius: BorderRadius.circular(VerticalLoudnessMeter.radius.x),
+      clipBehavior: Clip.antiAlias,
+      elevation: 2,
+      child: SizedBox(
+        width: width,
+        height: height,
       ),
     );
   }
@@ -201,12 +203,14 @@ class _MeterForeground extends StatelessWidget {
     return Positioned(
       top: (height * (1 - normalizedValue.clamp(0.0, 1.0))),
       left: 0,
-      child: Container(
-        width: width,
-        height: height * normalizedValue.clamp(0.0, 1.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(VerticalLoudnessMeter.radius.x),
-          color: context.colorScheme.tertiary,
+      child: PhysicalModel(
+        color: context.colorScheme.tertiary,
+        borderRadius: BorderRadius.circular(VerticalLoudnessMeter.radius.x),
+        clipBehavior: Clip.antiAlias,
+        elevation: 2,
+        child: SizedBox(
+          width: width,
+          height: height * normalizedValue.clamp(0.0, 1.0),
         ),
       ),
     );
@@ -234,14 +238,15 @@ class _ThresholdSlider extends StatelessWidget {
     return Positioned(
       top: (sliderPosition * height),
       left: 0,
-      child: Container(
-        width: width,
-        height: 4, // Slider height
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(2), // Slider border radius
-          color: thresholdMet
-              ? colorScheme.onTertiary
-              : colorScheme.onTertiaryContainer,
+      child: PhysicalModel(
+        color: thresholdMet
+            ? colorScheme.onTertiary
+            : colorScheme.onTertiaryContainer,
+        borderRadius: BorderRadius.circular(2),
+        clipBehavior: Clip.antiAlias,
+        child: SizedBox(
+          width: width,
+          height: 4, // Slider height
         ),
       ),
     );
@@ -268,16 +273,15 @@ class _SliderButton extends StatelessWidget {
       left: width + defaultLeftPadding,
       top: (sliderPosition * height) - (maxButtonWidth / 2),
       child: PhysicalModel(
-        elevation: 2, // Resting level 3
-        color: Colors.transparent,
+        elevation: 3, // Resting level 3
+        color: context.colorScheme.tertiaryContainer,
         borderRadius:
             BorderRadius.circular(maxButtonWidth / 2), // Button border radius
         child: Container(
           width: maxButtonWidth,
           height: maxButtonWidth,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             shape: BoxShape.circle,
-            color: context.colorScheme.tertiaryContainer,
           ),
           child: Icon(
             Icons.record_voice_over,
