@@ -1,7 +1,10 @@
 import 'package:flutter/rendering.dart';
 
-const Radius bigRadius = Radius.circular(28.0);
-const Radius mediumRadius = Radius.circular(20.0);
+const double bigRadiusValue = 28.0;
+const double mediumRadiusValue = 20.0;
+
+const Radius bigRadius = Radius.circular(bigRadiusValue);
+const Radius mediumRadius = Radius.circular(mediumRadiusValue);
 
 const BorderRadius bigBorderRadius = BorderRadius.all(bigRadius);
 const BorderRadius mediumBorderRadius = BorderRadius.all(mediumRadius);

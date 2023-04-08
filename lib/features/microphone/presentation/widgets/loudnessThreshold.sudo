@@ -1,3 +1,14 @@
+Act as an expert Flutter Developer and an expert in Material UI language.
+Update the code I provide based on a few requirements.
+You can suggest new code if you need to.
+Your modifications should be concise, but you should explain each step.
+Place comments on their own lines.
+You may ask to see more revelant code if necessary.
+
+First prompt:
+
+I have a widget `VerticalLoudnessMeter`:
+```
 import 'package:flutter/material.dart';
 
 import '../../../../core/extensions/build_context_extensions.dart';
@@ -74,7 +85,7 @@ class _VerticalLoudnessMeterState extends State<VerticalLoudnessMeter> {
                       sliderPosition: sliderPosition,
                       sliderPositionOffset: const Offset(
                           0, -1 * (_SliderButton.maxButtonWidth / 2)),
-                      thresholdMet: volume.value >
+                      thresholdMet: volume.value - 5 >
                           _convertSliderPositionToDecibels(sliderPosition),
                     ),
                     _SliderButton(
@@ -95,14 +106,7 @@ class _VerticalLoudnessMeterState extends State<VerticalLoudnessMeter> {
   void _onDragUpdate(DragUpdateDetails details) {
     final newValue =
         _sliderPositionNotifier.value! + details.delta.dy / widget.height;
-    final newSliderPosition = newValue.clamp(0.0, 1.0);
-    final maxSliderPosition =
-        (widget.height - (_SliderButton.maxButtonWidth / 2)) / widget.height;
-    final minSliderPosition =
-        (_SliderButton.maxButtonWidth / 2) / widget.height;
-    final clampedSliderPosition =
-        newSliderPosition.clamp(minSliderPosition, maxSliderPosition);
-    _sliderPositionNotifier.value = clampedSliderPosition;
+    _sliderPositionNotifier.value = newValue.clamp(0.0, 1.0);
   }
 
   void _onDragEnd(DragEndDetails details) {
@@ -232,7 +236,7 @@ class _ThresholdSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     var colorScheme = context.colorScheme;
     return Positioned(
-      top: (sliderPosition * height),
+      top: (sliderPosition * height) - (_SliderButton.maxButtonWidth / 2),
       left: 0,
       child: Container(
         width: width,
@@ -266,7 +270,7 @@ class _SliderButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned(
       left: width + defaultLeftPadding,
-      top: (sliderPosition * height) - (maxButtonWidth / 2),
+      top: (sliderPosition * height) - (maxButtonWidth),
       child: PhysicalModel(
         elevation: 2, // Resting level 3
         color: Colors.transparent,
@@ -289,3 +293,9 @@ class _SliderButton extends StatelessWidget {
     );
   }
 }
+```
+
+# Requirements
+
+When dragging the button or the slider, I can drag it outside the height of the outermost stack.
+The top of the `_SliderButton` should not be draggable beyond the top of the outermost stack.
