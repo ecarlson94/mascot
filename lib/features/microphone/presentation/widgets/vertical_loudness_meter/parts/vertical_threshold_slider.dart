@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../core/extensions/extensions.dart';
+import '../../../../../../core/widgets/vertical_draggable.dart';
 
 class VerticalThresholdSlider extends StatelessWidget {
   final double width;
@@ -38,7 +39,7 @@ class VerticalThresholdSlider extends StatelessWidget {
             width: width,
             height: 16,
             color: Colors.transparent,
-            child: GestureDetector(
+            child: VerticalDraggable(
               onVerticalDragUpdate: onVerticalDragUpdate,
               onVerticalDragEnd: onVerticalDragEnd,
             ),
