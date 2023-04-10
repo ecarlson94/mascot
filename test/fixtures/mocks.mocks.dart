@@ -19,7 +19,7 @@ import 'package:mascot/features/expressions/domain/entities/expression.dart'
     as _i14;
 import 'package:mascot/features/expressions/domain/repositories/expressions_repository.dart'
     as _i12;
-import 'package:mascot/features/expressions/domain/services/expression_animation_service.dart'
+import 'package:mascot/features/expressions/domain/services/animation/expression_animation_service.dart'
     as _i31;
 import 'package:mascot/features/mascot/data/datasources/indexed_db/mascots_indexed_db_data_source.dart'
     as _i16;

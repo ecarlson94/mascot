@@ -1,14 +1,15 @@
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../core/data/stream_subscriber.dart';
-import '../entities/expression.dart';
-import 'expression_trigger.dart';
+import '../../../../../core/data/stream_subscriber.dart';
+import '../../entities/expression.dart';
+import 'expression_trigger_factory.dart';
 
 abstract class ExpressionAnimationService {
   Future<Stream<Expression>> animateExpressions(Set<Expression> expressions);
 }
 
+// TODO: write tests for this class
 @Injectable(as: ExpressionAnimationService)
 class ExpressionAnimationServiceImpl extends ExpressionAnimationService
     with SubscriptionDisposer

@@ -8,7 +8,7 @@ import 'package:injectable/injectable.dart';
 import '../../../../core/data/stream_subscriber.dart';
 import '../../../../core/error/error.dart';
 import '../../../expressions/domain/entities/expression.dart';
-import '../../../expressions/domain/services/expression_animation_service.dart';
+import '../../../expressions/domain/services/animation/expression_animation_service.dart';
 import '../../domain/entities/mascot.dart';
 import '../../domain/usecases/stream_mascot.dart';
 
