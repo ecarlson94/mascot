@@ -60,7 +60,7 @@ class SettingsRepositoryImpl extends SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> setFavoriteMascotId(Id id) async {
+  FailureOrUnitFuture setFavoriteMascotId(Id id) async {
     try {
       var settings = await _localDataSource.getObject(1);
       var updatedSettings = settings.copyWith(favoriteMascotId: id);
@@ -74,8 +74,7 @@ class SettingsRepositoryImpl extends SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> setTalkingThreshold(
-      DecibelLufs threshold) async {
+  FailureOrUnitFuture setTalkingThreshold(DecibelLufs threshold) async {
     try {
       var settings = await _localDataSource.getObject(1);
       var updatedSettings = settings.copyWith(
