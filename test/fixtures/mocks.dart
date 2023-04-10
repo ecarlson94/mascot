@@ -12,6 +12,7 @@ import 'package:mascot/features/microphone/domain/services/microphone_service.da
 import 'package:mascot/features/microphone/domain/usecases/stream_microphone_volume.dart';
 import 'package:mascot/features/settings/data/datasources/indexded_db/settings_indexed_db_data_source.dart';
 import 'package:mascot/features/settings/domain/repositories/settings_repository.dart';
+import 'package:mascot/features/settings/domain/usecases/save_talking_threshold.dart';
 import 'package:mascot/features/settings/domain/usecases/stream_settings.dart';
 import 'package:mockito/annotations.dart';
 
@@ -27,6 +28,7 @@ import 'mocks.mocks.dart';
   GetMascot,
   SettingsRepository,
   StreamSettings,
+  SaveTalkingThreshold,
   StreamMascot,
   Logger<MascotsRepositoryImpl>,
   MicrophoneService,
@@ -63,6 +65,10 @@ class Mocks {
   MockStreamSettings? _streamSettings;
   MockStreamSettings get streamSettings =>
       _streamSettings ??= MockStreamSettings();
+
+  MockSaveTalkingThreshold? _saveTalkingThreshold;
+  MockSaveTalkingThreshold get saveTalkingThreshold =>
+      _saveTalkingThreshold ??= MockSaveTalkingThreshold();
 
   MockStreamMascot? _streamMascot;
   MockStreamMascot get streamMascot => _streamMascot ??= MockStreamMascot();

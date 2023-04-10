@@ -17,12 +17,12 @@ class SettingsRepositoryLogger extends Logger<SettingsRepositoryImpl> {}
 @Injectable(as: SettingsRepository)
 class SettingsRepositoryImpl extends SettingsRepository {
   final SettingsIndexedDbDataSource _localDataSource;
-  final SettingsMapper _driftSettingsMapper;
+  final SettingsMapper _settingsMapper;
   final Logger<SettingsRepositoryImpl> _logger;
 
   SettingsRepositoryImpl(
     this._localDataSource,
-    this._driftSettingsMapper,
+    this._settingsMapper,
     this._logger,
   );
 
@@ -30,7 +30,7 @@ class SettingsRepositoryImpl extends SettingsRepository {
   FailureOrSettingsFuture loadSettings() async {
     try {
       var settingsModel = await _localDataSource.getObject(1);
-      return Right(_driftSettingsMapper.toSettings(settingsModel));
+      return Right(_settingsMapper.toSettings(settingsModel));
     } catch (e) {
       _logger.logError('Failed to load settings', e);
       return Left(LocalDataSourceFailure());
@@ -42,13 +42,13 @@ class SettingsRepositoryImpl extends SettingsRepository {
     try {
       var settingsModel = await _localDataSource.getObject(1);
       var settingsBehaviorSubject = BehaviorSubject<Settings>.seeded(
-        _driftSettingsMapper.toSettings(settingsModel),
+        _settingsMapper.toSettings(settingsModel),
       );
 
       var settingsStream = _localDataSource.streamObject(1);
       settingsStream.listen((event) async {
         settingsBehaviorSubject.add(
-          _driftSettingsMapper.toSettings(event),
+          _settingsMapper.toSettings(event),
         );
       });
 

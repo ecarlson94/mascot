@@ -10,7 +10,7 @@ import 'package:idb_shim/idb_client.dart' as _i5;
 import 'package:mascot/core/clean_architecture/usecase.dart' as _i24;
 import 'package:mascot/core/data/indexed_db/indexed_db_data_source.dart' as _i2;
 import 'package:mascot/core/error/failure.dart' as _i13;
-import 'package:mascot/core/utils/logger.dart' as _i26;
+import 'package:mascot/core/utils/logger.dart' as _i27;
 import 'package:mascot/features/expressions/data/datasources/indexed_db/expressions_indexed_db_data_source.dart'
     as _i10;
 import 'package:mascot/features/expressions/data/models/expression_model.dart'
@@ -28,14 +28,14 @@ import 'package:mascot/features/mascot/domain/repositories/mascots_repository.da
 import 'package:mascot/features/mascot/domain/usecases/add_mascot.dart' as _i19;
 import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart' as _i20;
 import 'package:mascot/features/mascot/domain/usecases/stream_mascot.dart'
-    as _i25;
-import 'package:mascot/features/microphone/device/microphone.dart' as _i28;
+    as _i26;
+import 'package:mascot/features/microphone/device/microphone.dart' as _i29;
 import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart'
     as _i22;
 import 'package:mascot/features/microphone/domain/services/microphone_service.dart'
-    as _i27;
+    as _i28;
 import 'package:mascot/features/microphone/domain/usecases/stream_microphone_volume.dart'
-    as _i29;
+    as _i30;
 import 'package:mascot/features/settings/data/datasources/indexded_db/settings_indexed_db_data_source.dart'
     as _i15;
 import 'package:mascot/features/settings/data/models/settings_model.dart'
@@ -43,6 +43,8 @@ import 'package:mascot/features/settings/data/models/settings_model.dart'
 import 'package:mascot/features/settings/domain/entities/settings.dart' as _i21;
 import 'package:mascot/features/settings/domain/repositories/settings_repository.dart'
     as _i8;
+import 'package:mascot/features/settings/domain/usecases/save_talking_threshold.dart'
+    as _i25;
 import 'package:mascot/features/settings/domain/usecases/stream_settings.dart'
     as _i23;
 import 'package:mockito/mockito.dart' as _i1;
@@ -862,10 +864,46 @@ class MockStreamSettings extends _i1.Mock implements _i23.StreamSettings {
           _i4.Either<_i13.Failure, _i18.BehaviorSubject<_i21.Settings>>>);
 }
 
+/// A class which mocks [SaveTalkingThreshold].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSaveTalkingThreshold extends _i1.Mock
+    implements _i25.SaveTalkingThreshold {
+  MockSaveTalkingThreshold() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i8.SettingsRepository get repository => (super.noSuchMethod(
+        Invocation.getter(#repository),
+        returnValue: _FakeSettingsRepository_7(
+          this,
+          Invocation.getter(#repository),
+        ),
+      ) as _i8.SettingsRepository);
+  @override
+  _i11.Future<_i4.Either<_i13.Failure, _i4.Unit>> call(
+          _i22.DecibelLufs? params) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [params],
+        ),
+        returnValue: _i11.Future<_i4.Either<_i13.Failure, _i4.Unit>>.value(
+            _FakeEither_4<_i13.Failure, _i4.Unit>(
+          this,
+          Invocation.method(
+            #call,
+            [params],
+          ),
+        )),
+      ) as _i11.Future<_i4.Either<_i13.Failure, _i4.Unit>>);
+}
+
 /// A class which mocks [StreamMascot].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockStreamMascot extends _i1.Mock implements _i25.StreamMascot {
+class MockStreamMascot extends _i1.Mock implements _i26.StreamMascot {
   MockStreamMascot() {
     _i1.throwOnMissingStub(this);
   }
@@ -903,7 +941,7 @@ class MockStreamMascot extends _i1.Mock implements _i25.StreamMascot {
 /// A class which mocks [Logger].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLogger<T> extends _i1.Mock implements _i26.Logger<T> {
+class MockLogger<T> extends _i1.Mock implements _i27.Logger<T> {
   MockLogger() {
     _i1.throwOnMissingStub(this);
   }
@@ -946,7 +984,7 @@ class MockLogger<T> extends _i1.Mock implements _i26.Logger<T> {
 /// A class which mocks [MicrophoneService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMicrophoneService extends _i1.Mock implements _i27.MicrophoneService {
+class MockMicrophoneService extends _i1.Mock implements _i28.MicrophoneService {
   MockMicrophoneService() {
     _i1.throwOnMissingStub(this);
   }
@@ -975,7 +1013,7 @@ class MockMicrophoneService extends _i1.Mock implements _i27.MicrophoneService {
 /// A class which mocks [Microphone].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMicrophone extends _i1.Mock implements _i28.Microphone {
+class MockMicrophone extends _i1.Mock implements _i29.Microphone {
   MockMicrophone() {
     _i1.throwOnMissingStub(this);
   }
@@ -999,7 +1037,7 @@ class MockMicrophone extends _i1.Mock implements _i28.Microphone {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockStreamMicrophoneVolume extends _i1.Mock
-    implements _i29.StreamMicrophoneVolume {
+    implements _i30.StreamMicrophoneVolume {
   MockStreamMicrophoneVolume() {
     _i1.throwOnMissingStub(this);
   }

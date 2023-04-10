@@ -6,7 +6,7 @@ import 'settings_model.dart';
 
 abstract class SettingsMapper {
   SettingsModel fromSettings(Settings settings);
-  Settings toSettings(SettingsModel driftSettings);
+  Settings toSettings(SettingsModel settingsModel);
 }
 
 @LazySingleton(as: SettingsMapper)

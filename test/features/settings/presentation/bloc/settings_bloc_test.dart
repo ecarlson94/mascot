@@ -22,7 +22,10 @@ void main() {
 
     setUp(() {
       context = TestContext();
-      bloc = SettingsBloc(context.mocks.streamSettings);
+      bloc = SettingsBloc(
+        context.mocks.streamSettings,
+        context.mocks.saveTalkingThreshold,
+      );
       settingsSubject = BehaviorSubject<Settings>.seeded(context.data.settings);
       favoriteMascotIdSubject =
           BehaviorSubject.seeded(context.data.settings.favoriteMascotId);
@@ -36,6 +39,22 @@ void main() {
     test('initialState should be SettingsInitial', () {
       // assert
       expect(bloc.state, SettingsInitial(none(), none()));
+    });
+
+    group('SetTalkingThreshold', () {
+      blocTest(
+        'should invoke the save talking threshold usecase',
+        build: () => bloc,
+        setUp: () {
+          when(context.mocks.saveTalkingThreshold(any))
+              .thenAnswer((_) async => const Right(unit));
+        },
+        act: (bloc) => bloc.add(const SetTalkingThreshold(DecibelLufs(12))),
+        verify: (bloc) {
+          verify(context.mocks.saveTalkingThreshold(const DecibelLufs(12)));
+          verifyNoMoreInteractions(context.mocks.saveTalkingThreshold);
+        },
+      );
     });
 
     group('LoadSettings', () {
@@ -78,6 +97,11 @@ void main() {
             bloc.state.favoriteMascotIdStreamOption.getOrFailTest(),
             emits(context.data.settings.favoriteMascotId),
           );
+
+          expect(
+            bloc.state.favoriteMascotIdStreamOption.getOrFailTest(),
+            emits(context.data.settings.favoriteMascotId),
+          );
         },
       );
 
@@ -87,11 +111,19 @@ void main() {
         act: (bloc) => bloc.add(LoadSettings()),
         verify: (bloc) {
           settingsSubject.add(
-            context.data.settings.copyWith(favoriteMascotId: 2),
+            context.data.settings.copyWith(
+                favoriteMascotId: 2, talkingThreshold: const DecibelLufs(2)),
           );
           expect(
             bloc.state.favoriteMascotIdStreamOption.getOrFailTest(),
             emitsInOrder([context.data.settings.favoriteMascotId, 2]),
+          );
+          expect(
+            bloc.state.talkingThresholdStreamOption.getOrFailTest(),
+            emitsInOrder([
+              context.data.settings.talkingThreshold,
+              const DecibelLufs(2),
+            ]),
           );
         },
       );
