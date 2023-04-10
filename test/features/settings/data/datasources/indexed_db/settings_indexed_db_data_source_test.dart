@@ -24,6 +24,7 @@ void main() {
         final json = {
           'id': 1,
           'favoriteMascotId': 1,
+          'talkingThresholdDecibels': -10.0,
         };
 
         // act
@@ -33,6 +34,10 @@ void main() {
         expect(result, isA<SettingsModel>());
         expect(result.id, json['id']);
         expect(result.favoriteMascotId, json['favoriteMascotId']);
+        expect(
+          result.talkingThresholdDecibels,
+          json['talkingThresholdDecibels'],
+        );
       });
     });
 
@@ -49,8 +54,10 @@ void main() {
         expect(result, isA<Map<String, dynamic>>());
         expect(result['id'], settings.id);
         expect(result['favoriteMascotId'], settings.favoriteMascotId);
-        expect(result['talkingThresholdDecibels'],
-            settings.talkingThresholdDecibels);
+        expect(
+          result['talkingThresholdDecibels'],
+          settings.talkingThresholdDecibels,
+        );
       });
     });
 

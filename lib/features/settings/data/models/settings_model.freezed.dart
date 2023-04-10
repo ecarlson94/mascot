@@ -18,7 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$SettingsModel {
   int get id => throw _privateConstructorUsedError;
   int? get favoriteMascotId => throw _privateConstructorUsedError;
-  double? get talkingThresholdDecibels => throw _privateConstructorUsedError;
+  double get talkingThresholdDecibels => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SettingsModelCopyWith<SettingsModel> get copyWith =>
@@ -31,7 +31,7 @@ abstract class $SettingsModelCopyWith<$Res> {
           SettingsModel value, $Res Function(SettingsModel) then) =
       _$SettingsModelCopyWithImpl<$Res, SettingsModel>;
   @useResult
-  $Res call({int id, int? favoriteMascotId, double? talkingThresholdDecibels});
+  $Res call({int id, int? favoriteMascotId, double talkingThresholdDecibels});
 }
 
 /// @nodoc
@@ -49,7 +49,7 @@ class _$SettingsModelCopyWithImpl<$Res, $Val extends SettingsModel>
   $Res call({
     Object? id = null,
     Object? favoriteMascotId = freezed,
-    Object? talkingThresholdDecibels = freezed,
+    Object? talkingThresholdDecibels = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -60,10 +60,10 @@ class _$SettingsModelCopyWithImpl<$Res, $Val extends SettingsModel>
           ? _value.favoriteMascotId
           : favoriteMascotId // ignore: cast_nullable_to_non_nullable
               as int?,
-      talkingThresholdDecibels: freezed == talkingThresholdDecibels
+      talkingThresholdDecibels: null == talkingThresholdDecibels
           ? _value.talkingThresholdDecibels
           : talkingThresholdDecibels // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as double,
     ) as $Val);
   }
 }
@@ -76,7 +76,7 @@ abstract class _$$_SettingsModelCopyWith<$Res>
       __$$_SettingsModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, int? favoriteMascotId, double? talkingThresholdDecibels});
+  $Res call({int id, int? favoriteMascotId, double talkingThresholdDecibels});
 }
 
 /// @nodoc
@@ -92,7 +92,7 @@ class __$$_SettingsModelCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? favoriteMascotId = freezed,
-    Object? talkingThresholdDecibels = freezed,
+    Object? talkingThresholdDecibels = null,
   }) {
     return _then(_$_SettingsModel(
       id: null == id
@@ -103,10 +103,10 @@ class __$$_SettingsModelCopyWithImpl<$Res>
           ? _value.favoriteMascotId
           : favoriteMascotId // ignore: cast_nullable_to_non_nullable
               as int?,
-      talkingThresholdDecibels: freezed == talkingThresholdDecibels
+      talkingThresholdDecibels: null == talkingThresholdDecibels
           ? _value.talkingThresholdDecibels
           : talkingThresholdDecibels // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as double,
     ));
   }
 }
@@ -124,7 +124,7 @@ class _$_SettingsModel implements _SettingsModel {
   @override
   final int? favoriteMascotId;
   @override
-  final double? talkingThresholdDecibels;
+  final double talkingThresholdDecibels;
 
   @override
   String toString() {
@@ -159,14 +159,14 @@ abstract class _SettingsModel implements SettingsModel {
   const factory _SettingsModel(
       {required final int id,
       required final int? favoriteMascotId,
-      required final double? talkingThresholdDecibels}) = _$_SettingsModel;
+      required final double talkingThresholdDecibels}) = _$_SettingsModel;
 
   @override
   int get id;
   @override
   int? get favoriteMascotId;
   @override
-  double? get talkingThresholdDecibels;
+  double get talkingThresholdDecibels;
   @override
   @JsonKey(ignore: true)
   _$$_SettingsModelCopyWith<_$_SettingsModel> get copyWith =>

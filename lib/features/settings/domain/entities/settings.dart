@@ -9,11 +9,11 @@ part 'settings.freezed.dart';
 class Settings with _$Settings {
   const factory Settings({
     required Id? favoriteMascotId,
-    required DecibelLufs? talkingThreshold,
+    required DecibelLufs talkingThreshold,
   }) = _Settings;
 
   static const Settings empty = Settings(
     favoriteMascotId: null,
-    talkingThreshold: null,
+    talkingThreshold: DecibelLufs(-10),
   );
 }

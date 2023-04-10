@@ -16,7 +16,7 @@ class SettingsMapperImpl implements SettingsMapper {
     return SettingsModel(
       id: 1,
       favoriteMascotId: settings.favoriteMascotId,
-      talkingThresholdDecibels: settings.talkingThreshold?.value,
+      talkingThresholdDecibels: settings.talkingThreshold.value,
     );
   }
 
@@ -24,9 +24,7 @@ class SettingsMapperImpl implements SettingsMapper {
   Settings toSettings(SettingsModel settingsModel) {
     return Settings(
       favoriteMascotId: settingsModel.favoriteMascotId,
-      talkingThreshold: settingsModel.talkingThresholdDecibels == null
-          ? null
-          : DecibelLufs(settingsModel.talkingThresholdDecibels!),
+      talkingThreshold: DecibelLufs(settingsModel.talkingThresholdDecibels),
     );
   }
 }

@@ -27,7 +27,7 @@ class SettingsIndexedDbDataSource
     return SettingsModel(
       id: json['id'] as int,
       favoriteMascotId: json['favoriteMascotId'] as int?,
-      talkingThresholdDecibels: json['talkingThresholdDecibels'] as double?,
+      talkingThresholdDecibels: json['talkingThresholdDecibels'] as double,
     );
   }
 

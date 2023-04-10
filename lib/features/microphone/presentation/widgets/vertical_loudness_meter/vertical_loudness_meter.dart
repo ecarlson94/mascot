@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/utils/constants.dart';
+import '../../../domain/models/decibel_lufs.dart';
 import '../microphone_volume_provider.dart';
 import 'parts/meter.dart';
 import 'parts/slider_button.dart';
@@ -10,11 +11,12 @@ class VerticalLoudnessMeter extends StatefulWidget {
   static const double widthRatio = 1 / 5;
   static const Radius radius = bigRadius;
   static const defaultButtonLeftPadding = 5.0;
+  static const defaultTalkThreshold = DecibelLufs(-10);
 
   final double minDecibels;
   final double maxDecibels;
   final double height;
-  final double defaultSliderPositon;
+  final DecibelLufs? sliderThreshold;
   final void Function(double threshold)? onThresholdChanged;
 
   const VerticalLoudnessMeter({
@@ -22,7 +24,7 @@ class VerticalLoudnessMeter extends StatefulWidget {
     this.minDecibels = -35,
     this.maxDecibels = 15,
     this.height = 200,
-    this.defaultSliderPositon = -10,
+    this.sliderThreshold,
     this.onThresholdChanged,
   }) : super(key: key);
 
@@ -37,8 +39,10 @@ class _VerticalLoudnessMeterState extends State<VerticalLoudnessMeter> {
   @override
   void initState() {
     super.initState();
+    var talkingThreshold =
+        widget.sliderThreshold ?? VerticalLoudnessMeter.defaultTalkThreshold;
     var sliderPosition = (1 -
-            (widget.defaultSliderPositon - widget.minDecibels) /
+            (talkingThreshold.value - widget.minDecibels) /
                 (widget.maxDecibels - widget.minDecibels))
         .clamp(0.0, 1.0);
 
