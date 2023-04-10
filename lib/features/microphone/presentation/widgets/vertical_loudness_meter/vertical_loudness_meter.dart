@@ -17,7 +17,7 @@ class VerticalLoudnessMeter extends StatefulWidget {
   final double maxDecibels;
   final double height;
   final DecibelLufs? sliderThreshold;
-  final void Function(double threshold)? onThresholdChanged;
+  final void Function(DecibelLufs threshold)? onThresholdChanged;
 
   const VerticalLoudnessMeter({
     Key? key,
@@ -36,23 +36,17 @@ class _VerticalLoudnessMeterState extends State<VerticalLoudnessMeter> {
   final ValueNotifier<double?> _sliderPositionNotifier =
       ValueNotifier<double?>(null);
 
-  @override
-  void initState() {
-    super.initState();
-    var talkingThreshold =
-        widget.sliderThreshold ?? VerticalLoudnessMeter.defaultTalkThreshold;
-    var sliderPosition = (1 -
-            (talkingThreshold.value - widget.minDecibels) /
-                (widget.maxDecibels - widget.minDecibels))
-        .clamp(0.0, 1.0);
-
-    _sliderPositionNotifier.value = sliderPosition;
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _setSliderPosition();
+  // }
 
   @override
   Widget build(BuildContext context) {
     var buttonPadding = 5.0;
     var maxButtonWidth = 28.0;
+    _setSliderPosition();
 
     return MicrophoneVolumeProvider(
       builder: (context, volume) {
@@ -83,7 +77,8 @@ class _VerticalLoudnessMeterState extends State<VerticalLoudnessMeter> {
                       child: VerticalThresholdSlider(
                         width: width,
                         thresholdMet: volume.value >
-                            _convertSliderPositionToDecibels(sliderPosition),
+                            _convertSliderPositionToDecibels(sliderPosition)
+                                .value,
                         onVerticalDragUpdate: _onDragUpdate,
                         onVerticalDragEnd: _onDragEnd,
                       ),
@@ -109,6 +104,18 @@ class _VerticalLoudnessMeterState extends State<VerticalLoudnessMeter> {
     );
   }
 
+  void _setSliderPosition() {
+    var talkingThreshold =
+        widget.sliderThreshold ?? VerticalLoudnessMeter.defaultTalkThreshold;
+    var sliderPosition = (1 -
+            (talkingThreshold.value - widget.minDecibels) /
+                (widget.maxDecibels - widget.minDecibels))
+        .clamp(0.0, 1.0);
+
+    if (_sliderPositionNotifier.value == sliderPosition) return;
+    _sliderPositionNotifier.value = sliderPosition;
+  }
+
   void _onDragUpdate(DragUpdateDetails details) {
     final newValue =
         _sliderPositionNotifier.value! + details.delta.dy / widget.height;
@@ -130,8 +137,10 @@ class _VerticalLoudnessMeterState extends State<VerticalLoudnessMeter> {
         _convertSliderPositionToDecibels(_sliderPositionNotifier.value!));
   }
 
-  double _convertSliderPositionToDecibels(double sliderPosition) {
-    return widget.minDecibels +
-        (1 - sliderPosition) * (widget.maxDecibels - widget.minDecibels);
+  DecibelLufs _convertSliderPositionToDecibels(double sliderPosition) {
+    return DecibelLufs(
+      widget.minDecibels +
+          (1 - sliderPosition) * (widget.maxDecibels - widget.minDecibels),
+    );
   }
 }
