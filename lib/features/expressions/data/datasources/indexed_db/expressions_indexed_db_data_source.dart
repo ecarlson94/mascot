@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:injectable/injectable.dart';
 
 import '../../../../../core/data/indexed_db/indexed_db_data_source.dart';
+import '../../../domain/entities/expression.dart';
 import '../../models/expression_model.dart';
 
 @lazySingleton
@@ -20,6 +21,10 @@ class ExpressionsIndexedDbDataSource
       image: Uint8List.fromList(
         image is List<int> ? image : (image as List<dynamic>).cast<int>(),
       ),
+      priority: json['priority'] as int,
+      activator: ExpressionTriggers.values.firstWhere(
+        (element) => element.toString() == json['activator'] as String,
+      ),
     );
   }
 
@@ -30,6 +35,8 @@ class ExpressionsIndexedDbDataSource
       'name': object.name,
       'description': object.description,
       'image': object.image.toList(),
+      'priority': object.priority,
+      'activator': object.activator.toString(),
     };
   }
 }

@@ -20,6 +20,8 @@ mixin _$ExpressionModel {
   String get name => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   Uint8List get image => throw _privateConstructorUsedError;
+  int get priority => throw _privateConstructorUsedError;
+  ExpressionTriggers get activator => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ExpressionModelCopyWith<ExpressionModel> get copyWith =>
@@ -32,7 +34,13 @@ abstract class $ExpressionModelCopyWith<$Res> {
           ExpressionModel value, $Res Function(ExpressionModel) then) =
       _$ExpressionModelCopyWithImpl<$Res, ExpressionModel>;
   @useResult
-  $Res call({int id, String name, String description, Uint8List image});
+  $Res call(
+      {int id,
+      String name,
+      String description,
+      Uint8List image,
+      int priority,
+      ExpressionTriggers activator});
 }
 
 /// @nodoc
@@ -52,6 +60,8 @@ class _$ExpressionModelCopyWithImpl<$Res, $Val extends ExpressionModel>
     Object? name = null,
     Object? description = null,
     Object? image = null,
+    Object? priority = null,
+    Object? activator = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -70,6 +80,14 @@ class _$ExpressionModelCopyWithImpl<$Res, $Val extends ExpressionModel>
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
               as Uint8List,
+      priority: null == priority
+          ? _value.priority
+          : priority // ignore: cast_nullable_to_non_nullable
+              as int,
+      activator: null == activator
+          ? _value.activator
+          : activator // ignore: cast_nullable_to_non_nullable
+              as ExpressionTriggers,
     ) as $Val);
   }
 }
@@ -82,7 +100,13 @@ abstract class _$$_ExpressionModelCopyWith<$Res>
       __$$_ExpressionModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, String name, String description, Uint8List image});
+  $Res call(
+      {int id,
+      String name,
+      String description,
+      Uint8List image,
+      int priority,
+      ExpressionTriggers activator});
 }
 
 /// @nodoc
@@ -100,6 +124,8 @@ class __$$_ExpressionModelCopyWithImpl<$Res>
     Object? name = null,
     Object? description = null,
     Object? image = null,
+    Object? priority = null,
+    Object? activator = null,
   }) {
     return _then(_$_ExpressionModel(
       id: null == id
@@ -118,6 +144,14 @@ class __$$_ExpressionModelCopyWithImpl<$Res>
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
               as Uint8List,
+      priority: null == priority
+          ? _value.priority
+          : priority // ignore: cast_nullable_to_non_nullable
+              as int,
+      activator: null == activator
+          ? _value.activator
+          : activator // ignore: cast_nullable_to_non_nullable
+              as ExpressionTriggers,
     ));
   }
 }
@@ -129,7 +163,9 @@ class _$_ExpressionModel implements _ExpressionModel {
       {required this.id,
       required this.name,
       required this.description,
-      required this.image});
+      required this.image,
+      required this.priority,
+      required this.activator});
 
   @override
   final int id;
@@ -139,10 +175,14 @@ class _$_ExpressionModel implements _ExpressionModel {
   final String description;
   @override
   final Uint8List image;
+  @override
+  final int priority;
+  @override
+  final ExpressionTriggers activator;
 
   @override
   String toString() {
-    return 'ExpressionModel(id: $id, name: $name, description: $description, image: $image)';
+    return 'ExpressionModel(id: $id, name: $name, description: $description, image: $image, priority: $priority, activator: $activator)';
   }
 
   @override
@@ -154,12 +194,16 @@ class _$_ExpressionModel implements _ExpressionModel {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            const DeepCollectionEquality().equals(other.image, image));
+            const DeepCollectionEquality().equals(other.image, image) &&
+            (identical(other.priority, priority) ||
+                other.priority == priority) &&
+            (identical(other.activator, activator) ||
+                other.activator == activator));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, id, name, description,
-      const DeepCollectionEquality().hash(image));
+      const DeepCollectionEquality().hash(image), priority, activator);
 
   @JsonKey(ignore: true)
   @override
@@ -173,7 +217,9 @@ abstract class _ExpressionModel implements ExpressionModel {
       {required final int id,
       required final String name,
       required final String description,
-      required final Uint8List image}) = _$_ExpressionModel;
+      required final Uint8List image,
+      required final int priority,
+      required final ExpressionTriggers activator}) = _$_ExpressionModel;
 
   @override
   int get id;
@@ -183,6 +229,10 @@ abstract class _ExpressionModel implements ExpressionModel {
   String get description;
   @override
   Uint8List get image;
+  @override
+  int get priority;
+  @override
+  ExpressionTriggers get activator;
   @override
   @JsonKey(ignore: true)
   _$$_ExpressionModelCopyWith<_$_ExpressionModel> get copyWith =>

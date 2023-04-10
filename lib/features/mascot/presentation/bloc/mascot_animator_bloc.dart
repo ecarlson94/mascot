@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
@@ -5,8 +7,8 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../core/data/stream_subscriber.dart';
 import '../../../../core/error/error.dart';
-import '../../../../core/utils/constants.dart';
 import '../../../expressions/domain/entities/expression.dart';
+import '../../../expressions/domain/services/expression_animation_service.dart';
 import '../../domain/entities/mascot.dart';
 import '../../domain/usecases/stream_mascot.dart';
 
@@ -18,28 +20,24 @@ class MascotAnimatorBloc extends Bloc<MascotAnimatorEvent, MascotAnimatorState>
     with SubscriptionDisposer
     implements StreamSubcriber {
   final StreamMascot streamMascot;
+  final ExpressionAnimationService expressionAnimationService;
 
-  MascotAnimatorBloc(this.streamMascot)
-      : super(
-          MascotAnimatorInitial(
-            none(),
-            defaultExpressionName,
-          ),
+  MascotAnimatorBloc(
+    this.streamMascot,
+    this.expressionAnimationService,
+  ) : super(
+          MascotAnimatorInitial(none()),
         ) {
     on<LoadMascot>(
       (event, emit) async {
-        emit(MascotAnimatorLoading(
-          state.expressionMapOption,
-          state.expression,
-        ));
+        emit(MascotAnimatorLoading(state.expressionOption));
 
         var failureOrMascotStream = await streamMascot(event.mascotId);
         failureOrMascotStream.fold(
           (l) => emit(
             MascotAnimatorError(
               ErrorCodes.loadMascotFailureCode,
-              state.expressionMapOption,
-              state.expression,
+              state.expressionOption,
             ),
           ),
           (stream) => subscriptions.add(
@@ -56,8 +54,24 @@ class MascotAnimatorBloc extends Bloc<MascotAnimatorEvent, MascotAnimatorState>
 
     on<SetMascot>(
       (event, emit) async {
-        var expressionMap = {for (var e in event.mascot.expressions) e.name: e};
-        emit(MascotLoaded(some(expressionMap), state.expression));
+        for (var sub
+            in subscriptions.whereType<StreamSubscription<Expression>>()) {
+          await sub.cancel();
+        }
+
+        var animationStream = await expressionAnimationService
+            .animateExpressions(event.mascot.expressions);
+        var animationSub = animationStream.listen((event) {
+          add(SetExpression(event));
+        });
+
+        subscriptions.add(animationSub);
+      },
+    );
+
+    on<SetExpression>(
+      (event, emit) async {
+        emit(ExpressionChanged(some(event.expression)));
       },
     );
   }

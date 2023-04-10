@@ -19,6 +19,8 @@ import 'package:mascot/features/expressions/domain/entities/expression.dart'
     as _i14;
 import 'package:mascot/features/expressions/domain/repositories/expressions_repository.dart'
     as _i12;
+import 'package:mascot/features/expressions/domain/services/expression_animation_service.dart'
+    as _i31;
 import 'package:mascot/features/mascot/data/datasources/indexed_db/mascots_indexed_db_data_source.dart'
     as _i16;
 import 'package:mascot/features/mascot/data/models/mascot_model.dart' as _i7;
@@ -1061,4 +1063,26 @@ class MockStreamMicrophoneVolume extends _i1.Mock
         )),
       ) as _i11
           .Future<_i4.Either<_i13.Failure, _i11.Stream<_i22.DecibelLufs>>>);
+}
+
+/// A class which mocks [ExpressionAnimationService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockExpressionAnimationService extends _i1.Mock
+    implements _i31.ExpressionAnimationService {
+  MockExpressionAnimationService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i11.Future<_i11.Stream<_i14.Expression>> animateExpressions(
+          Set<_i14.Expression>? expressions) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #animateExpressions,
+          [expressions],
+        ),
+        returnValue: _i11.Future<_i11.Stream<_i14.Expression>>.value(
+            _i11.Stream<_i14.Expression>.empty()),
+      ) as _i11.Future<_i11.Stream<_i14.Expression>>);
 }

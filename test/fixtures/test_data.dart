@@ -30,6 +30,8 @@ class TestData {
     name: CreateMascotBloc.neutralExpressionName,
     description: CreateMascotBloc.neutralExpressionDescription,
     image: Uint8List(5),
+    activator: ExpressionTriggers.always,
+    priority: 1000,
   );
   final ExpressionMapperImpl expressionMapper = ExpressionMapperImpl();
 
@@ -39,12 +41,16 @@ class TestData {
       name: CreateMascotBloc.neutralExpressionName,
       description: CreateMascotBloc.neutralExpressionDescription,
       image: Uint8List(5),
+      activator: ExpressionTriggers.always,
+      priority: 1000,
     ),
     Expression(
       id: 2,
       name: talkingExpressionName,
       description: CreateMascotBloc.talkingExpressionDescription,
       image: Uint8List(5),
+      activator: ExpressionTriggers.talking,
+      priority: 999,
     ),
   ];
 
@@ -57,12 +63,16 @@ class TestData {
         name: CreateMascotBloc.neutralExpressionName,
         description: CreateMascotBloc.neutralExpressionDescription,
         image: Uint8List(5),
+        activator: ExpressionTriggers.always,
+        priority: 1000,
       ),
       Expression(
         id: 2,
         name: talkingExpressionName,
         description: CreateMascotBloc.talkingExpressionDescription,
         image: Uint8List(5),
+        activator: ExpressionTriggers.talking,
+        priority: 999,
       ),
     },
   );

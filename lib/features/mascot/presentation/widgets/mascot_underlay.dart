@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,11 +20,11 @@ class MascotUnderlay extends StatelessWidget {
                 getIt<MascotAnimatorBloc>()..add(LoadMascot(mascotId)),
             child: BlocBuilder<MascotAnimatorBloc, MascotAnimatorState>(
               builder: (context, state) {
-                return state.expressionMapOption.fold(
+                return state.expressionOption.fold(
                   () => const CircularProgressIndicator(),
-                  (expressionMap) {
+                  (expression) {
                     return Image.memory(
-                      expressionMap[state.expression]?.image ?? Uint8List(0),
+                      expression.image,
                       fit: BoxFit.contain,
                     );
                   },

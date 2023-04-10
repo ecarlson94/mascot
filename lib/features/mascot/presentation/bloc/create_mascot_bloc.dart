@@ -98,12 +98,16 @@ class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
             name: neutralExpressionName,
             description: neutralExpressionDescription,
             image: _neutralExpressionImage.bytes ?? Uint8List(0),
+            priority: 1000,
+            activator: ExpressionTriggers.always,
           ),
           Expression(
             id: 0,
             name: talkingExpressionName,
             description: talkingExpressionDescription,
             image: _talkingExpressionImage.bytes ?? Uint8List(0),
+            priority: 999,
+            activator: ExpressionTriggers.talking,
           ),
         },
       );
