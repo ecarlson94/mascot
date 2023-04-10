@@ -11,8 +11,11 @@ void main() {
 
   setUp(() async {
     indexedDbFactory = TestIdbFactory();
-    dataSource =
-        SettingsIndexedDbDataSource(indexedDbFactory, IndexDbSettings());
+    dataSource = SettingsIndexedDbDataSource(
+      indexedDbFactory,
+      IndexDbSettings(),
+    );
+
     Type testType = SettingsModel;
     await indexedDbFactory.factory!.deleteDatabase(testType.toString());
   });
