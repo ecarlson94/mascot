@@ -54,7 +54,7 @@ class _MeterBackground extends StatelessWidget {
       color: context.colorScheme.tertiaryContainer,
       borderRadius: bigBorderRadius,
       clipBehavior: Clip.antiAlias,
-      elevation: 2,
+      elevation: 3,
       child: SizedBox(
         width: width,
         height: height,
@@ -83,7 +83,7 @@ class _MeterForeground extends StatelessWidget {
         color: context.colorScheme.tertiary,
         borderRadius: bigBorderRadius,
         clipBehavior: Clip.antiAlias,
-        elevation: 2,
+        elevation: 3,
         child: SizedBox(
           width: width,
           height: height * normalizedValue.clamp(0.0, 1.0),

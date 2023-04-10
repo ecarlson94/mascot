@@ -28,6 +28,7 @@ class VerticalThresholdSlider extends StatelessWidget {
               : colorScheme.onTertiaryContainer,
           borderRadius: BorderRadius.circular(2),
           clipBehavior: Clip.antiAlias,
+          elevation: 2,
           child: SizedBox(
             width: width,
             height: 4, // Slider height
