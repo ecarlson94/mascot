@@ -13,8 +13,16 @@ class ActionsOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: FavoriteMascotIdProvider(
-        builder: (_, __) => const VerticalLoudnessMeter(),
+      body: Stack(
+        children: <Widget>[
+          Positioned(
+            left: 20,
+            bottom: 20,
+            child: FavoriteMascotIdProvider(
+              builder: (_, __) => const VerticalLoudnessMeter(),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: const CreateMascotFab(),
     );
