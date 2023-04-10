@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../microphone/presentation/widgets/vertical_loudness_meter/vertical_loudness_meter.dart';
+import '../../../settings/presentation/widgets/favorite_mascot_id_provider.dart';
 import 'create_mascot_fab.dart';
 
 class ActionsOverlay extends StatelessWidget {
@@ -9,10 +11,20 @@ class ActionsOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: Colors.transparent,
-      body: SizedBox.shrink(),
-      floatingActionButton: CreateMascotFab(),
+      body: Stack(
+        children: <Widget>[
+          Positioned(
+            left: 20,
+            bottom: 20,
+            child: FavoriteMascotIdProvider(
+              builder: (_, __) => const VerticalLoudnessMeter(),
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: const CreateMascotFab(),
     );
   }
 }
