@@ -27,6 +27,7 @@ class SettingsIndexedDbDataSource
     return SettingsModel(
       id: json['id'] as int,
       favoriteMascotId: json['favoriteMascotId'] as int?,
+      talkingThresholdDecibels: json['talkingThresholdDecibels'] as double?,
     );
   }
 
@@ -35,6 +36,7 @@ class SettingsIndexedDbDataSource
     return {
       'id': object.id,
       'favoriteMascotId': object.favoriteMascotId,
+      'talkingThresholdDecibels': object.talkingThresholdDecibels,
     };
   }
 }

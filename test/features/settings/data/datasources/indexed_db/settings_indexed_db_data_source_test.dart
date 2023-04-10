@@ -40,9 +40,7 @@ void main() {
       test('should return a JSON object from the provided SettingsModel', () {
         // arrange
         const settings = SettingsModel(
-          id: 1,
-          favoriteMascotId: 1,
-        );
+            id: 1, favoriteMascotId: 1, talkingThresholdDecibels: -10.0);
 
         // act
         final result = dataSource.toJson(settings);
@@ -51,6 +49,8 @@ void main() {
         expect(result, isA<Map<String, dynamic>>());
         expect(result['id'], settings.id);
         expect(result['favoriteMascotId'], settings.favoriteMascotId);
+        expect(result['talkingThresholdDecibels'],
+            settings.talkingThresholdDecibels);
       });
     });
 
@@ -60,6 +60,7 @@ void main() {
         const settings = SettingsModel(
           id: 1,
           favoriteMascotId: 1,
+          talkingThresholdDecibels: -10.0,
         );
         await dataSource.putObject(settings);
 
@@ -70,6 +71,10 @@ void main() {
         expect(result, isA<SettingsModel>());
         expect(result.id, settings.id);
         expect(result.favoriteMascotId, settings.favoriteMascotId);
+        expect(
+          result.talkingThresholdDecibels,
+          settings.talkingThresholdDecibels,
+        );
       });
 
       test('should return and store empty SettingsModel when not found',

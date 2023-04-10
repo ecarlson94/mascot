@@ -7,6 +7,7 @@ import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mascot/features/mascot/data/models/mascot_mapper.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
 import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart';
+import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart';
 import 'package:mascot/features/settings/data/models/settings_mapper.dart';
 import 'package:mascot/features/settings/domain/entities/settings.dart';
 
@@ -68,6 +69,9 @@ class TestData {
   final MascotMapperImpl mascotMapper =
       MascotMapperImpl(ExpressionMapperImpl());
 
-  final Settings settings = const Settings(favoriteMascotId: 1);
+  final Settings settings = const Settings(
+    favoriteMascotId: 1,
+    talkingThreshold: DecibelLufs(-10.0),
+  );
   final SettingsMapperImpl settingsMapper = SettingsMapperImpl();
 }
