@@ -39,12 +39,19 @@ class ExpressionAnimationServiceImpl extends ExpressionAnimationService
           _triggeredExpressions.remove(trigger.expression.name);
         }
 
-        expressionStream.add(_getCurrentExpression());
+        _addCurrentExpression(expressionStream);
       });
       subscriptions.add(triggerSub);
     }
 
     return expressionStream;
+  }
+
+  void _addCurrentExpression(BehaviorSubject<Expression> expressionStream) {
+    var currentExpression = _getCurrentExpression();
+    if (expressionStream.value != currentExpression) {
+      expressionStream.add(currentExpression);
+    }
   }
 
   Expression _getCurrentExpression() {
