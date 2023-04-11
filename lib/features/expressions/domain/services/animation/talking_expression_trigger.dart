@@ -12,12 +12,15 @@ class TalkingExpressionTrigger extends ExpressionTrigger
     implements StreamSubcriber {
   final SettingsRepository _settingsRepository;
   final StreamMicrophoneVolume _streamMicrophoneVolume;
+  final BehaviorSubject<TalkingExpressionTrigger> _stream = BehaviorSubject();
 
   TalkingExpressionTrigger(
     super.expression,
     this._settingsRepository,
     this._streamMicrophoneVolume,
-  );
+  ) {
+    _stream.add(this);
+  }
 
   bool _isTriggered = false;
   @override
@@ -25,18 +28,16 @@ class TalkingExpressionTrigger extends ExpressionTrigger
 
   @override
   Future<Stream<ExpressionTrigger>> get stream async {
-    var stream = BehaviorSubject.seeded(this);
-
     DecibelLufs talkingThreshold = const DecibelLufs(-10);
     DecibelLufs microphoneVolume = const DecibelLufs(-40);
 
     var settingsStreamOrFailure = await _settingsRepository.streamSettings();
     settingsStreamOrFailure.fold(
-      (l) => stream.addError(l),
+      (l) => _stream.addError(l),
       (settingsStream) {
         var settingsSub = settingsStream.listen((event) {
           talkingThreshold = event.talkingThreshold;
-          _addTrigger(microphoneVolume, talkingThreshold, stream);
+          _addTrigger(microphoneVolume, talkingThreshold);
         });
         subscriptions.add(settingsSub);
       },
@@ -44,25 +45,24 @@ class TalkingExpressionTrigger extends ExpressionTrigger
 
     var volumeStreamOrFailure = await _streamMicrophoneVolume(NoParams());
     volumeStreamOrFailure.fold(
-      (l) => stream.addError(l),
+      (l) => _stream.addError(l),
       (volumeStream) {
         var volumeSub = volumeStream.listen((event) {
           microphoneVolume = event;
-          _addTrigger(event, talkingThreshold, stream);
+          _addTrigger(event, talkingThreshold);
         });
         subscriptions.add(volumeSub);
       },
     );
 
-    return stream;
+    return _stream;
   }
 
-  void _addTrigger(DecibelLufs event, DecibelLufs talkingThreshold,
-      BehaviorSubject<TalkingExpressionTrigger> stream) {
+  void _addTrigger(DecibelLufs event, DecibelLufs talkingThreshold) {
     var newIsTriggered = event.value >= talkingThreshold.value;
     if (_isTriggered != newIsTriggered) {
       _isTriggered = newIsTriggered;
-      stream.add(this);
+      _stream.add(this);
     }
   }
 }
