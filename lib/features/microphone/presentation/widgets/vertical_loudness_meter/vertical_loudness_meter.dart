@@ -36,12 +36,6 @@ class _VerticalLoudnessMeterState extends State<VerticalLoudnessMeter> {
   final ValueNotifier<double?> _sliderPositionNotifier =
       ValueNotifier<double?>(null);
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _setSliderPosition();
-  // }
-
   @override
   Widget build(BuildContext context) {
     var buttonPadding = 5.0;
