@@ -49,7 +49,8 @@ class ExpressionAnimationServiceImpl extends ExpressionAnimationService
 
   void _addCurrentExpression(BehaviorSubject<Expression> expressionStream) {
     var currentExpression = _getCurrentExpression();
-    if (expressionStream.value != currentExpression) {
+    if (!expressionStream.hasValue ||
+        expressionStream.value != currentExpression) {
       expressionStream.add(currentExpression);
     }
   }
