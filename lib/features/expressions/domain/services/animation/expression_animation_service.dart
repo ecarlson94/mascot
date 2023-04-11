@@ -65,10 +65,4 @@ class ExpressionAnimationServiceImpl extends ExpressionAnimationService
       },
     );
   }
-
-  @override
-  FutureOr onDispose() async {
-    await super.onDispose();
-    await expressionTriggerFactory.onDispose();
-  }
 }
