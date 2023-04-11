@@ -7,6 +7,7 @@ import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mascot/features/mascot/data/models/mascot_mapper.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
 import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart';
+import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart';
 import 'package:mascot/features/settings/data/models/settings_mapper.dart';
 import 'package:mascot/features/settings/domain/entities/settings.dart';
 
@@ -29,6 +30,8 @@ class TestData {
     name: CreateMascotBloc.neutralExpressionName,
     description: CreateMascotBloc.neutralExpressionDescription,
     image: Uint8List(5),
+    activator: ExpressionTriggers.always,
+    priority: 1000,
   );
   final ExpressionMapperImpl expressionMapper = ExpressionMapperImpl();
 
@@ -38,12 +41,16 @@ class TestData {
       name: CreateMascotBloc.neutralExpressionName,
       description: CreateMascotBloc.neutralExpressionDescription,
       image: Uint8List(5),
+      activator: ExpressionTriggers.always,
+      priority: 1000,
     ),
     Expression(
       id: 2,
       name: talkingExpressionName,
       description: CreateMascotBloc.talkingExpressionDescription,
       image: Uint8List(5),
+      activator: ExpressionTriggers.talking,
+      priority: 980,
     ),
   ];
 
@@ -56,18 +63,25 @@ class TestData {
         name: CreateMascotBloc.neutralExpressionName,
         description: CreateMascotBloc.neutralExpressionDescription,
         image: Uint8List(5),
+        activator: ExpressionTriggers.always,
+        priority: 1000,
       ),
       Expression(
         id: 2,
         name: talkingExpressionName,
         description: CreateMascotBloc.talkingExpressionDescription,
         image: Uint8List(5),
+        activator: ExpressionTriggers.talking,
+        priority: 999,
       ),
     },
   );
   final MascotMapperImpl mascotMapper =
       MascotMapperImpl(ExpressionMapperImpl());
 
-  final Settings settings = const Settings(favoriteMascotId: 1);
+  final Settings settings = const Settings(
+    favoriteMascotId: 1,
+    talkingThreshold: DecibelLufs(-10.0),
+  );
   final SettingsMapperImpl settingsMapper = SettingsMapperImpl();
 }

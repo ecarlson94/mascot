@@ -6,6 +6,12 @@ import '../../../../core/clean_architecture/entity.dart';
 
 part 'expression.freezed.dart';
 
+enum ExpressionTriggers {
+  always,
+  never,
+  talking,
+}
+
 @freezed
 class Expression extends Entity with _$Expression {
   const factory Expression({
@@ -13,6 +19,8 @@ class Expression extends Entity with _$Expression {
     required String name,
     required String description,
     required Uint8List image,
+    required int priority,
+    required ExpressionTriggers activator,
   }) = _Expression;
 
   static Expression empty = Expression(
@@ -20,5 +28,7 @@ class Expression extends Entity with _$Expression {
     name: '',
     description: '',
     image: Uint8List(0),
+    priority: 0,
+    activator: ExpressionTriggers.never,
   );
 }

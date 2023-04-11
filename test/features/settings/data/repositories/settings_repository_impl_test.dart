@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/error/failure.dart';
 import 'package:mascot/core/utils/input_converters/input_converter.dart';
+import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart';
 import 'package:mascot/features/settings/data/models/settings_model.dart';
 import 'package:mascot/features/settings/data/repositories/settings_repository_impl.dart';
 import 'package:mascot/features/settings/domain/entities/settings.dart';
@@ -95,6 +96,50 @@ void main() {
 
         // act
         final result = await repository.setFavoriteMascotId(27);
+
+        // assert
+        expect(result, isA<Left<Failure, Unit>>());
+        expect(
+          result.swap().getOrElse(() => InvalidInputFailure()),
+          isA<LocalDataSourceFailure>(),
+        );
+      });
+    });
+
+    group('setTalkingThreshold', () {
+      test('should update talkingThresholdDecibels in local database',
+          () async {
+        // arrange
+        when(context.mocks.settingsLocalDataSource.getObject(1))
+            .thenAnswer((_) async => getSettingsModel());
+        when(context.mocks.settingsLocalDataSource.putObject(any))
+            .thenAnswer((_) async => 1);
+        const threshold = DecibelLufs(27);
+
+        // act
+        final result = await repository.setTalkingThreshold(threshold);
+
+        // assert
+        expect(result, isA<Right<Failure, Unit>>());
+        verify(
+          context.mocks.settingsLocalDataSource.putObject(
+            context.data.settingsMapper.fromSettings(
+              context.data.settings.copyWith(talkingThreshold: threshold),
+            ),
+          ),
+        );
+      });
+
+      test('should return failure if local database throws', () async {
+        // arrange
+        when(context.mocks.settingsLocalDataSource.getObject(1))
+            .thenAnswer((_) async => getSettingsModel());
+        when(context.mocks.settingsLocalDataSource.putObject(any))
+            .thenThrow(Exception());
+        const threshold = DecibelLufs(27);
+
+        // act
+        final result = await repository.setTalkingThreshold(threshold);
 
         // assert
         expect(result, isA<Left<Failure, Unit>>());

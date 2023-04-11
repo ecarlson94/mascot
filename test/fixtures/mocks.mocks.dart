@@ -7,10 +7,10 @@ import 'dart:async' as _i11;
 
 import 'package:dartz/dartz.dart' as _i4;
 import 'package:idb_shim/idb_client.dart' as _i5;
-import 'package:mascot/core/clean_architecture/usecase.dart' as _i23;
+import 'package:mascot/core/clean_architecture/usecase.dart' as _i24;
 import 'package:mascot/core/data/indexed_db/indexed_db_data_source.dart' as _i2;
 import 'package:mascot/core/error/failure.dart' as _i13;
-import 'package:mascot/core/utils/logger.dart' as _i25;
+import 'package:mascot/core/utils/logger.dart' as _i27;
 import 'package:mascot/features/expressions/data/datasources/indexed_db/expressions_indexed_db_data_source.dart'
     as _i10;
 import 'package:mascot/features/expressions/data/models/expression_model.dart'
@@ -19,6 +19,8 @@ import 'package:mascot/features/expressions/domain/entities/expression.dart'
     as _i14;
 import 'package:mascot/features/expressions/domain/repositories/expressions_repository.dart'
     as _i12;
+import 'package:mascot/features/expressions/domain/services/animation/expression_animation_service.dart'
+    as _i31;
 import 'package:mascot/features/mascot/data/datasources/indexed_db/mascots_indexed_db_data_source.dart'
     as _i16;
 import 'package:mascot/features/mascot/data/models/mascot_model.dart' as _i7;
@@ -28,14 +30,14 @@ import 'package:mascot/features/mascot/domain/repositories/mascots_repository.da
 import 'package:mascot/features/mascot/domain/usecases/add_mascot.dart' as _i19;
 import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart' as _i20;
 import 'package:mascot/features/mascot/domain/usecases/stream_mascot.dart'
-    as _i24;
-import 'package:mascot/features/microphone/device/microphone.dart' as _i28;
-import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart'
-    as _i27;
-import 'package:mascot/features/microphone/domain/services/microphone_service.dart'
     as _i26;
+import 'package:mascot/features/microphone/device/microphone.dart' as _i29;
+import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart'
+    as _i22;
+import 'package:mascot/features/microphone/domain/services/microphone_service.dart'
+    as _i28;
 import 'package:mascot/features/microphone/domain/usecases/stream_microphone_volume.dart'
-    as _i29;
+    as _i30;
 import 'package:mascot/features/settings/data/datasources/indexded_db/settings_indexed_db_data_source.dart'
     as _i15;
 import 'package:mascot/features/settings/data/models/settings_model.dart'
@@ -43,8 +45,10 @@ import 'package:mascot/features/settings/data/models/settings_model.dart'
 import 'package:mascot/features/settings/domain/entities/settings.dart' as _i21;
 import 'package:mascot/features/settings/domain/repositories/settings_repository.dart'
     as _i8;
+import 'package:mascot/features/settings/domain/usecases/save_talking_threshold.dart'
+    as _i25;
 import 'package:mascot/features/settings/domain/usecases/stream_settings.dart'
-    as _i22;
+    as _i23;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:rxdart/rxdart.dart' as _i18;
 
@@ -804,12 +808,29 @@ class MockSettingsRepository extends _i1.Mock
           ),
         )),
       ) as _i11.Future<_i4.Either<_i13.Failure, _i4.Unit>>);
+  @override
+  _i11.Future<_i4.Either<_i13.Failure, _i4.Unit>> setTalkingThreshold(
+          _i22.DecibelLufs? threshold) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setTalkingThreshold,
+          [threshold],
+        ),
+        returnValue: _i11.Future<_i4.Either<_i13.Failure, _i4.Unit>>.value(
+            _FakeEither_4<_i13.Failure, _i4.Unit>(
+          this,
+          Invocation.method(
+            #setTalkingThreshold,
+            [threshold],
+          ),
+        )),
+      ) as _i11.Future<_i4.Either<_i13.Failure, _i4.Unit>>);
 }
 
 /// A class which mocks [StreamSettings].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockStreamSettings extends _i1.Mock implements _i22.StreamSettings {
+class MockStreamSettings extends _i1.Mock implements _i23.StreamSettings {
   MockStreamSettings() {
     _i1.throwOnMissingStub(this);
   }
@@ -825,7 +846,7 @@ class MockStreamSettings extends _i1.Mock implements _i22.StreamSettings {
   @override
   _i11.Future<
       _i4.Either<_i13.Failure, _i18.BehaviorSubject<_i21.Settings>>> call(
-          _i23.NoParams? params) =>
+          _i24.NoParams? params) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
@@ -845,10 +866,46 @@ class MockStreamSettings extends _i1.Mock implements _i22.StreamSettings {
           _i4.Either<_i13.Failure, _i18.BehaviorSubject<_i21.Settings>>>);
 }
 
+/// A class which mocks [SaveTalkingThreshold].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSaveTalkingThreshold extends _i1.Mock
+    implements _i25.SaveTalkingThreshold {
+  MockSaveTalkingThreshold() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i8.SettingsRepository get repository => (super.noSuchMethod(
+        Invocation.getter(#repository),
+        returnValue: _FakeSettingsRepository_7(
+          this,
+          Invocation.getter(#repository),
+        ),
+      ) as _i8.SettingsRepository);
+  @override
+  _i11.Future<_i4.Either<_i13.Failure, _i4.Unit>> call(
+          _i22.DecibelLufs? params) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [params],
+        ),
+        returnValue: _i11.Future<_i4.Either<_i13.Failure, _i4.Unit>>.value(
+            _FakeEither_4<_i13.Failure, _i4.Unit>(
+          this,
+          Invocation.method(
+            #call,
+            [params],
+          ),
+        )),
+      ) as _i11.Future<_i4.Either<_i13.Failure, _i4.Unit>>);
+}
+
 /// A class which mocks [StreamMascot].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockStreamMascot extends _i1.Mock implements _i24.StreamMascot {
+class MockStreamMascot extends _i1.Mock implements _i26.StreamMascot {
   MockStreamMascot() {
     _i1.throwOnMissingStub(this);
   }
@@ -886,7 +943,7 @@ class MockStreamMascot extends _i1.Mock implements _i24.StreamMascot {
 /// A class which mocks [Logger].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLogger<T> extends _i1.Mock implements _i25.Logger<T> {
+class MockLogger<T> extends _i1.Mock implements _i27.Logger<T> {
   MockLogger() {
     _i1.throwOnMissingStub(this);
   }
@@ -929,13 +986,13 @@ class MockLogger<T> extends _i1.Mock implements _i25.Logger<T> {
 /// A class which mocks [MicrophoneService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMicrophoneService extends _i1.Mock implements _i26.MicrophoneService {
+class MockMicrophoneService extends _i1.Mock implements _i28.MicrophoneService {
   MockMicrophoneService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i11.Future<_i4.Either<_i13.Failure, _i11.Stream<_i27.DecibelLufs>>>
+  _i11.Future<_i4.Either<_i13.Failure, _i11.Stream<_i22.DecibelLufs>>>
       getVolumeStream() => (super.noSuchMethod(
             Invocation.method(
               #getVolumeStream,
@@ -943,8 +1000,8 @@ class MockMicrophoneService extends _i1.Mock implements _i26.MicrophoneService {
             ),
             returnValue: _i11.Future<
                     _i4.Either<_i13.Failure,
-                        _i11.Stream<_i27.DecibelLufs>>>.value(
-                _FakeEither_4<_i13.Failure, _i11.Stream<_i27.DecibelLufs>>(
+                        _i11.Stream<_i22.DecibelLufs>>>.value(
+                _FakeEither_4<_i13.Failure, _i11.Stream<_i22.DecibelLufs>>(
               this,
               Invocation.method(
                 #getVolumeStream,
@@ -952,22 +1009,22 @@ class MockMicrophoneService extends _i1.Mock implements _i26.MicrophoneService {
               ),
             )),
           ) as _i11
-              .Future<_i4.Either<_i13.Failure, _i11.Stream<_i27.DecibelLufs>>>);
+              .Future<_i4.Either<_i13.Failure, _i11.Stream<_i22.DecibelLufs>>>);
 }
 
 /// A class which mocks [Microphone].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMicrophone extends _i1.Mock implements _i28.Microphone {
+class MockMicrophone extends _i1.Mock implements _i29.Microphone {
   MockMicrophone() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i11.Stream<_i27.DecibelLufs> get volumeStream => (super.noSuchMethod(
+  _i11.Stream<_i22.DecibelLufs> get volumeStream => (super.noSuchMethod(
         Invocation.getter(#volumeStream),
-        returnValue: _i11.Stream<_i27.DecibelLufs>.empty(),
-      ) as _i11.Stream<_i27.DecibelLufs>);
+        returnValue: _i11.Stream<_i22.DecibelLufs>.empty(),
+      ) as _i11.Stream<_i22.DecibelLufs>);
   @override
   _i11.Future<bool> hasPermission() => (super.noSuchMethod(
         Invocation.method(
@@ -982,22 +1039,22 @@ class MockMicrophone extends _i1.Mock implements _i28.Microphone {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockStreamMicrophoneVolume extends _i1.Mock
-    implements _i29.StreamMicrophoneVolume {
+    implements _i30.StreamMicrophoneVolume {
   MockStreamMicrophoneVolume() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i11.Future<_i4.Either<_i13.Failure, _i11.Stream<_i27.DecibelLufs>>> call(
-          _i23.NoParams? params) =>
+  _i11.Future<_i4.Either<_i13.Failure, _i11.Stream<_i22.DecibelLufs>>> call(
+          _i24.NoParams? params) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [params],
         ),
         returnValue: _i11.Future<
-                _i4.Either<_i13.Failure, _i11.Stream<_i27.DecibelLufs>>>.value(
-            _FakeEither_4<_i13.Failure, _i11.Stream<_i27.DecibelLufs>>(
+                _i4.Either<_i13.Failure, _i11.Stream<_i22.DecibelLufs>>>.value(
+            _FakeEither_4<_i13.Failure, _i11.Stream<_i22.DecibelLufs>>(
           this,
           Invocation.method(
             #call,
@@ -1005,5 +1062,100 @@ class MockStreamMicrophoneVolume extends _i1.Mock
           ),
         )),
       ) as _i11
-          .Future<_i4.Either<_i13.Failure, _i11.Stream<_i27.DecibelLufs>>>);
+          .Future<_i4.Either<_i13.Failure, _i11.Stream<_i22.DecibelLufs>>>);
+}
+
+/// A class which mocks [ExpressionAnimationService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockExpressionAnimationService extends _i1.Mock
+    implements _i31.ExpressionAnimationService {
+  MockExpressionAnimationService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i11.Future<_i11.Stream<_i14.Expression>> animateExpressions(
+          Set<_i14.Expression>? expressions) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #animateExpressions,
+          [expressions],
+        ),
+        returnValue: _i11.Future<_i11.Stream<_i14.Expression>>.value(
+            _i11.Stream<_i14.Expression>.empty()),
+      ) as _i11.Future<_i11.Stream<_i14.Expression>>);
+}
+
+/// A class which mocks [StreamSubscription].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockStreamSubscription<T> extends _i1.Mock
+    implements _i11.StreamSubscription<T> {
+  MockStreamSubscription() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  bool get isPaused => (super.noSuchMethod(
+        Invocation.getter(#isPaused),
+        returnValue: false,
+      ) as bool);
+  @override
+  _i11.Future<void> cancel() => (super.noSuchMethod(
+        Invocation.method(
+          #cancel,
+          [],
+        ),
+        returnValue: _i11.Future<void>.value(),
+        returnValueForMissingStub: _i11.Future<void>.value(),
+      ) as _i11.Future<void>);
+  @override
+  void onData(void Function(T)? handleData) => super.noSuchMethod(
+        Invocation.method(
+          #onData,
+          [handleData],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void onError(Function? handleError) => super.noSuchMethod(
+        Invocation.method(
+          #onError,
+          [handleError],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void onDone(void Function()? handleDone) => super.noSuchMethod(
+        Invocation.method(
+          #onDone,
+          [handleDone],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void pause([_i11.Future<void>? resumeSignal]) => super.noSuchMethod(
+        Invocation.method(
+          #pause,
+          [resumeSignal],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void resume() => super.noSuchMethod(
+        Invocation.method(
+          #resume,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  _i11.Future<E> asFuture<E>([E? futureValue]) => (super.noSuchMethod(
+        Invocation.method(
+          #asFuture,
+          [futureValue],
+        ),
+        returnValue: _i11.Future<E>.value(null),
+      ) as _i11.Future<E>);
 }

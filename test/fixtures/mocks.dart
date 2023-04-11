@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:mascot/core/utils/logger.dart';
 import 'package:mascot/features/expressions/data/datasources/indexed_db/expressions_indexed_db_data_source.dart';
+import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mascot/features/expressions/domain/repositories/expressions_repository.dart';
+import 'package:mascot/features/expressions/domain/services/animation/expression_animation_service.dart';
 import 'package:mascot/features/mascot/data/datasources/indexed_db/mascots_indexed_db_data_source.dart';
 import 'package:mascot/features/mascot/data/repositories/mascots_repository_impl.dart';
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart';
@@ -12,6 +16,7 @@ import 'package:mascot/features/microphone/domain/services/microphone_service.da
 import 'package:mascot/features/microphone/domain/usecases/stream_microphone_volume.dart';
 import 'package:mascot/features/settings/data/datasources/indexded_db/settings_indexed_db_data_source.dart';
 import 'package:mascot/features/settings/domain/repositories/settings_repository.dart';
+import 'package:mascot/features/settings/domain/usecases/save_talking_threshold.dart';
 import 'package:mascot/features/settings/domain/usecases/stream_settings.dart';
 import 'package:mockito/annotations.dart';
 
@@ -27,11 +32,14 @@ import 'mocks.mocks.dart';
   GetMascot,
   SettingsRepository,
   StreamSettings,
+  SaveTalkingThreshold,
   StreamMascot,
   Logger<MascotsRepositoryImpl>,
   MicrophoneService,
   Microphone,
   StreamMicrophoneVolume,
+  ExpressionAnimationService,
+  StreamSubscription<Expression>,
 ])
 class Mocks {
   MockExpressionsIndexedDbDataSource? _expressionsLocalDataSource;
@@ -64,6 +72,10 @@ class Mocks {
   MockStreamSettings get streamSettings =>
       _streamSettings ??= MockStreamSettings();
 
+  MockSaveTalkingThreshold? _saveTalkingThreshold;
+  MockSaveTalkingThreshold get saveTalkingThreshold =>
+      _saveTalkingThreshold ??= MockSaveTalkingThreshold();
+
   MockStreamMascot? _streamMascot;
   MockStreamMascot get streamMascot => _streamMascot ??= MockStreamMascot();
 
@@ -83,4 +95,12 @@ class Mocks {
   MockStreamMicrophoneVolume? _streamMicrophoneVolume;
   MockStreamMicrophoneVolume get streamMicrophoneVolume =>
       _streamMicrophoneVolume ??= MockStreamMicrophoneVolume();
+
+  MockExpressionAnimationService? _expressionAnimationService;
+  MockExpressionAnimationService get expressionAnimationService =>
+      _expressionAnimationService ??= MockExpressionAnimationService();
+
+  MockStreamSubscription? _streamSubcriber;
+  MockStreamSubscription get streamSubcriber =>
+      _streamSubcriber ??= MockStreamSubscription();
 }

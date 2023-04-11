@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/error/error.dart';
 import 'package:mascot/core/error/failure.dart';
+import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart';
 import 'package:mascot/features/settings/domain/entities/settings.dart';
 import 'package:mascot/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:mockito/mockito.dart';
@@ -17,12 +18,19 @@ void main() {
     late SettingsBloc bloc;
     late BehaviorSubject<Settings> settingsSubject;
     late BehaviorSubject<int?> favoriteMascotIdSubject;
+    late BehaviorSubject<DecibelLufs?> talkingThresholdSubject;
+
     setUp(() {
       context = TestContext();
-      bloc = SettingsBloc(context.mocks.streamSettings);
+      bloc = SettingsBloc(
+        context.mocks.streamSettings,
+        context.mocks.saveTalkingThreshold,
+      );
       settingsSubject = BehaviorSubject<Settings>.seeded(context.data.settings);
       favoriteMascotIdSubject =
           BehaviorSubject.seeded(context.data.settings.favoriteMascotId);
+      talkingThresholdSubject =
+          BehaviorSubject.seeded(context.data.settings.talkingThreshold);
 
       when(context.mocks.streamSettings(any))
           .thenAnswer((_) async => Right(settingsSubject));
@@ -30,7 +38,23 @@ void main() {
 
     test('initialState should be SettingsInitial', () {
       // assert
-      expect(bloc.state, SettingsInitial(none()));
+      expect(bloc.state, SettingsInitial(none(), none()));
+    });
+
+    group('SetTalkingThreshold', () {
+      blocTest(
+        'should invoke the save talking threshold usecase',
+        build: () => bloc,
+        setUp: () {
+          when(context.mocks.saveTalkingThreshold(any))
+              .thenAnswer((_) async => const Right(unit));
+        },
+        act: (bloc) => bloc.add(const SetTalkingThreshold(DecibelLufs(12))),
+        verify: (bloc) {
+          verify(context.mocks.saveTalkingThreshold(const DecibelLufs(12)));
+          verifyNoMoreInteractions(context.mocks.saveTalkingThreshold);
+        },
+      );
     });
 
     group('LoadSettings', () {
@@ -73,6 +97,11 @@ void main() {
             bloc.state.favoriteMascotIdStreamOption.getOrFailTest(),
             emits(context.data.settings.favoriteMascotId),
           );
+
+          expect(
+            bloc.state.favoriteMascotIdStreamOption.getOrFailTest(),
+            emits(context.data.settings.favoriteMascotId),
+          );
         },
       );
 
@@ -82,11 +111,19 @@ void main() {
         act: (bloc) => bloc.add(LoadSettings()),
         verify: (bloc) {
           settingsSubject.add(
-            context.data.settings.copyWith(favoriteMascotId: 2),
+            context.data.settings.copyWith(
+                favoriteMascotId: 2, talkingThreshold: const DecibelLufs(2)),
           );
           expect(
             bloc.state.favoriteMascotIdStreamOption.getOrFailTest(),
             emitsInOrder([context.data.settings.favoriteMascotId, 2]),
+          );
+          expect(
+            bloc.state.talkingThresholdStreamOption.getOrFailTest(),
+            emitsInOrder([
+              context.data.settings.talkingThreshold,
+              const DecibelLufs(2),
+            ]),
           );
         },
       );
@@ -94,12 +131,19 @@ void main() {
       blocTest<SettingsBloc, SettingsState>(
         'should reuse existing stream for individual settings',
         build: () => bloc,
-        seed: () => SettingsLoaded(some(favoriteMascotIdSubject)),
+        seed: () => SettingsLoaded(
+            some(favoriteMascotIdSubject), some(talkingThresholdSubject)),
         act: (bloc) => bloc.add(LoadSettings()),
-        verify: (bloc) => expect(
-          bloc.state.favoriteMascotIdStreamOption.getOrFailTest(),
-          favoriteMascotIdSubject,
-        ),
+        verify: (bloc) => {
+          expect(
+            bloc.state.favoriteMascotIdStreamOption.getOrFailTest(),
+            favoriteMascotIdSubject,
+          ),
+          expect(
+            bloc.state.talkingThresholdStreamOption.getOrFailTest(),
+            talkingThresholdSubject,
+          ),
+        },
       );
 
       blocTest(
@@ -109,7 +153,7 @@ void main() {
             .thenAnswer((_) async => Left(LocalDataSourceFailure())),
         act: (bloc) => bloc.add(LoadSettings()),
         expect: () => [
-          SettingsError(ErrorCodes.loadSettingsFailureCode, none()),
+          SettingsError(ErrorCodes.loadSettingsFailureCode, none(), none()),
         ],
       );
     });

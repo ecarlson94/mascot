@@ -3,11 +3,13 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/error/failure.dart';
+import '../../../microphone/domain/models/decibel_lufs.dart';
 import '../entities/settings.dart';
 
 typedef FailureOrSettingsFuture = Future<Either<Failure, Settings>>;
 typedef FailureOrSettingsSubjectFuture
     = Future<Either<Failure, BehaviorSubject<Settings>>>;
+typedef FailureOrUnitFuture = Future<Either<Failure, Unit>>;
 
 abstract class SettingsRepository {
   /// Gets the current application settings.
@@ -19,5 +21,8 @@ abstract class SettingsRepository {
   FailureOrSettingsSubjectFuture streamSettings();
 
   /// Saves the favorite mascot id.
-  Future<Either<Failure, Unit>> setFavoriteMascotId(Id id);
+  FailureOrUnitFuture setFavoriteMascotId(Id id);
+
+  /// Saves the talking threshold.
+  FailureOrUnitFuture setTalkingThreshold(DecibelLufs threshold);
 }

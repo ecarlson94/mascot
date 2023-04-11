@@ -3,7 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/error/error.dart';
 import 'package:mascot/core/error/failure.dart';
-import 'package:mascot/core/utils/constants.dart';
+import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
 import 'package:mascot/features/mascot/presentation/bloc/mascot_animator_bloc.dart';
 import 'package:mockito/mockito.dart';
@@ -17,45 +17,39 @@ void main() {
     late TestContext context;
     late MascotAnimatorBloc bloc;
     late BehaviorSubject<Mascot> mascotSubject;
+    late BehaviorSubject<Expression> animationStream;
 
     setUp(() {
       context = TestContext();
-      bloc = MascotAnimatorBloc(context.mocks.streamMascot);
+      bloc = MascotAnimatorBloc(
+        context.mocks.streamMascot,
+        context.mocks.expressionAnimationService,
+      );
       mascotSubject = BehaviorSubject<Mascot>.seeded(context.data.mascot);
+      animationStream = BehaviorSubject<Expression>.seeded(
+        context.data.expressions.first,
+      );
 
       when(context.mocks.streamMascot(any))
           .thenAnswer((_) async => Right(mascotSubject));
+      when(context.mocks.expressionAnimationService.animateExpressions(any))
+          .thenAnswer((_) async => animationStream);
     });
 
     test('initial state is MascotInitial', () {
       // assert
-      expect(bloc.state, MascotAnimatorInitial(none(), defaultExpressionName));
+      expect(bloc.state, MascotAnimatorInitial(none()));
     });
 
     group('LoadMascotStream', () {
       blocTest(
-        'should emit [MascotLoaded] when retrieval of mascot is successful',
+        'should emit [ExpressionChanged] when retrieval of mascot is successful',
         build: () => bloc,
         act: (bloc) => bloc.add(LoadMascot(context.data.mascot.id)),
         expect: () => [
-          MascotAnimatorLoading(none(), defaultExpressionName),
-          isA<MascotLoaded>(),
+          MascotAnimatorLoading(none()),
+          isA<ExpressionChanged>(),
         ],
-      );
-
-      blocTest(
-        'should use mascot to create expression map',
-        build: () => bloc,
-        act: (bloc) => bloc.add(LoadMascot(context.data.mascot.id)),
-        verify: (bloc) async {
-          var expressionMapOption = bloc.state.expressionMapOption;
-          expect(expressionMapOption, isSome);
-          var map = expressionMapOption.getOrFailTest();
-          expect(
-            map,
-            {for (var e in context.data.mascot.expressions) e.name: e},
-          );
-        },
       );
 
       blocTest(
@@ -63,26 +57,26 @@ void main() {
         build: () => bloc,
         act: (bloc) async {
           bloc.add(LoadMascot(context.data.mascot.id));
-          await Future.delayed(const Duration(milliseconds: 100));
+          await Future.delayed(const Duration(milliseconds: 25));
           mascotSubject.add(
             context.data.mascot.copyWith(
               expressions: context.data.expressions.skip(1).toSet(),
             ),
           );
         },
-        wait: const Duration(milliseconds: 100),
+        wait: const Duration(milliseconds: 25),
         expect: () => [
-          MascotAnimatorLoading(none(), defaultExpressionName),
-          isA<MascotLoaded>(),
-          isA<MascotLoaded>(),
+          MascotAnimatorLoading(none()),
+          isA<ExpressionChanged>(),
         ],
         verify: (bloc) async {
-          var expressionMapOption = bloc.state.expressionMapOption;
-          expect(expressionMapOption, isSome);
-          var map = expressionMapOption.getOrFailTest();
+          var expressionOption = bloc.state.expressionOption;
+          expect(expressionOption, isSome);
+          var expression = expressionOption.getOrFailTest();
           expect(
-            map,
-            {for (var e in context.data.mascot.expressions.skip(1)) e.name: e},
+            expression,
+            context.data.expressions
+                .firstWhere((e) => e.name == expression.name),
           );
         },
       );
@@ -96,12 +90,39 @@ void main() {
         },
         act: (bloc) => bloc.add(LoadMascot(context.data.mascot.id)),
         expect: () => [
-          MascotAnimatorLoading(none(), defaultExpressionName),
+          MascotAnimatorLoading(none()),
           MascotAnimatorError(
             ErrorCodes.loadMascotFailureCode,
             none(),
-            defaultExpressionName,
           ),
+        ],
+      );
+    });
+
+    group('SetExpression', () {
+      blocTest(
+        'should emit [ExpressionChanged] when SetExpression event is received',
+        build: () => bloc,
+        act: (bloc) => bloc.add(SetExpression(context.data.expressions.first)),
+        expect: () => [
+          ExpressionChanged(some(context.data.expressions.first)),
+        ],
+      );
+    });
+
+    group('SetMascot', () {
+      blocTest(
+        'should emit [ExpressionChanged] when new animation is triggered',
+        build: () => bloc,
+        act: (bloc) async => {
+          bloc.add(SetMascot(context.data.mascot)),
+          await Future.delayed(const Duration(milliseconds: 25)),
+          animationStream.add(context.data.expressions.last),
+          await Future.delayed(const Duration(milliseconds: 25)),
+        },
+        expect: () => [
+          ExpressionChanged(some(context.data.expressions.first)),
+          ExpressionChanged(some(context.data.expressions.last)),
         ],
       );
     });

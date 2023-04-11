@@ -5,6 +5,7 @@ import 'package:rxdart/rxdart.dart';
 import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/utils/logger.dart';
+import '../../../microphone/domain/models/decibel_lufs.dart';
 import '../../domain/entities/settings.dart';
 import '../../domain/repositories/settings_repository.dart';
 import '../datasources/indexded_db/settings_indexed_db_data_source.dart';
@@ -16,12 +17,12 @@ class SettingsRepositoryLogger extends Logger<SettingsRepositoryImpl> {}
 @Injectable(as: SettingsRepository)
 class SettingsRepositoryImpl extends SettingsRepository {
   final SettingsIndexedDbDataSource _localDataSource;
-  final SettingsMapper _driftSettingsMapper;
+  final SettingsMapper _settingsMapper;
   final Logger<SettingsRepositoryImpl> _logger;
 
   SettingsRepositoryImpl(
     this._localDataSource,
-    this._driftSettingsMapper,
+    this._settingsMapper,
     this._logger,
   );
 
@@ -29,7 +30,7 @@ class SettingsRepositoryImpl extends SettingsRepository {
   FailureOrSettingsFuture loadSettings() async {
     try {
       var settingsModel = await _localDataSource.getObject(1);
-      return Right(_driftSettingsMapper.toSettings(settingsModel));
+      return Right(_settingsMapper.toSettings(settingsModel));
     } catch (e) {
       _logger.logError('Failed to load settings', e);
       return Left(LocalDataSourceFailure());
@@ -41,13 +42,13 @@ class SettingsRepositoryImpl extends SettingsRepository {
     try {
       var settingsModel = await _localDataSource.getObject(1);
       var settingsBehaviorSubject = BehaviorSubject<Settings>.seeded(
-        _driftSettingsMapper.toSettings(settingsModel),
+        _settingsMapper.toSettings(settingsModel),
       );
 
       var settingsStream = _localDataSource.streamObject(1);
       settingsStream.listen((event) async {
         settingsBehaviorSubject.add(
-          _driftSettingsMapper.toSettings(event),
+          _settingsMapper.toSettings(event),
         );
       });
 
@@ -59,7 +60,7 @@ class SettingsRepositoryImpl extends SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> setFavoriteMascotId(Id id) async {
+  FailureOrUnitFuture setFavoriteMascotId(Id id) async {
     try {
       var settings = await _localDataSource.getObject(1);
       var updatedSettings = settings.copyWith(favoriteMascotId: id);
@@ -68,6 +69,22 @@ class SettingsRepositoryImpl extends SettingsRepository {
       return const Right(unit);
     } catch (e) {
       _logger.logError('Failed to set favorite mascot id', e);
+      return Left(LocalDataSourceFailure());
+    }
+  }
+
+  @override
+  FailureOrUnitFuture setTalkingThreshold(DecibelLufs threshold) async {
+    try {
+      var settings = await _localDataSource.getObject(1);
+      var updatedSettings = settings.copyWith(
+        talkingThresholdDecibels: threshold.value,
+      );
+      await _localDataSource.putObject(updatedSettings);
+
+      return const Right(unit);
+    } catch (e) {
+      _logger.logError('Failed to set talking threshold', e);
       return Left(LocalDataSourceFailure());
     }
   }

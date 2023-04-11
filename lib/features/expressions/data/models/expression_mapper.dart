@@ -17,6 +17,8 @@ class ExpressionMapperImpl implements ExpressionMapper {
       name: expression.name,
       description: expression.description,
       image: expression.image,
+      priority: expression.priority,
+      activator: expression.activator,
     );
   }
 
@@ -27,6 +29,8 @@ class ExpressionMapperImpl implements ExpressionMapper {
       name: expressionModel.name,
       description: expressionModel.description,
       image: expressionModel.image,
+      priority: expressionModel.priority,
+      activator: expressionModel.activator,
     );
   }
 }

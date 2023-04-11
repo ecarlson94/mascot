@@ -8,7 +8,9 @@ import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/clean_architecture/usecase.dart';
 import '../../../../core/data/stream_subscriber.dart';
 import '../../../../core/error/error.dart';
+import '../../../microphone/domain/models/decibel_lufs.dart';
 import '../../domain/entities/settings.dart';
+import '../../domain/usecases/save_talking_threshold.dart';
 import '../../domain/usecases/stream_settings.dart';
 
 part 'settings_event.dart';
@@ -19,27 +21,37 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
     with SubscriptionDisposer
     implements StreamSubcriber {
   final StreamSettings streamSettings;
+  final SaveTalkingThreshold setTalkingThreshold;
 
-  SettingsBloc(this.streamSettings) : super(SettingsInitial(none())) {
-    on<SettingsEvent>((event, emit) async {
-      if (event is LoadSettings) {
-        var failureOrSettingsStream = await streamSettings(NoParams());
-        failureOrSettingsStream.fold(
-          (l) => emit(
-            SettingsError(ErrorCodes.loadSettingsFailureCode, none()),
-          ),
-          (settingsStream) => emit(
-            SettingsLoaded(
-              _settingValueStreamOption(
-                settingsStream,
-                (state) => state.favoriteMascotIdStreamOption,
-                (settings) => settings.favoriteMascotId,
-              ),
+  SettingsBloc(
+    this.streamSettings,
+    this.setTalkingThreshold,
+  ) : super(SettingsInitial(none(), none())) {
+    on<LoadSettings>((event, emit) async {
+      var failureOrSettingsStream = await streamSettings(NoParams());
+      failureOrSettingsStream.fold(
+        (l) => emit(
+          SettingsError(ErrorCodes.loadSettingsFailureCode, none(), none()),
+        ),
+        (settingsStream) => emit(
+          SettingsLoaded(
+            _settingValueStreamOption(
+              settingsStream,
+              (state) => state.favoriteMascotIdStreamOption,
+              (settings) => settings.favoriteMascotId,
+            ),
+            _settingValueStreamOption(
+              settingsStream,
+              (state) => state.talkingThresholdStreamOption,
+              (settings) => settings.talkingThreshold,
             ),
           ),
-        );
-      }
+        ),
+      );
     });
+
+    on<SetTalkingThreshold>((event, emit) async =>
+        await setTalkingThreshold(event.talkingThreshold));
   }
 
   Option<BehaviorSubject<T>> _settingValueStreamOption<T>(

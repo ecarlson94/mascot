@@ -16,13 +16,13 @@ class MascotMapperImpl extends MascotMapper {
 
   @override
   MascotModel fromMascot(Mascot mascot) {
-    final driftmascot = MascotModel(
+    final mascotModel = MascotModel(
       id: mascot.id,
       name: mascot.name,
       expressions:
           mascot.expressions.map(_expressionMapper.fromExpression).toList(),
     );
-    return driftmascot;
+    return mascotModel;
   }
 
   @override

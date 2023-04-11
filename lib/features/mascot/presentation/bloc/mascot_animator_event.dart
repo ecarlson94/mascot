@@ -24,3 +24,12 @@ class SetMascot extends MascotAnimatorEvent {
   @override
   List<Object> get props => [mascot];
 }
+
+class SetExpression extends MascotAnimatorEvent {
+  final Expression expression;
+
+  const SetExpression(this.expression);
+
+  @override
+  List<Object> get props => [expression];
+}
