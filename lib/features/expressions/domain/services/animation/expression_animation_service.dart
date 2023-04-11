@@ -47,12 +47,14 @@ class ExpressionAnimationServiceImpl extends ExpressionAnimationService
   }
 
   Expression _getCurrentExpression() {
-    return _triggeredExpressions.values.reduce((previous, current) {
-      if (previous.priority < current.priority) {
-        return previous;
-      } else {
-        return current;
-      }
-    });
+    return _triggeredExpressions.values.reduce(
+      (previous, current) {
+        if (previous.priority < current.priority) {
+          return previous;
+        } else {
+          return current;
+        }
+      },
+    );
   }
 }

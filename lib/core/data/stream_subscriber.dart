@@ -7,9 +7,9 @@ abstract class StreamSubcriber extends Disposable with SubscriptionDisposer {}
 mixin SubscriptionDisposer {
   final List<StreamSubscription> subscriptions = List.empty(growable: true);
 
-  FutureOr onDispose() {
+  FutureOr onDispose() async {
     for (final subscription in subscriptions) {
-      subscription.cancel();
+      await subscription.cancel();
     }
   }
 }

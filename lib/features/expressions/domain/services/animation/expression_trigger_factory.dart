@@ -10,16 +10,15 @@ import '../../entities/expression.dart';
 import 'expression_trigger.dart';
 import 'talking_expression_trigger.dart';
 
-// TODO: write tests for this class
 @injectable
 class ExpressionTriggerFactory implements Disposable {
-  final SettingsRepository settingsRepository;
-  final StreamMicrophoneVolume streamMicrophoneVolume;
+  final SettingsRepository _settingsRepository;
+  final StreamMicrophoneVolume _streamMicrophoneVolume;
   final List<SubscriptionDisposer> _disposers = [];
 
   ExpressionTriggerFactory(
-    this.settingsRepository,
-    this.streamMicrophoneVolume,
+    this._settingsRepository,
+    this._streamMicrophoneVolume,
   );
 
   ExpressionTrigger create(Expression expression) {
@@ -31,8 +30,8 @@ class ExpressionTriggerFactory implements Disposable {
       case ExpressionTriggers.talking:
         var talkingExpressionTrigger = TalkingExpressionTrigger(
           expression,
-          settingsRepository,
-          streamMicrophoneVolume,
+          _settingsRepository,
+          _streamMicrophoneVolume,
         );
         _disposers.add(talkingExpressionTrigger);
         return talkingExpressionTrigger;
@@ -42,9 +41,9 @@ class ExpressionTriggerFactory implements Disposable {
   }
 
   @override
-  FutureOr onDispose() {
+  FutureOr onDispose() async {
     for (var disposer in _disposers) {
-      disposer.onDispose();
+      await disposer.onDispose();
     }
   }
 }

@@ -10,13 +10,13 @@ import 'expression_trigger.dart';
 class TalkingExpressionTrigger extends ExpressionTrigger
     with SubscriptionDisposer
     implements StreamSubcriber {
-  final SettingsRepository settingsRepository;
-  final StreamMicrophoneVolume streamMicrophoneVolume;
+  final SettingsRepository _settingsRepository;
+  final StreamMicrophoneVolume _streamMicrophoneVolume;
 
   TalkingExpressionTrigger(
     super.expression,
-    this.settingsRepository,
-    this.streamMicrophoneVolume,
+    this._settingsRepository,
+    this._streamMicrophoneVolume,
   );
 
   bool _isTriggered = false;
@@ -30,7 +30,7 @@ class TalkingExpressionTrigger extends ExpressionTrigger
     DecibelLufs talkingThreshold = const DecibelLufs(-10);
     DecibelLufs microphoneVolume = const DecibelLufs(-40);
 
-    var settingsStreamOrFailure = await settingsRepository.streamSettings();
+    var settingsStreamOrFailure = await _settingsRepository.streamSettings();
     settingsStreamOrFailure.fold(
       (l) => stream.addError(l),
       (settingsStream) {
@@ -42,7 +42,7 @@ class TalkingExpressionTrigger extends ExpressionTrigger
       },
     );
 
-    var volumeStreamOrFailure = await streamMicrophoneVolume(NoParams());
+    var volumeStreamOrFailure = await _streamMicrophoneVolume(NoParams());
     volumeStreamOrFailure.fold(
       (l) => stream.addError(l),
       (volumeStream) {

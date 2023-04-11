@@ -1,5 +1,9 @@
+import 'dart:async';
+
+import 'package:mascot/core/data/stream_subscriber.dart';
 import 'package:mascot/core/utils/logger.dart';
 import 'package:mascot/features/expressions/data/datasources/indexed_db/expressions_indexed_db_data_source.dart';
+import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mascot/features/expressions/domain/repositories/expressions_repository.dart';
 import 'package:mascot/features/expressions/domain/services/animation/expression_animation_service.dart';
 import 'package:mascot/features/mascot/data/datasources/indexed_db/mascots_indexed_db_data_source.dart';
@@ -36,6 +40,7 @@ import 'mocks.mocks.dart';
   Microphone,
   StreamMicrophoneVolume,
   ExpressionAnimationService,
+  StreamSubscription<Expression>,
 ])
 class Mocks {
   MockExpressionsIndexedDbDataSource? _expressionsLocalDataSource;
@@ -95,4 +100,8 @@ class Mocks {
   MockExpressionAnimationService? _expressionAnimationService;
   MockExpressionAnimationService get expressionAnimationService =>
       _expressionAnimationService ??= MockExpressionAnimationService();
+
+  MockStreamSubscription? _streamSubcriber;
+  MockStreamSubscription get streamSubcriber =>
+      _streamSubcriber ??= MockStreamSubscription();
 }
