@@ -106,7 +106,7 @@ class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
             name: talkingExpressionName,
             description: talkingExpressionDescription,
             image: _talkingExpressionImage.bytes ?? Uint8List(0),
-            priority: 999,
+            priority: 980,
             activator: ExpressionTriggers.talking,
           ),
         },

@@ -12,7 +12,6 @@ abstract class ExpressionTrigger {
   FutureOr<Stream<ExpressionTrigger>> get stream;
 }
 
-// TODO: write tests for this class
 class AlwaysExpressionTrigger extends ExpressionTrigger {
   const AlwaysExpressionTrigger(super.expression);
 
@@ -23,7 +22,6 @@ class AlwaysExpressionTrigger extends ExpressionTrigger {
   Stream<ExpressionTrigger> get stream => Stream.value(this);
 }
 
-// TODO: write tests for this class
 class NeverExpressionTrigger extends ExpressionTrigger {
   const NeverExpressionTrigger(super.expression);
 
