@@ -50,7 +50,7 @@ class TestData {
       description: CreateMascotBloc.talkingExpressionDescription,
       image: Uint8List(5),
       activator: ExpressionTriggers.talking,
-      priority: 999,
+      priority: 980,
     ),
   ];
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -9,7 +11,6 @@ abstract class ExpressionAnimationService {
   Future<Stream<Expression>> animateExpressions(Set<Expression> expressions);
 }
 
-// TODO: write tests for this class
 @Injectable(as: ExpressionAnimationService)
 class ExpressionAnimationServiceImpl extends ExpressionAnimationService
     with SubscriptionDisposer
@@ -56,5 +57,11 @@ class ExpressionAnimationServiceImpl extends ExpressionAnimationService
         }
       },
     );
+  }
+
+  @override
+  FutureOr onDispose() async {
+    await super.onDispose();
+    await expressionTriggerFactory.onDispose();
   }
 }

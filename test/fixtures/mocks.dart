@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:mascot/core/data/stream_subscriber.dart';
 import 'package:mascot/core/utils/logger.dart';
 import 'package:mascot/features/expressions/data/datasources/indexed_db/expressions_indexed_db_data_source.dart';
 import 'package:mascot/features/expressions/domain/entities/expression.dart';
