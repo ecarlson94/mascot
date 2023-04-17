@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:universal_html/html.dart' as html;
 
@@ -14,9 +15,11 @@ import '../microphone.dart';
 class MascotMicrophoneLogger extends Logger<WebMicrophone> {}
 
 @LazySingleton(as: Microphone)
-class WebMicrophone implements Microphone {
+class WebMicrophone implements Microphone, Disposable {
   final AudioContext _webAudio;
   final Logger<WebMicrophone> _logger;
+  final StreamController<DecibelLufs> _volumeStreamController =
+      StreamController.broadcast();
 
   WebMicrophone(this._webAudio, this._logger);
 
@@ -27,18 +30,34 @@ class WebMicrophone implements Microphone {
   }
 
   @override
-  Stream<DecibelLufs> get volumeStream async* {
+  Stream<DecibelLufs> get volumeStream {
+    _startVolumeUpdates();
+    return _volumeStreamController.stream;
+  }
+
+  Timer? _volumeUpdateTimer;
+  void _startVolumeUpdates() async {
+    if (_volumeUpdateTimer != null) {
+      return; // Timer already started
+    }
+
     final analyzer = await _getAnalyzer();
     final data = Float32List(analyzer.frequencyBinCount);
 
-    while (true) {
-      // get the audio data from the analyzer
-      analyzer.getFloatTimeDomainData(data);
+    _volumeUpdateTimer = Timer.periodic(
+      const Duration(milliseconds: 10),
+      (_) {
+        // get the audio data from the analyzer
+        analyzer.getFloatTimeDomainData(data);
 
-      yield DecibelLufs(data.loudness);
+        _volumeStreamController.add(DecibelLufs(data.loudness));
+      },
+    );
+  }
 
-      await Future.delayed(const Duration(milliseconds: 10));
-    }
+  void _stopVolumeUpdates() {
+    _volumeUpdateTimer?.cancel();
+    _volumeUpdateTimer = null;
   }
 
   html.MediaStream? _microphoneStream;
@@ -85,5 +104,11 @@ class WebMicrophone implements Microphone {
     await _setMicrophoneStream(throwOnError: true);
 
     return _source ??= _webAudio.createMediaStreamSource(_microphoneStream!);
+  }
+
+  @override
+  FutureOr onDispose() {
+    _stopVolumeUpdates();
+    _volumeStreamController.close();
   }
 }
