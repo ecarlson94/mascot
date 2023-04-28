@@ -7,6 +7,7 @@ import 'package:injectable/injectable.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../../core/error/error.dart';
+import '../../../../core/error/failure.dart';
 import '../../../../core/utils/constants.dart';
 import '../../../../core/widgets/reactive_image_picker/image_file.dart';
 import '../../../expressions/domain/entities/expression.dart';
@@ -52,40 +53,51 @@ class CreateMascotBloc extends Bloc<CreateMascotEvent, CreateMascotState> {
       _form.control(talkingExpressionFormControlName).value as ImageFile;
 
   CreateMascotBloc(this._addMascot) : super(CreateMascotInitial(none())) {
-    on<CreateMascotEvent>((event, emit) async {
-      if (event is Initialize) {
-        emit(CreateMascotInitial(some(_form)));
-      } else if (event is SaveMascot) {
-        await _saveMascot(emit);
-      }
+    on<Initialize>((event, emit) {
+      emit(CreateMascotInitial(some(_form)));
     });
+    on<SaveMascot>((event, emit) => _saveMascot(emit));
+    on<SaveMascotSuccess>(
+      (event, emit) => _emitMascotSaved(emit, event.mascot),
+    );
+    on<SaveMascotFailure>(
+      (event, emit) =>
+          _emitSaveMascotError(emit, ErrorCodes.saveMascotFailureCode),
+    );
   }
 
-  Future<void> _saveMascot(
+  // TODO: Extract to action
+  void _emitMascotSaved(Emitter<CreateMascotState> emit, Mascot mascot) {
+    _form.markAsEnabled();
+    emit(MascotSaved(mascot, some(_form)));
+  }
+
+  // TODO: Extract to action
+  void _emitSaveMascotError(Emitter<CreateMascotState> emit, int errorCode) =>
+      emit(SaveMascotError(errorCode, some(_form)));
+
+  // TODO: Extract to action
+  void _saveMascot(
     Emitter<CreateMascotState> emit,
-  ) async {
+  ) {
     if (!_form.valid) {
       emit(SaveMascotError(ErrorCodes.invalidInputFailureCode, state.form));
-      return;
+    } else {
+      _form.markAsDisabled();
+      emit(SavingMascot(some(_form)));
+      _triggerSaveMascot(emit);
     }
+  }
 
-    _form.markAsDisabled();
-    emit(SavingMascot(some(_form)));
-
+  // TODO: Extract to effect
+  void _triggerSaveMascot(Emitter<CreateMascotState> emit) {
     Mascot mascotToUpdate = _createMascotFromForm();
 
-    var mascotOrFailure = await _addMascot(mascotToUpdate);
-    mascotOrFailure.fold(
-      (l) async => emit(
-        SaveMascotError(
-          ErrorCodes.saveMascotFailureCode,
-          state.form,
-        ),
+    _addMascot(mascotToUpdate).then(
+      (value) => value.fold(
+        (failure) => add(SaveMascotFailure(failure)),
+        (mascot) => add(SaveMascotSuccess(mascot)),
       ),
-      (mascot) => {
-        _form.markAsEnabled(),
-        emit(MascotSaved(mascot, some(_form))),
-      },
     );
   }
 
