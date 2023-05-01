@@ -7,10 +7,10 @@ import 'dart:async' as _i10;
 
 import 'package:dartz/dartz.dart' as _i4;
 import 'package:idb_shim/idb_client.dart' as _i5;
-import 'package:mascot/core/clean_architecture/usecase.dart' as _i24;
+import 'package:mascot/core/clean_architecture/usecase.dart' as _i26;
 import 'package:mascot/core/data/indexed_db/indexed_db_data_source.dart' as _i2;
 import 'package:mascot/core/error/failure.dart' as _i13;
-import 'package:mascot/core/utils/logger.dart' as _i27;
+import 'package:mascot/core/utils/logger.dart' as _i29;
 import 'package:mascot/features/expressions/data/datasources/indexed_db/expressions_indexed_db_data_source.dart'
     as _i11;
 import 'package:mascot/features/expressions/data/models/expression_model.dart'
@@ -20,7 +20,7 @@ import 'package:mascot/features/expressions/domain/entities/expression.dart'
 import 'package:mascot/features/expressions/domain/repositories/expressions_repository.dart'
     as _i12;
 import 'package:mascot/features/expressions/domain/services/animation/expression_animation_service.dart'
-    as _i31;
+    as _i33;
 import 'package:mascot/features/mascot/data/datasources/indexed_db/mascots_indexed_db_data_source.dart'
     as _i16;
 import 'package:mascot/features/mascot/data/models/mascot_model.dart' as _i7;
@@ -28,27 +28,31 @@ import 'package:mascot/features/mascot/domain/entities/mascot.dart' as _i17;
 import 'package:mascot/features/mascot/domain/repositories/mascots_repository.dart'
     as _i9;
 import 'package:mascot/features/mascot/domain/usecases/add_mascot.dart' as _i19;
-import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart' as _i20;
+import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart' as _i22;
 import 'package:mascot/features/mascot/domain/usecases/stream_mascot.dart'
-    as _i26;
-import 'package:mascot/features/microphone/device/microphone.dart' as _i29;
-import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart'
-    as _i22;
-import 'package:mascot/features/microphone/domain/services/microphone_service.dart'
     as _i28;
-import 'package:mascot/features/microphone/domain/usecases/stream_microphone_volume.dart'
+import 'package:mascot/features/mascot/presentation/bloc/create_mascot/create_mascot_bloc.dart'
+    as _i21;
+import 'package:mascot/features/mascot/presentation/bloc/create_mascot/effects/save_mascot_effect.dart'
+    as _i20;
+import 'package:mascot/features/microphone/device/microphone.dart' as _i31;
+import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart'
+    as _i24;
+import 'package:mascot/features/microphone/domain/services/microphone_service.dart'
     as _i30;
+import 'package:mascot/features/microphone/domain/usecases/stream_microphone_volume.dart'
+    as _i32;
 import 'package:mascot/features/settings/data/datasources/indexded_db/settings_indexed_db_data_source.dart'
     as _i15;
 import 'package:mascot/features/settings/data/models/settings_model.dart'
     as _i6;
-import 'package:mascot/features/settings/domain/entities/settings.dart' as _i21;
+import 'package:mascot/features/settings/domain/entities/settings.dart' as _i23;
 import 'package:mascot/features/settings/domain/repositories/settings_repository.dart'
     as _i8;
 import 'package:mascot/features/settings/domain/usecases/save_talking_threshold.dart'
-    as _i25;
+    as _i27;
 import 'package:mascot/features/settings/domain/usecases/stream_settings.dart'
-    as _i23;
+    as _i25;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:rxdart/rxdart.dart' as _i18;
 
@@ -731,10 +735,35 @@ class MockAddMascot extends _i1.Mock implements _i19.AddMascot {
       ) as _i10.Future<_i4.Either<_i13.Failure, _i17.Mascot>>);
 }
 
+/// A class which mocks [SaveMascotEffect].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSaveMascotEffect extends _i1.Mock implements _i20.SaveMascotEffect {
+  MockSaveMascotEffect() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i10.Stream<_i21.CreateMascotEvent> call(
+    _i21.CreateMascotState? state,
+    _i21.SaveMascot? event,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [
+            state,
+            event,
+          ],
+        ),
+        returnValue: _i10.Stream<_i21.CreateMascotEvent>.empty(),
+      ) as _i10.Stream<_i21.CreateMascotEvent>);
+}
+
 /// A class which mocks [GetMascot].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGetMascot extends _i1.Mock implements _i20.GetMascot {
+class MockGetMascot extends _i1.Mock implements _i22.GetMascot {
   MockGetMascot() {
     _i1.throwOnMissingStub(this);
   }
@@ -767,23 +796,23 @@ class MockSettingsRepository extends _i1.Mock
   }
 
   @override
-  _i10.Future<_i4.Either<_i13.Failure, _i21.Settings>> loadSettings() =>
+  _i10.Future<_i4.Either<_i13.Failure, _i23.Settings>> loadSettings() =>
       (super.noSuchMethod(
         Invocation.method(
           #loadSettings,
           [],
         ),
-        returnValue: _i10.Future<_i4.Either<_i13.Failure, _i21.Settings>>.value(
-            _FakeEither_4<_i13.Failure, _i21.Settings>(
+        returnValue: _i10.Future<_i4.Either<_i13.Failure, _i23.Settings>>.value(
+            _FakeEither_4<_i13.Failure, _i23.Settings>(
           this,
           Invocation.method(
             #loadSettings,
             [],
           ),
         )),
-      ) as _i10.Future<_i4.Either<_i13.Failure, _i21.Settings>>);
+      ) as _i10.Future<_i4.Either<_i13.Failure, _i23.Settings>>);
   @override
-  _i10.Future<_i4.Either<_i13.Failure, _i18.BehaviorSubject<_i21.Settings>>>
+  _i10.Future<_i4.Either<_i13.Failure, _i18.BehaviorSubject<_i23.Settings>>>
       streamSettings() => (super.noSuchMethod(
             Invocation.method(
               #streamSettings,
@@ -791,8 +820,8 @@ class MockSettingsRepository extends _i1.Mock
             ),
             returnValue: _i10.Future<
                 _i4.Either<_i13.Failure,
-                    _i18.BehaviorSubject<_i21.Settings>>>.value(_FakeEither_4<
-                _i13.Failure, _i18.BehaviorSubject<_i21.Settings>>(
+                    _i18.BehaviorSubject<_i23.Settings>>>.value(_FakeEither_4<
+                _i13.Failure, _i18.BehaviorSubject<_i23.Settings>>(
               this,
               Invocation.method(
                 #streamSettings,
@@ -800,7 +829,7 @@ class MockSettingsRepository extends _i1.Mock
               ),
             )),
           ) as _i10.Future<
-              _i4.Either<_i13.Failure, _i18.BehaviorSubject<_i21.Settings>>>);
+              _i4.Either<_i13.Failure, _i18.BehaviorSubject<_i23.Settings>>>);
   @override
   _i10.Future<_i4.Either<_i13.Failure, _i4.Unit>> setFavoriteMascotId(
           int? id) =>
@@ -820,7 +849,7 @@ class MockSettingsRepository extends _i1.Mock
       ) as _i10.Future<_i4.Either<_i13.Failure, _i4.Unit>>);
   @override
   _i10.Future<_i4.Either<_i13.Failure, _i4.Unit>> setTalkingThreshold(
-          _i22.DecibelLufs? threshold) =>
+          _i24.DecibelLufs? threshold) =>
       (super.noSuchMethod(
         Invocation.method(
           #setTalkingThreshold,
@@ -840,7 +869,7 @@ class MockSettingsRepository extends _i1.Mock
 /// A class which mocks [StreamSettings].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockStreamSettings extends _i1.Mock implements _i23.StreamSettings {
+class MockStreamSettings extends _i1.Mock implements _i25.StreamSettings {
   MockStreamSettings() {
     _i1.throwOnMissingStub(this);
   }
@@ -855,8 +884,8 @@ class MockStreamSettings extends _i1.Mock implements _i23.StreamSettings {
       ) as _i8.SettingsRepository);
   @override
   _i10.Future<
-      _i4.Either<_i13.Failure, _i18.BehaviorSubject<_i21.Settings>>> call(
-          _i24.NoParams? params) =>
+      _i4.Either<_i13.Failure, _i18.BehaviorSubject<_i23.Settings>>> call(
+          _i26.NoParams? params) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
@@ -864,8 +893,8 @@ class MockStreamSettings extends _i1.Mock implements _i23.StreamSettings {
         ),
         returnValue: _i10.Future<
                 _i4.Either<_i13.Failure,
-                    _i18.BehaviorSubject<_i21.Settings>>>.value(
-            _FakeEither_4<_i13.Failure, _i18.BehaviorSubject<_i21.Settings>>(
+                    _i18.BehaviorSubject<_i23.Settings>>>.value(
+            _FakeEither_4<_i13.Failure, _i18.BehaviorSubject<_i23.Settings>>(
           this,
           Invocation.method(
             #call,
@@ -873,14 +902,14 @@ class MockStreamSettings extends _i1.Mock implements _i23.StreamSettings {
           ),
         )),
       ) as _i10.Future<
-          _i4.Either<_i13.Failure, _i18.BehaviorSubject<_i21.Settings>>>);
+          _i4.Either<_i13.Failure, _i18.BehaviorSubject<_i23.Settings>>>);
 }
 
 /// A class which mocks [SaveTalkingThreshold].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockSaveTalkingThreshold extends _i1.Mock
-    implements _i25.SaveTalkingThreshold {
+    implements _i27.SaveTalkingThreshold {
   MockSaveTalkingThreshold() {
     _i1.throwOnMissingStub(this);
   }
@@ -895,7 +924,7 @@ class MockSaveTalkingThreshold extends _i1.Mock
       ) as _i8.SettingsRepository);
   @override
   _i10.Future<_i4.Either<_i13.Failure, _i4.Unit>> call(
-          _i22.DecibelLufs? params) =>
+          _i24.DecibelLufs? params) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
@@ -915,7 +944,7 @@ class MockSaveTalkingThreshold extends _i1.Mock
 /// A class which mocks [StreamMascot].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockStreamMascot extends _i1.Mock implements _i26.StreamMascot {
+class MockStreamMascot extends _i1.Mock implements _i28.StreamMascot {
   MockStreamMascot() {
     _i1.throwOnMissingStub(this);
   }
@@ -953,7 +982,7 @@ class MockStreamMascot extends _i1.Mock implements _i26.StreamMascot {
 /// A class which mocks [Logger].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLogger<T> extends _i1.Mock implements _i27.Logger<T> {
+class MockLogger<T> extends _i1.Mock implements _i29.Logger<T> {
   MockLogger() {
     _i1.throwOnMissingStub(this);
   }
@@ -996,13 +1025,13 @@ class MockLogger<T> extends _i1.Mock implements _i27.Logger<T> {
 /// A class which mocks [MicrophoneService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMicrophoneService extends _i1.Mock implements _i28.MicrophoneService {
+class MockMicrophoneService extends _i1.Mock implements _i30.MicrophoneService {
   MockMicrophoneService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i10.Future<_i4.Either<_i13.Failure, _i10.Stream<_i22.DecibelLufs>>>
+  _i10.Future<_i4.Either<_i13.Failure, _i10.Stream<_i24.DecibelLufs>>>
       getVolumeStream() => (super.noSuchMethod(
             Invocation.method(
               #getVolumeStream,
@@ -1010,8 +1039,8 @@ class MockMicrophoneService extends _i1.Mock implements _i28.MicrophoneService {
             ),
             returnValue: _i10.Future<
                     _i4.Either<_i13.Failure,
-                        _i10.Stream<_i22.DecibelLufs>>>.value(
-                _FakeEither_4<_i13.Failure, _i10.Stream<_i22.DecibelLufs>>(
+                        _i10.Stream<_i24.DecibelLufs>>>.value(
+                _FakeEither_4<_i13.Failure, _i10.Stream<_i24.DecibelLufs>>(
               this,
               Invocation.method(
                 #getVolumeStream,
@@ -1019,22 +1048,22 @@ class MockMicrophoneService extends _i1.Mock implements _i28.MicrophoneService {
               ),
             )),
           ) as _i10
-              .Future<_i4.Either<_i13.Failure, _i10.Stream<_i22.DecibelLufs>>>);
+              .Future<_i4.Either<_i13.Failure, _i10.Stream<_i24.DecibelLufs>>>);
 }
 
 /// A class which mocks [Microphone].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMicrophone extends _i1.Mock implements _i29.Microphone {
+class MockMicrophone extends _i1.Mock implements _i31.Microphone {
   MockMicrophone() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i10.Stream<_i22.DecibelLufs> get volumeStream => (super.noSuchMethod(
+  _i10.Stream<_i24.DecibelLufs> get volumeStream => (super.noSuchMethod(
         Invocation.getter(#volumeStream),
-        returnValue: _i10.Stream<_i22.DecibelLufs>.empty(),
-      ) as _i10.Stream<_i22.DecibelLufs>);
+        returnValue: _i10.Stream<_i24.DecibelLufs>.empty(),
+      ) as _i10.Stream<_i24.DecibelLufs>);
   @override
   _i10.Future<bool> hasPermission() => (super.noSuchMethod(
         Invocation.method(
@@ -1049,22 +1078,22 @@ class MockMicrophone extends _i1.Mock implements _i29.Microphone {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockStreamMicrophoneVolume extends _i1.Mock
-    implements _i30.StreamMicrophoneVolume {
+    implements _i32.StreamMicrophoneVolume {
   MockStreamMicrophoneVolume() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i10.Future<_i4.Either<_i13.Failure, _i10.Stream<_i22.DecibelLufs>>> call(
-          _i24.NoParams? params) =>
+  _i10.Future<_i4.Either<_i13.Failure, _i10.Stream<_i24.DecibelLufs>>> call(
+          _i26.NoParams? params) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [params],
         ),
         returnValue: _i10.Future<
-                _i4.Either<_i13.Failure, _i10.Stream<_i22.DecibelLufs>>>.value(
-            _FakeEither_4<_i13.Failure, _i10.Stream<_i22.DecibelLufs>>(
+                _i4.Either<_i13.Failure, _i10.Stream<_i24.DecibelLufs>>>.value(
+            _FakeEither_4<_i13.Failure, _i10.Stream<_i24.DecibelLufs>>(
           this,
           Invocation.method(
             #call,
@@ -1072,14 +1101,14 @@ class MockStreamMicrophoneVolume extends _i1.Mock
           ),
         )),
       ) as _i10
-          .Future<_i4.Either<_i13.Failure, _i10.Stream<_i22.DecibelLufs>>>);
+          .Future<_i4.Either<_i13.Failure, _i10.Stream<_i24.DecibelLufs>>>);
 }
 
 /// A class which mocks [ExpressionAnimationService].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockExpressionAnimationService extends _i1.Mock
-    implements _i31.ExpressionAnimationService {
+    implements _i33.ExpressionAnimationService {
   MockExpressionAnimationService() {
     _i1.throwOnMissingStub(this);
   }

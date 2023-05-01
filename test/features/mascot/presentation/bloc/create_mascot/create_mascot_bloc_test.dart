@@ -3,11 +3,11 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/error/error.dart';
 import 'package:mascot/core/utils/input_converters/input_converter.dart';
-import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart';
+import 'package:mascot/features/mascot/presentation/bloc/create_mascot/create_mascot_bloc.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../fixtures/option.dart';
-import '../../../../fixtures/test_context.dart';
+import '../../../../../fixtures/option.dart';
+import '../../../../../fixtures/test_context.dart';
 
 void main() {
   group('CreateMascotBloc', () {
@@ -19,7 +19,7 @@ void main() {
     setUp(() {
       context = TestContext();
       bloc = CreateMascotBloc(
-        context.mocks.addMascot,
+        context.mocks.saveMascotEffect,
       );
 
       when(context.mocks.addMascot(any))
@@ -35,10 +35,14 @@ void main() {
       blocTest<CreateMascotBloc, CreateMascotState>(
         'should emit [CreateMascotInitial] state with empty form',
         build: () => bloc,
-        act: (bloc) => bloc.add(Initialize()),
+        act: (bloc) => bloc.add(InitializeEvent()),
         expect: () => [
           isA<CreateMascotInitial>()
-              .having((state) => state.form.isSome(), 'isSome', true)
+              .having(
+                (state) => state.form.isSome(),
+                'isSome',
+                true,
+              )
               .having(
                 (state) => state.form
                     .getOrFailTest()
@@ -71,7 +75,7 @@ void main() {
           'should not be valid if natural expression is empty but other fields are not',
           () async {
             // arrange
-            bloc.add(Initialize());
+            bloc.add(InitializeEvent());
             await Future.delayed(blocWaitDuration);
 
             var form = bloc.state.form.getOrFailTest();
@@ -89,7 +93,7 @@ void main() {
           'should not be valid if talk expression is empty but other fields are not',
           () async {
             // arrange
-            bloc.add(Initialize());
+            bloc.add(InitializeEvent());
             await Future.delayed(blocWaitDuration);
 
             var form = bloc.state.form.getOrFailTest();
@@ -107,7 +111,7 @@ void main() {
           'should not be valid if mascot name is empty but other fields are not',
           () async {
             // arrange
-            bloc.add(Initialize());
+            bloc.add(InitializeEvent());
             await Future.delayed(blocWaitDuration);
 
             var form = bloc.state.form.getOrFailTest();
@@ -126,7 +130,7 @@ void main() {
 
     group('SaveMascot', () {
       Future<void> fillAndSaveForm(CreateMascotBloc bloc) async {
-        bloc.add(Initialize());
+        bloc.add(InitializeEvent());
         await Future.delayed(blocWaitDuration);
 
         var form = bloc.state.form.getOrFailTest();
@@ -169,7 +173,7 @@ void main() {
         'should emit [SaveMascotError(${ErrorCodes.invalidInputFailureCode})] when the form is invalid',
         build: () => bloc,
         act: (bloc) async {
-          bloc.add(Initialize());
+          bloc.add(InitializeEvent());
           await Future.delayed(blocWaitDuration);
 
           bloc.add(SaveMascot());

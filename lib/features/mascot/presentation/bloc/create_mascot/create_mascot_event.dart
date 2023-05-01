@@ -19,12 +19,14 @@ class SaveMascotSuccess extends CreateMascotEvent {
 }
 
 class SaveMascotFailure extends CreateMascotEvent {
-  final Failure failure;
+  final int failureCode;
 
-  const SaveMascotFailure(this.failure);
+  const SaveMascotFailure(this.failureCode);
 
   @override
-  List<Object?> get props => [failure];
+  List<Object?> get props => [failureCode];
 }
 
-class Initialize extends CreateMascotEvent {}
+class InitializeEvent extends CreateMascotEvent {}
+
+class SavingMascotEvent extends CreateMascotEvent {}

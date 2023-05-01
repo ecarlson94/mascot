@@ -8,7 +8,7 @@ import '../../../../core/extensions/extensions.dart';
 import '../../../../core/injection/injection_container.dart';
 import '../../../../core/widgets/common_text_field.dart';
 import '../../../expressions/presentation/widgets/upload_expression.dart';
-import '../bloc/create_mascot_bloc.dart';
+import '../bloc/create_mascot/create_mascot_bloc.dart';
 
 class NewMascotPage extends StatelessWidget {
   const NewMascotPage({super.key});
@@ -18,7 +18,8 @@ class NewMascotPage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: BlocProvider(
-          create: (context) => getIt<CreateMascotBloc>()..add(Initialize()),
+          create: (context) =>
+              getIt<CreateMascotBloc>()..add(InitializeEvent()),
           child: BlocBuilder<CreateMascotBloc, CreateMascotState>(
             builder: (context, state) {
               var isSaving = state is SavingMascot;

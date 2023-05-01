@@ -6,7 +6,8 @@ import 'package:mascot/features/expressions/data/models/expression_mapper.dart';
 import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mascot/features/mascot/data/models/mascot_mapper.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
-import 'package:mascot/features/mascot/presentation/bloc/create_mascot_bloc.dart';
+import 'package:mascot/features/mascot/presentation/bloc/create_mascot/create_mascot_bloc.dart';
+import 'package:mascot/features/mascot/presentation/bloc/create_mascot/effects/save_mascot_effect.dart';
 import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart';
 import 'package:mascot/features/settings/data/models/settings_mapper.dart';
 import 'package:mascot/features/settings/domain/entities/settings.dart';
@@ -27,8 +28,8 @@ class TestData {
 
   final Expression expression = Expression(
     id: 1,
-    name: CreateMascotBloc.neutralExpressionName,
-    description: CreateMascotBloc.neutralExpressionDescription,
+    name: SaveMascotEffect.neutralExpressionName,
+    description: SaveMascotEffect.neutralExpressionDescription,
     image: Uint8List(5),
     activator: ExpressionTriggers.always,
     priority: 1000,
@@ -38,8 +39,8 @@ class TestData {
   final List<Expression> expressions = [
     Expression(
       id: 1,
-      name: CreateMascotBloc.neutralExpressionName,
-      description: CreateMascotBloc.neutralExpressionDescription,
+      name: SaveMascotEffect.neutralExpressionName,
+      description: SaveMascotEffect.neutralExpressionDescription,
       image: Uint8List(5),
       activator: ExpressionTriggers.always,
       priority: 1000,
@@ -47,7 +48,7 @@ class TestData {
     Expression(
       id: 2,
       name: talkingExpressionName,
-      description: CreateMascotBloc.talkingExpressionDescription,
+      description: SaveMascotEffect.talkingExpressionDescription,
       image: Uint8List(5),
       activator: ExpressionTriggers.talking,
       priority: 980,
@@ -60,8 +61,8 @@ class TestData {
     expressions: {
       Expression(
         id: 1,
-        name: CreateMascotBloc.neutralExpressionName,
-        description: CreateMascotBloc.neutralExpressionDescription,
+        name: SaveMascotEffect.neutralExpressionName,
+        description: SaveMascotEffect.neutralExpressionDescription,
         image: Uint8List(5),
         activator: ExpressionTriggers.always,
         priority: 1000,
@@ -69,7 +70,7 @@ class TestData {
       Expression(
         id: 2,
         name: talkingExpressionName,
-        description: CreateMascotBloc.talkingExpressionDescription,
+        description: SaveMascotEffect.talkingExpressionDescription,
         image: Uint8List(5),
         activator: ExpressionTriggers.talking,
         priority: 999,

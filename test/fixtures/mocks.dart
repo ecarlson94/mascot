@@ -11,6 +11,7 @@ import 'package:mascot/features/mascot/domain/repositories/mascots_repository.da
 import 'package:mascot/features/mascot/domain/usecases/get_mascot.dart';
 import 'package:mascot/features/mascot/domain/usecases/add_mascot.dart';
 import 'package:mascot/features/mascot/domain/usecases/stream_mascot.dart';
+import 'package:mascot/features/mascot/presentation/bloc/create_mascot/effects/save_mascot_effect.dart';
 import 'package:mascot/features/microphone/device/microphone.dart';
 import 'package:mascot/features/microphone/domain/services/microphone_service.dart';
 import 'package:mascot/features/microphone/domain/usecases/stream_microphone_volume.dart';
@@ -29,6 +30,7 @@ import 'mocks.mocks.dart';
   MascotsIndexedDbDataSource,
   MascotsRepository,
   AddMascot,
+  SaveMascotEffect,
   GetMascot,
   SettingsRepository,
   StreamSettings,
@@ -60,6 +62,10 @@ class Mocks {
 
   MockAddMascot? _addMascot;
   MockAddMascot get addMascot => _addMascot ??= MockAddMascot();
+
+  MockSaveMascotEffect? _saveMascotEffect;
+  MockSaveMascotEffect get saveMascotEffect =>
+      _saveMascotEffect ??= MockSaveMascotEffect();
 
   MockGetMascot? _getMascot;
   MockGetMascot get getMascot => _getMascot ??= MockGetMascot();
