@@ -1,42 +1,25 @@
 part of 'create_mascot_bloc.dart';
 
-abstract class CreateMascotState extends Equatable {
+class CreateMascotState extends Equatable {
   final Option<FormGroup> form;
+  final Option<int> failureCode;
+  final Option<Mascot> mascot;
+  final bool isSaving;
 
-  const CreateMascotState(this.form);
+  const CreateMascotState(
+    this.form,
+    this.mascot,
+    this.failureCode,
+    this.isSaving,
+  );
 
-  @override
-  List<Object> get props => [form];
-}
-
-class CreateMascotInitial extends CreateMascotState {
-  const CreateMascotInitial(super.form);
-}
-
-class SavingMascot extends CreateMascotState {
-  const SavingMascot(super.form);
-}
-
-class MascotSaved extends CreateMascotState {
-  final Mascot mascot;
-
-  const MascotSaved(this.mascot, super.form);
+  FormGroup get _form => form.getOrElse(getInitialForm);
 
   @override
-  List<Object> get props => [mascot, form];
-}
-
-abstract class CreateMascotError extends CreateMascotState
-    implements ErrorState {
-  @override
-  final int code;
-
-  const CreateMascotError(this.code, super.form);
-
-  @override
-  List<Object> get props => [code];
-}
-
-class SaveMascotError extends CreateMascotError {
-  const SaveMascotError(super.code, super.form);
+  List<Object?> get props => [
+        _form.controls.values.map((c) => c.value).toList(),
+        mascot,
+        failureCode,
+        isSaving,
+      ];
 }

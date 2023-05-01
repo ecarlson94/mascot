@@ -6,7 +6,6 @@ import 'package:mascot/features/expressions/data/models/expression_mapper.dart';
 import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mascot/features/mascot/data/models/mascot_mapper.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
-import 'package:mascot/features/mascot/presentation/bloc/create_mascot/create_mascot_bloc.dart';
 import 'package:mascot/features/mascot/presentation/bloc/create_mascot/effects/save_mascot_effect.dart';
 import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart';
 import 'package:mascot/features/settings/data/models/settings_mapper.dart';

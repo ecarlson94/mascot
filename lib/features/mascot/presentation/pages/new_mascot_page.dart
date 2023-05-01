@@ -22,8 +22,7 @@ class NewMascotPage extends StatelessWidget {
               getIt<CreateMascotBloc>()..add(InitializeEvent()),
           child: BlocBuilder<CreateMascotBloc, CreateMascotState>(
             builder: (context, state) {
-              var isSaving = state is SavingMascot;
-              if (state is MascotSaved) {
+              if (state.mascot.isSome()) {
                 SchedulerBinding.instance
                     .addPostFrameCallback((_) => context.back());
               }
@@ -76,12 +75,12 @@ class NewMascotPage extends StatelessWidget {
                           SizedBox(
                             width: double.infinity,
                             child: FilledButton(
-                              onPressed: isSaving
+                              onPressed: form.disabled
                                   ? null
                                   : () => form.valid
                                       ? bloc.add(SaveMascot())
                                       : form.markAllAsTouched(),
-                              child: isSaving
+                              child: state.isSaving
                                   ? const CircularProgressIndicator()
                                   : const Text('Save'),
                             ),

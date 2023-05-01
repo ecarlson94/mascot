@@ -7,10 +7,9 @@ import '../data/stream_subscriber.dart';
 // Implementations must be pure functions, meaning that they
 // should always return the same output given the same input
 // and should not have any side effects.
-typedef BlocAction<TEvent, TState> = void Function(
+typedef BlocAction<TEvent, TState> = TState Function(
   TEvent event,
   TState state,
-  Emitter<TState> emit,
 );
 
 // Effects are similar to actions, but they can have side effects.
@@ -25,7 +24,7 @@ abstract class BaseBloc<TEvent, TState> extends Bloc<TEvent, TState>
   BaseBloc(super.initialState);
 
   void createAction<AEvent extends TEvent>(BlocAction<AEvent, TState> action) {
-    on<AEvent>((event, emit) => action(event, state, emit));
+    on<AEvent>((event, emit) => emit(action(event, state)));
   }
 
   void createEffect<AEvent extends TEvent>(

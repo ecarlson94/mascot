@@ -4,9 +4,9 @@ import 'package:injectable/injectable.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../../../core/clean_architecture/base_bloc.dart';
-import '../../../../../core/error/error.dart';
 import '../../../domain/entities/mascot.dart';
 import 'create_mascot_actions.dart' as actions;
+import 'create_mascot_actions.dart';
 import 'effects/save_mascot_effect.dart';
 
 part 'create_mascot_event.dart';
@@ -21,9 +21,14 @@ class CreateMascotBloc extends BaseBloc<CreateMascotEvent, CreateMascotState> {
   final SaveMascotEffect _saveMascotEffect;
 
   CreateMascotBloc(this._saveMascotEffect)
-      : super(CreateMascotInitial(none())) {
+      : super(CreateMascotState(
+          none(),
+          none(),
+          none(),
+          false,
+        )) {
     createAction(actions.initialize);
-    createAction(actions.mascotSaved);
+    createAction(actions.saveMascotSuccess);
     createAction(actions.saveMascotFailed);
     createAction(actions.savingMascot);
 

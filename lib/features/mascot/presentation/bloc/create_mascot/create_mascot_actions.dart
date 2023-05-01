@@ -1,12 +1,10 @@
-import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import '../../../../../core/error/error.dart';
 import '../../../../../core/widgets/reactive_image_picker/image_file.dart';
 import 'create_mascot_bloc.dart';
 
-FormGroup initialForm() => FormGroup({
+FormGroup getInitialForm() => FormGroup({
       CreateMascotBloc.neutralExpressionFormControlName: FormControl<ImageFile>(
         validators: [Validators.required],
       ),
@@ -23,40 +21,56 @@ FormGroup initialForm() => FormGroup({
       ),
     });
 
-void initialize(
+CreateMascotState get initialCreateMascotState =>
+    CreateMascotState(some(getInitialForm()), none(), none(), false);
+
+CreateMascotState initialize(
   InitializeEvent event,
   CreateMascotState state,
-  Emitter<CreateMascotState> emit,
-) {
-  emit(CreateMascotInitial(some(initialForm())));
-}
+) =>
+    initialCreateMascotState;
 
-void mascotSaved(
+CreateMascotState saveMascotSuccess(
   SaveMascotSuccess event,
   CreateMascotState state,
-  Emitter<CreateMascotState> emit,
 ) {
-  var form = state.form.getOrElse(() => initialForm());
+  var form = state.form.getOrElse(getInitialForm);
   form.markAsEnabled();
 
-  emit(MascotSaved(event.mascot, some(form)));
+  return CreateMascotState(
+    some(form),
+    some(event.mascot),
+    none(),
+    false,
+  );
 }
 
-void saveMascotFailed(
+CreateMascotState saveMascotFailed(
   SaveMascotFailure event,
   CreateMascotState state,
-  Emitter<CreateMascotState> emit,
 ) {
-  emit(SaveMascotError(ErrorCodes.saveMascotFailureCode, state.form));
+  var form = state.form.getOrElse(getInitialForm);
+  form.markAsEnabled();
+
+  return CreateMascotState(
+    some(form),
+    state.mascot,
+    some(event.failureCode),
+    false,
+  );
 }
 
-void savingMascot(
+CreateMascotState savingMascot(
   SavingMascotEvent event,
   CreateMascotState state,
-  Emitter<CreateMascotState> emit,
 ) {
-  var form = state.form.getOrElse(() => initialForm());
+  var form = state.form.getOrElse(getInitialForm);
   form.markAsDisabled();
 
-  emit(SavingMascot(some(form)));
+  return CreateMascotState(
+    some(form),
+    state.mascot,
+    state.failureCode,
+    true,
+  );
 }

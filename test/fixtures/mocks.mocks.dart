@@ -6,6 +6,7 @@
 import 'dart:async' as _i10;
 
 import 'package:dartz/dartz.dart' as _i4;
+import 'package:flutter_bloc/flutter_bloc.dart' as _i34;
 import 'package:idb_shim/idb_client.dart' as _i5;
 import 'package:mascot/core/clean_architecture/usecase.dart' as _i26;
 import 'package:mascot/core/data/indexed_db/indexed_db_data_source.dart' as _i2;
@@ -745,15 +746,15 @@ class MockSaveMascotEffect extends _i1.Mock implements _i20.SaveMascotEffect {
 
   @override
   _i10.Stream<_i21.CreateMascotEvent> call(
-    _i21.CreateMascotState? state,
     _i21.SaveMascot? event,
+    _i21.CreateMascotState? state,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [
-            state,
             event,
+            state,
           ],
         ),
         returnValue: _i10.Stream<_i21.CreateMascotEvent>.empty(),
@@ -1203,4 +1204,69 @@ class MockStreamSubscription<T> extends _i1.Mock
           ),
         ),
       ) as _i10.Future<E>);
+}
+
+/// A class which mocks [Emitter].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockEmitter<State> extends _i1.Mock implements _i34.Emitter<State> {
+  MockEmitter() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  bool get isDone => (super.noSuchMethod(
+        Invocation.getter(#isDone),
+        returnValue: false,
+      ) as bool);
+  @override
+  _i10.Future<void> onEach<T>(
+    _i10.Stream<T>? stream, {
+    required void Function(T)? onData,
+    void Function(
+      Object,
+      StackTrace,
+    )? onError,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #onEach,
+          [stream],
+          {
+            #onData: onData,
+            #onError: onError,
+          },
+        ),
+        returnValue: _i10.Future<void>.value(),
+        returnValueForMissingStub: _i10.Future<void>.value(),
+      ) as _i10.Future<void>);
+  @override
+  _i10.Future<void> forEach<T>(
+    _i10.Stream<T>? stream, {
+    required State Function(T)? onData,
+    State Function(
+      Object,
+      StackTrace,
+    )? onError,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #forEach,
+          [stream],
+          {
+            #onData: onData,
+            #onError: onError,
+          },
+        ),
+        returnValue: _i10.Future<void>.value(),
+        returnValueForMissingStub: _i10.Future<void>.value(),
+      ) as _i10.Future<void>);
+  @override
+  void call(State? state) => super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [state],
+        ),
+        returnValueForMissingStub: null,
+      );
 }
