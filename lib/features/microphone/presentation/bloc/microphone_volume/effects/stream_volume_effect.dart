@@ -1,31 +1,31 @@
 import 'package:injectable/injectable.dart';
 
-import '../../../../../../core/reactive/base_bloc.dart';
 import '../../../../../../core/clean_architecture/usecase.dart';
+import '../../../../../../core/reactive/base_bloc.dart';
 import '../../../../domain/usecases/stream_microphone_volume.dart';
 import '../microphone_volume_bloc.dart';
 
 @injectable
 class StreamVolumeEffect extends BlocEffect<MicrophoneVolumeEvent,
-    InitializeMicrophoneVolume, MicrophoneVolumeState> {
+    InitializeMicrophoneVolumeEvent, MicrophoneVolumeState> {
   final StreamMicrophoneVolume _streamMicrophoneVolume;
 
   StreamVolumeEffect(this._streamMicrophoneVolume);
 
   @override
   Stream<MicrophoneVolumeEvent> call(
-    InitializeMicrophoneVolume event,
+    InitializeMicrophoneVolumeEvent event,
     MicrophoneVolumeState state,
   ) async* {
-    yield const LoadingVolumeStream();
+    yield const LoadingVolumeStreamEvent();
 
     var volumeStreamOrFailure = await _streamMicrophoneVolume(NoParams());
     yield* volumeStreamOrFailure.fold(
       (failure) async* {
-        yield StreamVolumeFailure(failure);
+        yield StreamVolumeFailureEvent(failure);
       },
       (volumeStream) =>
-          volumeStream.map((volume) => MicrophoneVolumeUpdated(volume)),
+          volumeStream.map((volume) => MicrophoneVolumeUpdatedEvent(volume)),
     );
   }
 }

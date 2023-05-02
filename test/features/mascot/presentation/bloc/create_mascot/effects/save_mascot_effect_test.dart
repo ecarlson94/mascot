@@ -72,13 +72,15 @@ void main() {
         var state = initialCreateMascotState;
 
         // act
-        var result = effect(SaveMascot(), state);
+        var result = effect(SaveMascotEvent(), state);
         var events = await result.toList();
 
         // assert
         expect(
           events,
-          equals([const SaveMascotFailure(ErrorCodes.invalidInputFailureCode)]),
+          equals([
+            const SaveMascotFailureEvent(ErrorCodes.invalidInputFailureCode)
+          ]),
         );
       },
     );
@@ -91,12 +93,12 @@ void main() {
         var state = CreateMascotState(some(form), none(), none(), false);
 
         // act
-        var result = effect(SaveMascot(), state);
+        var result = effect(SaveMascotEvent(), state);
         var events = await result.toList();
 
         // assert
         expect(events,
-            equals([SavingMascotEvent(), SaveMascotSuccess(savedMascot)]));
+            equals([SavingMascotEvent(), SaveMascotSuccessEvent(savedMascot)]));
       },
     );
 
@@ -108,7 +110,7 @@ void main() {
         var state = CreateMascotState(some(form), none(), none(), false);
 
         // act
-        var result = effect(SaveMascot(), state);
+        var result = effect(SaveMascotEvent(), state);
         await result.toList();
 
         // assert
@@ -126,7 +128,7 @@ void main() {
             .thenAnswer((_) async => Left(LocalDataSourceFailure()));
 
         // act
-        var result = effect(SaveMascot(), state);
+        var result = effect(SaveMascotEvent(), state);
         var events = await result.toList();
 
         // assert
@@ -134,7 +136,7 @@ void main() {
           events,
           equals([
             SavingMascotEvent(),
-            const SaveMascotFailure(ErrorCodes.saveMascotFailureCode)
+            const SaveMascotFailureEvent(ErrorCodes.saveMascotFailureCode)
           ]),
         );
       },

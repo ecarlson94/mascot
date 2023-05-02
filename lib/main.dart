@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SettingsBloc>(
-      create: (_) => getIt<SettingsBloc>()..add(LoadSettings()),
+      create: (_) => getIt<SettingsBloc>()..add(LoadSettingsEvent()),
       child: BlocProvider(
         create: (context) => getIt<MicrophoneVolumeBloc>(),
         child: MaterialApp(

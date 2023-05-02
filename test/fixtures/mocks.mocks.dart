@@ -757,7 +757,7 @@ class MockSaveMascotEffect extends _i1.Mock implements _i20.SaveMascotEffect {
       ) as _i21.EffectReplaceStrategy);
   @override
   _i10.Stream<_i22.CreateMascotEvent> call(
-    _i22.SaveMascot? event,
+    _i22.SaveMascotEvent? event,
     _i22.CreateMascotState? state,
   ) =>
       (super.noSuchMethod(

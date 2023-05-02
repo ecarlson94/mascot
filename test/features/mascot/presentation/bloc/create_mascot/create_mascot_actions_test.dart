@@ -131,7 +131,7 @@ void main() {
         () {
           // arrange
           var errorCode = 100;
-          var event = SaveMascotFailure(errorCode);
+          var event = SaveMascotFailureEvent(errorCode);
           var state = initialCreateMascotState;
 
           // act
@@ -149,7 +149,7 @@ void main() {
       test('should set isSaving to false', () {
         // arrange
         var errorCode = 100;
-        var event = SaveMascotFailure(errorCode);
+        var event = SaveMascotFailureEvent(errorCode);
         var state = CreateMascotState(none(), none(), none(), true);
 
         // act
@@ -164,7 +164,7 @@ void main() {
         () {
           // arrange
           var errorCode = 100;
-          var event = SaveMascotFailure(errorCode);
+          var event = SaveMascotFailureEvent(errorCode);
           var state = initialCreateMascotState;
           var form = state.form.getOrFailTest();
           form.markAsDisabled();
@@ -184,7 +184,7 @@ void main() {
         'should return state with event mascot and the current state\'s form',
         () {
           // arrange
-          var event = SaveMascotSuccess(context.data.mascot);
+          var event = SaveMascotSuccessEvent(context.data.mascot);
           var state = CreateMascotState(none(), none(), none(), true);
 
           // act
@@ -205,7 +205,7 @@ void main() {
 
       test('should set isSaving to false', () {
         // arrange
-        var event = SaveMascotSuccess(context.data.mascot);
+        var event = SaveMascotSuccessEvent(context.data.mascot);
         var state = CreateMascotState(none(), none(), none(), true);
 
         // act
@@ -219,7 +219,7 @@ void main() {
         'should mark form as enabled',
         () {
           // arrange
-          var event = SaveMascotSuccess(context.data.mascot);
+          var event = SaveMascotSuccessEvent(context.data.mascot);
           var state = initialCreateMascotState;
           var form = state.form.getOrFailTest();
           form.markAsDisabled();

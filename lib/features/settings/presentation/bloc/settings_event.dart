@@ -7,12 +7,12 @@ abstract class SettingsEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class LoadSettings extends SettingsEvent {}
+class LoadSettingsEvent extends SettingsEvent {}
 
-class SetTalkingThreshold extends SettingsEvent {
+class SetTalkingThresholdEvent extends SettingsEvent {
   final DecibelLufs talkingThreshold;
 
-  const SetTalkingThreshold(this.talkingThreshold);
+  const SetTalkingThresholdEvent(this.talkingThreshold);
 
   @override
   List<Object?> get props => [talkingThreshold, ...super.props];

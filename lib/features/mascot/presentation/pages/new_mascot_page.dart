@@ -78,7 +78,7 @@ class NewMascotPage extends StatelessWidget {
                               onPressed: form.disabled
                                   ? null
                                   : () => form.valid
-                                      ? bloc.add(SaveMascot())
+                                      ? bloc.add(SaveMascotEvent())
                                       : form.markAllAsTouched(),
                               child: state.isSaving
                                   ? const CircularProgressIndicator()

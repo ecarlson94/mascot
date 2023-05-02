@@ -1,22 +1,22 @@
 import 'package:dartz/dartz.dart';
-import '../../../../../core/error/error.dart';
 
+import '../../../../../core/error/error.dart';
 import 'mascot_animator_bloc.dart';
 
 MascotAnimatorState setExpression(
-  SetExpression event,
+  SetExpressionEvent event,
   MascotAnimatorState state,
 ) =>
     ExpressionChanged(some(event.expression));
 
 MascotAnimatorState loadingMascot(
-  LoadingMascot event,
+  LoadingMascotEvent event,
   MascotAnimatorState state,
 ) =>
     MascotAnimatorLoading(state.expressionOption);
 
 MascotAnimatorState streamMascotError(
-  StreamMascotError event,
+  StreamMascotErrorEvent event,
   MascotAnimatorState state,
 ) =>
     MascotAnimatorError(

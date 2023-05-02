@@ -27,7 +27,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
     this.streamSettings,
     this.setTalkingThreshold,
   ) : super(SettingsInitial(none(), none())) {
-    on<LoadSettings>((event, emit) async {
+    on<LoadSettingsEvent>((event, emit) async {
       var failureOrSettingsStream = await streamSettings(NoParams());
       failureOrSettingsStream.fold(
         (l) => emit(
@@ -50,7 +50,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
       );
     });
 
-    on<SetTalkingThreshold>((event, emit) async =>
+    on<SetTalkingThresholdEvent>((event, emit) async =>
         await setTalkingThreshold(event.talkingThreshold));
   }
 

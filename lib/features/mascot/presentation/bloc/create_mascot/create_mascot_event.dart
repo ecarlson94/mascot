@@ -7,21 +7,21 @@ abstract class CreateMascotEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class SaveMascot extends CreateMascotEvent {}
+class SaveMascotEvent extends CreateMascotEvent {}
 
-class SaveMascotSuccess extends CreateMascotEvent {
+class SaveMascotSuccessEvent extends CreateMascotEvent {
   final Mascot mascot;
 
-  const SaveMascotSuccess(this.mascot);
+  const SaveMascotSuccessEvent(this.mascot);
 
   @override
   List<Object?> get props => [mascot];
 }
 
-class SaveMascotFailure extends CreateMascotEvent {
+class SaveMascotFailureEvent extends CreateMascotEvent {
   final int failureCode;
 
-  const SaveMascotFailure(this.failureCode);
+  const SaveMascotFailureEvent(this.failureCode);
 
   @override
   List<Object?> get props => [failureCode];

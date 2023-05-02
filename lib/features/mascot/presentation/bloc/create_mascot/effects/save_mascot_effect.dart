@@ -14,7 +14,7 @@ import '../create_mascot_bloc.dart';
 
 @injectable
 class SaveMascotEffect
-    extends BlocEffect<CreateMascotEvent, SaveMascot, CreateMascotState> {
+    extends BlocEffect<CreateMascotEvent, SaveMascotEvent, CreateMascotState> {
   static const String neutralExpressionName = constants.defaultExpressionName;
   static const int neutralExpressionPriority = 1000;
   static const String neutralExpressionDescription =
@@ -30,12 +30,12 @@ class SaveMascotEffect
 
   @override
   Stream<CreateMascotEvent> call(
-    SaveMascot event,
+    SaveMascotEvent event,
     CreateMascotState state,
   ) async* {
     var form = state.form.getOrElse(getInitialForm);
     if (!form.valid) {
-      yield const SaveMascotFailure(ErrorCodes.invalidInputFailureCode);
+      yield const SaveMascotFailureEvent(ErrorCodes.invalidInputFailureCode);
     } else {
       yield SavingMascotEvent();
       yield await _triggerSaveMascot(form);
@@ -47,8 +47,9 @@ class SaveMascotEffect
 
     var mascotOrFailure = await _addMascot(mascotToSave);
     return mascotOrFailure.fold(
-      (failure) => const SaveMascotFailure(ErrorCodes.saveMascotFailureCode),
-      (mascot) => SaveMascotSuccess(mascot),
+      (failure) =>
+          const SaveMascotFailureEvent(ErrorCodes.saveMascotFailureCode),
+      (mascot) => SaveMascotSuccessEvent(mascot),
     );
   }
 

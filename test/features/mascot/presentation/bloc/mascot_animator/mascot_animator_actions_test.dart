@@ -21,7 +21,7 @@ void main() {
 
         // act
         var result = setExpression(
-          SetExpression(context.data.expression),
+          SetExpressionEvent(context.data.expression),
           state,
         );
 
@@ -37,7 +37,7 @@ void main() {
 
         // act
         var result = loadingMascot(
-          const LoadingMascot(),
+          const LoadingMascotEvent(),
           state,
         );
 
@@ -51,7 +51,7 @@ void main() {
 
         // act
         var result = loadingMascot(
-          const LoadingMascot(),
+          const LoadingMascotEvent(),
           state,
         );
 
@@ -67,7 +67,7 @@ void main() {
 
         // act
         var result = streamMascotError(
-          const StreamMascotError(),
+          const StreamMascotErrorEvent(),
           state,
         );
 
@@ -84,7 +84,7 @@ void main() {
 
         // act
         var result = streamMascotError(
-          const StreamMascotError(),
+          const StreamMascotErrorEvent(),
           state,
         );
 

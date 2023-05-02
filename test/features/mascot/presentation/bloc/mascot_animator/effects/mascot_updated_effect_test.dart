@@ -30,7 +30,7 @@ void main() {
       'should invoke ExpressionAnimationService.animateExpressions with mascot expressions',
       () async {
         // arrange
-        final event = MascotUpdated(context.data.mascot);
+        final event = MascotUpdatedEvent(context.data.mascot);
         final state = MascotAnimatorInitial();
 
         // act
@@ -49,7 +49,7 @@ void main() {
       'should map expression animation stream to SetExpression events',
       () async {
         // arrange
-        final event = MascotUpdated(context.data.mascot);
+        final event = MascotUpdatedEvent(context.data.mascot);
         final state = MascotAnimatorInitial();
 
         // act
@@ -60,8 +60,8 @@ void main() {
         expect(
           events,
           [
-            SetExpression(context.data.mascot.expressions.first),
-            SetExpression(context.data.mascot.expressions.last),
+            SetExpressionEvent(context.data.mascot.expressions.first),
+            SetExpressionEvent(context.data.mascot.expressions.last),
           ],
         );
       },

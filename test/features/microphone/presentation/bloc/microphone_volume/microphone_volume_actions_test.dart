@@ -15,7 +15,7 @@ void main() {
 
         // act
         var result = loadingVolumeStream(
-          const LoadingVolumeStream(),
+          const LoadingVolumeStreamEvent(),
           state,
         );
 
@@ -30,7 +30,7 @@ void main() {
 
         // act
         var result = loadingVolumeStream(
-          const LoadingVolumeStream(),
+          const LoadingVolumeStreamEvent(),
           state,
         );
 
@@ -47,7 +47,7 @@ void main() {
 
         // act
         var result = microphoneVolumeUpdated(
-          const MicrophoneVolumeUpdated(decibels),
+          const MicrophoneVolumeUpdatedEvent(decibels),
           state,
         );
 
@@ -73,7 +73,7 @@ void main() {
 
             // act
             var result = streamVolumeFailure(
-              StreamVolumeFailure(entry.key),
+              StreamVolumeFailureEvent(entry.key),
               state,
             );
 
@@ -93,7 +93,7 @@ void main() {
 
         // act
         var result = streamVolumeFailure(
-          StreamVolumeFailure(MicrophoneFailure()),
+          StreamVolumeFailureEvent(MicrophoneFailure()),
           state,
         );
 

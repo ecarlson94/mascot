@@ -7,34 +7,34 @@ abstract class MascotAnimatorEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadMascot extends MascotAnimatorEvent {
+class LoadMascotEvent extends MascotAnimatorEvent {
   final int mascotId;
 
-  const LoadMascot(this.mascotId);
+  const LoadMascotEvent(this.mascotId);
 
   @override
   List<Object> get props => [mascotId];
 }
 
-class SetExpression extends MascotAnimatorEvent {
+class SetExpressionEvent extends MascotAnimatorEvent {
   final Expression expression;
 
-  const SetExpression(this.expression);
+  const SetExpressionEvent(this.expression);
 
   @override
   List<Object> get props => [expression];
 }
 
-class LoadingMascot extends MascotAnimatorEvent {
-  const LoadingMascot();
+class LoadingMascotEvent extends MascotAnimatorEvent {
+  const LoadingMascotEvent();
 }
 
-class StreamMascotError extends MascotAnimatorEvent {
-  const StreamMascotError();
+class StreamMascotErrorEvent extends MascotAnimatorEvent {
+  const StreamMascotErrorEvent();
 }
 
-class MascotUpdated extends MascotAnimatorEvent {
+class MascotUpdatedEvent extends MascotAnimatorEvent {
   final Mascot mascot;
 
-  const MascotUpdated(this.mascot);
+  const MascotUpdatedEvent(this.mascot);
 }

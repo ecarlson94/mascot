@@ -49,7 +49,8 @@ void main() {
           when(context.mocks.saveTalkingThreshold(any))
               .thenAnswer((_) async => const Right(unit));
         },
-        act: (bloc) => bloc.add(const SetTalkingThreshold(DecibelLufs(12))),
+        act: (bloc) =>
+            bloc.add(const SetTalkingThresholdEvent(DecibelLufs(12))),
         verify: (bloc) {
           verify(context.mocks.saveTalkingThreshold(const DecibelLufs(12)));
           verifyNoMoreInteractions(context.mocks.saveTalkingThreshold);
@@ -61,7 +62,7 @@ void main() {
       blocTest(
         'should emit [SettingsLoaded] when retrieval of settings is successful',
         build: () => bloc,
-        act: (bloc) => bloc.add(LoadSettings()),
+        act: (bloc) => bloc.add(LoadSettingsEvent()),
         expect: () => [
           isA<SettingsLoaded>(),
         ],
@@ -70,14 +71,14 @@ void main() {
       blocTest(
         'should use the stream settings usecase',
         build: () => bloc,
-        act: (bloc) => bloc.add(LoadSettings()),
+        act: (bloc) => bloc.add(LoadSettingsEvent()),
         verify: (bloc) => verify(context.mocks.streamSettings(any)),
       );
 
       blocTest(
         'should create streams for individual settings',
         build: () => bloc,
-        act: (bloc) => bloc.add(LoadSettings()),
+        act: (bloc) => bloc.add(LoadSettingsEvent()),
         verify: (bloc) {
           var settingStreamOption = bloc.state.favoriteMascotIdStreamOption;
           expect(settingStreamOption, isSome);
@@ -91,7 +92,7 @@ void main() {
         'should ignore individual settings updates when the value is the same',
         build: () => bloc,
         setUp: () => settingsSubject.add(context.data.settings),
-        act: (bloc) => bloc.add(LoadSettings()),
+        act: (bloc) => bloc.add(LoadSettingsEvent()),
         verify: (bloc) {
           expect(
             bloc.state.favoriteMascotIdStreamOption.getOrFailTest(),
@@ -108,7 +109,7 @@ void main() {
       blocTest(
         'should update individual settings when the value is different',
         build: () => bloc,
-        act: (bloc) => bloc.add(LoadSettings()),
+        act: (bloc) => bloc.add(LoadSettingsEvent()),
         verify: (bloc) {
           settingsSubject.add(
             context.data.settings.copyWith(
@@ -133,7 +134,7 @@ void main() {
         build: () => bloc,
         seed: () => SettingsLoaded(
             some(favoriteMascotIdSubject), some(talkingThresholdSubject)),
-        act: (bloc) => bloc.add(LoadSettings()),
+        act: (bloc) => bloc.add(LoadSettingsEvent()),
         verify: (bloc) => {
           expect(
             bloc.state.favoriteMascotIdStreamOption.getOrFailTest(),
@@ -151,7 +152,7 @@ void main() {
         build: () => bloc,
         setUp: () => when(context.mocks.streamSettings(any))
             .thenAnswer((_) async => Left(LocalDataSourceFailure())),
-        act: (bloc) => bloc.add(LoadSettings()),
+        act: (bloc) => bloc.add(LoadSettingsEvent()),
         expect: () => [
           SettingsError(ErrorCodes.loadSettingsFailureCode, none(), none()),
         ],

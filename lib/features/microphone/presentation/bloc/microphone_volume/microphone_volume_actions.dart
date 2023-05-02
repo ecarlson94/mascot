@@ -5,21 +5,21 @@ import '../../../../../core/error/failure.dart';
 import 'microphone_volume_bloc.dart';
 
 MicrophoneVolumeState loadingVolumeStream(
-  LoadingVolumeStream event,
+  LoadingVolumeStreamEvent event,
   MicrophoneVolumeState currentState,
 ) {
   return MicrophoneVolumeLoading(currentState.volumeOption);
 }
 
 MicrophoneVolumeState microphoneVolumeUpdated(
-  MicrophoneVolumeUpdated event,
+  MicrophoneVolumeUpdatedEvent event,
   MicrophoneVolumeState currentState,
 ) {
   return MicrophoneVolumeLoaded(some(event.volume));
 }
 
 MicrophoneVolumeState streamVolumeFailure(
-  StreamVolumeFailure event,
+  StreamVolumeFailureEvent event,
   MicrophoneVolumeState currentState,
 ) {
   return MicrophoneVolumeError(

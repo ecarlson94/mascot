@@ -17,7 +17,7 @@ class MascotUnderlay extends StatelessWidget {
         child: FavoriteMascotIdProvider(
           builder: (context, mascotId) => BlocProvider<MascotAnimatorBloc>(
             create: (_) =>
-                getIt<MascotAnimatorBloc>()..add(LoadMascot(mascotId)),
+                getIt<MascotAnimatorBloc>()..add(LoadMascotEvent(mascotId)),
             child: BlocBuilder<MascotAnimatorBloc, MascotAnimatorState>(
               builder: (context, state) {
                 return state.expressionOption.fold(

@@ -31,7 +31,7 @@ CreateMascotState initialize(
     initialCreateMascotState;
 
 CreateMascotState saveMascotSuccess(
-  SaveMascotSuccess event,
+  SaveMascotSuccessEvent event,
   CreateMascotState state,
 ) {
   var form = state.form.getOrElse(getInitialForm);
@@ -46,7 +46,7 @@ CreateMascotState saveMascotSuccess(
 }
 
 CreateMascotState saveMascotFailed(
-  SaveMascotFailure event,
+  SaveMascotFailureEvent event,
   CreateMascotState state,
 ) {
   var form = state.form.getOrElse(getInitialForm);

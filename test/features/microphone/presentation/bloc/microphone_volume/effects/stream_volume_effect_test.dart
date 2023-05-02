@@ -34,7 +34,7 @@ void main() {
       'should invoke StreamMicrophoneVolume',
       () async {
         // arrange
-        final event = InitializeMicrophoneVolume();
+        final event = InitializeMicrophoneVolumeEvent();
         final state = MicrophoneVolumeInitial(some(twentyDecibels));
 
         // act
@@ -50,7 +50,7 @@ void main() {
       'should map volume stream to MicrophoneVolumeUpdated events',
       () async {
         // arrange
-        final event = InitializeMicrophoneVolume();
+        final event = InitializeMicrophoneVolumeEvent();
         final state = MicrophoneVolumeInitial(some(twentyDecibels));
 
         // act
@@ -58,9 +58,9 @@ void main() {
 
         // assert
         expect(result, const [
-          LoadingVolumeStream(),
-          MicrophoneVolumeUpdated(twentyDecibels),
-          MicrophoneVolumeUpdated(thirtyDecibels)
+          LoadingVolumeStreamEvent(),
+          MicrophoneVolumeUpdatedEvent(twentyDecibels),
+          MicrophoneVolumeUpdatedEvent(thirtyDecibels)
         ]);
       },
     );
@@ -69,7 +69,7 @@ void main() {
       'should return [LoadingVolumeStream, StreamVolumeFailure] events when stream fails',
       () async {
         // arrange
-        final event = InitializeMicrophoneVolume();
+        final event = InitializeMicrophoneVolumeEvent();
         final state = MicrophoneVolumeInitial(some(twentyDecibels));
         final failure = NoMicrophonePermissionFailure();
 
@@ -82,8 +82,8 @@ void main() {
 
         // assert
         expect(result, [
-          const LoadingVolumeStream(),
-          StreamVolumeFailure(failure),
+          const LoadingVolumeStreamEvent(),
+          StreamVolumeFailureEvent(failure),
         ]);
       },
     );

@@ -5,19 +5,19 @@ import '../../../../../expressions/domain/services/animation/expression_animatio
 import '../mascot_animator_bloc.dart';
 
 @injectable
-class MascotUpdatedEffect extends BlocEffect<MascotAnimatorEvent, MascotUpdated,
-    MascotAnimatorState> {
+class MascotUpdatedEffect extends BlocEffect<MascotAnimatorEvent,
+    MascotUpdatedEvent, MascotAnimatorState> {
   final ExpressionAnimationService _expressionAnimationService;
 
   MascotUpdatedEffect(this._expressionAnimationService);
 
   @override
   Stream<MascotAnimatorEvent> call(
-    MascotUpdated event,
+    MascotUpdatedEvent event,
     MascotAnimatorState state,
   ) async* {
     var animationStream = await _expressionAnimationService
         .animateExpressions(event.mascot.expressions);
-    yield* animationStream.map((event) => SetExpression(event));
+    yield* animationStream.map((event) => SetExpressionEvent(event));
   }
 }

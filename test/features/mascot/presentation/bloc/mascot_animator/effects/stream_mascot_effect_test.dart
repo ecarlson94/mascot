@@ -25,7 +25,7 @@ void main() {
     test('should return [LoadingMascot, MascotUpdated] when mascot is loaded',
         () async {
       // arrange
-      final event = LoadMascot(context.data.mascot.id);
+      final event = LoadMascotEvent(context.data.mascot.id);
       final state = MascotAnimatorInitial();
 
       // act
@@ -36,8 +36,8 @@ void main() {
       expect(
         events,
         [
-          const LoadingMascot(),
-          MascotUpdated(context.data.mascot),
+          const LoadingMascotEvent(),
+          MascotUpdatedEvent(context.data.mascot),
         ],
       );
     });
@@ -45,7 +45,7 @@ void main() {
     test('should return [LoadingMascot, StreamMascotError] when mascot fails',
         () async {
       // arrange
-      final event = LoadMascot(context.data.mascot.id);
+      final event = LoadMascotEvent(context.data.mascot.id);
       final state = MascotAnimatorInitial();
 
       when(context.mocks.streamMascot(any)).thenAnswer(
@@ -60,8 +60,8 @@ void main() {
       expect(
         events,
         [
-          const LoadingMascot(),
-          const StreamMascotError(),
+          const LoadingMascotEvent(),
+          const StreamMascotErrorEvent(),
         ],
       );
     });

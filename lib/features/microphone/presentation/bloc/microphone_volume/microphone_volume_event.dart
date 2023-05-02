@@ -7,26 +7,26 @@ abstract class MicrophoneVolumeEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class InitializeMicrophoneVolume extends MicrophoneVolumeEvent {}
+class InitializeMicrophoneVolumeEvent extends MicrophoneVolumeEvent {}
 
-class MicrophoneVolumeUpdated extends MicrophoneVolumeEvent {
+class MicrophoneVolumeUpdatedEvent extends MicrophoneVolumeEvent {
   final DecibelLufs volume;
 
-  const MicrophoneVolumeUpdated(this.volume);
+  const MicrophoneVolumeUpdatedEvent(this.volume);
 
   @override
   List<Object> get props => [volume];
 }
 
-class StreamVolumeFailure extends MicrophoneVolumeEvent {
+class StreamVolumeFailureEvent extends MicrophoneVolumeEvent {
   final Failure failure;
 
-  const StreamVolumeFailure(this.failure);
+  const StreamVolumeFailureEvent(this.failure);
 
   @override
   List<Object> get props => [failure];
 }
 
-class LoadingVolumeStream extends MicrophoneVolumeEvent {
-  const LoadingVolumeStream();
+class LoadingVolumeStreamEvent extends MicrophoneVolumeEvent {
+  const LoadingVolumeStreamEvent();
 }

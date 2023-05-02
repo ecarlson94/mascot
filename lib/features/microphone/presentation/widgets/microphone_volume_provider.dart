@@ -17,7 +17,7 @@ class MicrophoneVolumeProvider extends StatelessWidget {
         if (state is MicrophoneVolumeInitial) {
           context
               .bloc<MicrophoneVolumeBloc>()
-              .add(InitializeMicrophoneVolume());
+              .add(InitializeMicrophoneVolumeEvent());
         }
 
         return state.volumeOption.fold(
