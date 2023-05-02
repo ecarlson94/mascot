@@ -66,7 +66,7 @@ void main() {
     return form;
   }
 
-  group('SaveMascotEffect', () {
+  group('CreateMascotBloc SaveMascotEffect', () {
     test(
       'should return [SaveMascotFailure] events when form is invalid',
       () async {

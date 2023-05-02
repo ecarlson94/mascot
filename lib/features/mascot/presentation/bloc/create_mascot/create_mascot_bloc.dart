@@ -28,10 +28,10 @@ class CreateMascotBloc extends BaseBloc<CreateMascotEvent, CreateMascotState> {
           false,
         )) {
     createAction(actions.initialize);
-    createAction(actions.saveMascotSuccess);
-    createAction(actions.saveMascotFailed);
-    createAction(actions.savingMascot);
 
     createEffect(_saveMascotEffect);
+    createAction(actions.savingMascot);
+    createAction(actions.saveMascotSuccess);
+    createAction(actions.saveMascotFailed);
   }
 }

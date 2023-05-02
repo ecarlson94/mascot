@@ -16,15 +16,6 @@ class LoadMascot extends MascotAnimatorEvent {
   List<Object> get props => [mascotId];
 }
 
-class SetMascot extends MascotAnimatorEvent {
-  final Mascot mascot;
-
-  const SetMascot(this.mascot);
-
-  @override
-  List<Object> get props => [mascot];
-}
-
 class SetExpression extends MascotAnimatorEvent {
   final Expression expression;
 
@@ -32,4 +23,18 @@ class SetExpression extends MascotAnimatorEvent {
 
   @override
   List<Object> get props => [expression];
+}
+
+class LoadingMascot extends MascotAnimatorEvent {
+  const LoadingMascot();
+}
+
+class StreamMascotError extends MascotAnimatorEvent {
+  const StreamMascotError();
+}
+
+class MascotUpdated extends MascotAnimatorEvent {
+  final Mascot mascot;
+
+  const MascotUpdated(this.mascot);
 }
