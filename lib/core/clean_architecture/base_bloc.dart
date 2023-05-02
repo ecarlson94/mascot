@@ -14,8 +14,11 @@ typedef BlocAction<TEvent, TState> = TState Function(
 
 // Effects are similar to actions, but they can have side effects.
 // They are useful for making API calls, navigating, logging, etc.
-abstract class BlocEffect<TBaseEvent, TEvent extends TBaseEvent, TState> {
-  Stream<TBaseEvent> call(TEvent event, TState state);
+// BEWARE: Infinite loops can be easily created with effects.
+// Avoid returning the same event that triggered the effect.
+abstract class BlocEffect<TBaseEvent, TCaptureEvent extends TBaseEvent,
+    TState> {
+  Stream<TBaseEvent> call(TCaptureEvent event, TState state);
 
   EffectRepeatStrategy get repeatStrategy => EffectRepeatStrategy.every;
 
