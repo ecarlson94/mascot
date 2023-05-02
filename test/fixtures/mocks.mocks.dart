@@ -1126,16 +1126,15 @@ class MockExpressionAnimationService extends _i1.Mock
   }
 
   @override
-  _i10.Future<_i10.Stream<_i14.Expression>> animateExpressions(
+  _i10.Stream<_i14.Expression> animateExpressions(
           Set<_i14.Expression>? expressions) =>
       (super.noSuchMethod(
         Invocation.method(
           #animateExpressions,
           [expressions],
         ),
-        returnValue: _i10.Future<_i10.Stream<_i14.Expression>>.value(
-            _i10.Stream<_i14.Expression>.empty()),
-      ) as _i10.Future<_i10.Stream<_i14.Expression>>);
+        returnValue: _i10.Stream<_i14.Expression>.empty(),
+      ) as _i10.Stream<_i14.Expression>);
 }
 
 /// A class which mocks [StreamSubscription].

@@ -21,7 +21,7 @@ void main() {
 
     when(context.mocks.expressionAnimationService.animateExpressions(any))
         .thenAnswer(
-      (_) async => expressionStream,
+      (_) => expressionStream,
     );
   });
 

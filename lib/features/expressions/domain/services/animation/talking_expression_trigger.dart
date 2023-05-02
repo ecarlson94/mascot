@@ -27,7 +27,7 @@ class TalkingExpressionTrigger extends ExpressionTrigger
   bool get isTriggered => _isTriggered;
 
   @override
-  Future<Stream<ExpressionTrigger>> get stream async {
+  Stream<ExpressionTrigger> get stream async* {
     DecibelLufs talkingThreshold = const DecibelLufs(-10);
     DecibelLufs microphoneVolume = const DecibelLufs(-40);
 
@@ -55,7 +55,7 @@ class TalkingExpressionTrigger extends ExpressionTrigger
       },
     );
 
-    return _stream;
+    yield* _stream;
   }
 
   void _addTrigger(DecibelLufs event, DecibelLufs talkingThreshold) {
