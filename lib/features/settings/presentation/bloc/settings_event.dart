@@ -17,3 +17,25 @@ class SetTalkingThresholdEvent extends SettingsEvent {
   @override
   List<Object?> get props => [talkingThreshold, ...super.props];
 }
+
+class SettingsUpdatedEvent extends SettingsEvent {
+  final Settings settings;
+
+  const SettingsUpdatedEvent(this.settings);
+
+  @override
+  List<Object?> get props => [settings, ...super.props];
+}
+
+class LoadingSettingsEvent extends SettingsEvent {
+  const LoadingSettingsEvent();
+}
+
+class LoadSettingsFailureEvent extends SettingsEvent {
+  final Failure failure;
+
+  const LoadSettingsFailureEvent(this.failure);
+
+  @override
+  List<Object?> get props => [failure, ...super.props];
+}

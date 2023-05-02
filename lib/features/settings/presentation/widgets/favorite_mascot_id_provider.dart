@@ -13,18 +13,15 @@ class FavoriteMascotIdProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsBloc, SettingsState>(
       builder: (context, state) {
-        return state.favoriteMascotIdStreamOption.fold(
+        return state.favoriteMascotIdOption.fold(
           () => const SizedBox.shrink(),
-          (favoriteMascotIdStream) => StreamBuilder<int?>(
-            stream: favoriteMascotIdStream,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData || snapshot.data == null) {
-                return const SizedBox.shrink();
-              }
+          (favoriteMascotId) {
+            if (favoriteMascotId == null) {
+              return const SizedBox.shrink();
+            }
 
-              return builder(context, snapshot.data!);
-            },
-          ),
+            return builder(context, favoriteMascotId);
+          },
         );
       },
     );

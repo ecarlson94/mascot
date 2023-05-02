@@ -1,26 +1,27 @@
 part of 'settings_bloc.dart';
 
 abstract class SettingsState extends Equatable {
-  final Option<BehaviorSubject<Id?>> favoriteMascotIdStreamOption;
-  final Option<BehaviorSubject<DecibelLufs?>> talkingThresholdStreamOption;
+  final Option<Id?> favoriteMascotIdOption;
+  final Option<DecibelLufs?> talkingThresholdOption;
 
   const SettingsState(
-    this.favoriteMascotIdStreamOption,
-    this.talkingThresholdStreamOption,
+    this.favoriteMascotIdOption,
+    this.talkingThresholdOption,
   );
 
   @override
   List<Object> get props => [
-        favoriteMascotIdStreamOption,
-        talkingThresholdStreamOption,
+        favoriteMascotIdOption,
+        talkingThresholdOption,
       ];
 }
 
 class SettingsInitial extends SettingsState {
-  const SettingsInitial(
-    super.favoriteMascotIdStreamOption,
-    super.talkingThresholdStreamOption,
-  );
+  SettingsInitial()
+      : super(
+          none(),
+          none(),
+        );
 }
 
 class SettingsLoaded extends SettingsState {

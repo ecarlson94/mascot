@@ -40,6 +40,7 @@ enum EffectReplaceStrategy {
   add,
 }
 
+// TODO: write tests for this class
 abstract class BaseBloc<TEvent, TState> extends Bloc<TEvent, TState>
     with SubscriptionDisposer
     implements StreamSubcriber {

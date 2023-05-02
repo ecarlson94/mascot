@@ -8,10 +8,10 @@ import 'dart:async' as _i10;
 import 'package:dartz/dartz.dart' as _i4;
 import 'package:flutter_bloc/flutter_bloc.dart' as _i35;
 import 'package:idb_shim/idb_client.dart' as _i5;
-import 'package:mascot/core/reactive/base_bloc.dart' as _i21;
 import 'package:mascot/core/clean_architecture/usecase.dart' as _i27;
 import 'package:mascot/core/data/indexed_db/indexed_db_data_source.dart' as _i2;
 import 'package:mascot/core/error/failure.dart' as _i13;
+import 'package:mascot/core/reactive/base_bloc.dart' as _i21;
 import 'package:mascot/core/utils/logger.dart' as _i30;
 import 'package:mascot/features/expressions/data/datasources/indexed_db/expressions_indexed_db_data_source.dart'
     as _i11;
@@ -1237,8 +1237,7 @@ class MockEmitter<State> extends _i1.Mock implements _i35.Emitter<State> {
     void Function(
       Object,
       StackTrace,
-    )?
-        onError,
+    )? onError,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -1259,8 +1258,7 @@ class MockEmitter<State> extends _i1.Mock implements _i35.Emitter<State> {
     State Function(
       Object,
       StackTrace,
-    )?
-        onError,
+    )? onError,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
