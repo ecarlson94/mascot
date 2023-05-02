@@ -1,4 +1,3 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/features/mascot/presentation/bloc/mascot_animator/effects/mascot_updated_effect.dart';
 import 'package:mascot/features/mascot/presentation/bloc/mascot_animator/effects/stream_mascot_effect.dart';
@@ -21,7 +20,7 @@ void main() {
 
     test('initial state is MascotInitial', () {
       // assert
-      expect(bloc.state, MascotAnimatorInitial(none()));
+      expect(bloc.state, MascotAnimatorInitial());
     });
   });
 }

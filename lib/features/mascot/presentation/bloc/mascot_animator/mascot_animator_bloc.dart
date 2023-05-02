@@ -24,7 +24,7 @@ class MascotAnimatorBloc
   MascotAnimatorBloc(
     this._streamMascotEffect,
     this._mascotUpdatedEffect,
-  ) : super(MascotAnimatorInitial(none())) {
+  ) : super(MascotAnimatorInitial()) {
     createEffect(_streamMascotEffect);
     createAction(actions.loadingMascot);
     createAction(actions.streamMascotError);

@@ -17,7 +17,7 @@ void main() {
     group('setExpression', () {
       test('should return ExpressionChanged', () {
         // assemble
-        var state = MascotAnimatorInitial(none());
+        var state = MascotAnimatorInitial();
 
         // act
         var result = setExpression(
@@ -33,7 +33,7 @@ void main() {
     group('loadingMascot', () {
       test('should return MascotAnimatorLoading', () {
         // assemble
-        var state = MascotAnimatorInitial(none());
+        var state = MascotAnimatorInitial();
 
         // act
         var result = loadingMascot(
@@ -47,7 +47,7 @@ void main() {
 
       test('should use the expression of the current state', () {
         // assemble
-        var state = MascotAnimatorInitial(some(context.data.expression));
+        var state = ExpressionChanged(some(context.data.expression));
 
         // act
         var result = loadingMascot(
@@ -63,7 +63,7 @@ void main() {
     group('streamMascotError', () {
       test('should return MascotAnimatorError', () {
         // assemble
-        var state = MascotAnimatorInitial(none());
+        var state = MascotAnimatorInitial();
 
         // act
         var result = streamMascotError(
@@ -80,7 +80,7 @@ void main() {
 
       test('should use the expression of the current state', () {
         // assemble
-        var state = MascotAnimatorInitial(some(context.data.expression));
+        var state = ExpressionChanged(some(context.data.expression));
 
         // act
         var result = streamMascotError(

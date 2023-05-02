@@ -1,4 +1,3 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mascot/features/mascot/presentation/bloc/mascot_animator/effects/mascot_updated_effect.dart';
@@ -32,7 +31,7 @@ void main() {
       () async {
         // arrange
         final event = MascotUpdated(context.data.mascot);
-        final state = MascotAnimatorInitial(none());
+        final state = MascotAnimatorInitial();
 
         // act
         await effect(event, state).toList();
@@ -51,7 +50,7 @@ void main() {
       () async {
         // arrange
         final event = MascotUpdated(context.data.mascot);
-        final state = MascotAnimatorInitial(none());
+        final state = MascotAnimatorInitial();
 
         // act
         final result = effect(event, state);

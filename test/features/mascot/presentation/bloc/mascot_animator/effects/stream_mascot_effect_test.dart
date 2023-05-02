@@ -26,7 +26,7 @@ void main() {
         () async {
       // arrange
       final event = LoadMascot(context.data.mascot.id);
-      final state = MascotAnimatorInitial(none());
+      final state = MascotAnimatorInitial();
 
       // act
       final result = effect(event, state);
@@ -46,7 +46,7 @@ void main() {
         () async {
       // arrange
       final event = LoadMascot(context.data.mascot.id);
-      final state = MascotAnimatorInitial(none());
+      final state = MascotAnimatorInitial();
 
       when(context.mocks.streamMascot(any)).thenAnswer(
         (_) async => Left(LocalDataSourceFailure()),
