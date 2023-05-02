@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:injectable/injectable.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -63,11 +61,10 @@ class SaveMascotEffect
             name: neutralExpressionName,
             description: neutralExpressionDescription,
             image: form
-                    .controlValue<ImageFile>(
-                      CreateMascotBloc.neutralExpressionFormControlName,
-                    )
-                    .bytes ??
-                Uint8List(0),
+                .controlValue<ImageFile>(
+                  CreateMascotBloc.neutralExpressionFormControlName,
+                )
+                .bytes,
             priority: neutralExpressionPriority,
             activator: ExpressionTriggers.always,
           ),
@@ -76,11 +73,10 @@ class SaveMascotEffect
             name: talkingExpressionName,
             description: talkingExpressionDescription,
             image: form
-                    .controlValue<ImageFile>(
-                      CreateMascotBloc.talkingExpressionFormControlName,
-                    )
-                    .bytes ??
-                Uint8List(0),
+                .controlValue<ImageFile>(
+                  CreateMascotBloc.talkingExpressionFormControlName,
+                )
+                .bytes,
             priority: talkingExpressionPriority,
             activator: ExpressionTriggers.talking,
           ),

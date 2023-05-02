@@ -18,7 +18,7 @@ import '../../features/expressions/data/datasources/indexed_db/expressions_index
     as _i26;
 import '../../features/expressions/data/models/expression_mapper.dart' as _i5;
 import '../../features/expressions/data/repositories/expressions_repository_impl.dart'
-    as _i13;
+    as _i8;
 import '../../features/expressions/domain/repositories/expressions_repository.dart'
     as _i27;
 import '../../features/expressions/domain/services/animation/expression_animation_service.dart'
@@ -29,7 +29,7 @@ import '../../features/mascot/data/datasources/indexed_db/mascots_indexed_db_dat
     as _i15;
 import '../../features/mascot/data/models/mascot_mapper.dart' as _i14;
 import '../../features/mascot/data/repositories/mascots_repository_impl.dart'
-    as _i10;
+    as _i12;
 import '../../features/mascot/domain/repositories/mascots_repository.dart'
     as _i28;
 import '../../features/mascot/domain/usecases/add_mascot.dart' as _i11;
@@ -47,8 +47,8 @@ import '../../features/mascot/presentation/bloc/mascot_animator/mascot_animator_
     as _i39;
 import '../../features/microphone/device/microphone.dart' as _i16;
 import '../../features/microphone/device/services/microphone_service_impl.dart'
-    as _i12;
-import '../../features/microphone/device/web/web_microphone.dart' as _i8;
+    as _i13;
+import '../../features/microphone/device/web/web_microphone.dart' as _i10;
 import '../../features/microphone/domain/services/microphone_service.dart'
     as _i18;
 import '../../features/microphone/domain/usecases/stream_microphone_volume.dart'
@@ -92,16 +92,17 @@ _i1.GetIt $init(
   gh.lazySingleton<_i5.ExpressionMapper>(() => _i5.ExpressionMapperImpl());
   gh.lazySingleton<_i6.IndexDbSettings>(() => _i6.IndexDbSettings());
   gh.lazySingleton<_i6.IndexedDbFactory>(() => _i6.IndexedDbFactory());
-  gh.factory<_i7.Logger<_i8.WebMicrophone>>(() => _i8.MascotMicrophoneLogger());
+  gh.factory<_i7.Logger<_i8.ExpressionsRepositoryImpl>>(
+      () => _i8.ExpressionsRepositoryLogger());
   gh.factory<_i7.Logger<_i9.SettingsRepositoryImpl>>(
       () => _i9.SettingsRepositoryLogger());
-  gh.factory<_i7.Logger<_i10.MascotsRepositoryImpl>>(
-      () => _i10.MascotRepositoryLogger());
+  gh.factory<_i7.Logger<_i10.WebMicrophone>>(
+      () => _i10.MascotMicrophoneLogger());
   gh.factory<_i7.Logger<_i11.AddMascot>>(() => _i11.AddMascotLogger());
-  gh.factory<_i7.Logger<_i12.MicrophoneServiceImpl>>(
-      () => _i12.MicrophoneServiceImplLogger());
-  gh.factory<_i7.Logger<_i13.ExpressionsRepositoryImpl>>(
-      () => _i13.ExpressionsRepositoryLogger());
+  gh.factory<_i7.Logger<_i12.MascotsRepositoryImpl>>(
+      () => _i12.MascotRepositoryLogger());
+  gh.factory<_i7.Logger<_i13.MicrophoneServiceImpl>>(
+      () => _i13.MicrophoneServiceImplLogger());
   gh.lazySingleton<_i14.MascotMapper>(
       () => _i14.MascotMapperImpl(gh<_i5.ExpressionMapper>()));
   gh.lazySingleton<_i15.MascotsIndexedDbDataSource>(
@@ -109,13 +110,13 @@ _i1.GetIt $init(
             gh<_i6.IndexedDbFactory>(),
             gh<_i6.IndexDbSettings>(),
           ));
-  gh.lazySingleton<_i16.Microphone>(() => _i8.WebMicrophone(
+  gh.lazySingleton<_i16.Microphone>(() => _i10.WebMicrophone(
         gh<_i17.AudioContext>(),
-        gh<_i7.Logger<_i8.WebMicrophone>>(),
+        gh<_i7.Logger<_i10.WebMicrophone>>(),
       ));
-  gh.lazySingleton<_i18.MicrophoneService>(() => _i12.MicrophoneServiceImpl(
+  gh.lazySingleton<_i18.MicrophoneService>(() => _i13.MicrophoneServiceImpl(
         gh<_i16.Microphone>(),
-        gh<_i7.Logger<_i12.MicrophoneServiceImpl>>(),
+        gh<_i7.Logger<_i13.MicrophoneServiceImpl>>(),
       ));
   gh.lazySingleton<_i19.SettingsIndexedDbDataSource>(
       () => _i19.SettingsIndexedDbDataSource(
@@ -143,16 +144,16 @@ _i1.GetIt $init(
             gh<_i6.IndexedDbFactory>(),
             gh<_i6.IndexDbSettings>(),
           ));
-  gh.factory<_i27.ExpressionsRepository>(() => _i13.ExpressionsRepositoryImpl(
+  gh.factory<_i27.ExpressionsRepository>(() => _i8.ExpressionsRepositoryImpl(
         gh<_i26.ExpressionsIndexedDbDataSource>(),
         gh<_i5.ExpressionMapper>(),
-        gh<_i7.Logger<_i13.ExpressionsRepositoryImpl>>(),
+        gh<_i7.Logger<_i8.ExpressionsRepositoryImpl>>(),
       ));
-  gh.factory<_i28.MascotsRepository>(() => _i10.MascotsRepositoryImpl(
+  gh.factory<_i28.MascotsRepository>(() => _i12.MascotsRepositoryImpl(
         gh<_i15.MascotsIndexedDbDataSource>(),
         gh<_i26.ExpressionsIndexedDbDataSource>(),
         gh<_i14.MascotMapper>(),
-        gh<_i7.Logger<_i10.MascotsRepositoryImpl>>(),
+        gh<_i7.Logger<_i12.MascotsRepositoryImpl>>(),
       ));
   gh.factory<_i29.MicrophoneVolumeBloc>(
       () => _i29.MicrophoneVolumeBloc(gh<_i24.StreamVolumeEffect>()));

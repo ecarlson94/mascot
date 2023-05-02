@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/error/error.dart';
@@ -31,7 +29,7 @@ void main() {
           id: 0,
           name: SaveMascotEffect.neutralExpressionName,
           description: SaveMascotEffect.neutralExpressionDescription,
-          image: context.data.imageFile.bytes ?? Uint8List(0),
+          image: context.data.imageFile.bytes,
           priority: SaveMascotEffect.neutralExpressionPriority,
           activator: ExpressionTriggers.always,
         ),
@@ -39,7 +37,7 @@ void main() {
           id: 0,
           name: SaveMascotEffect.talkingExpressionName,
           description: SaveMascotEffect.talkingExpressionDescription,
-          image: context.data.imageFile.bytes ?? Uint8List(0),
+          image: context.data.imageFile.bytes,
           priority: SaveMascotEffect.talkingExpressionPriority,
           activator: ExpressionTriggers.talking,
         ),

@@ -188,7 +188,7 @@ class ReactiveImagePicker extends ReactiveFormField<ImageFile, ImageFile> {
                   decoration:
                       effectiveDecoration.copyWith(errorText: field.errorText),
                   onChanged: field.didChange,
-                  value: field.value ?? const ImageFile(),
+                  value: field.value ?? ImageFile(bytes: Uint8List(0)),
                   maxHeight: maxHeight,
                   maxWidth: maxWidth,
                   imageQuality: imageQuality,
@@ -457,7 +457,7 @@ class ImagePickerWidget extends StatelessWidget {
                   SizedBox(
                     height: 250,
                     child: Image.memory(
-                      value.bytes ?? Uint8List(0),
+                      value.bytes,
                       fit: BoxFit.cover,
                     ),
                   ),
