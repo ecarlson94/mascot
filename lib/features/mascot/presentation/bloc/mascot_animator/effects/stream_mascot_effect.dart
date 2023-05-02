@@ -20,7 +20,9 @@ class StreamMascotEffect
 
     var failureOrMascotStream = await streamMascot(event.mascotId);
     yield* failureOrMascotStream.fold(
-      (l) => Stream.value(const StreamMascotError()),
+      (l) async* {
+        yield const StreamMascotError();
+      },
       (mascotStream) => mascotStream.map((mascot) => MascotUpdated(mascot)),
     );
   }

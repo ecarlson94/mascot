@@ -6,7 +6,7 @@ import 'core/injection/injection_container.dart';
 import 'core/theme/color_schemes.dart';
 import 'features/actions/presentation/pages/actions_overlay.dart';
 import 'features/mascot/presentation/widgets/mascot_underlay.dart';
-import 'features/microphone/presentation/bloc/microphone_volume_bloc.dart';
+import 'features/microphone/presentation/bloc/microphone_volume/microphone_volume_bloc.dart';
 import 'features/settings/presentation/bloc/settings_bloc.dart';
 
 Future<void> main() async {
