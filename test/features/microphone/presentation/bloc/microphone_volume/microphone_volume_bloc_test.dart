@@ -26,7 +26,7 @@ void main() {
   group('MicrophoneVolumeBloc', () {
     test('Initial state should be MicrophoneVolumeInitial', () {
       // asser
-      expect(bloc.state, MicrophoneVolumeInitial(none()));
+      expect(bloc.state, MicrophoneVolumeInitial());
     });
   });
 }

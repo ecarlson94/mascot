@@ -11,7 +11,7 @@ void main() {
     group('loadingVolumeStream', () {
       test('should return MicrophoneVolumeLoading', () {
         // assemble
-        var state = MicrophoneVolumeInitial(none());
+        var state = MicrophoneVolumeInitial();
 
         // act
         var result = loadingVolumeStream(
@@ -26,7 +26,7 @@ void main() {
       test('should use the volumeOption of the current state', () {
         // assemble
         const decibels = DecibelLufs(2);
-        var state = MicrophoneVolumeInitial(some(decibels));
+        var state = MicrophoneVolumeLoaded(some(decibels));
 
         // act
         var result = loadingVolumeStream(
@@ -43,7 +43,7 @@ void main() {
       test('should return MicrophoneVolumeLoaded', () {
         // assemble
         const decibels = DecibelLufs(2);
-        var state = MicrophoneVolumeInitial(none());
+        var state = MicrophoneVolumeInitial();
 
         // act
         var result = microphoneVolumeUpdated(
@@ -69,7 +69,7 @@ void main() {
           'should return MicrophoneVolumeError with error code ${entry.value} when failure is ${entry.key.runtimeType}',
           () {
             // assemble
-            var state = MicrophoneVolumeInitial(none());
+            var state = MicrophoneVolumeInitial();
 
             // act
             var result = streamVolumeFailure(
@@ -89,7 +89,7 @@ void main() {
       test('should use the volumeOption of the current state', () {
         // assemble
         const decibels = DecibelLufs(2);
-        var state = MicrophoneVolumeInitial(some(decibels));
+        var state = MicrophoneVolumeLoaded(some(decibels));
 
         // act
         var result = streamVolumeFailure(

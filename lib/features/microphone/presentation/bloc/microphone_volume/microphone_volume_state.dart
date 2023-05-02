@@ -10,7 +10,7 @@ abstract class MicrophoneVolumeState extends Equatable {
 }
 
 class MicrophoneVolumeInitial extends MicrophoneVolumeState {
-  const MicrophoneVolumeInitial(super.volumeOption);
+  MicrophoneVolumeInitial() : super(none());
 }
 
 class MicrophoneVolumeLoading extends MicrophoneVolumeState {

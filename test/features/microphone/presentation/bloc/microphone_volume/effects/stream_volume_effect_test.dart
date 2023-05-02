@@ -35,7 +35,7 @@ void main() {
       () async {
         // arrange
         final event = InitializeMicrophoneVolumeEvent();
-        final state = MicrophoneVolumeInitial(some(twentyDecibels));
+        final state = MicrophoneVolumeLoaded(some(twentyDecibels));
 
         // act
         var result = await effect(event, state).toList();
@@ -51,7 +51,7 @@ void main() {
       () async {
         // arrange
         final event = InitializeMicrophoneVolumeEvent();
-        final state = MicrophoneVolumeInitial(some(twentyDecibels));
+        final state = MicrophoneVolumeLoaded(some(twentyDecibels));
 
         // act
         final result = await effect(event, state).toList();
@@ -70,7 +70,7 @@ void main() {
       () async {
         // arrange
         final event = InitializeMicrophoneVolumeEvent();
-        final state = MicrophoneVolumeInitial(some(twentyDecibels));
+        final state = MicrophoneVolumeLoaded(some(twentyDecibels));
         final failure = NoMicrophonePermissionFailure();
 
         when(context.mocks.streamMicrophoneVolume(any)).thenAnswer(
