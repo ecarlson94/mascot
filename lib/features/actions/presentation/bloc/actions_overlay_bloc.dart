@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../../core/clean_architecture/base_bloc.dart';
+import '../../../../core/reactive/base_bloc.dart';
 import 'actions_overlay_actions.dart' as actions;
 
 part 'actions_overlay_event.dart';

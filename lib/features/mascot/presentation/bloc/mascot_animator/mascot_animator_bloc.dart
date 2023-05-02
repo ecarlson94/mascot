@@ -2,8 +2,8 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../../../core/clean_architecture/base_bloc.dart';
-import '../../../../../core/data/stream_subscriber.dart';
+import '../../../../../core/reactive/base_bloc.dart';
+import '../../../../../core/reactive/stream_subscriber.dart';
 import '../../../../expressions/domain/entities/expression.dart';
 import '../../../domain/entities/mascot.dart';
 import 'effects/mascot_updated_effect.dart';

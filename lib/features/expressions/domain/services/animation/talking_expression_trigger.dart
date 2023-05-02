@@ -1,7 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 
 import '../../../../../core/clean_architecture/usecase.dart';
-import '../../../../../core/data/stream_subscriber.dart';
+import '../../../../../core/reactive/stream_subscriber.dart';
 import '../../../../microphone/domain/models/decibel_lufs.dart';
 import '../../../../microphone/domain/usecases/stream_microphone_volume.dart';
 import '../../../../settings/domain/repositories/settings_repository.dart';

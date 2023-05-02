@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../data/stream_subscriber.dart';
+import 'stream_subscriber.dart';
 
 // Implementations must be pure functions, meaning that they
 // should always return the same output given the same input

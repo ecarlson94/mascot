@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../../../core/data/stream_subscriber.dart';
+import '../../../../../core/reactive/stream_subscriber.dart';
 import '../../../../microphone/domain/usecases/stream_microphone_volume.dart';
 import '../../../../settings/domain/repositories/settings_repository.dart';
 import '../../entities/expression.dart';

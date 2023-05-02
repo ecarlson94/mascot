@@ -4,7 +4,7 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/data/failure_or_id_future.dart';
-import '../../../../core/data/stream_subscriber.dart';
+import '../../../../core/reactive/stream_subscriber.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/utils/logger.dart';
 import '../../../expressions/data/datasources/indexed_db/expressions_indexed_db_data_source.dart';

@@ -1,6 +1,6 @@
 import 'package:injectable/injectable.dart';
 
-import '../../../../../../core/clean_architecture/base_bloc.dart';
+import '../../../../../../core/reactive/base_bloc.dart';
 import '../../../../../../core/clean_architecture/usecase.dart';
 import '../../../../domain/usecases/stream_microphone_volume.dart';
 import '../microphone_volume_bloc.dart';

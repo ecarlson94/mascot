@@ -6,8 +6,8 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/clean_architecture/usecase.dart';
-import '../../../../core/data/stream_subscriber.dart';
 import '../../../../core/error/error.dart';
+import '../../../../core/reactive/stream_subscriber.dart';
 import '../../../microphone/domain/models/decibel_lufs.dart';
 import '../../domain/entities/settings.dart';
 import '../../domain/usecases/save_talking_threshold.dart';

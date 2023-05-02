@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../../core/data/stream_subscriber.dart';
+import '../../../../../core/reactive/stream_subscriber.dart';
 import '../../entities/expression.dart';
 import 'expression_trigger_factory.dart';
 

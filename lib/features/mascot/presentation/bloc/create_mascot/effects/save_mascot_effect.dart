@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import '../../../../../../core/clean_architecture/base_bloc.dart';
+import '../../../../../../core/reactive/base_bloc.dart';
 import '../../../../../../core/error/error.dart';
 import '../../../../../../core/extensions/extensions.dart';
 import '../../../../../../core/utils/constants.dart' as constants;

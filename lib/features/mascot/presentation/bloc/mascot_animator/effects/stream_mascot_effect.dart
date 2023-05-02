@@ -1,6 +1,6 @@
 import 'package:injectable/injectable.dart';
 
-import '../../../../../../core/clean_architecture/base_bloc.dart';
+import '../../../../../../core/reactive/base_bloc.dart';
 import '../../../../domain/usecases/stream_mascot.dart';
 import '../mascot_animator_bloc.dart';
 
