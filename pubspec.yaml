@@ -49,6 +49,7 @@ dependencies:
   reactive_forms: ^14.2.0
   responsive_framework: ^0.2.0
   rxdart: ^0.27.7
+  rxdart_ext: ^0.2.9
   sqlite3: ^1.9.3
   sqlite3_flutter_libs: ^0.5.13
   universal_html: ^2.2.1

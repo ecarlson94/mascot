@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'stream_subscriber.dart';
+import 'package:get_it/get_it.dart';
 
 // Implementations must be pure functions, meaning that they
 // should always return the same output given the same input
@@ -40,10 +39,10 @@ enum EffectReplaceStrategy {
   add,
 }
 
-// TODO: write tests for this class
 abstract class BaseBloc<TEvent, TState> extends Bloc<TEvent, TState>
-    with SubscriptionDisposer
-    implements StreamSubcriber {
+    implements Disposable {
+  final Map<String, List<StreamSubscription>> _effectSubscriptions = {};
+
   BaseBloc(super.initialState);
 
   void createAction<AEvent extends TEvent>(BlocAction<AEvent, TState> action) {
@@ -53,8 +52,11 @@ abstract class BaseBloc<TEvent, TState> extends Bloc<TEvent, TState>
   void createEffect<AEvent extends TEvent>(
     BlocEffect<TEvent, AEvent, TState> effect,
   ) {
+    var effectType = effect.runtimeType.toString();
+    _effectSubscriptions[effectType] = List.empty(growable: true);
+
     on<AEvent>((event, emit) async {
-      var effectSubs = subscriptions.whereType<StreamSubscription<AEvent>>();
+      var effectSubs = _effectSubscriptions[effectType]!;
       if (effect.repeatStrategy == EffectRepeatStrategy.once &&
           effectSubs.isNotEmpty) {
         return;
@@ -64,6 +66,8 @@ abstract class BaseBloc<TEvent, TState> extends Bloc<TEvent, TState>
         for (var sub in effectSubs) {
           await sub.cancel();
         }
+
+        effectSubs.clear();
       }
 
       var sub = effect(event, state).listen(
@@ -72,13 +76,20 @@ abstract class BaseBloc<TEvent, TState> extends Bloc<TEvent, TState>
         },
       );
 
-      subscriptions.add(sub);
+      _effectSubscriptions[effectType]!.add(sub);
     });
   }
 
   @override
-  Future<void> close() async {
-    await onDispose();
-    return super.close();
+  Future<void> onDispose() {
+    for (var effect in _effectSubscriptions.keys) {
+      for (var sub in _effectSubscriptions[effect]!) {
+        sub.cancel();
+      }
+    }
+
+    _effectSubscriptions.clear();
+
+    return close();
   }
 }

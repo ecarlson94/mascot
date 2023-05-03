@@ -9,7 +9,7 @@ abstract class ExpressionTrigger {
 
   bool get isTriggered;
 
-  FutureOr<Stream<ExpressionTrigger>> get stream;
+  Stream<ExpressionTrigger> get stream;
 }
 
 class AlwaysExpressionTrigger extends ExpressionTrigger {

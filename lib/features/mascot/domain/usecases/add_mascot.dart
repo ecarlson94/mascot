@@ -35,7 +35,7 @@ class AddMascot implements UseCase<Mascot, Mascot> {
   );
 
   @override
-  MascotOrFailureFuture call(Mascot params) async {
+  FailureOrMascotSingle call(Mascot params) async {
     if (params.id != 0) {
       _logger.logError('Cannot add a mascot that already exists');
       return Left(InvalidArgumentFailure());
@@ -50,9 +50,9 @@ class AddMascot implements UseCase<Mascot, Mascot> {
     );
   }
 
-  MascotOrFailureFuture _saveExpressions(
+  FailureOrMascotSingle _saveExpressions(
     Mascot params,
-    MascotOrFailureFuture Function(Mascot mascot) onComplete,
+    FailureOrMascotSingle Function(Mascot mascot) onComplete,
   ) async {
     var expressionIdsOrFailure = await _expressionsRepository.saveExpressions(
       params.expressions.toList(),
@@ -71,9 +71,9 @@ class AddMascot implements UseCase<Mascot, Mascot> {
     );
   }
 
-  MascotOrFailureFuture _saveMascot(
+  FailureOrMascotSingle _saveMascot(
     Mascot mascot,
-    MascotOrFailureFuture Function(Mascot mascot) onComplete,
+    FailureOrMascotSingle Function(Mascot mascot) onComplete,
   ) async {
     var idOrFailure = await _mascotsRepository.saveMascot(mascot);
     return idOrFailure.fold(
@@ -88,7 +88,7 @@ class AddMascot implements UseCase<Mascot, Mascot> {
     );
   }
 
-  MascotOrFailureFuture _setInitialFavoriteMascot(
+  FailureOrMascotSingle _setInitialFavoriteMascot(
     Mascot mascot,
   ) async {
     var settingsOrFailure = await _settingsRepository.loadSettings();

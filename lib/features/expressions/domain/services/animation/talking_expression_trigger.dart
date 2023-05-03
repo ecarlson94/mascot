@@ -65,4 +65,10 @@ class TalkingExpressionTrigger extends ExpressionTrigger
       _stream.add(this);
     }
   }
+
+  @override
+  void onDispose() {
+    _stream.close();
+    super.onDispose();
+  }
 }

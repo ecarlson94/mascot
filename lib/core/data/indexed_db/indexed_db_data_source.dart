@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
+import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
 import 'package:idb_shim/idb_browser.dart';
 import 'package:idb_shim/idb_client.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rxdart_ext/rxdart_ext.dart';
 
 import '../../clean_architecture/entity.dart';
 
@@ -20,9 +23,9 @@ class IndexDbSettings {
 }
 
 abstract class IndexedDbDataSource<T extends Entity> {
-  Future<T> getObject(Id id);
-  Future<Option<T>> getOptionObject(Id id);
-  Future<List<T>> getObjects(Iterable<Id> ids);
+  Single<T> getObject(Id id);
+  Single<Option<T>> getOptionObject(Id id);
+  Single<List<T>> getObjects(List<Id> ids);
   Future<int> putObject(T object);
   Future<void> deleteObject(Id id);
   Stream<T> streamObject(Id id);
@@ -31,6 +34,16 @@ abstract class IndexedDbDataSource<T extends Entity> {
   String get storeName;
   T fromJson(Map<String, dynamic> json);
   Map<String, dynamic> toJson(T object);
+}
+
+class Pair<T1, T2> extends Equatable {
+  final T1 first;
+  final T2 second;
+
+  const Pair(this.first, this.second);
+
+  @override
+  List<Object?> get props => [first, second];
 }
 
 abstract class IndexedDbDataSourceImpl<T extends Entity>
@@ -47,51 +60,45 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
   String get storeName => T.toString();
 
   @override
-  Future<T> getObject(Id id) async {
-    return (await getOptionObject(id)).fold(
-      () => throw Exception('Object not found'),
-      (o) => o,
-    );
-  }
+  Single<T> getObject(Id id) => getOptionObject(id).map(
+      (option) => option.getOrElse(() => throw Exception('Object not found')));
 
   @override
-  Future<Option<T>> getOptionObject(Id id) async {
-    final db = await openDb();
-    final transaction = db.transaction(storeName, idbModeReadOnly);
-    final store = transaction.objectStore(storeName);
-    final value = await store.getObject(id);
-
-    if (value != null) {
-      var obj = _fromJson(value);
-      _currentState[obj.id] = obj;
-      return some(obj);
-    } else {
-      return none();
-    }
-  }
+  Single<Option<T>> getOptionObject(Id id) =>
+      _openObjectStore(mode: idbModeReadOnly)
+          .zipWith(
+              Single.value(id), (store, id) => store.getObject(id).asSingle())
+          .singleOrError()
+          .map<Option<T>>(_createOption);
 
   @override
-  Future<List<T>> getObjects(Iterable<Id> ids) async {
-    final db = await openDb();
-    final transaction = db.transaction(storeName, idbModeReadOnly);
-    final store = transaction.objectStore(storeName);
+  Single<List<T>> getObjects(List<Id> ids) => Stream.fromIterable(ids)
+      .zipWith(_openObjectStore(mode: idbModeReadOnly),
+          (id, store) => store.getObject(id).asSingle())
+      .switchMap((value) => value)
+      .whereNotNull()
+      .map(_fromJson)
+      .toList()
+      .asSingle();
 
-    final objects = <T>[];
-    for (var id in ids) {
-      final value = await store.getObject(id);
-      if (value != null) {
-        var obj = _fromJson(value);
-        _currentState[obj.id] = obj;
-        objects.add(obj);
-      }
-    }
+  @override
+  Single<Id> putObjectSingle(T object) {
+    var test = Single.value(object).map<Map<String, dynamic>>(toJson).zipWith(
+            _openObjectStore(mode: idbModeReadWrite),
+            (json, store) => Pair(json, json['id'] == 0 ? store.add(json): store.put(json, json['id'] as int)),
+          ).singleOrError().switchMap((value) {
+            return value.second.asSingle().map((event) {
+              value.first['id'] = event;
+              return value.first;
+            });
+          });
 
-    return objects;
+    return test
   }
 
   @override
   Future<Id> putObject(T object) async {
-    final db = await openDb();
+    final db = await _openDb();
     final transaction = db.transaction(storeName, idbModeReadWrite);
     final store = transaction.objectStore(storeName);
 
@@ -114,7 +121,7 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
 
   @override
   Future<void> deleteObject(Id id) async {
-    final db = await openDb();
+    final db = await _openDb();
     final transaction = db.transaction(storeName, idbModeReadWrite);
     final store = transaction.objectStore(storeName);
     await store.delete(id);
@@ -124,12 +131,17 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
 
   @override
   Stream<T> streamObject(Id id) {
-    return _streamController.stream
-        .map((data) => data[id])
-        .where((item) => item != null)
-        .cast<T>();
+    return getObject(id).asSingle().concatWith([
+      _streamController.stream
+          .map((data) => data[id])
+          .whereNotNull()
+          .cast<Object>()
+          .map(_fromJson)
+          .cast<T>()
+    ]);
   }
 
+  // TODO: find a way to remove the stream controller
   @override
   Stream<List<T>> streamObjects(Iterable<Id> ids) {
     return _streamController.stream.map(
@@ -143,7 +155,7 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
     _streamController.close();
   }
 
-  Future<Database> openDb() async {
+  Single<Database> _openDb() {
     var factory = indexedDbFactory.factory;
     if (factory == null) {
       throw Exception('IndexedDbFactory could not be initialized');
@@ -156,7 +168,24 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
         final db = event.database;
         db.createObjectStore(storeName, autoIncrement: true);
       },
-    );
+    ).asSingle();
+  }
+
+  Single<Transaction> _openTransaction({String mode = idbModeReadWrite}) =>
+      _openDb().map((db) => db.transaction(storeName, mode));
+
+  Single<ObjectStore> _openObjectStore({String mode = idbModeReadWrite}) =>
+      _openTransaction(mode: mode)
+          .map((transaction) => transaction.objectStore(storeName));
+
+  Option<T> _createOption(Object? value) {
+    if (value != null) {
+      var obj = _fromJson(value);
+      _currentState[obj.id] = obj;
+      return some(obj);
+    } else {
+      return none();
+    }
   }
 
   T _fromJson(Object value) => fromJson(_toStringKeyMap(value));

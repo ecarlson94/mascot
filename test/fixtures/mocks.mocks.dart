@@ -304,7 +304,7 @@ class MockExpressionsIndexedDbDataSource extends _i1.Mock
         returnValueForMissingStub: null,
       );
   @override
-  _i10.Future<_i5.Database> openDb() => (super.noSuchMethod(
+  _i10.Future<_i5.Database> _openDb() => (super.noSuchMethod(
         Invocation.method(
           #openDb,
           [],
@@ -492,7 +492,7 @@ class MockSettingsIndexedDbDataSource extends _i1.Mock
         returnValueForMissingStub: null,
       );
   @override
-  _i10.Future<_i5.Database> openDb() => (super.noSuchMethod(
+  _i10.Future<_i5.Database> _openDb() => (super.noSuchMethod(
         Invocation.method(
           #openDb,
           [],
@@ -634,7 +634,7 @@ class MockMascotsIndexedDbDataSource extends _i1.Mock
         returnValueForMissingStub: null,
       );
   @override
-  _i10.Future<_i5.Database> openDb() => (super.noSuchMethod(
+  _i10.Future<_i5.Database> _openDb() => (super.noSuchMethod(
         Invocation.method(
           #openDb,
           [],
@@ -1236,7 +1236,8 @@ class MockEmitter<State> extends _i1.Mock implements _i35.Emitter<State> {
     void Function(
       Object,
       StackTrace,
-    )? onError,
+    )?
+        onError,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -1257,7 +1258,8 @@ class MockEmitter<State> extends _i1.Mock implements _i35.Emitter<State> {
     State Function(
       Object,
       StackTrace,
-    )? onError,
+    )?
+        onError,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
