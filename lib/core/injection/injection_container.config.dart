@@ -77,8 +77,6 @@ import '../device/web/js_interop/web_audio/audio_context.dart' as _i4;
 import '../device/web/js_interop/web_audio/web_audio.dart' as _i17;
 import '../utils/logger.dart' as _i7;
 
-// ignore_for_file: unnecessary_lambdas
-// ignore_for_file: lines_longer_than_80_chars
 // initializes the registration of main-scope dependencies inside of GetIt
 _i1.GetIt $init(
   _i1.GetIt getIt, {
