@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/extensions/extensions.dart';
 import '../../domain/models/decibel_lufs.dart';
-import '../bloc/microphone_volume_bloc.dart';
+import '../bloc/microphone_volume/microphone_volume_bloc.dart';
 
 class MicrophoneVolumeProvider extends StatelessWidget {
   final Widget Function(BuildContext, DecibelLufs volume) builder;
@@ -17,21 +17,12 @@ class MicrophoneVolumeProvider extends StatelessWidget {
         if (state is MicrophoneVolumeInitial) {
           context
               .bloc<MicrophoneVolumeBloc>()
-              .add(InitializeMicrophoneVolume());
+              .add(InitializeMicrophoneVolumeEvent());
         }
 
-        return state.volumeStreamOption.fold(
+        return state.volumeOption.fold(
           () => const SizedBox.shrink(),
-          (volumeStream) => StreamBuilder<DecibelLufs>(
-            stream: volumeStream,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const SizedBox.shrink();
-              }
-
-              return builder(context, snapshot.data!);
-            },
-          ),
+          (volume) => builder(context, volume),
         );
       },
     );

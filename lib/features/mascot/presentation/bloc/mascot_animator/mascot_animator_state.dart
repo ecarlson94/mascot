@@ -10,7 +10,7 @@ abstract class MascotAnimatorState extends Equatable {
 }
 
 class MascotAnimatorInitial extends MascotAnimatorState {
-  const MascotAnimatorInitial(super.expressionOption);
+  MascotAnimatorInitial() : super(none());
 }
 
 class MascotAnimatorLoading extends MascotAnimatorState {
@@ -18,9 +18,7 @@ class MascotAnimatorLoading extends MascotAnimatorState {
 }
 
 class ExpressionChanged extends MascotAnimatorState {
-  const ExpressionChanged(
-    super.expressionOption,
-  );
+  const ExpressionChanged(super.expressionOption);
 }
 
 class MascotAnimatorError extends MascotAnimatorState {

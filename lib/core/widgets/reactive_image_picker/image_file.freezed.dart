@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ImageFile {
-  Uint8List? get bytes => throw _privateConstructorUsedError;
+  Uint8List get bytes => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ImageFileCopyWith<ImageFile> get copyWith =>
@@ -28,7 +28,7 @@ abstract class $ImageFileCopyWith<$Res> {
   factory $ImageFileCopyWith(ImageFile value, $Res Function(ImageFile) then) =
       _$ImageFileCopyWithImpl<$Res, ImageFile>;
   @useResult
-  $Res call({Uint8List? bytes});
+  $Res call({Uint8List bytes});
 }
 
 /// @nodoc
@@ -44,13 +44,13 @@ class _$ImageFileCopyWithImpl<$Res, $Val extends ImageFile>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? bytes = freezed,
+    Object? bytes = null,
   }) {
     return _then(_value.copyWith(
-      bytes: freezed == bytes
+      bytes: null == bytes
           ? _value.bytes
           : bytes // ignore: cast_nullable_to_non_nullable
-              as Uint8List?,
+              as Uint8List,
     ) as $Val);
   }
 }
@@ -62,7 +62,7 @@ abstract class _$$_ImageFileCopyWith<$Res> implements $ImageFileCopyWith<$Res> {
       __$$_ImageFileCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Uint8List? bytes});
+  $Res call({Uint8List bytes});
 }
 
 /// @nodoc
@@ -76,13 +76,13 @@ class __$$_ImageFileCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? bytes = freezed,
+    Object? bytes = null,
   }) {
     return _then(_$_ImageFile(
-      bytes: freezed == bytes
+      bytes: null == bytes
           ? _value.bytes
           : bytes // ignore: cast_nullable_to_non_nullable
-              as Uint8List?,
+              as Uint8List,
     ));
   }
 }
@@ -90,10 +90,10 @@ class __$$_ImageFileCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_ImageFile extends _ImageFile {
-  const _$_ImageFile({this.bytes}) : super._();
+  const _$_ImageFile({required this.bytes}) : super._();
 
   @override
-  final Uint8List? bytes;
+  final Uint8List bytes;
 
   @override
   String toString() {
@@ -120,11 +120,11 @@ class _$_ImageFile extends _ImageFile {
 }
 
 abstract class _ImageFile extends ImageFile {
-  const factory _ImageFile({final Uint8List? bytes}) = _$_ImageFile;
+  const factory _ImageFile({required final Uint8List bytes}) = _$_ImageFile;
   const _ImageFile._() : super._();
 
   @override
-  Uint8List? get bytes;
+  Uint8List get bytes;
   @override
   @JsonKey(ignore: true)
   _$$_ImageFileCopyWith<_$_ImageFile> get copyWith =>

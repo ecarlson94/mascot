@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../../core/data/stream_subscriber.dart';
+import '../../../../../core/reactive/stream_subscriber.dart';
 import '../../entities/expression.dart';
 import 'expression_trigger_factory.dart';
 
 abstract class ExpressionAnimationService {
-  Future<Stream<Expression>> animateExpressions(Set<Expression> expressions);
+  Stream<Expression> animateExpressions(Set<Expression> expressions);
 }
 
 @Injectable(as: ExpressionAnimationService)
@@ -23,20 +23,17 @@ class ExpressionAnimationServiceImpl extends ExpressionAnimationService
   );
 
   @override
-  Future<Stream<Expression>> animateExpressions(
-      Set<Expression> expressions) async {
+  Stream<Expression> animateExpressions(Set<Expression> expressions) async* {
     var expressionStream = BehaviorSubject<Expression>();
-    var triggers = expressions.map((e) {
-      return expressionTriggerFactory.create(e);
-    }).toList();
+    var triggers = expressions.map(expressionTriggerFactory.create).toList();
 
     for (var trigger in triggers) {
       var triggerStream = await trigger.stream;
-      var triggerSub = triggerStream.listen((trigger) {
-        if (trigger.isTriggered) {
-          _triggeredExpressions[trigger.expression.name] = trigger.expression;
+      var triggerSub = triggerStream.listen((event) {
+        if (event.isTriggered) {
+          _triggeredExpressions[event.expression.name] = event.expression;
         } else {
-          _triggeredExpressions.remove(trigger.expression.name);
+          _triggeredExpressions.remove(event.expression.name);
         }
 
         _addCurrentExpression(expressionStream);
@@ -44,7 +41,7 @@ class ExpressionAnimationServiceImpl extends ExpressionAnimationService
       subscriptions.add(triggerSub);
     }
 
-    return expressionStream;
+    yield* expressionStream;
   }
 
   void _addCurrentExpression(BehaviorSubject<Expression> expressionStream) {

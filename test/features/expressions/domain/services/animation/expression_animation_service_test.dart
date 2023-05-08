@@ -17,12 +17,12 @@ void main() {
   late ExpressionAnimationService expressionAnimationService;
   late Set<Expression> expressions;
   late BehaviorSubject<Settings> settingsStream;
-  late BehaviorSubject<DecibelLufs> microphoneVolumeStream;
+  late Stream<DecibelLufs> microphoneVolumeStream;
 
   setUp(() {
     context = TestContext();
     settingsStream = BehaviorSubject.seeded(context.data.settings);
-    microphoneVolumeStream = BehaviorSubject.seeded(const DecibelLufs(-11));
+    microphoneVolumeStream = Stream.value(const DecibelLufs(-11));
 
     expressionAnimationService = ExpressionAnimationServiceImpl(
       ExpressionTriggerFactory(
@@ -50,38 +50,42 @@ void main() {
   });
 
   group('ExpressionAnimationService', () {
-    test('should return a stream of expressions', () async {
-      // arrange
-      var result =
-          await expressionAnimationService.animateExpressions(expressions);
+    test(
+      'should return a stream of expressions',
+      () {
+        // arrange
+        var result = expressionAnimationService.animateExpressions(expressions);
 
-      // assert
-      expect(result, isA<Stream<Expression>>());
-    });
+        // assert
+        expect(result, isA<Stream<Expression>>());
+      },
+    );
 
     test(
-        'should return a stream of expressions with the highest priority (lower number) first',
-        () async {
-      // arrange
-      var result =
-          await expressionAnimationService.animateExpressions(expressions);
-
-      // act
-      var expression = await result.skip(1).first;
-
-      // assert
-      expect(expression.priority, 990);
-    });
-
-    test(
-      'should return new expression when new trigger is triggered',
+      'should return a stream of expressions with the highest priority (lower number) first',
       () async {
         // arrange
-        var result =
-            await expressionAnimationService.animateExpressions(expressions);
+        var result = expressionAnimationService.animateExpressions(expressions);
 
         // act
-        microphoneVolumeStream.add(const DecibelLufs(-10));
+        var expression = await result.skip(1).first;
+
+        // assert
+        expect(expression.priority, 990);
+      },
+    );
+
+    test(
+      'should return new expression when trigger is triggered',
+      () async {
+        // arrange
+        microphoneVolumeStream = Stream.fromIterable([
+          const DecibelLufs(-11),
+          const DecibelLufs(-10),
+        ]);
+
+        // act
+        var result = expressionAnimationService.animateExpressions(expressions);
 
         // assert
         expect(
@@ -94,15 +98,17 @@ void main() {
     );
 
     test(
-      'should return new expression when new trigger is de-triggered',
+      'should return new expression when trigger is de-triggered',
       () async {
         // arrange
-        var result =
-            await expressionAnimationService.animateExpressions(expressions);
+        microphoneVolumeStream = Stream.fromIterable([
+          const DecibelLufs(-11),
+          const DecibelLufs(-10),
+          const DecibelLufs(-23),
+        ]);
 
         // act
-        microphoneVolumeStream.add(const DecibelLufs(-10));
-        microphoneVolumeStream.add(const DecibelLufs(-20));
+        var result = expressionAnimationService.animateExpressions(expressions);
 
         // assert
         expect(

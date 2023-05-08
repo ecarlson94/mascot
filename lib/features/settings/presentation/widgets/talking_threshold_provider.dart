@@ -13,18 +13,15 @@ class TalkingThresholdProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsBloc, SettingsState>(
       builder: (context, state) {
-        return state.talkingThresholdStreamOption.fold(
+        return state.talkingThresholdOption.fold(
           () => const SizedBox.shrink(),
-          (talkingThresholdStream) => StreamBuilder<DecibelLufs?>(
-            stream: talkingThresholdStream,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData || snapshot.data == null) {
-                return const SizedBox.shrink();
-              }
+          (talkingThreshold) {
+            if (talkingThreshold == null) {
+              return const SizedBox.shrink();
+            }
 
-              return builder(context, snapshot.data!);
-            },
-          ),
+            return builder(context, talkingThreshold);
+          },
         );
       },
     );

@@ -9,10 +9,10 @@ class ImageFile with _$ImageFile {
   const ImageFile._();
 
   const factory ImageFile({
-    Uint8List? bytes,
+    required Uint8List bytes,
   }) = _ImageFile;
 
-  bool get isEmpty => bytes == null;
+  bool get isEmpty => bytes.isEmpty;
 
   bool get isNotEmpty => !isEmpty;
 }

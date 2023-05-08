@@ -22,7 +22,7 @@ class ActionsOverlay extends StatelessWidget {
       builder: (context, state) {
         var bloc = context.bloc<ActionsOverlayBloc>();
         return GestureDetector(
-          onTap: () => bloc.add(ToggleShowActions()),
+          onTap: () => bloc.add(ToggleShowActionsEvent()),
           child: Scaffold(
             backgroundColor: Colors.transparent,
             body: Stack(
@@ -39,7 +39,7 @@ class ActionsOverlay extends StatelessWidget {
                           sliderThreshold: decibels,
                           onThresholdChanged: (threshold) => context
                               .bloc<SettingsBloc>()
-                              .add(SetTalkingThreshold(threshold)),
+                              .add(SetTalkingThresholdEvent(threshold)),
                         ),
                       ),
                     ),

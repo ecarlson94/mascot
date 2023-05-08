@@ -7,4 +7,4 @@ abstract class ActionsOverlayEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class ToggleShowActions extends ActionsOverlayEvent {}
+class ToggleShowActionsEvent extends ActionsOverlayEvent {}

@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 
 import '../../../../core/widgets/card_button.dart';
@@ -51,7 +49,7 @@ class UploadExpression extends StatelessWidget {
         child: SizedBox(
           height: height,
           width: width,
-          child: Image.memory(image.bytes ?? Uint8List(0), fit: BoxFit.contain),
+          child: Image.memory(image.bytes, fit: BoxFit.contain),
         ),
       ),
       popupDialogBuilder: (_) async => ImageSource.gallery,

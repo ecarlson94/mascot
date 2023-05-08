@@ -40,7 +40,7 @@ void main() {
     group('stream', () {
       test('should return stream with this trigger', () async {
         // act
-        var stream = await trigger.stream;
+        var stream = trigger.stream;
 
         // assert
         expect(await stream.first, trigger);
@@ -50,7 +50,7 @@ void main() {
         'should emit [trigger.isTriggered = true] when microphone volume is above threshold',
         () async {
           // arrange
-          var stream = await trigger.stream;
+          var stream = trigger.stream;
 
           // act
           microphoneVolumeStream.add(const DecibelLufs(-9));
@@ -65,7 +65,7 @@ void main() {
         'should emit [trigger.isTriggered = true] when microphone volume is at threshold',
         () async {
           // arrange
-          var stream = await trigger.stream;
+          var stream = trigger.stream;
 
           // act
           microphoneVolumeStream.add(const DecibelLufs(-10));
@@ -80,7 +80,7 @@ void main() {
         'should emit [trigger.isTriggered = false] when microphone volume is below threshold',
         () async {
           // arrange
-          var stream = await trigger.stream;
+          var stream = trigger.stream;
           microphoneVolumeStream.add(const DecibelLufs(-9));
 
           // act
@@ -94,7 +94,7 @@ void main() {
 
       test('should update talking threshold when settings change', () async {
         // arrange
-        var stream = await trigger.stream;
+        var stream = trigger.stream;
         microphoneVolumeStream.add(const DecibelLufs(-9));
 
         // act
@@ -109,7 +109,7 @@ void main() {
 
       test('should not emit when trigger state does not change', () async {
         // arrange
-        var stream = await trigger.stream;
+        var stream = trigger.stream;
         microphoneVolumeStream.add(const DecibelLufs(-9));
         await Future.delayed(const Duration(milliseconds: 25));
 

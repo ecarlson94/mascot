@@ -1,7 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 
 import '../../../../../core/clean_architecture/usecase.dart';
-import '../../../../../core/data/stream_subscriber.dart';
+import '../../../../../core/reactive/stream_subscriber.dart';
 import '../../../../microphone/domain/models/decibel_lufs.dart';
 import '../../../../microphone/domain/usecases/stream_microphone_volume.dart';
 import '../../../../settings/domain/repositories/settings_repository.dart';
@@ -27,7 +27,7 @@ class TalkingExpressionTrigger extends ExpressionTrigger
   bool get isTriggered => _isTriggered;
 
   @override
-  Future<Stream<ExpressionTrigger>> get stream async {
+  Stream<ExpressionTrigger> get stream async* {
     DecibelLufs talkingThreshold = const DecibelLufs(-10);
     DecibelLufs microphoneVolume = const DecibelLufs(-40);
 
@@ -55,7 +55,7 @@ class TalkingExpressionTrigger extends ExpressionTrigger
       },
     );
 
-    return _stream;
+    yield* _stream;
   }
 
   void _addTrigger(DecibelLufs event, DecibelLufs talkingThreshold) {

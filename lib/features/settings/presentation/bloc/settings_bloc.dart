@@ -1,79 +1,35 @@
-import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../../../core/clean_architecture/entity.dart';
-import '../../../../core/clean_architecture/usecase.dart';
-import '../../../../core/data/stream_subscriber.dart';
-import '../../../../core/error/error.dart';
+import '../../../../core/error/failure.dart';
+import '../../../../core/reactive/base_bloc.dart';
+import '../../../../core/reactive/stream_subscriber.dart';
 import '../../../microphone/domain/models/decibel_lufs.dart';
 import '../../domain/entities/settings.dart';
-import '../../domain/usecases/save_talking_threshold.dart';
-import '../../domain/usecases/stream_settings.dart';
+import 'effects/set_talking_threshold_effect.dart';
+import 'effects/stream_settings_effect.dart';
+import 'settings_actions.dart' as actions;
 
 part 'settings_event.dart';
 part 'settings_state.dart';
 
 @injectable
-class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
+class SettingsBloc extends BaseBloc<SettingsEvent, SettingsState>
     with SubscriptionDisposer
     implements StreamSubcriber {
-  final StreamSettings streamSettings;
-  final SaveTalkingThreshold setTalkingThreshold;
+  final StreamSettingsEffect _streamSettingsEffect;
+  final SetTalkingThresholdEffect _setTalkingThreshold;
 
   SettingsBloc(
-    this.streamSettings,
-    this.setTalkingThreshold,
-  ) : super(SettingsInitial(none(), none())) {
-    on<LoadSettings>((event, emit) async {
-      var failureOrSettingsStream = await streamSettings(NoParams());
-      failureOrSettingsStream.fold(
-        (l) => emit(
-          SettingsError(ErrorCodes.loadSettingsFailureCode, none(), none()),
-        ),
-        (settingsStream) => emit(
-          SettingsLoaded(
-            _settingValueStreamOption(
-              settingsStream,
-              (state) => state.favoriteMascotIdStreamOption,
-              (settings) => settings.favoriteMascotId,
-            ),
-            _settingValueStreamOption(
-              settingsStream,
-              (state) => state.talkingThresholdStreamOption,
-              (settings) => settings.talkingThreshold,
-            ),
-          ),
-        ),
-      );
-    });
+    this._streamSettingsEffect,
+    this._setTalkingThreshold,
+  ) : super(SettingsInitial()) {
+    createEffect(_streamSettingsEffect);
+    createAction(actions.loadSettingsFailure);
+    createAction(actions.settingsUpdated);
 
-    on<SetTalkingThreshold>((event, emit) async =>
-        await setTalkingThreshold(event.talkingThreshold));
-  }
-
-  Option<BehaviorSubject<T>> _settingValueStreamOption<T>(
-    Stream<Settings> settingsStream,
-    Option<BehaviorSubject<T>> Function(SettingsState state) currentValueStream,
-    T Function(Settings settings) valueSelector, {
-    bool alwaysEmit = false,
-  }) {
-    var valueStream = currentValueStream(state).getOrElse(
-      () => BehaviorSubject<T>(),
-    );
-
-    var sub = settingsStream.listen((settings) {
-      var oldValue = valueStream.hasValue ? valueStream.value : null;
-      var newValue = valueSelector(settings);
-      if (alwaysEmit || oldValue != newValue) {
-        valueStream.add(newValue);
-      }
-    });
-
-    subscriptions.add(sub);
-
-    return some(valueStream);
+    createEffect(_setTalkingThreshold);
   }
 }
