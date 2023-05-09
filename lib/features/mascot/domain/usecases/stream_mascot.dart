@@ -6,12 +6,11 @@ import '../entities/mascot.dart';
 import '../repositories/mascots_repository.dart';
 
 @injectable
-class StreamMascot implements UseCase<Stream<Mascot>, Id> {
+class StreamMascot implements UseCaseStream<Mascot, Id> {
   final MascotsRepository mascotsRepository;
 
   StreamMascot(this.mascotsRepository);
 
   @override
-  FailureOrMascotStream call(Id params) =>
-      mascotsRepository.streamMascot(params);
+  MascotStream call(Id params) => mascotsRepository.streamMascot(params);
 }

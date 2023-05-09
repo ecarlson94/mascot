@@ -1,4 +1,6 @@
 import 'package:injectable/injectable.dart';
+import 'package:mascot/core/error/exception.dart';
+import 'package:rxdart_ext/rxdart_ext.dart';
 
 import '../../../../../core/clean_architecture/entity.dart';
 import '../../../../../core/data/indexed_db/indexed_db_data_source.dart';
@@ -10,17 +12,12 @@ class SettingsIndexedDbDataSource
   SettingsIndexedDbDataSource(super.indexedDbFactory, super.settings);
 
   @override
-  Future<SettingsModel> getObject(Id id) async {
-    var optionSettings = await super.getOptionObject(id);
-    return optionSettings.fold(
-      () async {
-        var settings = SettingsModel.empty;
-        await putObject(settings);
-        return settings;
-      },
-      (s) => s,
-    );
-  }
+  Single<SettingsModel> getObject(Id id) =>
+      super.getObject(id).onErrorResumeSingle((error, stackTrace) {
+        return error is ObjectNotFoundException
+            ? putObject(SettingsModel.empty).map((event) => SettingsModel.empty)
+            : Single.error(error, stackTrace);
+      });
 
   @override
   SettingsModel fromJson(Map<String, dynamic> json) {

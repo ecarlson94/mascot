@@ -12,6 +12,5 @@ class SaveTalkingThreshold extends UseCase<Unit, DecibelLufs> {
   SaveTalkingThreshold(this.repository);
 
   @override
-  FailureOrUnitFuture call(DecibelLufs params) =>
-      repository.setTalkingThreshold(params);
+  UnitSingle call(DecibelLufs params) => repository.setTalkingThreshold(params);
 }

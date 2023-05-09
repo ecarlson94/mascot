@@ -11,6 +11,5 @@ class StreamMicrophoneVolume implements UseCase<Stream<DecibelLufs>, NoParams> {
   StreamMicrophoneVolume(this._microphoneService);
 
   @override
-  VolumeStreamOrFailureFuture call(NoParams params) =>
-      _microphoneService.getVolumeStream();
+  VolumeStream call(NoParams params) => _microphoneService.getVolumeStream();
 }

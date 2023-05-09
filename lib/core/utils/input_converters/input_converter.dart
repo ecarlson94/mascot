@@ -8,4 +8,6 @@ abstract class InputConverter<TIn, TOut> {
   FutureOr<Either<Failure, TOut>> call(TIn input);
 }
 
-class InvalidInputFailure extends Failure {}
+class InvalidInputFailure extends Failure {
+  const InvalidInputFailure(super.exception);
+}

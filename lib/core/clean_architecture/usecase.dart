@@ -8,6 +8,10 @@ abstract class UseCase<Type, Params> {
   Single<Either<Failure, Type>> call(Params params);
 }
 
+abstract class UseCaseStream<Type, Params> {
+  Stream<Either<Failure, Type>> call(Params params);
+}
+
 class NoParams extends Equatable {
   @override
   List<Object?> get props => [];

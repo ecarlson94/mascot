@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:idb_shim/idb_browser.dart';
 import 'package:idb_shim/idb_client.dart';
 import 'package:injectable/injectable.dart';
+import 'package:mascot/core/error/exception.dart';
 import 'package:rxdart_ext/rxdart_ext.dart';
 
 import '../../clean_architecture/entity.dart';
@@ -26,10 +27,10 @@ abstract class IndexedDbDataSource<T extends Entity> {
   Single<T> getObject(Id id);
   Single<Option<T>> getOptionObject(Id id);
   Single<List<T>> getObjects(List<Id> ids);
-  Future<int> putObject(T object);
-  Future<void> deleteObject(Id id);
+  Single<int> putObject(T object);
+  Single<void> deleteObject(Id id);
   Stream<T> streamObject(Id id);
-  Stream<List<T>> streamObjects(Iterable<Id> ids);
+  Stream<List<T>> streamObjects(List<Id> ids);
 
   String get storeName;
   T fromJson(Map<String, dynamic> json);
@@ -61,94 +62,63 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
 
   @override
   Single<T> getObject(Id id) => getOptionObject(id).map(
-      (option) => option.getOrElse(() => throw Exception('Object not found')));
+      (option) => option.getOrElse(() => throw ObjectNotFoundException(id, T)));
 
   @override
-  Single<Option<T>> getOptionObject(Id id) =>
-      _openObjectStore(mode: idbModeReadOnly)
-          .zipWith(
-              Single.value(id), (store, id) => store.getObject(id).asSingle())
-          .singleOrError()
-          .map<Option<T>>(_createOption);
+  Single<Option<T>> getOptionObject(Id id) => Single.value(id)
+      .zipWith(
+        _openObjectStore(mode: idbModeReadOnly),
+        (id, store) => store.getObject(id).asSingle(),
+      )
+      .singleOrError()
+      .map<Option<T>>(_createOption);
 
   @override
   Single<List<T>> getObjects(List<Id> ids) => Stream.fromIterable(ids)
-      .zipWith(_openObjectStore(mode: idbModeReadOnly),
-          (id, store) => store.getObject(id).asSingle())
+      .zipWith(
+        _openObjectStore(mode: idbModeReadOnly),
+        (id, store) => store.getObject(id).asSingle(),
+      )
       .switchMap((value) => value)
+      .onErrorResume((e, s) => Single.error(LocalDataSourceException(e, s)))
       .whereNotNull()
       .map(_fromJson)
       .toList()
       .asSingle();
 
   @override
-  Single<Id> putObjectSingle(T object) {
-    var test = Single.value(object).map<Map<String, dynamic>>(toJson).zipWith(
-            _openObjectStore(mode: idbModeReadWrite),
-            (json, store) => Pair(json, json['id'] == 0 ? store.add(json): store.put(json, json['id'] as int)),
-          ).singleOrError().switchMap((value) {
-            return value.second.asSingle().map((event) {
-              value.first['id'] = event;
-              return value.first;
-            });
-          });
-
-    return test
-  }
+  Single<Id> putObject(T object) => Single.value(object)
+      .map<Map<String, dynamic>>(toJson)
+      .zipWith(_openObjectStore(mode: idbModeReadWrite), _saveObject)
+      .switchMap((value) => value)
+      .onErrorResume((e, s) => Single.error(LocalDataSourceException(e, s)))
+      .singleOrError();
 
   @override
-  Future<Id> putObject(T object) async {
-    final db = await _openDb();
-    final transaction = db.transaction(storeName, idbModeReadWrite);
-    final store = transaction.objectStore(storeName);
-
-    final jsonObject = toJson(object);
-    if (jsonObject['id'] == 0) {
-      var id = await store.add('');
-      jsonObject['id'] = id;
-    }
-
-    final id = await store.put(jsonObject, jsonObject['id'] as int);
-
-    if (id is Id) {
-      _currentState[id] = fromJson(jsonObject);
-      _streamController.add(_currentState);
-      return id;
-    } else {
-      throw Exception('Object could not be saved');
-    }
-  }
+  Single<void> deleteObject(Id id) => _openObjectStore(mode: idbModeReadWrite)
+      .switchMapSingle((store) => store.delete(id).asSingle())
+      .doOnDone(() {
+        _currentState.remove(id);
+        _streamController.add(_currentState);
+      })
+      .onErrorResume((e, s) => Single.error(LocalDataSourceException(e, s)))
+      .singleOrError();
 
   @override
-  Future<void> deleteObject(Id id) async {
-    final db = await _openDb();
-    final transaction = db.transaction(storeName, idbModeReadWrite);
-    final store = transaction.objectStore(storeName);
-    await store.delete(id);
-    _currentState.remove(id);
-    _streamController.add(_currentState);
-  }
+  Stream<T> streamObject(Id id) => getObject(id).concatWith([
+        _streamController.stream
+            .map((data) => data[id])
+            .whereNotNull()
+            .cast<Object>()
+            .map(_fromJson)
+            .cast<T>()
+      ]);
 
   @override
-  Stream<T> streamObject(Id id) {
-    return getObject(id).asSingle().concatWith([
-      _streamController.stream
-          .map((data) => data[id])
-          .whereNotNull()
-          .cast<Object>()
-          .map(_fromJson)
-          .cast<T>()
-    ]);
-  }
-
-  // TODO: find a way to remove the stream controller
-  @override
-  Stream<List<T>> streamObjects(Iterable<Id> ids) {
-    return _streamController.stream.map(
-      (data) =>
-          data.values.where((item) => ids.contains(item.id)).cast<T>().toList(),
-    );
-  }
+  Stream<List<T>> streamObjects(List<Id> ids) => getObjects(ids).concatWith([
+        _streamController.stream.map((data) =>
+            data.values.where((item) => ids.contains(item.id)).toList())
+      ]);
 
   @override
   void onDispose() {
@@ -182,6 +152,7 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
     if (value != null) {
       var obj = _fromJson(value);
       _currentState[obj.id] = obj;
+      _streamController.add(_currentState);
       return some(obj);
     } else {
       return none();
@@ -193,4 +164,20 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
   Map<String, dynamic> _toStringKeyMap(Object? object) =>
       (object as Map<dynamic, dynamic>)
           .map((key, value) => MapEntry(key as String, value));
+
+  Single<Id> _saveObject(Map<String, dynamic> json, ObjectStore store) {
+    var jsonSingle = json['id'] == 0
+        ? store.add('').asSingle().map((id) => json..['id'] = id)
+        : Single.value(json);
+
+    return jsonSingle.switchMapSingle(
+      (json) => store
+          .put(
+            json,
+            json['id'] as Id,
+          )
+          .asSingle()
+          .map((id) => id as Id),
+    );
+  }
 }

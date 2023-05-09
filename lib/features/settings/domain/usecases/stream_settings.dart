@@ -11,6 +11,5 @@ class StreamSettings extends UseCase<Stream<Settings?>, NoParams> {
   StreamSettings(this.repository);
 
   @override
-  FailureOrSettingsSubjectFuture call(NoParams params) =>
-      repository.streamSettings();
+  SettingsStream call(NoParams params) => repository.streamSettings();
 }

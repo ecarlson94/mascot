@@ -1,7 +1,8 @@
-import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
+import 'package:mascot/core/error/exception.dart';
+import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart';
+import 'package:rxdart_ext/rxdart_ext.dart';
 
-import '../../../../core/error/failure.dart';
 import '../../../../core/utils/logger.dart';
 import '../../domain/services/microphone_service.dart';
 import '../microphone.dart';
@@ -17,16 +18,15 @@ class MicrophoneServiceImpl implements MicrophoneService {
   MicrophoneServiceImpl(this._microphone, this._logger);
 
   @override
-  VolumeStreamOrFailureFuture getVolumeStream() async {
-    try {
-      if (!await _microphone.hasPermission()) {
-        _logger.logError('No microphone permission');
-        return Left(NoMicrophonePermissionFailure());
-      }
+  VolumeStream getVolumeStream() => _microphoneHasPermission()
+      .switchMap(
+        (hasPermission) => hasPermission
+            ? _microphone.volumeStream
+            : Stream<DecibelLufs>.error(const MicrophonePermissionException()),
+      )
+      .doOnError((e, s) => _logger.logError('Failed to stream volume', e, s));
 
-      return Right(_microphone.volumeStream);
-    } catch (e) {
-      return Left(MicrophoneFailure());
-    }
-  }
+  Single<bool> _microphoneHasPermission() =>
+      Single.fromFuture(_microphone.hasPermission()).doOnError(
+          (e, s) => _logger.logError('Failed to check permission', e, s));
 }
