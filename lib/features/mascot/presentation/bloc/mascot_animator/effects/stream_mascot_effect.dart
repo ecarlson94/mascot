@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:rxdart_ext/rxdart_ext.dart';
 
 import '../../../../../../core/reactive/base_bloc.dart';
 import '../../../../domain/usecases/stream_mascot.dart';
@@ -15,16 +16,9 @@ class StreamMascotEffect extends BlocEffect<MascotAnimatorEvent,
   Stream<MascotAnimatorEvent> call(
     LoadMascotEvent event,
     MascotAnimatorState state,
-  ) async* {
-    yield const LoadingMascotEvent();
-
-    var failureOrMascotStream = await streamMascot(event.mascotId);
-    yield* failureOrMascotStream.fold(
-      (l) async* {
-        yield const StreamMascotErrorEvent();
-      },
-      (mascotStream) =>
-          mascotStream.map((mascot) => MascotUpdatedEvent(mascot)),
-    );
-  }
+  ) =>
+      streamMascot(event.mascotId)
+          .map<MascotAnimatorEvent>((mascot) => MascotUpdatedEvent(mascot))
+          .startWith(const LoadingMascotEvent())
+          .onErrorReturn(const StreamMascotErrorEvent());
 }

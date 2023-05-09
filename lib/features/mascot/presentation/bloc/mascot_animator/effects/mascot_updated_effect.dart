@@ -15,9 +15,8 @@ class MascotUpdatedEffect extends BlocEffect<MascotAnimatorEvent,
   Stream<MascotAnimatorEvent> call(
     MascotUpdatedEvent event,
     MascotAnimatorState state,
-  ) async* {
-    var animationStream = _expressionAnimationService
-        .animateExpressions(event.mascot.expressions);
-    yield* animationStream.map((event) => SetExpressionEvent(event));
-  }
+  ) =>
+      _expressionAnimationService
+          .animateExpressions(event.mascot.expressions)
+          .map((expression) => SetExpressionEvent(expression));
 }

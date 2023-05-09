@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../../core/reactive/base_bloc.dart';
-import '../../../../../core/reactive/stream_subscriber.dart';
 import '../../../../expressions/domain/entities/expression.dart';
 import '../../../domain/entities/mascot.dart';
 import 'effects/mascot_updated_effect.dart';
@@ -15,9 +14,7 @@ part 'mascot_animator_state.dart';
 
 @injectable
 class MascotAnimatorBloc
-    extends BaseBloc<MascotAnimatorEvent, MascotAnimatorState>
-    with SubscriptionDisposer
-    implements StreamSubcriber {
+    extends BaseBloc<MascotAnimatorEvent, MascotAnimatorState> {
   final StreamMascotEffect _streamMascotEffect;
   final MascotUpdatedEffect _mascotUpdatedEffect;
 

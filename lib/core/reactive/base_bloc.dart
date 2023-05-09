@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mascot/core/reactive/stream_subscriber.dart';
 
 // Implementations must be pure functions, meaning that they
 // should always return the same output given the same input
@@ -15,8 +16,9 @@ typedef BlocAction<TEvent, TState> = TState Function(
 // They are useful for making API calls, navigating, logging, etc.
 // BEWARE: Infinite loops can be easily created with effects.
 // Avoid returning the same event that triggered the effect.
-abstract class BlocEffect<TBaseEvent, TCaptureEvent extends TBaseEvent,
-    TState> {
+abstract class BlocEffect<TBaseEvent, TCaptureEvent extends TBaseEvent, TState>
+    with SubscriptionDisposer
+    implements StreamSubcriber {
   Stream<TBaseEvent> call(TCaptureEvent event, TState state);
 
   EffectRepeatStrategy get repeatStrategy => EffectRepeatStrategy.every;
