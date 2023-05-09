@@ -109,9 +109,7 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
         _streamController.stream
             .map((data) => data[id])
             .whereNotNull()
-            .cast<Object>()
             .map(_fromJson)
-            .cast<T>()
       ]);
 
   @override
