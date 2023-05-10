@@ -43,10 +43,10 @@ void main() {
       test('should return object when object exists in the database', () async {
         // arrange
         const testEntity = TestEntity(id: 1, name: 'Test');
-        final id = await dataSource.putObject(testEntity);
+        final id = await dataSource.putObject(testEntity).single;
 
         // act
-        final result = await dataSource.getObject(id);
+        final result = await dataSource.getObject(id).single;
 
         // assert
         expect(result, testEntity);
@@ -59,7 +59,7 @@ void main() {
 
         // act & assert
         expect(
-          () async => await dataSource.getObject(id),
+          () async => await dataSource.getObject(id).single,
           throwsA(isA<Exception>()),
         );
       });
@@ -70,10 +70,10 @@ void main() {
           () async {
         // arrange
         const testEntity = TestEntity(id: 1, name: 'Test');
-        final id = await dataSource.putObject(testEntity);
+        final id = await dataSource.putObject(testEntity).single;
 
         // act
-        final result = await dataSource.getOptionObject(id);
+        final result = await dataSource.getOptionObject(id).single;
 
         // assert
         expect(result, some(testEntity));
@@ -86,7 +86,7 @@ void main() {
         const id = 1;
 
         // act
-        final result = await dataSource.getOptionObject(id);
+        final result = await dataSource.getOptionObject(id).single;
 
         // assert
         expect(result, none());
@@ -98,11 +98,11 @@ void main() {
         // arrange
         const testEntity1 = TestEntity(id: 1, name: 'Test1');
         const testEntity2 = TestEntity(id: 2, name: 'Test2');
-        final id1 = await dataSource.putObject(testEntity1);
-        final id2 = await dataSource.putObject(testEntity2);
+        final id1 = await dataSource.putObject(testEntity1).single;
+        final id2 = await dataSource.putObject(testEntity2).single;
 
         // act
-        final result = await dataSource.getObjects([id1, id2]);
+        final result = await dataSource.getObjects([id1, id2]).single;
 
         // assert
         expect(result, [testEntity1, testEntity2]);
@@ -116,11 +116,11 @@ void main() {
         const testEntity = TestEntity(id: 0, name: 'Test');
 
         // act
-        final id = await dataSource.putObject(testEntity);
+        final id = await dataSource.putObject(testEntity).single;
 
         // assert
         expect(id, isA<Id>());
-        final retrievedObject = await dataSource.getObject(id);
+        final retrievedObject = await dataSource.getObject(id).single;
         expect(retrievedObject, testEntity.copyWith(id: id));
       });
     });
@@ -129,11 +129,11 @@ void main() {
       test('should delete object from the database', () async {
         // arrange
         const testEntity = TestEntity(id: 1, name: 'Test');
-        final id = await dataSource.putObject(testEntity);
+        final id = await dataSource.putObject(testEntity).single;
 
         // act
-        await dataSource.deleteObject(id);
-        final result = await dataSource.getOptionObject(id);
+        await dataSource.deleteObject(id).single;
+        final result = await dataSource.getOptionObject(id).single;
 
         // assert
         expect(result, none());
@@ -144,14 +144,17 @@ void main() {
       test('should stream updates for a specific object', () async {
         // arrange
         const testEntity = TestEntity(id: 1, name: 'Test');
-        const updatedEntity = TestEntity(id: 1, name: 'Updated');
-        final id = await dataSource.putObject(testEntity);
-        dataSource.streamObject(id).listen(expectAsync1((value) {
-          expect(value, updatedEntity);
-        }));
+        const entityToUpdate = TestEntity(id: 1, name: 'Updated');
+        final id = await dataSource.putObject(testEntity).single;
+
+        late TestEntity result;
+        dataSource.streamObject(id).listen((value) => result = value);
 
         // act
-        await dataSource.putObject(updatedEntity);
+        await dataSource.putObject(entityToUpdate).single;
+
+        // assert
+        await expectLater(result, entityToUpdate);
       });
     });
 
@@ -161,14 +164,18 @@ void main() {
         const testEntity1 = TestEntity(id: 1, name: 'Test1');
         const testEntity2 = TestEntity(id: 2, name: 'Test2');
         const updatedEntity1 = TestEntity(id: 1, name: 'Updated1');
-        final id1 = await dataSource.putObject(testEntity1);
-        final id2 = await dataSource.putObject(testEntity2);
-        dataSource.streamObjects([id1, id2]).listen(expectAsync1((value) {
-          expect(value, [updatedEntity1, testEntity2]);
-        }));
+        final id1 = await dataSource.putObject(testEntity1).single;
+        final id2 = await dataSource.putObject(testEntity2).single;
+
+        List<TestEntity> result = [];
+        dataSource.streamObjects([id1, id2]).listen((value) => result = value);
 
         // act
-        await dataSource.putObject(updatedEntity1);
+        await dataSource.putObject(updatedEntity1).single;
+
+        // assert
+        await Future.delayed(const Duration(milliseconds: 100));
+        await expectLater(result, [updatedEntity1, testEntity2]);
       });
     });
   });

@@ -77,23 +77,22 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
 
   @override
   Single<Id> putObject(T object) => _openObjectStore(mode: idbModeReadWrite)
-      .switchMapSingle((store) => _saveObject(object, store))
-      .doOnData((event) {
+          .switchMapSingle((store) => _saveObject(object, store))
+          .doOnData((event) {
         _currentState[event] = object;
         _streamController.add(_currentState);
-      })
-      .onErrorResume((e, s) => Single.error(LocalDataSourceException(e, s)))
-      .singleOrError();
+      }).onErrorResumeSingle(
+              (e, s) => Single.error(LocalDataSourceException(e, s)));
 
   @override
   Single<void> deleteObject(Id id) => _openObjectStore(mode: idbModeReadWrite)
-      .switchMapSingle((store) => store.delete(id).asSingle())
-      .doOnDone(() {
+          .switchMapSingle((store) => store.delete(id).asSingle())
+          .doOnData((_) {
         _currentState.remove(id);
         _streamController.add(_currentState);
-      })
-      .onErrorResume((e, s) => Single.error(LocalDataSourceException(e, s)))
-      .singleOrError();
+      }).onErrorResumeSingle(
+        (e, s) => Single.error(LocalDataSourceException(e, s)),
+      );
 
   @override
   Stream<T> streamObject(Id id) => getObject(id).concatWith(
