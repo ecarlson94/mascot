@@ -19,12 +19,12 @@ class MicrophoneVolumeUpdatedEvent extends MicrophoneVolumeEvent {
 }
 
 class StreamVolumeFailureEvent extends MicrophoneVolumeEvent {
-  final Failure failure;
+  final int errorCode;
 
-  const StreamVolumeFailureEvent(this.failure);
+  const StreamVolumeFailureEvent(this.errorCode);
 
   @override
-  List<Object> get props => [failure];
+  List<Object> get props => [];
 }
 
 class LoadingVolumeStreamEvent extends MicrophoneVolumeEvent {
