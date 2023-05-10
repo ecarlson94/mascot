@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
-import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
 import 'package:idb_shim/idb_browser.dart';
 import 'package:idb_shim/idb_client.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mascot/core/error/exception.dart';
+import 'package:mascot/core/extensions/extensions.dart';
 import 'package:rxdart_ext/rxdart_ext.dart';
 
 import '../../clean_architecture/entity.dart';
@@ -37,16 +37,6 @@ abstract class IndexedDbDataSource<T extends Entity> {
   Map<String, dynamic> toJson(T object);
 }
 
-class Pair<T1, T2> extends Equatable {
-  final T1 first;
-  final T2 second;
-
-  const Pair(this.first, this.second);
-
-  @override
-  List<Object?> get props => [first, second];
-}
-
 abstract class IndexedDbDataSourceImpl<T extends Entity>
     implements IndexedDbDataSource<T>, Disposable {
   final IndexedDbFactory indexedDbFactory;
@@ -65,32 +55,33 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
       (option) => option.getOrElse(() => throw ObjectNotFoundException(id, T)));
 
   @override
-  Single<Option<T>> getOptionObject(Id id) => Single.value(id)
-      .zipWith(
-        _openObjectStore(mode: idbModeReadOnly),
-        (id, store) => store.getObject(id).asSingle(),
-      )
-      .singleOrError()
-      .map<Option<T>>(_createOption);
+  Single<Option<T>> getOptionObject(Id id) =>
+      _openObjectStore(mode: idbModeReadOnly)
+          .switchMapSingle((store) => store.getObject(id).asSingle())
+          .map<Option<T>>(_createOption);
 
   @override
-  Single<List<T>> getObjects(List<Id> ids) => Stream.fromIterable(ids)
-      .zipWith(
-        _openObjectStore(mode: idbModeReadOnly),
-        (id, store) => store.getObject(id).asSingle(),
-      )
-      .switchMap((value) => value)
-      .onErrorResume((e, s) => Single.error(LocalDataSourceException(e, s)))
-      .whereNotNull()
-      .map(_fromJson)
-      .toList()
-      .asSingle();
+  Single<List<T>> getObjects(List<Id> ids) =>
+      _openObjectStore(mode: idbModeReadOnly)
+          .switchMapSingle(
+            (store) => ids.stream.flatMapBatchesSingle(
+                (id) => store.getObject(id).asSingle(), ids.length),
+          )
+          .map(_mapObjectsFromJson)
+          .doOnData((event) {
+        _currentState.addAll(Map.fromIterable(event, key: (e) => e.id));
+        _streamController.add(_currentState);
+      }).onErrorResumeSingle(
+        (e, s) => Single.error(LocalDataSourceException(e, s)),
+      );
 
   @override
-  Single<Id> putObject(T object) => Single.value(object)
-      .map<Map<String, dynamic>>(toJson)
-      .zipWith(_openObjectStore(mode: idbModeReadWrite), _saveObject)
-      .switchMap((value) => value)
+  Single<Id> putObject(T object) => _openObjectStore(mode: idbModeReadWrite)
+      .switchMapSingle((store) => _saveObject(object, store))
+      .doOnData((event) {
+        _currentState[event] = object;
+        _streamController.add(_currentState);
+      })
       .onErrorResume((e, s) => Single.error(LocalDataSourceException(e, s)))
       .singleOrError();
 
@@ -105,12 +96,8 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
       .singleOrError();
 
   @override
-  Stream<T> streamObject(Id id) => getObject(id).concatWith([
-        _streamController.stream
-            .map((data) => data[id])
-            .whereNotNull()
-            .map(_fromJson)
-      ]);
+  Stream<T> streamObject(Id id) => getObject(id).concatWith(
+      [_streamController.stream.map((data) => data[id]).whereNotNull()]);
 
   @override
   Stream<List<T>> streamObjects(List<Id> ids) => getObjects(ids).concatWith([
@@ -146,9 +133,16 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
       _openTransaction(mode: mode)
           .map((transaction) => transaction.objectStore(storeName));
 
+  List<T> _mapObjectsFromJson(List<Object?> values) =>
+      values.whereNotNull().map(_toStringKeyMap).map<T>(fromJson).toList();
+
+  Map<String, dynamic> _toStringKeyMap(Object object) =>
+      (object as Map<dynamic, dynamic>)
+          .map((key, value) => MapEntry(key as String, value));
+
   Option<T> _createOption(Object? value) {
     if (value != null) {
-      var obj = _fromJson(value);
+      var obj = fromJson(_toStringKeyMap(value));
       _currentState[obj.id] = obj;
       _streamController.add(_currentState);
       return some(obj);
@@ -157,13 +151,8 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
     }
   }
 
-  T _fromJson(Object value) => fromJson(_toStringKeyMap(value));
-
-  Map<String, dynamic> _toStringKeyMap(Object? object) =>
-      (object as Map<dynamic, dynamic>)
-          .map((key, value) => MapEntry(key as String, value));
-
-  Single<Id> _saveObject(Map<String, dynamic> json, ObjectStore store) {
+  Single<Id> _saveObject(T object, ObjectStore store) {
+    var json = toJson(object);
     var jsonSingle = json['id'] == 0
         ? store.add('').asSingle().map((id) => json..['id'] = id)
         : Single.value(json);

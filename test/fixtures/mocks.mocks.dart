@@ -856,27 +856,20 @@ class MockSaveTalkingThreshold extends _i1.Mock
   }
 
   @override
-  _i7.SettingsRepository get repository => (super.noSuchMethod(
-        Invocation.getter(#repository),
-        returnValue: _FakeSettingsRepository_5(
-          this,
-          Invocation.getter(#repository),
-        ),
-      ) as _i7.SettingsRepository);
-  @override
-  _i4.Single<_i11.Unit> call(_i23.DecibelLufs? params) => (super.noSuchMethod(
+  _i4.Single<_i22.Settings> call(_i23.DecibelLufs? params) =>
+      (super.noSuchMethod(
         Invocation.method(
           #call,
           [params],
         ),
-        returnValue: _FakeSingle_2<_i11.Unit>(
+        returnValue: _FakeSingle_2<_i22.Settings>(
           this,
           Invocation.method(
             #call,
             [params],
           ),
         ),
-      ) as _i4.Single<_i11.Unit>);
+      ) as _i4.Single<_i22.Settings>);
 }
 
 /// A class which mocks [StreamMascot].

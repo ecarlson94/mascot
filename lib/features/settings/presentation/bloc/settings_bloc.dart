@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/clean_architecture/entity.dart';
-import '../../../../core/error/failure.dart';
 import '../../../../core/reactive/base_bloc.dart';
 import '../../../microphone/domain/models/decibel_lufs.dart';
 import '../../domain/entities/settings.dart';
