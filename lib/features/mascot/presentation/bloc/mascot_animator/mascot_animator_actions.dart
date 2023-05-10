@@ -20,6 +20,6 @@ MascotAnimatorState streamMascotError(
   MascotAnimatorState state,
 ) =>
     MascotAnimatorError(
-      ErrorCodes.loadMascotFailureCode,
+      ErrorCodes.loadMascotFailure,
       state.expressionOption,
     );

@@ -17,8 +17,7 @@ typedef BlocAction<TEvent, TState> = TState Function(
 // BEWARE: Infinite loops can be easily created with effects.
 // Avoid returning the same event that triggered the effect.
 abstract class BlocEffect<TBaseEvent, TCaptureEvent extends TBaseEvent, TState>
-    with SubscriptionDisposer
-    implements StreamSubcriber {
+    extends StreamSubcriber {
   Stream<TBaseEvent> call(TCaptureEvent event, TState state);
 
   EffectRepeatStrategy get repeatStrategy => EffectRepeatStrategy.every;
@@ -78,7 +77,7 @@ abstract class BaseBloc<TEvent, TState> extends Bloc<TEvent, TState>
         },
       );
 
-      _effectSubscriptions[effectType]!.add(sub);
+      effectSubs.add(sub);
     });
   }
 

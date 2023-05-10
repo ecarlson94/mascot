@@ -159,6 +159,23 @@ void main() {
     });
 
     group('streamObjects', () {
+      test('should seed stream with current values', () async {
+        // arrange
+        const testEntity1 = TestEntity(id: 1, name: 'Test1');
+        const testEntity2 = TestEntity(id: 2, name: 'Test2');
+        final id1 = await dataSource.putObject(testEntity1).single;
+        final id2 = await dataSource.putObject(testEntity2).single;
+        var stream = dataSource.streamObjects([id1, id2]);
+
+        // assert
+        expect(
+          stream,
+          emitsInOrder([
+            [testEntity1, testEntity2],
+          ]),
+        );
+      });
+
       test('should stream updates for a list of objects', () async {
         // arrange
         const testEntity1 = TestEntity(id: 1, name: 'Test1');
@@ -166,16 +183,18 @@ void main() {
         const updatedEntity1 = TestEntity(id: 1, name: 'Updated1');
         final id1 = await dataSource.putObject(testEntity1).single;
         final id2 = await dataSource.putObject(testEntity2).single;
-
-        List<TestEntity> result = [];
-        dataSource.streamObjects([id1, id2]).listen((value) => result = value);
+        var stream = dataSource.streamObjects([id1, id2]);
 
         // act
         await dataSource.putObject(updatedEntity1).single;
 
         // assert
-        await Future.delayed(const Duration(milliseconds: 100));
-        await expectLater(result, [updatedEntity1, testEntity2]);
+        expect(
+          stream,
+          emitsInOrder([
+            [updatedEntity1, testEntity2],
+          ]),
+        );
       });
     });
   });

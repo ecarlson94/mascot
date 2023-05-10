@@ -28,8 +28,10 @@ class StreamVolumeEffect extends BlocEffect<MicrophoneVolumeEvent,
           .onErrorReturnWith(
             (e, s) => e is MicrophonePermissionException
                 ? const StreamVolumeFailureEvent(
-                    ErrorCodes.noMicrophonePermissionFailureCode)
+                    ErrorCodes.microphonePermissionFailure,
+                  )
                 : const StreamVolumeFailureEvent(
-                    ErrorCodes.microphoneFailureCode),
+                    ErrorCodes.unknownFailure,
+                  ),
           );
 }

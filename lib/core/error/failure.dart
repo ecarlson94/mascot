@@ -11,19 +11,3 @@ abstract class Failure extends Equatable {
   @override
   List<Object?> get props => [];
 }
-
-class LocalDataSourceFailure extends Failure {
-  const LocalDataSourceFailure(super.exception);
-}
-
-class InvalidArgumentFailure extends Failure {
-  const InvalidArgumentFailure(super.exception);
-}
-
-class NoMicrophonePermissionFailure extends Failure {
-  const NoMicrophonePermissionFailure(super.exception);
-}
-
-class MicrophoneFailure extends Failure {
-  const MicrophoneFailure(super.exception);
-}

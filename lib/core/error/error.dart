@@ -5,14 +5,13 @@ abstract class ErrorState {
 }
 
 abstract class ErrorCodes {
-  static const int unknownFailureCode = 0;
-  static const int invalidInputFailureCode = 100;
-  static const int addImageFailureCode = 101;
-  static const int getImageFailureCode = 102;
-  static const int saveMascotFailureCode = 103;
-  static const int getMascotFailureCode = 104;
-  static const int loadSettingsFailureCode = 105;
-  static const int loadMascotFailureCode = 106;
-  static const int noMicrophonePermissionFailureCode = 200;
-  static const int microphoneFailureCode = 201;
+  static const int unknownFailure = 0;
+  static const int invalidInputFailure = 100;
+  static const int addImageFailure = 101;
+  static const int getImageFailure = 102;
+  static const int saveMascotFailure = 103;
+  static const int getMascotFailure = 104;
+  static const int loadSettingsFailure = 105;
+  static const int loadMascotFailure = 106;
+  static const int microphonePermissionFailure = 200;
 }

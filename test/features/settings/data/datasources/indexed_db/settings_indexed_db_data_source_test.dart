@@ -72,10 +72,10 @@ void main() {
           favoriteMascotId: 1,
           talkingThresholdDecibels: -10.0,
         );
-        await dataSource.putObject(settings);
+        await dataSource.putObject(settings).single;
 
         // act
-        final result = await dataSource.getObject(1);
+        final result = await dataSource.getObject(1).single;
 
         // assert
         expect(result, isA<SettingsModel>());
@@ -92,12 +92,12 @@ void main() {
         // arrange
 
         // act
-        final result = await dataSource.getObject(1);
+        final result = await dataSource.getObject(1).single;
 
         // assert
         expect(result, isA<SettingsModel>());
         expect(result, SettingsModel.empty);
-        final storedSettings = await dataSource.getObject(1);
+        final storedSettings = await dataSource.getObject(1).single;
         expect(storedSettings, SettingsModel.empty);
       });
     });

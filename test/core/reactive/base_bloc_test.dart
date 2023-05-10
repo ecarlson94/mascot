@@ -57,8 +57,9 @@ class TestEffect extends BlocEffect<TestEvent, TestEvent2, TestState> {
     TestEvent event,
     TestState state,
   ) async* {
-    yield EffectTriggeredEvent(name);
-    yield EffectTriggeredEvent(name);
+    yield EffectTriggeredEvent('$name:${event.name}');
+    await Future.delayed(const Duration(milliseconds: 100));
+    yield EffectTriggeredEvent('$name:${event.name}');
   }
 }
 
@@ -108,14 +109,15 @@ void main() {
                 EffectTriggeredState(state.callCount + 1, event.name),
           ),
         act: (bloc) => bloc.add(const TestEvent2('test')),
+        wait: const Duration(milliseconds: 200),
         expect: () => <TestState>[
-          EffectTriggeredState(1, effect.name),
-          EffectTriggeredState(2, effect.name),
+          EffectTriggeredState(1, '${effect.name}:test'),
+          EffectTriggeredState(2, '${effect.name}:test'),
         ],
       );
 
       blocTest(
-        'should not add events from previous effects',
+        'should not add events from previous effects when the effect is replaced',
         setUp: () {
           effect = TestEffect('replacementEffect')
             ..repeatStrategy = EffectRepeatStrategy.every
@@ -127,15 +129,65 @@ void main() {
             (EffectTriggeredEvent event, state) =>
                 EffectTriggeredState(state.callCount + 1, event.name),
           ),
-        act: (bloc) => {
+        act: (bloc) async => {
           bloc.add(const TestEvent2('test')),
           bloc.add(const TestEvent2('test2')),
         },
+        wait: const Duration(milliseconds: 250),
         expect: () => <TestState>[
-          EffectTriggeredState(1, effect.name),
-          EffectTriggeredState(2, effect.name),
-          EffectTriggeredState(3, effect.name),
-          EffectTriggeredState(4, effect.name),
+          EffectTriggeredState(1, '${effect.name}:test'),
+          EffectTriggeredState(2, '${effect.name}:test2'),
+          EffectTriggeredState(3, '${effect.name}:test2'),
+        ],
+      );
+
+      blocTest(
+        'should add events from all effects when the effect is not replaced',
+        setUp: () {
+          effect = TestEffect('additiveEffect')
+            ..repeatStrategy = EffectRepeatStrategy.every
+            .._replacementStrategy = EffectReplaceStrategy.add;
+        },
+        build: () => TestBloc()
+          ..createEffect(effect)
+          ..createAction(
+            (EffectTriggeredEvent event, state) =>
+                EffectTriggeredState(state.callCount + 1, event.name),
+          ),
+        act: (bloc) async => {
+          bloc.add(const TestEvent2('test')),
+          bloc.add(const TestEvent2('test2')),
+        },
+        wait: const Duration(milliseconds: 250),
+        expect: () => <TestState>[
+          EffectTriggeredState(1, '${effect.name}:test'),
+          EffectTriggeredState(2, '${effect.name}:test2'),
+          EffectTriggeredState(3, '${effect.name}:test'),
+          EffectTriggeredState(4, '${effect.name}:test2'),
+        ],
+      );
+
+      blocTest(
+        'should run only once when repeatStrategy is once',
+        setUp: () {
+          effect = TestEffect('additiveEffect')
+            ..repeatStrategy = EffectRepeatStrategy.once
+            .._replacementStrategy = EffectReplaceStrategy.add;
+        },
+        build: () => TestBloc()
+          ..createEffect(effect)
+          ..createAction(
+            (EffectTriggeredEvent event, state) =>
+                EffectTriggeredState(state.callCount + 1, event.name),
+          ),
+        act: (bloc) async => {
+          bloc.add(const TestEvent2('test')),
+          bloc.add(const TestEvent2('test2')),
+        },
+        wait: const Duration(milliseconds: 250),
+        expect: () => <TestState>[
+          EffectTriggeredState(1, '${effect.name}:test'),
+          EffectTriggeredState(2, '${effect.name}:test'),
         ],
       );
     });

@@ -21,7 +21,8 @@ class StreamSettingsEffect
   ) =>
       _streamSettings(NoParams())
           .map<SettingsEvent>((settings) => SettingsUpdatedEvent(settings))
+          .startWith(const LoadingSettingsEvent())
           .onErrorReturn(
-            const LoadSettingsFailureEvent(ErrorCodes.loadSettingsFailureCode),
+            const LoadSettingsFailureEvent(ErrorCodes.loadSettingsFailure),
           );
 }

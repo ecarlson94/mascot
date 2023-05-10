@@ -36,7 +36,7 @@ class SaveMascotEffect
   ) async* {
     var form = state.form.getOrElse(getInitialForm);
     if (!form.valid) {
-      yield const SaveMascotFailureEvent(ErrorCodes.invalidInputFailureCode);
+      yield const SaveMascotFailureEvent(ErrorCodes.invalidInputFailure);
     } else {
       yield SavingMascotEvent();
       yield* _saveFormMascot(form);
@@ -49,7 +49,7 @@ class SaveMascotEffect
           .switchMapSingle((mascot) => _addMascot(mascot))
           .map<CreateMascotEvent>((mascot) => SaveMascotSuccessEvent(mascot))
           .onErrorReturn(
-            const SaveMascotFailureEvent(ErrorCodes.saveMascotFailureCode),
+            const SaveMascotFailureEvent(ErrorCodes.saveMascotFailure),
           );
 
   Mascot _createMascotFromForm(FormGroup form) => Mascot(

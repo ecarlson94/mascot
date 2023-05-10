@@ -78,9 +78,8 @@ void main() {
         // assert
         expect(
           events,
-          equals([
-            const SaveMascotFailureEvent(ErrorCodes.invalidInputFailureCode)
-          ]),
+          equals(
+              [const SaveMascotFailureEvent(ErrorCodes.invalidInputFailure)]),
         );
       },
     );

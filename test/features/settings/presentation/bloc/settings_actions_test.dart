@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/error/error.dart';
-import 'package:mascot/core/error/failure.dart';
 import 'package:mascot/features/settings/domain/entities/settings.dart';
 import 'package:mascot/features/settings/presentation/bloc/settings_actions.dart';
 import 'package:mascot/features/settings/presentation/bloc/settings_bloc.dart';
@@ -48,7 +47,7 @@ void main() {
 
         // act
         var result = loadSettingsFailure(
-          LoadSettingsFailureEvent(LocalDataSourceFailure()),
+          const LoadSettingsFailureEvent(ErrorCodes.loadSettingsFailure),
           state,
         );
 
@@ -56,7 +55,7 @@ void main() {
         expect(
           result,
           SettingsError(
-            ErrorCodes.loadSettingsFailureCode,
+            ErrorCodes.loadSettingsFailure,
             state.favoriteMascotIdOption,
             state.talkingThresholdOption,
           ),

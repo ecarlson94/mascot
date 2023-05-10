@@ -1,11 +1,11 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/clean_architecture/usecase.dart';
-import 'package:mascot/core/error/failure.dart';
+import 'package:mascot/core/error/error.dart';
+import 'package:mascot/core/error/exception.dart';
 import 'package:mascot/features/settings/presentation/bloc/effects/stream_settings_effect.dart';
 import 'package:mascot/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart_ext/rxdart_ext.dart';
 
 import '../../../../../fixtures/test_context.dart';
 
@@ -18,7 +18,7 @@ void main() {
     effect = StreamSettingsEffect(context.mocks.streamSettings);
 
     when(context.mocks.streamSettings(any)).thenAnswer(
-      (_) async => Right(BehaviorSubject.seeded(context.data.settings)),
+      (_) => Single.value(context.data.settings),
     );
   });
 
@@ -60,14 +60,14 @@ void main() {
     });
 
     test(
-        'should return [LoadingSettings, StreamSettingsError] when settings fails',
+        'should return [LoadingSettings, StreamSettingsError(${ErrorCodes.loadSettingsFailure})] when settings fails',
         () async {
       // arrange
       final event = LoadSettingsEvent();
       final state = SettingsInitial();
 
       when(context.mocks.streamSettings(any)).thenAnswer(
-        (_) async => Left(LocalDataSourceFailure()),
+        (_) => Single.error(const ArgumentException()),
       );
 
       // act
@@ -79,7 +79,7 @@ void main() {
         events,
         [
           const LoadingSettingsEvent(),
-          LoadSettingsFailureEvent(LocalDataSourceFailure()),
+          const LoadSettingsFailureEvent(ErrorCodes.loadSettingsFailure),
         ],
       );
     });
