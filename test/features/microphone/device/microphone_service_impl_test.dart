@@ -1,11 +1,10 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mascot/core/error/failure.dart';
+import 'package:mascot/core/error/exception.dart';
 import 'package:mascot/features/microphone/device/services/microphone_service_impl.dart';
 import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart_ext/rxdart_ext.dart';
 
-import '../../../fixtures/option.dart';
 import '../../../fixtures/test_context.dart';
 
 void main() {
@@ -26,54 +25,37 @@ void main() {
         'should return a stream of microphone volume',
         () async {
           // arrange
-          const stream = Stream<DecibelLufs>.empty();
+          const firstVolume = DecibelLufs(0.0);
+          var stream = Single.value(firstVolume);
           when(context.mocks.microphone.hasPermission())
               .thenAnswer((_) async => true);
           when(context.mocks.microphone.volumeStream).thenAnswer((_) => stream);
 
           // act
-          final result = await classUnderTest.getVolumeStream();
+          final result = await classUnderTest.getVolumeStream().single;
 
           // assert
-          expect(result.getOrFailTest(), stream);
+          expect(result, firstVolume);
           verify(context.mocks.microphone.hasPermission());
           verify(context.mocks.microphone.volumeStream);
         },
       );
 
       test(
-        'should return no microphone permission failure when no permission',
+        'should emit no microphone permission failure when no permission',
         () async {
           // arrange
           when(context.mocks.microphone.hasPermission())
               .thenAnswer((_) async => false);
 
           // act
-          final result = await classUnderTest.getVolumeStream();
+          final result = classUnderTest.getVolumeStream();
 
           // assert
-          expect(result, Left(NoMicrophonePermissionFailure()));
+          await expectLater(
+              result, emitsError(isA<MicrophonePermissionException>()));
           verify(context.mocks.microphone.hasPermission());
           verifyNever(context.mocks.microphone.volumeStream);
-        },
-      );
-
-      test(
-        'should return microphone failure when exception',
-        () async {
-          // arrange
-          when(context.mocks.microphone.hasPermission())
-              .thenAnswer((_) async => true);
-          when(context.mocks.microphone.volumeStream)
-              .thenThrow(Exception('test'));
-
-          // act
-          final result = await classUnderTest.getVolumeStream();
-
-          // assert
-          expect(result, Left(MicrophoneFailure()));
-          verify(context.mocks.microphone.hasPermission());
-          verify(context.mocks.microphone.volumeStream);
         },
       );
     });
