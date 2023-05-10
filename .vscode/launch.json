@@ -5,7 +5,7 @@
       "name": "Flutter",
       "request": "launch",
       "type": "dart",
-      "args": ["-d", "web-server","--web-port", "5000", "--web-hostname", "0.0.0.0"],
+      "args": ["-d", "web-server","--web-port", "5000", "--web-hostname", "0.0.0.0", "--debug"],
     }
   ]
 }

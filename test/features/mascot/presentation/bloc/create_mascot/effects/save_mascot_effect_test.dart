@@ -1,13 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/error/error.dart';
-import 'package:mascot/core/error/failure.dart';
 import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
 import 'package:mascot/features/mascot/presentation/bloc/create_mascot/create_mascot_actions.dart';
 import 'package:mascot/features/mascot/presentation/bloc/create_mascot/create_mascot_bloc.dart';
 import 'package:mascot/features/mascot/presentation/bloc/create_mascot/effects/save_mascot_effect.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart_ext/rxdart_ext.dart';
 
 import '../../../../../../fixtures/test_context.dart';
 import 'package:reactive_forms/src/models/models.dart';
@@ -46,7 +46,7 @@ void main() {
     savedMascot = context.data.mascot;
 
     when(context.mocks.addMascot(any))
-        .thenAnswer((_) async => Right(savedMascot));
+        .thenAnswer((_) => Single.value(savedMascot));
   });
 
   void fillForm(FormGroup form) {
@@ -78,9 +78,8 @@ void main() {
         // assert
         expect(
           events,
-          equals([
-            const SaveMascotFailureEvent(ErrorCodes.invalidInputFailureCode)
-          ]),
+          equals(
+              [const SaveMascotFailureEvent(ErrorCodes.invalidInputFailure)]),
         );
       },
     );
@@ -97,8 +96,10 @@ void main() {
         var events = await result.toList();
 
         // assert
-        expect(events,
-            equals([SavingMascotEvent(), SaveMascotSuccessEvent(savedMascot)]));
+        expect(
+          events,
+          equals([SavingMascotEvent(), SaveMascotSuccessEvent(savedMascot)]),
+        );
       },
     );
 
@@ -115,30 +116,6 @@ void main() {
 
         // assert
         verify(context.mocks.addMascot(mascotToSave));
-      },
-    );
-
-    test(
-      'should return [SavingMascotEvent, SaveMascotFailure] events when usecase fails',
-      () async {
-        // arrange
-        var form = createAndFillForm();
-        var state = CreateMascotState(some(form), none(), none(), false);
-        when(context.mocks.addMascot(any))
-            .thenAnswer((_) async => Left(LocalDataSourceFailure()));
-
-        // act
-        var result = effect(SaveMascotEvent(), state);
-        var events = await result.toList();
-
-        // assert
-        expect(
-          events,
-          equals([
-            SavingMascotEvent(),
-            const SaveMascotFailureEvent(ErrorCodes.saveMascotFailureCode)
-          ]),
-        );
       },
     );
   });

@@ -32,10 +32,10 @@ class LoadingSettingsEvent extends SettingsEvent {
 }
 
 class LoadSettingsFailureEvent extends SettingsEvent {
-  final Failure failure;
+  final int errorCode;
 
-  const LoadSettingsFailureEvent(this.failure);
+  const LoadSettingsFailureEvent(this.errorCode);
 
   @override
-  List<Object?> get props => [failure, ...super.props];
+  List<Object?> get props => [errorCode, ...super.props];
 }

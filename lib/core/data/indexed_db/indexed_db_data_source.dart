@@ -1,10 +1,14 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
 import 'package:get_it/get_it.dart';
 import 'package:idb_shim/idb_browser.dart';
 import 'package:idb_shim/idb_client.dart';
 import 'package:injectable/injectable.dart';
+import 'package:mascot/core/error/exception.dart';
+import 'package:mascot/core/extensions/extensions.dart';
+import 'package:rxdart_ext/rxdart_ext.dart';
 
 import '../../clean_architecture/entity.dart';
 
@@ -20,13 +24,13 @@ class IndexDbSettings {
 }
 
 abstract class IndexedDbDataSource<T extends Entity> {
-  Future<T> getObject(Id id);
-  Future<Option<T>> getOptionObject(Id id);
-  Future<List<T>> getObjects(Iterable<Id> ids);
-  Future<int> putObject(T object);
-  Future<void> deleteObject(Id id);
+  Single<T> getObject(Id id);
+  Single<Option<T>> getOptionObject(Id id);
+  Single<List<T>> getObjects(List<Id> ids);
+  Single<int> putObject(T object);
+  Single<void> deleteObject(Id id);
   Stream<T> streamObject(Id id);
-  Stream<List<T>> streamObjects(Iterable<Id> ids);
+  Stream<List<T>> streamObjects(List<Id> ids);
 
   String get storeName;
   T fromJson(Map<String, dynamic> json);
@@ -47,103 +51,65 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
   String get storeName => T.toString();
 
   @override
-  Future<T> getObject(Id id) async {
-    return (await getOptionObject(id)).fold(
-      () => throw Exception('Object not found'),
-      (o) => o,
-    );
-  }
+  Single<T> getObject(Id id) => getOptionObject(id).map(
+      (option) => option.getOrElse(() => throw ObjectNotFoundException(id, T)));
 
   @override
-  Future<Option<T>> getOptionObject(Id id) async {
-    final db = await openDb();
-    final transaction = db.transaction(storeName, idbModeReadOnly);
-    final store = transaction.objectStore(storeName);
-    final value = await store.getObject(id);
-
-    if (value != null) {
-      var obj = _fromJson(value);
-      _currentState[obj.id] = obj;
-      return some(obj);
-    } else {
-      return none();
-    }
-  }
+  Single<Option<T>> getOptionObject(Id id) =>
+      _openObjectStore(mode: idbModeReadOnly)
+          .switchMapSingle((store) => store.getObject(id).asSingle())
+          .map<Option<T>>(_createOption);
 
   @override
-  Future<List<T>> getObjects(Iterable<Id> ids) async {
-    final db = await openDb();
-    final transaction = db.transaction(storeName, idbModeReadOnly);
-    final store = transaction.objectStore(storeName);
-
-    final objects = <T>[];
-    for (var id in ids) {
-      final value = await store.getObject(id);
-      if (value != null) {
-        var obj = _fromJson(value);
-        _currentState[obj.id] = obj;
-        objects.add(obj);
-      }
-    }
-
-    return objects;
-  }
+  Single<List<T>> getObjects(List<Id> ids) =>
+      _openObjectStore(mode: idbModeReadOnly)
+          .switchMapSingle(
+            (store) => ids.stream.flatMapBatchesSingle(
+                (id) => store.getObject(id).asSingle(), ids.length),
+          )
+          .map(_mapObjectsFromJson)
+          .doOnData((event) {
+        _currentState.addAll(Map.fromIterable(event, key: (e) => e.id));
+        _streamController.add(_currentState);
+      }).onErrorResumeSingle(
+        (e, s) => Single.error(LocalDataSourceException(e, s)),
+      );
 
   @override
-  Future<Id> putObject(T object) async {
-    final db = await openDb();
-    final transaction = db.transaction(storeName, idbModeReadWrite);
-    final store = transaction.objectStore(storeName);
-
-    final jsonObject = toJson(object);
-    if (jsonObject['id'] == 0) {
-      var id = await store.add('');
-      jsonObject['id'] = id;
-    }
-
-    final id = await store.put(jsonObject, jsonObject['id'] as int);
-
-    if (id is Id) {
-      _currentState[id] = fromJson(jsonObject);
-      _streamController.add(_currentState);
-      return id;
-    } else {
-      throw Exception('Object could not be saved');
-    }
-  }
+  Single<Id> putObject(T object) => _openObjectStore(mode: idbModeReadWrite)
+          .switchMapSingle((store) => _saveObject(object, store))
+          .doOnData((event) {
+        _currentState[event] = object;
+        _streamController.add(_currentState);
+      }).onErrorResumeSingle(
+              (e, s) => Single.error(LocalDataSourceException(e, s)));
 
   @override
-  Future<void> deleteObject(Id id) async {
-    final db = await openDb();
-    final transaction = db.transaction(storeName, idbModeReadWrite);
-    final store = transaction.objectStore(storeName);
-    await store.delete(id);
-    _currentState.remove(id);
-    _streamController.add(_currentState);
-  }
+  Single<void> deleteObject(Id id) => _openObjectStore(mode: idbModeReadWrite)
+          .switchMapSingle((store) => store.delete(id).asSingle())
+          .doOnData((_) {
+        _currentState.remove(id);
+        _streamController.add(_currentState);
+      }).onErrorResumeSingle(
+        (e, s) => Single.error(LocalDataSourceException(e, s)),
+      );
 
   @override
-  Stream<T> streamObject(Id id) {
-    return _streamController.stream
-        .map((data) => data[id])
-        .where((item) => item != null)
-        .cast<T>();
-  }
+  Stream<T> streamObject(Id id) => getObject(id).concatWith(
+      [_streamController.stream.map((data) => data[id]).whereNotNull()]);
 
   @override
-  Stream<List<T>> streamObjects(Iterable<Id> ids) {
-    return _streamController.stream.map(
-      (data) =>
-          data.values.where((item) => ids.contains(item.id)).cast<T>().toList(),
-    );
-  }
+  Stream<List<T>> streamObjects(List<Id> ids) => getObjects(ids).concatWith([
+        _streamController.stream.map((data) =>
+            data.values.where((item) => ids.contains(item.id)).toList())
+      ]);
 
   @override
   void onDispose() {
     _streamController.close();
   }
 
-  Future<Database> openDb() async {
+  Single<Database> _openDb() {
     var factory = indexedDbFactory.factory;
     if (factory == null) {
       throw Exception('IndexedDbFactory could not be initialized');
@@ -156,12 +122,48 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
         final db = event.database;
         db.createObjectStore(storeName, autoIncrement: true);
       },
-    );
+    ).asSingle();
   }
 
-  T _fromJson(Object value) => fromJson(_toStringKeyMap(value));
+  Single<Transaction> _openTransaction({String mode = idbModeReadWrite}) =>
+      _openDb().map((db) => db.transaction(storeName, mode));
 
-  Map<String, dynamic> _toStringKeyMap(Object? object) =>
+  Single<ObjectStore> _openObjectStore({String mode = idbModeReadWrite}) =>
+      _openTransaction(mode: mode)
+          .map((transaction) => transaction.objectStore(storeName));
+
+  List<T> _mapObjectsFromJson(List<Object?> values) =>
+      values.whereNotNull().map(_toStringKeyMap).map<T>(fromJson).toList();
+
+  Map<String, dynamic> _toStringKeyMap(Object object) =>
       (object as Map<dynamic, dynamic>)
           .map((key, value) => MapEntry(key as String, value));
+
+  Option<T> _createOption(Object? value) {
+    if (value != null) {
+      var obj = fromJson(_toStringKeyMap(value));
+      _currentState[obj.id] = obj;
+      _streamController.add(_currentState);
+      return some(obj);
+    } else {
+      return none();
+    }
+  }
+
+  Single<Id> _saveObject(T object, ObjectStore store) {
+    var json = toJson(object);
+    var jsonSingle = json['id'] == 0
+        ? store.add('').asSingle().map((id) => json..['id'] = id)
+        : Single.value(json);
+
+    return jsonSingle.switchMapSingle(
+      (json) => store
+          .put(
+            json,
+            json['id'] as Id,
+          )
+          .asSingle()
+          .map((id) => id as Id),
+    );
+  }
 }

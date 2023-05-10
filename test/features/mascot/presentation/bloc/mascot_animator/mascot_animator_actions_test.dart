@@ -74,7 +74,7 @@ void main() {
         // assert
         expect(
           result,
-          MascotAnimatorError(ErrorCodes.loadMascotFailureCode, none()),
+          MascotAnimatorError(ErrorCodes.loadMascotFailure, none()),
         );
       });
 
@@ -92,7 +92,7 @@ void main() {
         expect(
           result,
           MascotAnimatorError(
-            ErrorCodes.loadMascotFailureCode,
+            ErrorCodes.loadMascotFailure,
             some(context.data.expression),
           ),
         );

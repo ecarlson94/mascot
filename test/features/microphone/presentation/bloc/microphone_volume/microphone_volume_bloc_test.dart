@@ -1,4 +1,3 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart';
 import 'package:mascot/features/microphone/presentation/bloc/microphone_volume/effects/stream_volume_effect.dart';
@@ -20,7 +19,7 @@ void main() {
 
     volumeStream = const Stream<DecibelLufs>.empty();
     when(context.mocks.streamMicrophoneVolume(any))
-        .thenAnswer((_) async => Right(volumeStream));
+        .thenAnswer((_) => volumeStream);
   });
 
   group('MicrophoneVolumeBloc', () {

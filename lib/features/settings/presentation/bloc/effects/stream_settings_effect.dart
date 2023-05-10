@@ -1,4 +1,6 @@
 import 'package:injectable/injectable.dart';
+import 'package:mascot/core/error/error.dart';
+import 'package:rxdart_ext/rxdart_ext.dart';
 
 import '../../../../../core/clean_architecture/usecase.dart';
 import '../../../../../core/reactive/base_bloc.dart';
@@ -16,16 +18,11 @@ class StreamSettingsEffect
   Stream<SettingsEvent> call(
     LoadSettingsEvent event,
     SettingsState state,
-  ) async* {
-    yield const LoadingSettingsEvent();
-
-    var settingsStreamOrFailure = await _streamSettings(NoParams());
-    yield* settingsStreamOrFailure.fold(
-      (failure) async* {
-        yield LoadSettingsFailureEvent(failure);
-      },
-      (settingsStream) =>
-          settingsStream.map((settings) => SettingsUpdatedEvent(settings)),
-    );
-  }
+  ) =>
+      _streamSettings(NoParams())
+          .map<SettingsEvent>((settings) => SettingsUpdatedEvent(settings))
+          .startWith(const LoadingSettingsEvent())
+          .onErrorReturn(
+            const LoadSettingsFailureEvent(ErrorCodes.loadSettingsFailure),
+          );
 }

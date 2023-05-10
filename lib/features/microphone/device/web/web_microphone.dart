@@ -45,7 +45,7 @@ class WebMicrophone implements Microphone, Disposable {
     final data = Float32List(analyzer.frequencyBinCount);
 
     _volumeUpdateTimer = Timer.periodic(
-      const Duration(milliseconds: 10),
+      const Duration(milliseconds: 17), // ~60fps
       (_) {
         // get the audio data from the analyzer
         analyzer.getFloatTimeDomainData(data);

@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/error/error.dart';
-import 'package:mascot/core/error/failure.dart';
 import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart';
 import 'package:mascot/features/microphone/presentation/bloc/microphone_volume/microphone_volume_actions.dart';
 import 'package:mascot/features/microphone/presentation/bloc/microphone_volume/microphone_volume_bloc.dart';
@@ -57,35 +56,6 @@ void main() {
     });
 
     group('streamVolumeFailure', () {
-      var failureToErrorCodes = {
-        NoMicrophonePermissionFailure():
-            ErrorCodes.noMicrophonePermissionFailureCode,
-        MicrophoneFailure(): ErrorCodes.microphoneFailureCode,
-        LocalDataSourceFailure(): ErrorCodes.unknownFailureCode,
-      };
-
-      for (var entry in failureToErrorCodes.entries) {
-        test(
-          'should return MicrophoneVolumeError with error code ${entry.value} when failure is ${entry.key.runtimeType}',
-          () {
-            // assemble
-            var state = MicrophoneVolumeInitial();
-
-            // act
-            var result = streamVolumeFailure(
-              StreamVolumeFailureEvent(entry.key),
-              state,
-            );
-
-            // assert
-            expect(
-              result,
-              MicrophoneVolumeError(entry.value, none()),
-            );
-          },
-        );
-      }
-
       test('should use the volumeOption of the current state', () {
         // assemble
         const decibels = DecibelLufs(2);
@@ -93,7 +63,8 @@ void main() {
 
         // act
         var result = streamVolumeFailure(
-          StreamVolumeFailureEvent(MicrophoneFailure()),
+          const StreamVolumeFailureEvent(
+              ErrorCodes.microphonePermissionFailure),
           state,
         );
 
@@ -101,7 +72,7 @@ void main() {
         expect(
           result,
           MicrophoneVolumeError(
-            ErrorCodes.microphoneFailureCode,
+            ErrorCodes.microphonePermissionFailure,
             some(decibels),
           ),
         );

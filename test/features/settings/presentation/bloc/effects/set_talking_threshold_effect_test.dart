@@ -4,6 +4,7 @@ import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart';
 import 'package:mascot/features/settings/presentation/bloc/effects/set_talking_threshold_effect.dart';
 import 'package:mascot/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart_ext/rxdart_ext.dart';
 
 import '../../../../../fixtures/test_context.dart';
 
@@ -16,7 +17,7 @@ void main() {
     effect = SetTalkingThresholdEffect(context.mocks.saveTalkingThreshold);
 
     when(context.mocks.saveTalkingThreshold(any)).thenAnswer(
-      (_) async => const Right(unit),
+      (_) => Single.value(unit),
     );
   });
 

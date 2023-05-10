@@ -1,7 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/clean_architecture/usecase.dart';
-import 'package:mascot/core/error/failure.dart';
+import 'package:mascot/core/error/error.dart';
+import 'package:mascot/core/error/exception.dart';
 import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart';
 import 'package:mascot/features/microphone/presentation/bloc/microphone_volume/effects/stream_volume_effect.dart';
 import 'package:mascot/features/microphone/presentation/bloc/microphone_volume/microphone_volume_bloc.dart';
@@ -25,7 +26,7 @@ void main() {
     ]);
 
     when(context.mocks.streamMicrophoneVolume(any)).thenAnswer(
-      (_) async => Right(volumeStream),
+      (_) => volumeStream,
     );
   });
 
@@ -66,15 +67,14 @@ void main() {
     );
 
     test(
-      'should return [LoadingVolumeStream, StreamVolumeFailure] events when stream fails',
+      'should return [LoadingVolumeStream, StreamVolumeFailure(${ErrorCodes.microphonePermissionFailure})] events microphone permission is denied',
       () async {
         // arrange
         final event = InitializeMicrophoneVolumeEvent();
         final state = MicrophoneVolumeLoaded(some(twentyDecibels));
-        final failure = NoMicrophonePermissionFailure();
 
         when(context.mocks.streamMicrophoneVolume(any)).thenAnswer(
-          (_) async => Left(failure),
+          (_) => Stream.error(const MicrophonePermissionException()),
         );
 
         // act
@@ -83,7 +83,33 @@ void main() {
         // assert
         expect(result, [
           const LoadingVolumeStreamEvent(),
-          StreamVolumeFailureEvent(failure),
+          const StreamVolumeFailureEvent(
+            ErrorCodes.microphonePermissionFailure,
+          ),
+        ]);
+      },
+    );
+
+    test(
+      'should return [LoadingVolumeStream, StreamVolumeFailure(${ErrorCodes.unknownFailure})] events when stream fails',
+      () async {
+        // arrange
+        final event = InitializeMicrophoneVolumeEvent();
+        final state = MicrophoneVolumeLoaded(some(twentyDecibels));
+
+        when(context.mocks.streamMicrophoneVolume(any)).thenAnswer(
+          (_) => Stream.error(const OutOfMemoryError()),
+        );
+
+        // act
+        final result = await effect(event, state).toList();
+
+        // assert
+        expect(result, [
+          const LoadingVolumeStreamEvent(),
+          const StreamVolumeFailureEvent(
+            ErrorCodes.unknownFailure,
+          ),
         ]);
       },
     );

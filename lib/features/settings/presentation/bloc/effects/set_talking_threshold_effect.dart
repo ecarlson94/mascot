@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../../../core/reactive/base_bloc.dart';
 import '../../../domain/usecases/save_talking_threshold.dart';
@@ -15,7 +16,7 @@ class SetTalkingThresholdEffect
   Stream<SettingsEvent> call(
     SetTalkingThresholdEvent event,
     SettingsState state,
-  ) async* {
-    await _saveTalkingThreshold(event.talkingThreshold);
-  }
+  ) =>
+      _saveTalkingThreshold(event.talkingThreshold)
+          .switchMap<SettingsEvent>((value) => const Stream.empty());
 }

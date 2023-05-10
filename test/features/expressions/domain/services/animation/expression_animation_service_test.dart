@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mascot/features/expressions/domain/services/animation/expression_animation_service.dart';
@@ -44,9 +43,9 @@ void main() {
     );
 
     when(context.mocks.settingsRepository.streamSettings())
-        .thenAnswer((_) async => Right(settingsStream));
+        .thenAnswer((_) => settingsStream);
     when(context.mocks.streamMicrophoneVolume(any))
-        .thenAnswer((_) async => Right(microphoneVolumeStream));
+        .thenAnswer((_) => microphoneVolumeStream);
   });
 
   group('ExpressionAnimationService', () {

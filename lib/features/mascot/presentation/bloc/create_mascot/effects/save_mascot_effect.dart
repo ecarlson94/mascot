@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:rxdart_ext/rxdart_ext.dart';
 
 import '../../../../../../core/reactive/base_bloc.dart';
 import '../../../../../../core/error/error.dart';
@@ -35,23 +36,21 @@ class SaveMascotEffect
   ) async* {
     var form = state.form.getOrElse(getInitialForm);
     if (!form.valid) {
-      yield const SaveMascotFailureEvent(ErrorCodes.invalidInputFailureCode);
+      yield const SaveMascotFailureEvent(ErrorCodes.invalidInputFailure);
     } else {
       yield SavingMascotEvent();
-      yield await _triggerSaveMascot(form);
+      yield* _saveFormMascot(form);
     }
   }
 
-  Future<CreateMascotEvent> _triggerSaveMascot(FormGroup form) async {
-    var mascotToSave = _createMascotFromForm(form);
-
-    var mascotOrFailure = await _addMascot(mascotToSave);
-    return mascotOrFailure.fold(
-      (failure) =>
-          const SaveMascotFailureEvent(ErrorCodes.saveMascotFailureCode),
-      (mascot) => SaveMascotSuccessEvent(mascot),
-    );
-  }
+  Single<CreateMascotEvent> _saveFormMascot(FormGroup form) =>
+      Single.value(form)
+          .map(_createMascotFromForm)
+          .switchMapSingle((mascot) => _addMascot(mascot))
+          .map<CreateMascotEvent>((mascot) => SaveMascotSuccessEvent(mascot))
+          .onErrorReturn(
+            const SaveMascotFailureEvent(ErrorCodes.saveMascotFailure),
+          );
 
   Mascot _createMascotFromForm(FormGroup form) => Mascot(
         id: 0,
