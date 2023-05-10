@@ -1,10 +1,8 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/features/expressions/data/repositories/expressions_repository_impl.dart';
-import 'package:mascot/core/error/failure.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart_ext/rxdart_ext.dart';
 
-import '../../../../fixtures/option.dart';
 import '../../../../fixtures/test_context.dart';
 
 void main() {
@@ -20,7 +18,7 @@ void main() {
     );
 
     when(context.mocks.expressionsLocalDataSource.putObject(any))
-        .thenAnswer((_) async => _.positionalArguments.first.id);
+        .thenAnswer((_) => Single.value(_.positionalArguments.first.id));
   });
 
   group('ExpressionsRepositoryImpl', () {
@@ -32,7 +30,7 @@ void main() {
           final expressions = context.data.expressions;
 
           // Act
-          await repository.saveExpressions(expressions);
+          await repository.saveExpressions(expressions).single;
 
           // Assert
           for (var expression in expressions) {
@@ -51,31 +49,10 @@ void main() {
           final expectedIds = expressions.map((e) => e.id).toList();
 
           // Act
-          final result = await repository.saveExpressions(expressions);
+          final result = await repository.saveExpressions(expressions).single;
 
           // Assert
-          var actualIds = result.getOrFailTest();
-          expect(actualIds, expectedIds);
-        },
-      );
-
-      test(
-        'should return LocalDataSourceFailure when exception occurs',
-        () async {
-          // Arrange
-          final expressions = context.data.expressions;
-          when(context.mocks.expressionsLocalDataSource.putObject(any))
-              .thenThrow(Exception());
-
-          // Act
-          final result = await repository.saveExpressions(expressions);
-
-          // Assert
-          expect(result, isA<Left>());
-          expect(
-            result.swap().getOrFailTest(),
-            isA<LocalDataSourceFailure>(),
-          );
+          expect(result, expectedIds);
         },
       );
     });
@@ -88,35 +65,17 @@ void main() {
           final ids = context.data.expressions.map((e) => e.id).toList();
           final expectedExpressions = context.data.expressions;
           when(context.mocks.expressionsLocalDataSource.getObjects(any))
-              .thenAnswer((_) async => expectedExpressions
-                  .map(context.data.expressionMapper.fromExpression)
-                  .toList());
-
-          // Act
-          final result = await repository.getExpressions(ids);
-
-          // Assert
-          expect(result.getOrFailTest(), expectedExpressions);
-        },
-      );
-
-      test(
-        'should return LocalDataSourceFailure when exception occurs',
-        () async {
-          // Arrange
-          final ids = context.data.expressions.map((e) => e.id).toList();
-          when(context.mocks.expressionsLocalDataSource.getObjects(any))
-              .thenThrow(Exception());
-
-          // Act
-          final result = await repository.getExpressions(ids);
-
-          // Assert
-          expect(result, isA<Left>());
-          expect(
-            result.swap().getOrFailTest(),
-            isA<LocalDataSourceFailure>(),
+              .thenAnswer(
+            (_) => Single.value(expectedExpressions
+                .map(context.data.expressionMapper.fromExpression)
+                .toList()),
           );
+
+          // Act
+          final result = await repository.getExpressions(ids).single;
+
+          // Assert
+          expect(result, expectedExpressions);
         },
       );
     });
