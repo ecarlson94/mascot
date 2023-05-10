@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../../core/error/error.dart';
 import 'settings_bloc.dart';
 
 SettingsState loadSettingsFailure(
@@ -8,7 +7,7 @@ SettingsState loadSettingsFailure(
   SettingsState state,
 ) =>
     SettingsError(
-      ErrorCodes.loadSettingsFailureCode,
+      event.errorCode,
       state.favoriteMascotIdOption,
       state.talkingThresholdOption,
     );

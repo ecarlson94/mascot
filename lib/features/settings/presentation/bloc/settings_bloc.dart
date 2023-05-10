@@ -5,7 +5,6 @@ import 'package:injectable/injectable.dart';
 import '../../../../core/clean_architecture/entity.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/reactive/base_bloc.dart';
-import '../../../../core/reactive/stream_subscriber.dart';
 import '../../../microphone/domain/models/decibel_lufs.dart';
 import '../../domain/entities/settings.dart';
 import 'effects/set_talking_threshold_effect.dart';
@@ -16,9 +15,7 @@ part 'settings_event.dart';
 part 'settings_state.dart';
 
 @injectable
-class SettingsBloc extends BaseBloc<SettingsEvent, SettingsState>
-    with SubscriptionDisposer
-    implements StreamSubcriber {
+class SettingsBloc extends BaseBloc<SettingsEvent, SettingsState> {
   final StreamSettingsEffect _streamSettingsEffect;
   final SetTalkingThresholdEffect _setTalkingThreshold;
 
