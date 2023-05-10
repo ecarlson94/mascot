@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mascot/core/error/failure.dart';
 import 'package:mascot/features/expressions/domain/entities/expression.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
 import 'package:mascot/features/mascot/domain/usecases/add_mascot.dart';
 import 'package:mascot/features/settings/domain/entities/settings.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart_ext/rxdart_ext.dart';
 
 import '../../../../fixtures/test_context.dart';
 
@@ -31,18 +31,18 @@ void main() {
     );
 
     when(context.mocks.mascotsRepository.saveMascot(any))
-        .thenAnswer((_) async => Right(context.data.mascot.id));
+        .thenAnswer((_) => Single.value(context.data.mascot.id));
     when(context.mocks.settingsRepository.loadSettings())
-        .thenAnswer((_) async => const Right(Settings.empty));
+        .thenAnswer((_) => Single.value(Settings.empty));
     when(context.mocks.settingsRepository.setFavoriteMascotId(any))
-        .thenAnswer((_) async => const Right(unit));
+        .thenAnswer((_) => Single.value(unit));
     when(context.mocks.mascotsRepository.getMascot(any))
-        .thenAnswer((_) async => Right(updatedMascot));
+        .thenAnswer((_) => Single.value(updatedMascot));
     when(context.mocks.expressionsRepository.saveExpressions(any)).thenAnswer(
-      (_) async => Right(newMascot.expressions.map((e) => e.id).toList()),
+      (_) => Single.value(newMascot.expressions.map((e) => e.id).toList()),
     );
     when(context.mocks.expressionsRepository.getExpressions(any))
-        .thenAnswer((_) async => Right(newMascot.expressions.toList()));
+        .thenAnswer((_) => Single.value(newMascot.expressions.toList()));
   });
 
   group('AddMascot', () {
@@ -50,7 +50,7 @@ void main() {
       'should add the provided mascot to the repository with the expression ids only',
       () async {
         // act
-        final result = await usecase(newMascot);
+        final result = await usecase(newMascot).single;
         var newMascotWithExpressionIds = newMascot.copyWith(
           expressions: newMascot.expressions
               .map((e) => Expression.empty.copyWith(id: e.id))
@@ -58,7 +58,7 @@ void main() {
         );
 
         // assert
-        expect(result, Right(updatedMascot));
+        expect(result, updatedMascot);
         verifyInOrder([
           context.mocks.mascotsRepository
               .saveMascot(newMascotWithExpressionIds),
@@ -70,7 +70,7 @@ void main() {
 
     test('should update favorite mascot when adding a new mascot', () async {
       // act
-      await usecase(newMascot);
+      await usecase(newMascot).single;
 
       // assert
       verify(context.mocks.settingsRepository.loadSettings());
@@ -84,27 +84,16 @@ void main() {
       () async {
         // arrange
         when(context.mocks.settingsRepository.loadSettings())
-            .thenAnswer((_) async => Right(context.data.settings));
+            .thenAnswer((_) => Single.value(context.data.settings));
 
         // act
-        await usecase(newMascot);
+        await usecase(newMascot).single;
 
         // assert
         verify(context.mocks.settingsRepository.loadSettings());
         verifyNever(context.mocks.settingsRepository.setFavoriteMascotId(
           context.data.mascot.id,
         ));
-      },
-    );
-
-    test(
-      'should return InvalidArgumentFailure when mascot already exists',
-      () async {
-        // act
-        final result = await usecase(newMascot.copyWith(id: 1));
-
-        // assert
-        expect(result, Left(InvalidArgumentFailure()));
       },
     );
   });
