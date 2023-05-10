@@ -39,13 +39,14 @@ class MascotsRepositoryImpl extends StreamSubcriber
   @override
   IdSingle saveMascot(Mascot mascot) {
     var hasUnsavedExpressions = mascot.expressions.any((e) => e.id == 0);
-    if (hasUnsavedExpressions) {
-      var message = 'Expressions must be saved before mascot';
-      _logger.logError(message);
-      throw ArgumentException(message);
-    }
+    var message = 'Expressions must be saved before mascot';
 
     return Single.value(mascot)
+        .map(
+          (mascot) =>
+              hasUnsavedExpressions ? throw ArgumentException(message) : mascot,
+        )
+        .doOnError((e, s) => _logger.logError(message, e, s))
         .map(_mascotMapper.fromMascot)
         .map(_mascotsLocalDataSource.putObject)
         .flatMapSingle((value) => value)
