@@ -8,4 +8,5 @@ extension IterableExtensions<T> on Iterable<T> {
 extension StreamIterableExtensions<T> on Iterable<Stream<T>> {
   Stream<T> mergeStreams() => MergeStream(this);
   Stream<T> concatStreams() => ConcatStream(this);
+  Stream<List<T>> compineLatest() => CombineLatestStream.list(this).share();
 }

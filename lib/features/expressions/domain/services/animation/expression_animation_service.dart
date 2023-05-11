@@ -1,9 +1,7 @@
 import 'dart:async';
 
 import 'package:injectable/injectable.dart';
-import 'package:rxdart_ext/single.dart';
 
-import '../../../../../core/clean_architecture/entity.dart';
 import '../../../../../core/extensions/extensions.dart';
 import '../../entities/expression.dart';
 import 'expression_trigger.dart';
@@ -23,21 +21,11 @@ class ExpressionAnimationServiceImpl extends ExpressionAnimationService {
 
   @override
   Stream<Expression> animateExpressions(Set<Expression> expressions) {
-    final Map<Id, ExpressionTrigger> triggeredExpressions = {};
-
     return expressions
         .map(expressionTriggerFactory.create)
         .map((trigger) => trigger.stream)
-        .mergeStreams()
-        .doOnData((trigger) {
-          if (trigger.isTriggered) {
-            triggeredExpressions[trigger.expression.id] = trigger;
-          } else if (triggeredExpressions.containsKey(trigger.expression.id)) {
-            triggeredExpressions.remove(trigger.expression.id);
-          }
-        })
-        .map((_) =>
-            _reduceTriggersToExpression(triggeredExpressions.values.toList()))
+        .compineLatest()
+        .map(_reduceTriggersToExpression)
         // Ignore consecutive duplicate expressions
         .distinct();
   }
