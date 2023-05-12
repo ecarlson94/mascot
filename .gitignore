@@ -65,6 +65,10 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Node
+node_modules/
+bundle.js
+
 # Test Results
 coverage/
 test-report.json
