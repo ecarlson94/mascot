@@ -27,6 +27,6 @@ class MicrophoneServiceImpl implements MicrophoneService {
       .doOnError((e, s) => _logger.logError('Failed to stream volume', e, s));
 
   Single<bool> _microphoneHasPermission() =>
-      Single.fromFuture(_microphone.hasPermission()).doOnError(
+      _microphone.hasPermission().doOnError(
           (e, s) => _logger.logError('Failed to check permission', e, s));
 }

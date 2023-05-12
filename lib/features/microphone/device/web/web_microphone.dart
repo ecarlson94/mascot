@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rxdart_ext/rxdart_ext.dart';
 import 'package:universal_html/html.dart' as html;
 
 import '../../../../core/device/web/js_interop/web_audio/web_audio.dart';
@@ -21,21 +22,24 @@ class WebMicrophone implements Microphone, Disposable {
   final StreamController<DecibelLufs> _volumeStreamController =
       StreamController.broadcast();
 
+  Timer? _volumeUpdateTimer;
+  html.MediaStream? _microphoneStream;
+  AnalyserNode? _analyzer;
+  MediaStreamAudioSourceNode? _source;
+
   WebMicrophone(this._webAudio, this._logger);
 
   @override
-  Future<bool> hasPermission() async {
-    await _setMicrophoneStream();
-    return _microphoneStream != null;
-  }
+  Single<bool> hasPermission() =>
+      _setMicrophoneStream().asSingle().map((_) => _microphoneStream != null);
 
   @override
-  Stream<DecibelLufs> get volumeStream {
-    _startVolumeUpdates();
-    return _volumeStreamController.stream;
-  }
+  Stream<DecibelLufs> get volumeStream =>
+      _setMicrophoneStream(throwOnError: true)
+          .asSingle()
+          .doOnData((_) => _startVolumeUpdates())
+          .switchMap((_) => _volumeStreamController.stream);
 
-  Timer? _volumeUpdateTimer;
   void _startVolumeUpdates() async {
     if (_volumeUpdateTimer != null) {
       return; // Timer already started
@@ -55,13 +59,11 @@ class WebMicrophone implements Microphone, Disposable {
     );
   }
 
-  void _stopVolumeUpdates() {
-    _volumeUpdateTimer?.cancel();
-    _volumeUpdateTimer = null;
-  }
-
-  html.MediaStream? _microphoneStream;
   Future<void> _setMicrophoneStream({bool throwOnError = false}) async {
+    if (_microphoneStream != null) {
+      return; // Stream alread set
+    }
+
     try {
       _microphoneStream ??=
           await html.window.navigator.mediaDevices?.getUserMedia({
@@ -88,7 +90,6 @@ class WebMicrophone implements Microphone, Disposable {
     }
   }
 
-  AnalyserNode? _analyzer;
   Future<AnalyserNode> _getAnalyzer() async {
     if (_analyzer == null) {
       final source = await _getSource();
@@ -99,7 +100,6 @@ class WebMicrophone implements Microphone, Disposable {
     return _analyzer!;
   }
 
-  MediaStreamAudioSourceNode? _source;
   Future<MediaStreamAudioSourceNode> _getSource() async {
     await _setMicrophoneStream(throwOnError: true);
 
@@ -108,7 +108,8 @@ class WebMicrophone implements Microphone, Disposable {
 
   @override
   FutureOr onDispose() {
-    _stopVolumeUpdates();
     _volumeStreamController.close();
+    _volumeUpdateTimer?.cancel();
+    _volumeUpdateTimer = null;
   }
 }

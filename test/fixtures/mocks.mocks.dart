@@ -972,13 +972,19 @@ class MockMicrophone extends _i1.Mock implements _i30.Microphone {
         returnValue: _i9.Stream<_i23.DecibelLufs>.empty(),
       ) as _i9.Stream<_i23.DecibelLufs>);
   @override
-  _i9.Future<bool> hasPermission() => (super.noSuchMethod(
+  _i4.Single<bool> hasPermission() => (super.noSuchMethod(
         Invocation.method(
           #hasPermission,
           [],
         ),
-        returnValue: _i9.Future<bool>.value(false),
-      ) as _i9.Future<bool>);
+        returnValue: _FakeSingle_2<bool>(
+          this,
+          Invocation.method(
+            #hasPermission,
+            [],
+          ),
+        ),
+      ) as _i4.Single<bool>);
 }
 
 /// A class which mocks [StreamMicrophoneVolume].

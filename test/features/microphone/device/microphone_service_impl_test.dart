@@ -28,7 +28,7 @@ void main() {
           const firstVolume = DecibelLufs(0.0);
           var stream = Single.value(firstVolume);
           when(context.mocks.microphone.hasPermission())
-              .thenAnswer((_) async => true);
+              .thenAnswer((_) => Single.value(true));
           when(context.mocks.microphone.volumeStream).thenAnswer((_) => stream);
 
           // act
@@ -46,7 +46,7 @@ void main() {
         () async {
           // arrange
           when(context.mocks.microphone.hasPermission())
-              .thenAnswer((_) async => false);
+              .thenAnswer((_) => Single.value(false));
 
           // act
           final result = classUnderTest.getVolumeStream();
