@@ -27,11 +27,13 @@ class TalkingExpressionTrigger extends ExpressionTrigger {
           (settings) => _streamMicrophoneVolume(NoParams())
               .map((volume) => volume.value >= settings.talkingThreshold.value)
               .map(
-            (newIsTriggered) {
-              _isTriggered = newIsTriggered;
-              return this;
-            },
-          ).distinct((prev, next) => prev.isTriggered != next.isTriggered),
+                (newIsTriggered) {
+                  _isTriggered = newIsTriggered;
+                  return this;
+                },
+              )
+              .distinct((prev, next) => prev.isTriggered != next.isTriggered)
+              .startWith(this),
         );
   }
 }

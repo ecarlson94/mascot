@@ -20,3 +20,12 @@ SettingsState settingsUpdated(
       some(event.settings.favoriteMascotId),
       some(event.settings.talkingThreshold),
     );
+
+SettingsState loadingSettings(
+  LoadingSettingsEvent event,
+  SettingsState state,
+) =>
+    LoadingSettings(
+      state.favoriteMascotIdOption,
+      state.talkingThresholdOption,
+    );

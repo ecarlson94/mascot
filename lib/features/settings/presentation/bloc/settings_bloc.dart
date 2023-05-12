@@ -23,6 +23,7 @@ class SettingsBloc extends BaseBloc<SettingsEvent, SettingsState> {
     this._setTalkingThreshold,
   ) : super(SettingsInitial()) {
     createEffect(_streamSettingsEffect);
+    createAction(actions.loadingSettings);
     createAction(actions.loadSettingsFailure);
     createAction(actions.settingsUpdated);
 

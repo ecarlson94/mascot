@@ -45,6 +45,15 @@ void main() {
         expect(await stream.first, trigger);
       });
 
+      test('should emit [trigger.isTriggered = false] when created', () async {
+        // arrange
+        var stream = trigger.stream;
+
+        // assert
+        expect(await stream.first, trigger);
+        expect(trigger.isTriggered, isFalse);
+      });
+
       test(
         'should emit [trigger.isTriggered = true] when microphone volume is above threshold',
         () async {
@@ -55,7 +64,7 @@ void main() {
           microphoneVolumeStream.add(const DecibelLufs(-9));
 
           // assert
-          expect(await stream.first, trigger);
+          expect(await stream.skip(1).first, trigger);
           expect(trigger.isTriggered, isTrue);
         },
       );
@@ -70,7 +79,7 @@ void main() {
           microphoneVolumeStream.add(const DecibelLufs(-10));
 
           // assert
-          expect(await stream.first, trigger);
+          expect(await stream.skip(1).first, trigger);
           expect(trigger.isTriggered, isTrue);
         },
       );

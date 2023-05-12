@@ -10,3 +10,4 @@ lcov --remove coverage/lcov.info \
     '*/data/*/models/*.dart' \
     '*/error.dart' \
     '*/generated_plugin_registrant.dart' -o coverage/lcov.info
+genhtml coverage/lcov.info -o coverage/html

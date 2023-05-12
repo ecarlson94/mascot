@@ -24,6 +24,13 @@ class SettingsInitial extends SettingsState {
         );
 }
 
+class LoadingSettings extends SettingsState {
+  const LoadingSettings(
+    super.favoriteMascotIdStreamOption,
+    super.talkingThresholdStreamOption,
+  );
+}
+
 class SettingsLoaded extends SettingsState {
   const SettingsLoaded(
     super.favoriteMascotIdStreamOption,
