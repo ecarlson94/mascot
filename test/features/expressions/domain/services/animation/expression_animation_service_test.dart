@@ -7,7 +7,7 @@ import 'package:mascot/features/expressions/domain/services/animation/expression
 import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart';
 import 'package:mascot/features/settings/domain/entities/settings.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart_ext/rxdart_ext.dart';
 
 import '../../../../../fixtures/test_context.dart';
 
@@ -15,13 +15,13 @@ void main() {
   late TestContext context;
   late ExpressionAnimationService expressionAnimationService;
   late Set<Expression> expressions;
-  late BehaviorSubject<Settings> settingsStream;
+  late Stream<Settings> settingsStream;
   late Stream<DecibelLufs> microphoneVolumeStream;
 
   setUp(() {
     context = TestContext();
-    settingsStream = BehaviorSubject.seeded(context.data.settings);
-    microphoneVolumeStream = Stream.value(const DecibelLufs(-11));
+    settingsStream = Single.value(context.data.settings);
+    microphoneVolumeStream = Single.value(const DecibelLufs(-11));
 
     expressionAnimationService = ExpressionAnimationServiceImpl(
       ExpressionTriggerFactory(
@@ -67,7 +67,7 @@ void main() {
         var result = expressionAnimationService.animateExpressions(expressions);
 
         // act
-        var expression = await result.skip(1).first;
+        var expression = await result.first;
 
         // assert
         expect(expression.priority, 990);
@@ -88,7 +88,7 @@ void main() {
 
         // assert
         expect(
-          await result.skip(2).first,
+          await result.skip(1).first,
           expressions.firstWhere(
             (e) => e.activator == ExpressionTriggers.talking,
           ),
@@ -111,7 +111,7 @@ void main() {
 
         // assert
         expect(
-          await result.skip(3).first,
+          await result.skip(2).first,
           expressions.firstWhere(
             (e) => e.priority == 990,
           ),
