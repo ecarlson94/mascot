@@ -8,7 +8,9 @@ import 'package:mascot/features/mascot/data/models/mascot_mapper.dart';
 import 'package:mascot/features/mascot/domain/entities/mascot.dart';
 import 'package:mascot/features/mascot/presentation/bloc/create_mascot/effects/save_mascot_effect.dart';
 import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart';
+import 'package:mascot/features/settings/data/models/record_settings_mapper.dart';
 import 'package:mascot/features/settings/data/models/settings_mapper.dart';
+import 'package:mascot/features/settings/domain/entities/record_settings.dart';
 import 'package:mascot/features/settings/domain/entities/settings.dart';
 
 import 'test_x_file.dart';
@@ -82,6 +84,8 @@ class TestData {
   final Settings settings = const Settings(
     favoriteMascotId: 1,
     talkingThreshold: DecibelLufs(-10.0),
+    recordSettings: RecordSettings.empty,
   );
-  final SettingsMapperImpl settingsMapper = SettingsMapperImpl();
+  final SettingsMapperImpl settingsMapper =
+      SettingsMapperImpl(RecordSettingsMapperImpl());
 }

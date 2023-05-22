@@ -32,6 +32,7 @@ void main() {
           SettingsLoaded(
             some(settings.favoriteMascotId),
             some(settings.talkingThreshold),
+            some(settings.recordSettings),
           ),
         );
       });
@@ -43,6 +44,7 @@ void main() {
         var state = SettingsLoaded(
           some(settings.favoriteMascotId),
           some(settings.talkingThreshold),
+          some(settings.recordSettings),
         );
 
         // act
@@ -58,6 +60,7 @@ void main() {
             ErrorCodes.loadSettingsFailure,
             state.favoriteMascotIdOption,
             state.talkingThresholdOption,
+            state.recordSettingsOption,
           ),
         );
       });

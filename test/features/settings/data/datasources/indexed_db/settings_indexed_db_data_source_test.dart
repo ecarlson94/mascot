@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/data/indexed_db/indexed_db_data_source.dart';
 import 'package:mascot/features/settings/data/datasources/indexded_db/settings_indexed_db_data_source.dart';
+import 'package:mascot/features/settings/data/models/record_settings_model.dart';
 import 'package:mascot/features/settings/data/models/settings_model.dart';
 
 import '../../../../../core/data/indexed_db/indexed_db_data_source_test.dart';
@@ -24,22 +25,44 @@ void main() {
     group('fromJson', () {
       test('should return SettingsModel when provided with valid JSON', () {
         // arrange
-        final json = {
+        final recordSettingsJson = {
+          'fps': 30,
+          'holdToRecord': true,
+          'delay': 3,
+          'duration': 5,
+        };
+        final settingsJson = {
           'id': 1,
           'favoriteMascotId': 1,
           'talkingThresholdDecibels': -10.0,
+          'recordSettings': recordSettingsJson,
         };
 
         // act
-        final result = dataSource.fromJson(json);
+        final result = dataSource.fromJson(settingsJson);
 
         // assert
         expect(result, isA<SettingsModel>());
-        expect(result.id, json['id']);
-        expect(result.favoriteMascotId, json['favoriteMascotId']);
+        expect(result.id, settingsJson['id']);
+        expect(result.favoriteMascotId, settingsJson['favoriteMascotId']);
         expect(
           result.talkingThresholdDecibels,
-          json['talkingThresholdDecibels'],
+          settingsJson['talkingThresholdDecibels'],
+        );
+
+        expect(result.recordSettings, isA<RecordSettingsModel>());
+        expect(result.recordSettings.fps, equals(recordSettingsJson['fps']));
+        expect(
+          result.recordSettings.holdToRecord,
+          equals(recordSettingsJson['holdToRecord']),
+        );
+        expect(
+          result.recordSettings.delay.value,
+          equals(recordSettingsJson['delay']),
+        );
+        expect(
+          result.recordSettings.duration.value,
+          equals(recordSettingsJson['duration']),
         );
       });
     });
@@ -48,7 +71,11 @@ void main() {
       test('should return a JSON object from the provided SettingsModel', () {
         // arrange
         const settings = SettingsModel(
-            id: 1, favoriteMascotId: 1, talkingThresholdDecibels: -10.0);
+          id: 1,
+          favoriteMascotId: 1,
+          talkingThresholdDecibels: -10.0,
+          recordSettings: RecordSettingsModel.empty,
+        );
 
         // act
         final result = dataSource.toJson(settings);
@@ -61,6 +88,22 @@ void main() {
           result['talkingThresholdDecibels'],
           settings.talkingThresholdDecibels,
         );
+
+        var recordSettings = result['recordSettings'];
+        expect(recordSettings, isA<Map<String, dynamic>>());
+        expect(recordSettings['fps'], equals(settings.recordSettings.fps));
+        expect(
+          recordSettings['holdToRecord'],
+          equals(settings.recordSettings.holdToRecord),
+        );
+        expect(
+          recordSettings['delay'],
+          equals(settings.recordSettings.delay.value),
+        );
+        expect(
+          recordSettings['duration'],
+          equals(settings.recordSettings.duration.value),
+        );
       });
     });
 
@@ -71,6 +114,7 @@ void main() {
           id: 1,
           favoriteMascotId: 1,
           talkingThresholdDecibels: -10.0,
+          recordSettings: RecordSettingsModel.empty,
         );
         await dataSource.putObject(settings).single;
 
