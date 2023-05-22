@@ -33,23 +33,30 @@ class CameraContextImpl implements CameraContext, Disposable {
     CameraDescription? cameraDesc,
     ResolutionPreset resolutionPreset = ResolutionPreset.medium,
   }) =>
-      Single.fromCallable(() async {
-        _cameraController ??= CameraController(
-          cameraDesc ?? (await cameras.single).first,
-          resolutionPreset,
-        );
+      _getCameraDesc(cameraDesc).switchMapSingle(
+        (camera) => Single.fromCallable(() async {
+          _cameraController ??= CameraController(
+            camera,
+            resolutionPreset,
+          );
 
-        if (!_cameraController!.value.isInitialized) {
-          await _cameraController!.initialize();
-        }
+          if (!_cameraController!.value.isInitialized) {
+            await _cameraController!.initialize();
+          }
 
-        return _cameraController!;
-      }).doOnError(
-        (e, s) => _logger.logError('Failed to get controller', e, s),
+          return _cameraController!;
+        }).doOnError(
+          (e, s) => _logger.logError('Failed to get camera controller', e, s),
+        ),
       );
 
   @override
   FutureOr onDispose() {
     _cameraController?.dispose();
   }
+
+  Single<CameraDescription> _getCameraDesc(CameraDescription? cameraDesc) =>
+      cameraDesc == null
+          ? cameras.map((cameras) => cameras.first)
+          : Single.value(cameraDesc);
 }
