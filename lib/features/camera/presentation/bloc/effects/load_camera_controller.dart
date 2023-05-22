@@ -8,7 +8,7 @@ import 'package:rxdart_ext/rxdart_ext.dart';
 import '../../../../../core/error/error.dart';
 import '../../../../../core/reactive/base_bloc.dart';
 import '../../../../../core/utils/logger.dart';
-import '../../../domain/services/camera_context.dart';
+import '../../../domain/services/camera_controller_context.dart';
 
 @Injectable(as: Logger<LoadCameraController>)
 class LoadCameraLogger extends Logger<LoadCameraController> {}
@@ -16,7 +16,7 @@ class LoadCameraLogger extends Logger<LoadCameraController> {}
 @injectable
 class LoadCameraController extends BlocEffect<CameraControllerEvent,
     InitializeCameraEvent, CameraControllerState> {
-  final CameraContext _cameraContext;
+  final CameraControllerContext _cameraContext;
   final Logger<LoadCameraController> _logger;
 
   LoadCameraController(this._cameraContext, this._logger);

@@ -6,27 +6,28 @@ import 'package:injectable/injectable.dart';
 import 'package:rxdart_ext/rxdart_ext.dart';
 
 import '../../../../core/utils/logger.dart';
-import '../../domain/services/camera_context.dart';
+import '../../domain/services/camera_controller_context.dart';
+import '../../domain/services/camera_controller_factory.dart';
+import '../../domain/services/camera_service.dart';
 
-@Injectable(as: Logger<CameraContextImpl>)
-class CameraContextImplLogger extends Logger<CameraContextImpl> {}
+@Injectable(as: Logger<CameraControllerContextImpl>)
+class CameraControllerContextImplLogger
+    extends Logger<CameraControllerContextImpl> {}
 
-@LazySingleton(as: CameraContext)
-class CameraContextImpl implements CameraContext, Disposable {
-  final Logger<CameraContextImpl> _logger;
+@Injectable(as: CameraControllerContext)
+class CameraControllerContextImpl
+    implements CameraControllerContext, Disposable {
+  final CameraService _cameraService;
+  final CameraControllerFactory _cameraControllerFactory;
+  final Logger<CameraControllerContextImpl> _logger;
 
-  List<CameraDescription>? _cameras;
   CameraController? _cameraController;
 
-  CameraContextImpl(this._logger);
-
-  @override
-  Single<List<CameraDescription>> get cameras => Single.fromCallable(() async {
-        _cameras ??= await availableCameras();
-        return _cameras!;
-      }).doOnError(
-        (e, s) => _logger.logError('Failed to get cameras', e, s),
-      );
+  CameraControllerContextImpl(
+    this._cameraService,
+    this._cameraControllerFactory,
+    this._logger,
+  );
 
   @override
   Single<CameraController> getController({
@@ -35,9 +36,9 @@ class CameraContextImpl implements CameraContext, Disposable {
   }) =>
       _getCameraDesc(cameraDesc).switchMapSingle(
         (camera) => Single.fromCallable(() async {
-          _cameraController ??= CameraController(
-            camera,
-            resolutionPreset,
+          _cameraController ??= _cameraControllerFactory.createController(
+            cameraDesc: camera,
+            resolutionPreset: resolutionPreset,
           );
 
           if (!_cameraController!.value.isInitialized) {
@@ -57,6 +58,6 @@ class CameraContextImpl implements CameraContext, Disposable {
 
   Single<CameraDescription> _getCameraDesc(CameraDescription? cameraDesc) =>
       cameraDesc == null
-          ? cameras.map((cameras) => cameras.first)
+          ? _cameraService.cameras.map((cameras) => cameras.first)
           : Single.value(cameraDesc);
 }
