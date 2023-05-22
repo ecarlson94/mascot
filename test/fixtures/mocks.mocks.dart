@@ -38,7 +38,7 @@ import 'package:mascot/features/mascot/presentation/bloc/create_mascot/effects/s
 import 'package:mascot/features/microphone/device/microphone.dart' as _i30;
 import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart'
     as _i23;
-import 'package:mascot/features/microphone/domain/services/microphone_service.dart'
+import 'package:mascot/features/microphone/domain/services/microphone_context.dart'
     as _i29;
 import 'package:mascot/features/microphone/domain/usecases/stream_microphone_volume.dart'
     as _i31;
@@ -940,11 +940,11 @@ class MockLogger<T> extends _i1.Mock implements _i28.Logger<T> {
       );
 }
 
-/// A class which mocks [MicrophoneService].
+/// A class which mocks [MicrophoneContext].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMicrophoneService extends _i1.Mock implements _i29.MicrophoneService {
-  MockMicrophoneService() {
+class MockMicrophoneContext extends _i1.Mock implements _i29.MicrophoneContext {
+  MockMicrophoneContext() {
     _i1.throwOnMissingStub(this);
   }
 

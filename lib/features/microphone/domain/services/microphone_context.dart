@@ -4,7 +4,7 @@ import '../models/decibel_lufs.dart';
 
 typedef VolumeStream = Stream<DecibelLufs>;
 
-abstract class MicrophoneService {
+abstract class MicrophoneContext {
   Single<bool> hasPermission();
   VolumeStream getVolumeStream();
 }

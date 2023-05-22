@@ -9,11 +9,11 @@ import '../../../../fixtures/mocks.mocks.dart';
 
 void main() {
   late StreamMicrophoneVolume usecase;
-  late MockMicrophoneService mockMicrophoneService;
+  late MockMicrophoneContext mockMicrophoneContext;
 
   setUp(() {
-    mockMicrophoneService = MockMicrophoneService();
-    usecase = StreamMicrophoneVolume(mockMicrophoneService);
+    mockMicrophoneContext = MockMicrophoneContext();
+    usecase = StreamMicrophoneVolume(mockMicrophoneContext);
   });
 
   group('StreamMicrophoneVolume', () {
@@ -21,14 +21,14 @@ void main() {
       // arrange
       const firstVolume = DecibelLufs(0.0);
       var stream = Single.value(firstVolume);
-      when(mockMicrophoneService.getVolumeStream()).thenAnswer((_) => stream);
+      when(mockMicrophoneContext.getVolumeStream()).thenAnswer((_) => stream);
 
       // act
       final result = await usecase(NoParams()).single;
 
       // assert
       expect(result, firstVolume);
-      verify(mockMicrophoneService.getVolumeStream());
+      verify(mockMicrophoneContext.getVolumeStream());
     });
   });
 }

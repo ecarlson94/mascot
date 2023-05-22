@@ -4,18 +4,18 @@ import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart';
 import 'package:rxdart_ext/rxdart_ext.dart';
 
 import '../../../../core/utils/logger.dart';
-import '../../domain/services/microphone_service.dart';
+import '../../domain/services/microphone_context.dart';
 import '../microphone.dart';
 
-@Injectable(as: Logger<MicrophoneServiceImpl>)
-class MicrophoneServiceImplLogger extends Logger<MicrophoneServiceImpl> {}
+@Injectable(as: Logger<MicrophoneContextImpl>)
+class MicrophoneContextImplLogger extends Logger<MicrophoneContextImpl> {}
 
-@LazySingleton(as: MicrophoneService)
-class MicrophoneServiceImpl implements MicrophoneService {
+@LazySingleton(as: MicrophoneContext)
+class MicrophoneContextImpl implements MicrophoneContext {
   final Microphone _microphone;
-  final Logger<MicrophoneServiceImpl> _logger;
+  final Logger<MicrophoneContextImpl> _logger;
 
-  MicrophoneServiceImpl(this._microphone, this._logger);
+  MicrophoneContextImpl(this._microphone, this._logger);
 
   @override
   Single<bool> hasPermission() => _microphone.hasPermission().doOnError(

@@ -15,6 +15,5 @@ abstract class ErrorCodes {
   static const int loadMascotFailure = 106;
   static const int microphonePermissionFailure = 200;
   static const int cameraPermissionFailure = 201;
-  static const int noCamerasFailure = 202;
-  static const int cameraRetrievalFailure = 203;
+  static const int cameraRetrievalFailure = 202;
 }

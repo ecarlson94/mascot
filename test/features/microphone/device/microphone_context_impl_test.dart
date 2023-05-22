@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mascot/core/error/exception.dart';
-import 'package:mascot/features/microphone/device/services/microphone_service_impl.dart';
+import 'package:mascot/features/microphone/device/services/microphone_context_impl.dart';
 import 'package:mascot/features/microphone/domain/models/decibel_lufs.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart_ext/rxdart_ext.dart';
@@ -9,11 +9,11 @@ import '../../../fixtures/test_context.dart';
 
 void main() {
   late TestContext context;
-  late MicrophoneServiceImpl classUnderTest;
+  late MicrophoneContextImpl classUnderTest;
 
   setUp(() {
     context = TestContext();
-    classUnderTest = MicrophoneServiceImpl(
+    classUnderTest = MicrophoneContextImpl(
       context.mocks.microphone,
       context.mocks.getLogger(),
     );
