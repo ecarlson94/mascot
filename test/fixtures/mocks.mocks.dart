@@ -949,6 +949,20 @@ class MockMicrophoneService extends _i1.Mock implements _i29.MicrophoneService {
   }
 
   @override
+  _i4.Single<bool> hasPermission() => (super.noSuchMethod(
+        Invocation.method(
+          #hasPermission,
+          [],
+        ),
+        returnValue: _FakeSingle_2<bool>(
+          this,
+          Invocation.method(
+            #hasPermission,
+            [],
+          ),
+        ),
+      ) as _i4.Single<bool>);
+  @override
   _i9.Stream<_i23.DecibelLufs> getVolumeStream() => (super.noSuchMethod(
         Invocation.method(
           #getVolumeStream,

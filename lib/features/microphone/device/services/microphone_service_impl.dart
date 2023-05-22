@@ -18,15 +18,15 @@ class MicrophoneServiceImpl implements MicrophoneService {
   MicrophoneServiceImpl(this._microphone, this._logger);
 
   @override
-  VolumeStream getVolumeStream() => _microphoneHasPermission()
+  Single<bool> hasPermission() => _microphone.hasPermission().doOnError(
+      (e, s) => _logger.logError('Failed to check permission', e, s));
+
+  @override
+  VolumeStream getVolumeStream() => hasPermission()
       .switchMap(
         (hasPermission) => hasPermission
             ? _microphone.volumeStream
             : Stream<DecibelLufs>.error(const MicrophonePermissionException()),
       )
       .doOnError((e, s) => _logger.logError('Failed to stream volume', e, s));
-
-  Single<bool> _microphoneHasPermission() =>
-      _microphone.hasPermission().doOnError(
-          (e, s) => _logger.logError('Failed to check permission', e, s));
 }
