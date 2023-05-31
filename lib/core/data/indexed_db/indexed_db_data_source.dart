@@ -136,8 +136,10 @@ abstract class IndexedDbDataSourceImpl<T extends Entity>
       values.whereNotNull().map(_toStringKeyMap).map<T>(fromJson).toList();
 
   Map<String, dynamic> _toStringKeyMap(Object object) =>
-      (object as Map<dynamic, dynamic>)
-          .map((key, value) => MapEntry(key as String, value));
+      (object as Map<dynamic, dynamic>).map(
+        (key, value) => MapEntry(key as String,
+            value is Map<dynamic, dynamic> ? _toStringKeyMap(value) : value),
+      );
 
   Option<T> _createOption(Object? value) {
     if (value != null) {
