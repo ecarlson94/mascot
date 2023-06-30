@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ml5": "^0.12.2"
+    "ml5": "^1.0.0"
   }
 }
