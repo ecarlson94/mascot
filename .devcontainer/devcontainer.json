@@ -21,7 +21,7 @@
     }
   },
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "flutter pub get",
+  "postCreateCommand": "scripts/installDependencies.sh",
   "forwardPorts": [
     5000, // HTTP
     9005

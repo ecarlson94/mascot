@@ -10,6 +10,7 @@ SettingsState loadSettingsFailure(
       event.errorCode,
       state.favoriteMascotIdOption,
       state.talkingThresholdOption,
+      state.recordSettingsOption,
     );
 
 SettingsState settingsUpdated(
@@ -19,6 +20,7 @@ SettingsState settingsUpdated(
     SettingsLoaded(
       some(event.settings.favoriteMascotId),
       some(event.settings.talkingThreshold),
+      some(event.settings.recordSettings),
     );
 
 SettingsState loadingSettings(
@@ -28,4 +30,5 @@ SettingsState loadingSettings(
     LoadingSettings(
       state.favoriteMascotIdOption,
       state.talkingThresholdOption,
+      state.recordSettingsOption,
     );

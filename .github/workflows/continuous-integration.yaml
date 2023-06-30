@@ -27,11 +27,19 @@ jobs:
           cache-path: '${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:' # optional, change this to specify the cache path
           architecture: x64 # optional, x64 or arm64
 
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install browserify
+        run: npm install -g browserify
+
       - name: Install lcov
         run: sudo apt-get install -y lcov
 
       - name: Install dependencies
-        run: flutter pub get
+        run: ./scripts/installDependencies.sh
 
       - name: Analyze Code
         run: dart analyze --fatal-infos

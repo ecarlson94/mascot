@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/extensions/extensions.dart';
-import '../../../mascot/presentation/widgets/create_mascot_fab.dart';
+import '../widgets/create_expression_fab.dart';
+import '../widgets/create_mascot_fab.dart';
 import '../../../microphone/presentation/widgets/vertical_loudness_meter/vertical_loudness_meter.dart';
 import '../../../settings/presentation/bloc/settings_bloc.dart';
 import '../../../settings/presentation/widgets/favorite_mascot_id_provider.dart';
@@ -52,6 +53,21 @@ class ActionsOverlay extends StatelessWidget {
                     reverse: !state.showActions,
                     direction: OffScreenSlideDirection.bottomRight,
                     child: const CreateMascotFab(),
+                  ),
+                ),
+                Positioned(
+                  top: actionPadding,
+                  right: actionPadding,
+                  child: FavoriteMascotIdProvider(
+                    builder: (context, _) => Column(
+                      children: [
+                        OffScreenSlideTransition(
+                          reverse: !state.showActions,
+                          direction: OffScreenSlideDirection.topRight,
+                          child: const CreateExpressionFab(),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

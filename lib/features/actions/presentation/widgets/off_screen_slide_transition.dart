@@ -108,7 +108,7 @@ class _OffScreenSlideTransitionState extends State<OffScreenSlideTransition>
       case OffScreenSlideDirection.topLeft:
         return const Offset(-1.0, -1.0);
       case OffScreenSlideDirection.topRight:
-        return const Offset(1.0, -1.0);
+        return const Offset(1.3, -1.3);
     }
   }
 }

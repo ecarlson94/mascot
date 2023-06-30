@@ -18,7 +18,7 @@ void main() {
       );
     });
 
-    test('initialState should be SettingsInitial', () {
+    test('initial state should be SettingsInitial', () {
       // assert
       expect(bloc.state, SettingsInitial());
     });

@@ -15,7 +15,7 @@ import 'package:mascot/features/mascot/domain/usecases/stream_mascot.dart';
 import 'package:mascot/features/mascot/presentation/bloc/create_mascot/create_mascot_bloc.dart';
 import 'package:mascot/features/mascot/presentation/bloc/create_mascot/effects/save_mascot_effect.dart';
 import 'package:mascot/features/microphone/device/microphone.dart';
-import 'package:mascot/features/microphone/domain/services/microphone_service.dart';
+import 'package:mascot/features/microphone/domain/services/microphone_context.dart';
 import 'package:mascot/features/microphone/domain/usecases/stream_microphone_volume.dart';
 import 'package:mascot/features/settings/data/datasources/indexded_db/settings_indexed_db_data_source.dart';
 import 'package:mascot/features/settings/domain/repositories/settings_repository.dart';
@@ -39,7 +39,7 @@ import 'mocks.mocks.dart';
   SaveTalkingThreshold,
   StreamMascot,
   Logger<MascotsRepositoryImpl>,
-  MicrophoneService,
+  MicrophoneContext,
   Microphone,
   StreamMicrophoneVolume,
   ExpressionAnimationService,
@@ -94,9 +94,9 @@ class Mocks {
 
   MockLogger<T> getLogger<T>() => MockLogger<T>();
 
-  MockMicrophoneService? _microphoneService;
-  MockMicrophoneService get microphoneService =>
-      _microphoneService ??= MockMicrophoneService();
+  MockMicrophoneContext? _microphoneContext;
+  MockMicrophoneContext get microphoneContext =>
+      _microphoneContext ??= MockMicrophoneContext();
 
   MockMicrophone? _microphone;
   MockMicrophone get microphone => _microphone ??= MockMicrophone();

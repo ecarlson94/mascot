@@ -2,11 +2,11 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../core/clean_architecture/usecase.dart';
 import '../models/decibel_lufs.dart';
-import '../services/microphone_service.dart';
+import '../services/microphone_context.dart';
 
 @injectable
 class StreamMicrophoneVolume implements UseCase<Stream<DecibelLufs>, NoParams> {
-  final MicrophoneService _microphoneService;
+  final MicrophoneContext _microphoneService;
 
   StreamMicrophoneVolume(this._microphoneService);
 

@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$Settings {
   int? get favoriteMascotId => throw _privateConstructorUsedError;
   DecibelLufs get talkingThreshold => throw _privateConstructorUsedError;
+  RecordSettings get recordSettings => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SettingsCopyWith<Settings> get copyWith =>
@@ -29,7 +30,12 @@ abstract class $SettingsCopyWith<$Res> {
   factory $SettingsCopyWith(Settings value, $Res Function(Settings) then) =
       _$SettingsCopyWithImpl<$Res, Settings>;
   @useResult
-  $Res call({int? favoriteMascotId, DecibelLufs talkingThreshold});
+  $Res call(
+      {int? favoriteMascotId,
+      DecibelLufs talkingThreshold,
+      RecordSettings recordSettings});
+
+  $RecordSettingsCopyWith<$Res> get recordSettings;
 }
 
 /// @nodoc
@@ -47,6 +53,7 @@ class _$SettingsCopyWithImpl<$Res, $Val extends Settings>
   $Res call({
     Object? favoriteMascotId = freezed,
     Object? talkingThreshold = null,
+    Object? recordSettings = null,
   }) {
     return _then(_value.copyWith(
       favoriteMascotId: freezed == favoriteMascotId
@@ -57,7 +64,19 @@ class _$SettingsCopyWithImpl<$Res, $Val extends Settings>
           ? _value.talkingThreshold
           : talkingThreshold // ignore: cast_nullable_to_non_nullable
               as DecibelLufs,
+      recordSettings: null == recordSettings
+          ? _value.recordSettings
+          : recordSettings // ignore: cast_nullable_to_non_nullable
+              as RecordSettings,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $RecordSettingsCopyWith<$Res> get recordSettings {
+    return $RecordSettingsCopyWith<$Res>(_value.recordSettings, (value) {
+      return _then(_value.copyWith(recordSettings: value) as $Val);
+    });
   }
 }
 
@@ -68,7 +87,13 @@ abstract class _$$_SettingsCopyWith<$Res> implements $SettingsCopyWith<$Res> {
       __$$_SettingsCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int? favoriteMascotId, DecibelLufs talkingThreshold});
+  $Res call(
+      {int? favoriteMascotId,
+      DecibelLufs talkingThreshold,
+      RecordSettings recordSettings});
+
+  @override
+  $RecordSettingsCopyWith<$Res> get recordSettings;
 }
 
 /// @nodoc
@@ -84,6 +109,7 @@ class __$$_SettingsCopyWithImpl<$Res>
   $Res call({
     Object? favoriteMascotId = freezed,
     Object? talkingThreshold = null,
+    Object? recordSettings = null,
   }) {
     return _then(_$_Settings(
       favoriteMascotId: freezed == favoriteMascotId
@@ -94,6 +120,10 @@ class __$$_SettingsCopyWithImpl<$Res>
           ? _value.talkingThreshold
           : talkingThreshold // ignore: cast_nullable_to_non_nullable
               as DecibelLufs,
+      recordSettings: null == recordSettings
+          ? _value.recordSettings
+          : recordSettings // ignore: cast_nullable_to_non_nullable
+              as RecordSettings,
     ));
   }
 }
@@ -102,16 +132,20 @@ class __$$_SettingsCopyWithImpl<$Res>
 
 class _$_Settings implements _Settings {
   const _$_Settings(
-      {required this.favoriteMascotId, required this.talkingThreshold});
+      {required this.favoriteMascotId,
+      required this.talkingThreshold,
+      required this.recordSettings});
 
   @override
   final int? favoriteMascotId;
   @override
   final DecibelLufs talkingThreshold;
+  @override
+  final RecordSettings recordSettings;
 
   @override
   String toString() {
-    return 'Settings(favoriteMascotId: $favoriteMascotId, talkingThreshold: $talkingThreshold)';
+    return 'Settings(favoriteMascotId: $favoriteMascotId, talkingThreshold: $talkingThreshold, recordSettings: $recordSettings)';
   }
 
   @override
@@ -122,12 +156,14 @@ class _$_Settings implements _Settings {
             (identical(other.favoriteMascotId, favoriteMascotId) ||
                 other.favoriteMascotId == favoriteMascotId) &&
             (identical(other.talkingThreshold, talkingThreshold) ||
-                other.talkingThreshold == talkingThreshold));
+                other.talkingThreshold == talkingThreshold) &&
+            (identical(other.recordSettings, recordSettings) ||
+                other.recordSettings == recordSettings));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, favoriteMascotId, talkingThreshold);
+  int get hashCode => Object.hash(
+      runtimeType, favoriteMascotId, talkingThreshold, recordSettings);
 
   @JsonKey(ignore: true)
   @override
@@ -139,12 +175,15 @@ class _$_Settings implements _Settings {
 abstract class _Settings implements Settings {
   const factory _Settings(
       {required final int? favoriteMascotId,
-      required final DecibelLufs talkingThreshold}) = _$_Settings;
+      required final DecibelLufs talkingThreshold,
+      required final RecordSettings recordSettings}) = _$_Settings;
 
   @override
   int? get favoriteMascotId;
   @override
   DecibelLufs get talkingThreshold;
+  @override
+  RecordSettings get recordSettings;
   @override
   @JsonKey(ignore: true)
   _$$_SettingsCopyWith<_$_Settings> get copyWith =>

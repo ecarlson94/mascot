@@ -24,3 +24,8 @@ class MicrophonePermissionException implements Exception {
   final String message;
   const MicrophonePermissionException([this.message = '']);
 }
+
+class CameraPermissionException implements Exception {
+  final String message;
+  const CameraPermissionException([this.message = '']);
+}
