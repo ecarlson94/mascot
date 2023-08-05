@@ -27,7 +27,9 @@
     9005
   ],
   "features": {
-    "ghcr.io/devcontainers/features/terraform:1": {}
+    "ghcr.io/devcontainers/features/terraform:1": {},
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/aws-cli:1": {}
   },
   "portsAttributes": {
     "5000": {
