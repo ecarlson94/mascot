@@ -1,21 +1,13 @@
 version: 2
 enable-beta-ecosystems: true
 updates:
-  - package-ecosystem: "pub"
-    directory: "/"
-    schedule:
-      interval: "daily"
-      time: "05:00"
-      timezone: "America/Denver"
-    open-pull-requests-limit: 3
-
   - package-ecosystem: "npm"
     directory: "/web/js"
     schedule:
       interval: "daily"
       time: "05:00"
       timezone: "America/Denver"
-    open-pull-requests-limit: 3
+    open-pull-requests-limit: 5
 
   - package-ecosystem: "github-actions"
     directory: "/"
