@@ -1,16 +1,38 @@
-# mascot
+# Welcome to Remix!
 
-A new Flutter project.
+- [Remix Docs](https://remix.run/docs)
 
-## Getting Started
+## Development
 
-This project is a starting point for a Flutter application.
+From your terminal:
 
-A few resources to get you started if this is your first Flutter project:
+```sh
+npm run dev
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+This starts your app in development mode, rebuilding assets on file changes.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Deployment
+
+First, build your app for production:
+
+```sh
+npm run build
+```
+
+Then run the app in production mode:
+
+```sh
+npm start
+```
+
+Now you'll need to pick a host to deploy it to.
+
+### DIY
+
+If you're familiar with deploying node applications, the built-in Remix app server is production-ready.
+
+Make sure to deploy the output of `remix build`
+
+- `build/`
+- `public/build/`

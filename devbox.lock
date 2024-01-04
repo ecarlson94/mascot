@@ -20,6 +20,26 @@
           "store_path": "/nix/store/yc5bicc5zs5czjp5q5aygz79km84rmd4-nodejs-20.10.0"
         }
       }
+    },
+    "yarn@latest": {
+      "last_modified": "2023-12-13T22:54:10Z",
+      "resolved": "github:NixOS/nixpkgs/fd04bea4cbf76f86f244b9e2549fca066db8ddff#yarn",
+      "source": "devbox-search",
+      "version": "1.22.19",
+      "systems": {
+        "aarch64-darwin": {
+          "store_path": "/nix/store/45vwimqzlg79phkshmci9rw2r94vns9y-yarn-1.22.19"
+        },
+        "aarch64-linux": {
+          "store_path": "/nix/store/4gfk6b9d1dvpgb8l6c853vsma20n4578-yarn-1.22.19"
+        },
+        "x86_64-darwin": {
+          "store_path": "/nix/store/fscsn6nbpfszb813njzk5f77vi1p9mb3-yarn-1.22.19"
+        },
+        "x86_64-linux": {
+          "store_path": "/nix/store/fpi2d88hrwazxm7ign8ivapcnwfzaj1g-yarn-1.22.19"
+        }
+      }
     }
   }
 }
