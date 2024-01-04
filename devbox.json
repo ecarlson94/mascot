@@ -2,7 +2,7 @@
   "packages": ["nodejs@20.10.0"],
   "shell": {
     "init_hook": [
-      "echo 'Welcome to devbox!' > /dev/null"
+      "npm install"
     ],
     "scripts": {
       "test": [

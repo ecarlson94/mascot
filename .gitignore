@@ -72,3 +72,9 @@ bundle.js
 # Test Results
 coverage/
 test-report.json
+
+public/sw*
+public/workbox*
+public/worker*
+
+.next/*
